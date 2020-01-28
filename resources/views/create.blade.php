@@ -24,52 +24,65 @@
 
 <body>
 
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-    <form method="POST" action="/reservations">
-        @csrf
-        <div class="flex flex-col">
+    <div class="w-1/2">
 
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text" class="@error('title') is-invalid @enderror">
-            @error('title')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+        <form method="POST" action="/reservations">
+            @csrf
+            <div class="flex flex-col">
 
-            <label for="person_count">Personen</label>
-            <input id="person_count" name="person_count" type="text" class="@error('title') is-invalid @enderror">
-            @error('title')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" class="@error('title') is-invalid @enderror">
+                @error('title')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
 
-            <label for="starting_at">Wann</label>
-            <input id="starting_at" name="starting_at" type="text" class="@error('title') is-invalid @enderror">
-            @error('title')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                <label for="person_count">Personen</label>
+                <input id="person_count" name="person_count" type="text" class="@error('title') is-invalid @enderror">
+                @error('title')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
 
-            <label for="length">Wie lange</label>
-            <input id="length" name="length" type="text" class="@error('title') is-invalid @enderror">
-            @error('title')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                <label for="starting_at">Wann</label>
+                <input id="starting_at" name="starting_at" type="text" class="@error('title') is-invalid @enderror">
+                @error('title')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
 
-            <label for="notice">Notiz</label>
-            <input id="notice" name="notice" type="text" class="@error('title') is-invalid @enderror">
-            @error('title')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                <label for="length">Wie lange</label>
+                <input id="length" name="length" type="text" class="@error('title') is-invalid @enderror">
+                @error('title')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
 
-            <label for="accepted_from">Von wem?</label>
-            <input id="accepted_from" name="accepted_from" type="text" class="@error('title') is-invalid @enderror">
-            @error('title')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                <label for="notice">Notiz</label>
+                <input id="notice" name="notice" type="text" class="@error('title') is-invalid @enderror">
+                @error('title')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
 
-            <button class="bg-blue-800 text-white" type="submit">Press me</button>
-        </div>
+                <label for="accepted_from">Von wem?</label>
+                <input id="accepted_from" name="accepted_from" type="text" class="@error('title') is-invalid @enderror">
+                @error('title')
+                <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
+
+                <button class="bg-blue-800 text-white" type="submit">Press me</button>
+            </div>
 
 
-    </form>
+        </form>
+    </div>
+
 
 </body>
 

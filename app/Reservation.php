@@ -10,7 +10,7 @@ class Reservation extends Model
     use Notifiable;
 
     protected $fillable = [
-        'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from'
+        'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
     ];
 
     protected $casts = [

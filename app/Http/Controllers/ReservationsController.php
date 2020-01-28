@@ -32,26 +32,17 @@ class ReservationsController extends Controller
     public function store(Request $request)
     {
 
-        $reservation = Reservation::create($request->validate([
-            'name'          => 'required|max:100',
-            'person_count'  => 'required|between:1,900',
-            'starting_at'   => 'date',
-            'length'        => 'digits_between:0,24',
-            'accepted_from' => 'required',
-        ]));
+        $request->validate([
+            'name' => 'required',
+            'person_count' => 'required',
+            'starting_at' => 'required|date',
+            'length' => 'required',
+            'accepted_from' => 'required'
+        ]);
 
-        // $reservation->attributes['user_id'] = Auth::id();
+        $reservation = Reservation::create(array_merge($request->all(), ['user_id' => Auth::id()]));
 
         $reservation->save();
-
-        return 'success';
-
-        
-
-        // if (!$reservation) {
-        //     abort('500');
-        // }
-        // return view('home', ['reservations' => Reservation::closes()->paginate(20)]);
 
     }
 
@@ -76,5 +67,6 @@ class ReservationsController extends Controller
 
     public function destroy($reservation)
     {
+        $reservation->delete();
     }
 }
