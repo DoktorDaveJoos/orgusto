@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,9 +20,29 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
+
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="flex items-center justify-between flex-wrap bg-gray-200 p-3 shadow-md mb-2 sticky top-0">
+            <div>
+                <span class="font-display text-xl text-gray-600 pl-4 text-center">{{ ucfirst(config('app.name')) }}</span>
+            </div>
+            <div class="pr-4">
+                @guest
+                @else
+                <span class="text-gray-600 text-center hover:border-gray-600 pr-2">{{ Auth::user()->name }}</span>
+                <a class="fas fa-sign-out-alt text-gray-600" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                    <i class="fas fa-sign-out-alt text-gray-600"></i>
+                </a>
+                @endguest
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                    @csrf
+                </form>
+            </div>
+        </nav>
+
+        <!-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -32,14 +53,14 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+        <!-- <ul class="navbar-nav mr-auto">
 
-                    </ul>
+                    </ul> -->
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
+        <!-- Right Side Of Navbar -->
+        <!-- <ul class="navbar-nav ml-auto"> -->
+        <!-- Authentication Links -->
+        <!-- @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
@@ -70,11 +91,12 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav> -->
 
         <main class="py-4">
             @yield('content')
         </main>
     </div>
 </body>
+
 </html>
