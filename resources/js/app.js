@@ -9,6 +9,7 @@ require('./fontawesome');
 
 window.Vue = require('vue');
 import VCalendar from 'v-calendar';
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 
 // Use v-calendar & v-date-picker components
 Vue.use(VCalendar, {
@@ -29,7 +30,7 @@ Vue.use(require('vue-moment'));
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('vue-timepicker', VueTimepicker);
 // Vue.component('reservations-component', require('./components/ReservationsComponent.vue').default);
 // Vue.component('delete-button', require('./components/DeleteButton.vue').default);
 // Vue.component('reservation-list-item', require('./components/ReservationListItem.vue').default);

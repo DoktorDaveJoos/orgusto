@@ -1,6 +1,6 @@
 <template>
   <button
-    class="rounded-full bg-gray-600 text-white px-2 self-end hover:bg-red-600 focus:no-underline focus:bg-red-400 focus:outline-none focus:shadow-outline"
+    class="rounded-full border-2 text-gray-700 px-3 py-1 self-end hover:border-red-300 hover:text-red-500 text-sm font-light focus:no-underline focus:bg-red-400 focus:outline-none focus:shadow-outline"
     v-on:click="deleteReservationWithId"
   >
     <i class="fas fa-trash-alt"></i>
