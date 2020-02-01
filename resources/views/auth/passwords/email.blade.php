@@ -2,38 +2,39 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+    <div class="flex justify-center">
+        <div class="w-8/12">
+            <div class="shadow-lg rounded-lg">
+                <div class="bg-gray-200 w-full rounded-t-lg p-4 px-8 text-gray-700 text-xl">{{ __('Reset Password') }}</div>
 
-                <div class="card-body">
+                <div class="text-gray-600 p-2 font-normal">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="abg-green-600 text-gray-700 font-semibold" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
 
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                        <div class="flex flex-col">
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="flex justify-center m-2">
+                                <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                             </div>
+                            @error('email')
+                            <div class="flex justify-center m-2">
+                                <span class="bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2" role="alert">
+                                    {{ $message }}
+                                </span>
+                            </div>
+                            @enderror
+
                         </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                        <div class="flex justify-center m-2">
+                            <div class="w-8/12 p-2">
+                                <button type="submit" class="bg-blue-400 hover:bg-blue-500 rounded-full px-4 py-1 text-white mr-4">
                                     {{ __('Send Password Reset Link') }}
                                 </button>
                             </div>

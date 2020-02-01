@@ -29,6 +29,12 @@
             </div>
             <div class="pr-4">
                 @guest
+                <a class="text-sm text-gray-600 hover:text-gray-700 mr-6" href="{{ route('login') }}">{{ __('Login') }}</a>
+                @if (Route::has('register'))
+                <a class="text-sm text-gray-600 hover:text-gray-700" href="{{ route('register') }}">{{ __('Register') }}</a>
+                @endif
+
+
                 @else
                 <span class="text-gray-600 text-center hover:border-gray-600 pr-2">{{ Auth::user()->name }}</span>
                 <a class="fas fa-sign-out-alt text-gray-600" href="{{ route('logout') }}" onclick="event.preventDefault();
