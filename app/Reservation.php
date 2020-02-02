@@ -13,6 +13,8 @@ class Reservation extends Model
         'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
     ];
 
+    // Table Number (required) - Color - Telefonnummer (required) - Email (not required)
+
     protected $casts = [
         'starting_at', 'created_at'
     ];

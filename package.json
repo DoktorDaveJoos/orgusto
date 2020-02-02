@@ -28,7 +28,6 @@
         "@fortawesome/fontawesome-free": "^5.12.0",
         "tailwindcss": "^1.1.4",
         "v-calendar": "^1.0.0-beta.23",
-        "vue-moment": "^4.1.0",
-        "vue2-timepicker": "^1.0.8"
+        "vue-moment": "^4.1.0"
     }
 }

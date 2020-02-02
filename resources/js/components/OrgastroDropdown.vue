@@ -1,24 +1,23 @@
 <template>
   <div class="w-full md:w-1/3 pr-3 mb-6 md:mb-0">
     <label
+      v-if="title"
       class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-      for="grid-state"
     >{{ title }}</label>
     <div class="relative">
       <select
-        v-if="!isArray(this.options)"
-        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-        id="persons"
+        :id="id"
+        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 font-semibold text-sm py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        @change="reset ? resetMiddleware($event, reset, onChange) : onChange($event)"
       >
-        <option v-for="option in parseInt(options)" v-bind:key="option">{{ option }}</option>
+        <option v-if="init" :value="init">{{ init }}</option>
+        <option
+          v-for="option in parseOptions(options)"
+          v-bind:key="option"
+          :value="option"
+        >{{ operation ? operation(option) : option }} {{ unit ? unit : null }}</option>
       </select>
-      <select
-        v-if="isArray(this.options)"
-        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-        id="persons"
-      >
-        <option v-for="option in options" v-bind:key="option">{{ option }}</option>
-      </select>
+
       <div
         class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
       >
@@ -34,18 +33,45 @@
 export default {
   name: "orgastro-dropdown",
   props: {
+    id: {
+      type: String,
+      required: true
+    },
+    init: {
+      required: false
+    },
     options: {
       required: true
     },
     title: {
       type: String,
+      required: false
+    },
+    unit: {
+      type: String,
+      required: false
+    },
+    operation: {
+      type: Function,
+      required: false
+    },
+    onChange: {
+      type: Function,
       required: true
+    },
+    reset: {
+      type: String
     }
   },
   methods: {
-    isArray: item => {
-      return item instanceof Array;
+    parseOptions: options => {
+      return options instanceof Array ? options : parseInt(options);
+    },
+    resetMiddleware: (event, reset, thenApply) => {
+      let tmp = event.target.value;
+      event.target.value = reset;
+      thenApply(tmp);
     }
-  },
+  }
 };
 </script>

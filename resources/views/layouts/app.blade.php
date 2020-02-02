@@ -23,7 +23,7 @@
 
 <body>
     <div id="app">
-        <nav class="flex items-center justify-between flex-wrap bg-gray-200 p-3 shadow-md mb-2 sticky top-0">
+        <nav class="flex items-center justify-between flex-wrap bg-gray-200 p-3 shadow-md mb-2 sticky top-0 z-50">
             <div>
                 <span class="font-display text-xl text-gray-700 pl-4 text-center">{{ ucfirst(config('app.name')) }}</span>
             </div>
