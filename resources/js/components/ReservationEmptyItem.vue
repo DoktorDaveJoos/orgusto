@@ -82,7 +82,7 @@
         <div class="flex">
           <orgastro-dropdown
             :onChange="onChange"
-            id="persons"
+            id="person_count"
             init="-"
             title="Persons"
             options="20"
@@ -204,7 +204,7 @@ export default {
         minutes: new Date(Date.now()).getMinutes().toString(),
         date: new Date(Date.now()),
 
-        persons: "",
+        person_count: "",
         length: "",
         accepted_from: "",
 
@@ -223,11 +223,28 @@ export default {
     },
     saveBtnPressed: function() {
       this.computeStartingAt();
-      console.log(this.inputValues.starting_at);
       if (this.errorList.length > 0) {
         this.displayError = true;
       } else {
-        console.log("send data.");
+
+        const request = {
+          "name": this.inputValues.name,
+          "notice": this.inputValues.notice,
+          "starting_at": this.inputValues.starting_at,
+          "person_count": this.inputValues.person_count,
+          "length": this.inputValues.length,
+          "accepted_from": this.inputValues.accepted_from
+        }
+
+        // name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
+
+        console.log(request);
+
+        axios
+          .post("/reservations", request)
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+
         this.displayError = false;
       }
     },
@@ -259,21 +276,12 @@ export default {
       }
     },
     computeStartingAt: function() {
-      console.log(
-        "year: " + this.inputValues.date.getFullYear().toString(),
-        "month: " + this.inputValues.date.getMonth().toString(),
-        "day: " + this.inputValues.date.getDay().toString(),
-        "hours: " + this.inputValues.hours.toString(),
-        "minutes: " + this.inputValues.minutes.toString()
-      );
+      let reservationDate = new Date(Date.parse(this.inputValues.date));
 
-      this.inputValues.starting_at = new Date(
-        this.inputValues.date.getFullYear().toString(),
-        this.inputValues.date.getMonth().toString(),
-        this.inputValues.date.getDay().toString(),
-        this.inputValues.hours.toString(),
-        this.inputValues.minutes.toString()
-      );
+      reservationDate.setHours(parseInt(this.inputValues.hours));
+      reservationDate.setMinutes(parseInt(this.inputValues.minutes));
+
+      this.inputValues.starting_at = reservationDate;
     }
   },
   computed: {

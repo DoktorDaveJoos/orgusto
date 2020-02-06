@@ -14,7 +14,7 @@
         <option
           v-for="option in parseOptions(options)"
           v-bind:key="option"
-          :value="option"
+          :value="operation ? operation(option) : option"
         >{{ operation ? operation(option) : option }} {{ unit ? unit : null }}</option>
       </select>
 

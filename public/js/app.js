@@ -6082,7 +6082,7 @@ __webpack_require__.r(__webpack_exports__);
         hours: new Date(Date.now()).getHours().toString() + " h",
         minutes: new Date(Date.now()).getMinutes().toString(),
         date: new Date(Date.now()),
-        persons: "",
+        person_count: "",
         length: "",
         accepted_from: "",
         card_color: "gray",
@@ -6099,12 +6099,25 @@ __webpack_require__.r(__webpack_exports__);
     },
     saveBtnPressed: function saveBtnPressed() {
       this.computeStartingAt();
-      console.log(this.inputValues.starting_at);
 
       if (this.errorList.length > 0) {
         this.displayError = true;
       } else {
-        console.log("send data.");
+        var request = {
+          "name": this.inputValues.name,
+          "notice": this.inputValues.notice,
+          "starting_at": this.inputValues.starting_at,
+          "person_count": this.inputValues.person_count,
+          "length": this.inputValues.length,
+          "accepted_from": this.inputValues.accepted_from
+        }; // name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
+
+        console.log(request);
+        axios.post("/reservations", request).then(function (res) {
+          return console.log(res);
+        })["catch"](function (err) {
+          return console.log(err);
+        });
         this.displayError = false;
       }
     },
@@ -6139,8 +6152,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     computeStartingAt: function computeStartingAt() {
-      console.log("year: " + this.inputValues.date.getFullYear().toString(), "month: " + this.inputValues.date.getMonth().toString(), "day: " + this.inputValues.date.getDay().toString(), "hours: " + this.inputValues.hours.toString(), "minutes: " + this.inputValues.minutes.toString());
-      this.inputValues.starting_at = new Date(this.inputValues.date.getFullYear().toString(), this.inputValues.date.getMonth().toString(), this.inputValues.date.getDay().toString(), this.inputValues.hours.toString(), this.inputValues.minutes.toString());
+      var reservationDate = new Date(Date.parse(this.inputValues.date));
+      reservationDate.setHours(parseInt(this.inputValues.hours));
+      reservationDate.setMinutes(parseInt(this.inputValues.minutes));
+      this.inputValues.starting_at = reservationDate;
     }
   },
   computed: {
@@ -37180,13 +37195,22 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _vm._l(_vm.parseOptions(_vm.options), function(option) {
-            return _c("option", { key: option, domProps: { value: option } }, [
-              _vm._v(
-                _vm._s(_vm.operation ? _vm.operation(option) : option) +
-                  " " +
-                  _vm._s(_vm.unit ? _vm.unit : null)
-              )
-            ])
+            return _c(
+              "option",
+              {
+                key: option,
+                domProps: {
+                  value: _vm.operation ? _vm.operation(option) : option
+                }
+              },
+              [
+                _vm._v(
+                  _vm._s(_vm.operation ? _vm.operation(option) : option) +
+                    " " +
+                    _vm._s(_vm.unit ? _vm.unit : null)
+                )
+              ]
+            )
           })
         ],
         2
@@ -37415,7 +37439,7 @@ var render = function() {
                   _c("orgastro-dropdown", {
                     attrs: {
                       onChange: _vm.onChange,
-                      id: "persons",
+                      id: "person_count",
                       init: "-",
                       title: "Persons",
                       options: "20"
