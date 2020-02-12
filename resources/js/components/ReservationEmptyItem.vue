@@ -280,8 +280,9 @@ export default {
 
       reservationDate.setHours(parseInt(this.inputValues.hours));
       reservationDate.setMinutes(parseInt(this.inputValues.minutes));
-
       this.inputValues.starting_at = reservationDate;
+
+      this.inputValues.starting_at = moment(this.inputValues.starting_at).format('YYYY-MM-DD HH:mm:ss');
     }
   },
   computed: {

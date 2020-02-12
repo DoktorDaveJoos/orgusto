@@ -16,8 +16,16 @@ class Reservation extends Model
     // Table Number (required) - Color - Telefonnummer (required) - Email (not required)
 
     protected $casts = [
-        'starting_at', 'created_at'
+        'starting_at' => 'datetime',
+        'created_at' => 'datetime'
     ];
+
+     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['starting_at'];
 
     public function scopeClosest($query)
     {
