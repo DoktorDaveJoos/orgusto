@@ -13,8 +13,6 @@ class Reservation extends Model
         'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
     ];
 
-    // Table Number (required) - Color - Telefonnummer (required) - Email (not required)
-
     protected $casts = [
         'starting_at' => 'datetime',
         'created_at' => 'datetime'
@@ -30,5 +28,9 @@ class Reservation extends Model
     public function scopeClosest($query)
     {
         return $query->orderBy('starting_at', 'asc');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

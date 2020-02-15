@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
-Route::redirect('/', '/reservations');
+Route::get('/', 'HomeController@index');
+Route::get('/manage', 'ManageController@index');
 
 Route::get('/reservations', 'ReservationsController@index');
 Route::get('/reservations/create', 'ReservationsController@create');
