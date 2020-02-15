@@ -25,7 +25,7 @@ class ReservationsController extends Controller
     {
         $reservations = Reservation::closest()->simplePaginate(20);
 
-        return view('home', ['reservations' => $reservations]);
+        return view('reservations', ['reservations' => $reservations]);
     }
 
     public function store(Request $request)

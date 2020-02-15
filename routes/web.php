@@ -17,10 +17,12 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index');
-Route::get('/manage', 'ManageController@index');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/manage', 'ManageController@index')->name('manage');
 
-Route::get('/reservations', 'ReservationsController@index');
+Route::get('/reservations', 'ReservationsController@index')->name('reservations');
+
+// For AJAX calls
 Route::get('/reservations/create', 'ReservationsController@create');
 
 Route::get('/reservations/{reservation}', 'ReservationsController@show');

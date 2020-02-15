@@ -3,18 +3,7 @@
 @section('content')
 <div class="flex flex-col justify-around">
 
-    <reservation-empty-item></reservation-empty-item>
+    <h1>WELCOME TO ORGASTRO</h1>
 
-    @foreach ($reservations as $reservation)
-
-    <reservation-list-item :reservation="{{ $reservation }}"></reservation-list-item>
-
-    @endforeach
-
-    <div class="flex flex-col justify-around">
-
-        {{ $reservations->links() }}
-
-    </div>
 </div>
 @endsection
