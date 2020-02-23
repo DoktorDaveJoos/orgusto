@@ -1,6 +1,7 @@
 <?php
 
 use App\Reservation;
+use App\Restaurant;
 use Illuminate\Database\Seeder;
 
 
@@ -16,7 +17,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UsersTableSeeder::class,
-            ReservationsTableSeeder::class
+            ReservationsTableSeeder::class,
+            RestaurantTableSeeder::class
         ]);
 
     }
