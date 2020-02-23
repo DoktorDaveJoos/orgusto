@@ -2,6 +2,24 @@
 
 @section('content')
 
-<div>CONTENT</div>
+
+
+<div>
+
+    <div class="w-full bg-red-600 sticky top-0 ">
+        timeline 
+    </div>
+
+    
+
+
+
+    
+
+
+</div>
+
+
+
 
 @endsection
