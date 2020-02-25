@@ -2,23 +2,24 @@
 
 @section('content')
 
+<div class="absolute mt-2 w-full flex flex-row">
 
 
-<div>
+    <div class="w-full pl-4">
 
-    <div class="w-full bg-red-600 sticky top-0 ">
-        timeline 
+        <orgastro-timeline ihour="16"></orgastro-timeline>
+
+        @foreach(range(1, Auth::user()->restaurants()->first()->table_count) as $tableNumber)
+
+        <orgastro-table tnumber="{{ $tableNumber }}"></orgastro-table>
+
+        @endforeach
     </div>
-
-    
-
-
-
-    
-
 
 </div>
 
+<!-- 
+<manage-test></manage-test> -->
 
 
 

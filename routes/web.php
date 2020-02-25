@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,8 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/manage', 'ManageController@index')->name('manage');
-
 Route::get('/reservations', 'ReservationsController@index')->name('reservations');
+Route::get('/restaurant', 'RestaurantController@index')->name('restaurant');
 
 // For AJAX calls
 Route::get('/reservations/create', 'ReservationsController@create');

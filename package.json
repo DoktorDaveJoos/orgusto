@@ -29,6 +29,7 @@
         "moment": "^2.24.0",
         "tailwindcss": "^1.1.4",
         "v-calendar": "^1.0.0-beta.23",
+        "vue-gantt-schedule-timeline-calendar": "^1.0.20",
         "vue-moment": "^4.1.0"
     }
 }

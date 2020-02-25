@@ -36,9 +36,11 @@
                 @else
 
                 <div class="w-full flex justify-between">
+
                     <div class="text-gray-600">
-                        <a class="pr-4 hover:text-blue-600 hover:border" href="{{ route('reservations') }}">{{ __('List') }}</a>
-                        <a class="hover:text-blue-600" href="{{ route('manage') }}">{{ __('Manage') }}</a>
+                        <a class="pr-4 hover:text-blue-600" href="{{ route('reservations') }}">{{ __('List') }}</a>
+                        <a class="pr-4 hover:text-blue-600" href="{{ route('manage') }}">{{ __('Manage') }}</a>
+                        <a class="pr-4 hover:text-blue-600" href="{{ route('restaurant') }}">{{ __('Restaurant') }}</a>                    
                     </div>
 
                     <div>
