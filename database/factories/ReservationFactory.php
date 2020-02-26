@@ -27,7 +27,14 @@ $factory->define(Reservation::class, function (Faker $faker) {
             'blue'
         )),
         'length' => '2',
-        'tables' => $faker->randomElements($array = array (1, 2, 3, 4, 5), $count = 1),
+        'tables' => $faker->randomElement($array = array (
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+        )),
         'accepted_from' => $faker->name
     ];
 });

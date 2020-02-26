@@ -11,7 +11,7 @@
 
         @foreach(range(1, Auth::user()->restaurants()->first()->table_count) as $tableNumber)
 
-        <orgastro-table tnumber="{{ $tableNumber }}"></orgastro-table>
+        <orgastro-table tnumber="{{ $tableNumber }}" reservations="{{ Auth::user()->reservations->where('tables', $tableNumber) }}"></orgastro-table>
 
         @endforeach
     </div>

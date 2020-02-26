@@ -35,32 +35,25 @@ export default {
     return {
       timeline: {
         currStart: moment("2020-02-25 17:00")
-      },
-      reservations: [
-        {
-          name: "Frau Müller",
-          starting_at: moment("2020-02-25 17:00"),
-          length: 1.5
-        },
-        {
-          name: "Herr Maier",
-          starting_at: moment("2020-02-25 19:30"),
-          length: 2
-        }
-      ]
+      }
     };
   },
   props: {
     tnumber: {
       type: String,
       required: true
+    },
+    reservations: {
+      type: String,
+      required: false
     }
   },
   methods: {
     slotHasReservation: function(slot) {
-      if (this.reservations.length === 0) {
+      if (JSON.parse(this.reservations).length === 0) {
         return false;
       }
+
       if (this.getReservation(slot) !== undefined) {
         return true;
       } else return false;
@@ -89,16 +82,23 @@ export default {
       const slotTime = moment(this.timeline.currStart)
         .add(slot * 15, "m")
         .toDate();
-      return this.reservations.find(
+      const d = JSON.parse(this.reservations);
+
+      let array = [];
+      Object.keys(d).forEach(a => array.push(d[a]));
+
+      
+
+      let found = array.find(
         reservation =>
-          slotTime > reservation.starting_at &&
+          slotTime > moment(reservation.starting_at) &&
           slotTime <=
             moment(reservation.starting_at)
               .add(reservation.length, "h")
               .toDate()
       );
+
     }
-  },
-  computed: {}
+  }
 };
 </script>

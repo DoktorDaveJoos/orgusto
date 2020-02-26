@@ -17,6 +17,7 @@ class CreateRestaurantsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('name');
+            $table->unsignedBigInteger('user_id');
             $table->integer('table_count');
             $table->string('contact_email')->nullable();
             $table->string('owner')->nullable();

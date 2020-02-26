@@ -6090,27 +6090,22 @@ __webpack_require__.r(__webpack_exports__);
     return {
       timeline: {
         currStart: moment("2020-02-25 17:00")
-      },
-      reservations: [{
-        name: "Frau Müller",
-        starting_at: moment("2020-02-25 17:00"),
-        length: 1.5
-      }, {
-        name: "Herr Maier",
-        starting_at: moment("2020-02-25 19:30"),
-        length: 2
-      }]
+      }
     };
   },
   props: {
     tnumber: {
       type: String,
       required: true
+    },
+    reservations: {
+      type: String,
+      required: false
     }
   },
   methods: {
     slotHasReservation: function slotHasReservation(slot) {
-      if (this.reservations.length === 0) {
+      if (JSON.parse(this.reservations).length === 0) {
         return false;
       }
 
@@ -6126,12 +6121,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     getReservation: function getReservation(slot) {
       var slotTime = moment(this.timeline.currStart).add(slot * 15, "m").toDate();
-      return this.reservations.find(function (reservation) {
-        return slotTime > reservation.starting_at && slotTime <= moment(reservation.starting_at).add(reservation.length, "h").toDate();
+      var d = JSON.parse(this.reservations);
+      var array = [];
+      Object.keys(d).forEach(function (a) {
+        return array.push(d[a]);
+      });
+      var found = array.find(function (reservation) {
+        return slotTime > moment(reservation.starting_at) && slotTime <= moment(reservation.starting_at).add(reservation.length, "h").toDate();
       });
     }
-  },
-  computed: {}
+  }
 });
 
 /***/ }),
