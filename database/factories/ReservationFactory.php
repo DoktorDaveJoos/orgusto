@@ -13,12 +13,12 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'notice' => $faker->text,
         'person_count' => $faker->randomDigitNotNull,
         'starting_at' => $faker->randomElement($array = array(
-            '2020-02-25 17:15:00',
-            '2020-02-25 17:30:00',
-            '2020-02-25 18:00:00',
-            '2020-02-25 18:45:00',
-            '2020-02-25 19:30:00',
-            '2020-02-25 19:00:00'
+            '2020-02-26 17:15:00',
+            '2020-02-26 17:30:00',
+            '2020-02-26 18:00:00',
+            '2020-02-26 18:45:00',
+            '2020-02-26 19:30:00',
+            '2020-02-26 19:00:00'
         )),
         'color' => $faker->randomElement($array = array(
             'green',

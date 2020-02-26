@@ -6084,12 +6084,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
   data: function data() {
     return {
       timeline: {
-        currStart: moment("2020-02-25 17:00")
+        currStart: moment("2020-02-26 17:00:00")
       }
     };
   },
@@ -6098,14 +6106,11 @@ __webpack_require__.r(__webpack_exports__);
       type: String,
       required: true
     },
-    reservations: {
-      type: String,
-      required: false
-    }
+    reservations: {}
   },
   methods: {
     slotHasReservation: function slotHasReservation(slot) {
-      if (JSON.parse(this.reservations).length === 0) {
+      if (this.reservations.length === 0) {
         return false;
       }
 
@@ -6115,19 +6120,35 @@ __webpack_require__.r(__webpack_exports__);
     },
     isEdgeSlot: function isEdgeSlot(slot) {
       var reservation = this.getReservation(slot);
-      var slotTimePlus = moment(this.timeline.currStart).add(slot * 15 + 1, "m").toDate();
-      var slotTime = moment(this.timeline.currStart).add(slot * 15 - 16, "m").toDate();
-      return slotTimePlus > moment(reservation.starting_at).add(reservation.length, "h").toDate() ? 1 : slotTime < reservation.starting_at ? 2 : 0;
+      var slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
+
+      if (this.tnumber === "1") {
+        console.log(reservation);
+      }
+
+      if (slotTime.isSame(reservation.starting_at)) {
+        return 2;
+      }
+
+      if (slotTime.add(15, "m").isSame(moment(reservation.starting_at).add(reservation.length, "h").toDate())) {
+        return 1;
+      }
+
+      return 0;
     },
     getReservation: function getReservation(slot) {
       var slotTime = moment(this.timeline.currStart).add(slot * 15, "m").toDate();
-      var d = JSON.parse(this.reservations);
-      var array = [];
-      Object.keys(d).forEach(function (a) {
-        return array.push(d[a]);
-      });
-      var found = array.find(function (reservation) {
+      return this.reservationsArray.find(function (reservation) {
         return slotTime > moment(reservation.starting_at) && slotTime <= moment(reservation.starting_at).add(reservation.length, "h").toDate();
+      });
+    }
+  },
+  computed: {
+    reservationsArray: function reservationsArray() {
+      var _this = this;
+
+      return Object.keys(this.reservations).map(function (key) {
+        return _this.reservations[key];
       });
     }
   }
@@ -64694,7 +64715,7 @@ var render = function() {
                         [_vm._v(" ")]
                       )
                 ])
-              : _c("div", { staticClass: "p-0 h-full" })
+              : _c("div", { staticClass: "p-0 h-full" }, [_vm._v(_vm._s(i))])
           ]
         )
       })
