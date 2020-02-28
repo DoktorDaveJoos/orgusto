@@ -6092,6 +6092,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
   data: function data() {
@@ -6122,10 +6124,6 @@ __webpack_require__.r(__webpack_exports__);
       var reservation = this.getReservation(slot);
       var slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
 
-      if (this.tnumber === "1") {
-        console.log(reservation);
-      }
-
       if (slotTime.isSame(reservation.starting_at)) {
         return 2;
       }
@@ -6137,10 +6135,13 @@ __webpack_require__.r(__webpack_exports__);
       return 0;
     },
     getReservation: function getReservation(slot) {
-      var slotTime = moment(this.timeline.currStart).add(slot * 15, "m").toDate();
+      var slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
       return this.reservationsArray.find(function (reservation) {
-        return slotTime > moment(reservation.starting_at) && slotTime <= moment(reservation.starting_at).add(reservation.length, "h").toDate();
+        return slotTime >= moment(reservation.starting_at) && slotTime < moment(reservation.starting_at).add(reservation.length, "h").toDate();
       });
+    },
+    slotColor: function slotColor(index) {
+      return "bg-" + this.getReservation(index).color + "-200";
     }
   },
   computed: {
@@ -64634,13 +64635,13 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "mx-8 my-4 bg-gray-200 rounded-full flex flex-row" },
+    { staticClass: "mx-8 my-4 bg-gray-100 rounded-full flex flex-row" },
     [
       _c(
         "div",
         {
           staticClass:
-            "w-1/6 m-0 p-2 rounded-full bg-gray-300 text-gray-600 flex flex-row"
+            "w-1/6 m-0 p-1 rounded-full bg-gray-300 text-gray-600 flex flex-row"
         },
         [
           _c("div", { staticClass: "w-1/2 text-center flex flex-col" }, [
@@ -64663,12 +64664,12 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm._l(20, function(i) {
+      _vm._l(20, function(n, i) {
         return _c(
           "div",
           {
             key: i,
-            staticClass: "m-0 flex flex-row",
+            staticClass: "flex flex-row",
             staticStyle: { width: "4.166665%" }
           },
           [
@@ -64681,7 +64682,8 @@ var render = function() {
                               "div",
                               {
                                 staticClass:
-                                  "m-0 flex flex-row w-full bg-green-300 rounded-l-full flex flex-row"
+                                  "m-0 flex flex-row w-full rounded-l-full flex flex-row",
+                                class: _vm.slotColor(i)
                               },
                               [
                                 _c(
@@ -64701,7 +64703,8 @@ var render = function() {
                               "div",
                               {
                                 staticClass:
-                                  "m-0 flex flex-row w-full bg-green-300 rounded-r-full"
+                                  "m-0 flex flex-row w-full rounded-r-full",
+                                class: _vm.slotColor(i)
                               },
                               [_vm._v(" ")]
                             )
@@ -64710,12 +64713,13 @@ var render = function() {
                     : _c(
                         "div",
                         {
-                          staticClass: "m-0 flex flex-row w-full bg-green-300"
+                          staticClass: "m-0 flex flex-row w-full",
+                          class: _vm.slotColor(i)
                         },
                         [_vm._v(" ")]
                       )
                 ])
-              : _c("div", { staticClass: "p-0 h-full" }, [_vm._v(_vm._s(i))])
+              : _c("div", { staticClass: "p-0 h-full" })
           ]
         )
       })

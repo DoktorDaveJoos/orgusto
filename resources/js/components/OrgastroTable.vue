@@ -1,7 +1,7 @@
 <template>
-  <div class="mx-8 my-4 bg-gray-200 rounded-full flex flex-row">
+  <div class="mx-8 my-4 bg-gray-100 rounded-full flex flex-row">
     <!-- Header -->
-    <div class="w-1/6 m-0 p-2 rounded-full bg-gray-300 text-gray-600 flex flex-row">
+    <div class="w-1/6 m-0 p-1 rounded-full bg-gray-300 text-gray-600 flex flex-row">
       <div class="w-1/2 text-center flex flex-col">
         <span class="font-thin text-xs">Table nr.</span>
         <span class="w-full text-center">{{ tnumber }}</span>
@@ -13,12 +13,13 @@
     </div>
 
     <!-- Body -->
-    <div v-for="i in 20" :key="i" style="width: 4.166665%" class="m-0 flex flex-row">
+    <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row">
       <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full">
         <div v-if="isEdgeSlot(i) !== 0" class="m-0 flex flex-row w-full">
           <div
             v-if="isEdgeSlot(i) === 2"
-            class="m-0 flex flex-row w-full bg-green-300 rounded-l-full flex flex-row"
+            :class="slotColor(i)"
+            class="m-0 flex flex-row w-full rounded-l-full flex flex-row"
           >
             <span
               class="absolute overflow-x-visible text-gray-700 self-center pl-4 text-sm font-light z-0"
@@ -26,12 +27,13 @@
           </div>
           <div
             v-if="isEdgeSlot(i) === 1"
-            class="m-0 flex flex-row w-full bg-green-300 rounded-r-full"
+            :class="slotColor(i)"
+            class="m-0 flex flex-row w-full rounded-r-full"
           >&nbsp;</div>
         </div>
-        <div v-else class="m-0 flex flex-row w-full bg-green-300">&nbsp;</div>
+        <div v-else :class="slotColor(i)" class="m-0 flex flex-row w-full">&nbsp;</div>
       </div>
-      <div v-else class="p-0 h-full">{{ i }}</div>
+      <div v-else class="p-0 h-full"></div>
     </div>
   </div>
 </template>
@@ -66,15 +68,7 @@ export default {
 
     isEdgeSlot: function(slot) {
       const reservation = this.getReservation(slot);
-
-      const slotTime = moment(this.timeline.currStart).add(
-        slot * 15,
-        "m"
-      );
-
-      if (this.tnumber === "1") {
-        console.log(reservation);
-      }
+      const slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
 
       if (slotTime.isSame(reservation.starting_at)) {
         return 2;
@@ -94,18 +88,20 @@ export default {
     },
 
     getReservation: function(slot) {
-      const slotTime = moment(this.timeline.currStart)
-        .add(slot * 15, "m")
-        .toDate();
+      const slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
 
       return this.reservationsArray.find(
         reservation =>
-          slotTime > moment(reservation.starting_at) &&
-          slotTime <=
+          slotTime >= moment(reservation.starting_at) &&
+          slotTime <
             moment(reservation.starting_at)
               .add(reservation.length, "h")
               .toDate()
       );
+    },
+
+    slotColor: function(index) {
+      return "bg-" + this.getReservation(index).color + "-200";
     }
   },
   computed: {
