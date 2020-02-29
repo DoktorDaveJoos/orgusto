@@ -31,7 +31,7 @@ class Reservation extends Model
     }
 
     public function table() {
-        return $this->belongsTo(Table::class);
+        return $this->belongsToMany(Table::class);
     }
 
 }

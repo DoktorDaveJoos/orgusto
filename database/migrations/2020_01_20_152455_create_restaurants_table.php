@@ -23,8 +23,6 @@ class CreateRestaurantsTable extends Migration
             $table->integer('street_number')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
-            $table->json('employees')->nullable();
-
         });
     }
 

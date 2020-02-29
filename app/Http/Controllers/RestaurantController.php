@@ -20,22 +20,18 @@ class RestaurantController extends Controller
 
     public function index()
     {
-       return view('home');
+        return view('home');
     }
 
-    public function update(Request $request, Restaurant $restaurant) {
+    public function update(Request $request, Restaurant $restaurant)
+    {
         // PATCH /restaurants/1
-
-
         return "full lord";
     }
 
     public function store(Request $request)
     {
-
-
         dd(auth()->user()->access_level);
-
-       return "gaylord";
+        return "gaylord";
     }
 }

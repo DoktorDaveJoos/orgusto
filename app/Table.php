@@ -10,11 +10,15 @@ class Table extends Model
         'seats',
     ];
 
+    public function scopeSortByTableNumber($query) {
+        return $query->orderBy('table_number', 'asc');
+    }
+
     public function restaurant() {
         return $this->belongsTo(Restaurant::class);
     }
 
     public function reservations() {
-        return $this->hasMany(Reservation::class);
+        return $this->belongsToMany(Reservation::class);
     }
 }

@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Nova\Reservation;
-use App\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ManageController extends Controller
@@ -22,8 +19,6 @@ class ManageController extends Controller
 
     public function index()
     {
-        $userData = Auth::user()->load(['restaurants.tables']);
-        dd($userData->toArray());
-        return view('manage', ['userData' => Auth::user()->load(['restaurants.tables'])]);
+        return view('manage', ['tables' => Auth::user()->restaurants->first()->tables()->sortByTableNumber()->with('reservations')->get()]);
     }
 }
