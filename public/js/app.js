@@ -6148,6 +6148,7 @@ __webpack_require__.r(__webpack_exports__);
     reservationsArray: function reservationsArray() {
       var _this = this;
 
+      console.log(this.reservations);
       return Object.keys(this.reservations).map(function (key) {
         return _this.reservations[key];
       });
@@ -6455,7 +6456,9 @@ __webpack_require__.r(__webpack_exports__);
           "starting_at": this.inputValues.starting_at,
           "person_count": this.inputValues.person_count,
           "length": this.inputValues.length,
-          "accepted_from": this.inputValues.accepted_from
+          "accepted_from": this.inputValues.accepted_from,
+          "tables": this.inputValues.tables,
+          "color": this.inputValues.card_color
         }; // name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
 
         console.log(request);

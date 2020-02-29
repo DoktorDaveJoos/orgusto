@@ -20,7 +20,6 @@ class ReservationsController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index()
     {
         $reservations = Reservation::closest()->simplePaginate(20);
@@ -35,7 +34,8 @@ class ReservationsController extends Controller
             'person_count' => 'required',
             'starting_at' => 'required|date',
             'length' => 'required',
-            'accepted_from' => 'required'
+            'accepted_from' => 'required',
+            'tables' => 'required'
         ]);
 
         $reservation = Reservation::create(array_merge($request->all(), ['user_id' => Auth::id()]));

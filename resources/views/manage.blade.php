@@ -9,9 +9,19 @@
 
         <orgastro-timeline ihour="16"></orgastro-timeline>
 
-        @foreach(range(1, Auth::user()->restaurants()->first()->table_count) as $tableNumber)
+        @php
+        $filterByTable = function ($arrayToFilter, $number) {
+                if (in_array($number, $arrayToFilter['tables'])) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            };
+        @endphp
 
-        <orgastro-table tnumber="{{ $tableNumber }}" :reservations='@json(Auth::user()->reservations->where("tables", $tableNumber))'></orgastro-table>
+        @foreach(range(1, $userData->restaurants[0]->table_count) as $tableNumber)
+
+        <orgastro-table :tnumber="{{ $tableNumber }}" :reservations="{{ array_filter($userData->reservations->toArray(), $filterByTable, $tableNumber) }}"></orgastro-table>
 
         @endforeach
     </div>

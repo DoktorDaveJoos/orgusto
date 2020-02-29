@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Nova\Reservation;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManageController extends Controller
 {
@@ -20,6 +23,8 @@ class ManageController extends Controller
 
     public function index()
     {
-        return view('manage');
+        $userData = User::with(['reservations', 'restaurants'])->find(Auth::user()->id);
+        // dd($userData->reservations->toArray());
+        return view('manage', ['userData' => $userData]);
     }
 }

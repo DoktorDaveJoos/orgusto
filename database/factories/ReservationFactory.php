@@ -8,7 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(Reservation::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'user_id' => 1,
         'created_at' => now(),
         'notice' => $faker->text,
         'person_count' => $faker->randomDigitNotNull,
@@ -22,15 +21,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
             'gray',
             'blue'
         )),
-        'length' => '2',
-        'tables' => $faker->randomElement($array = array (
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-        )),
+        'length' => $faker->randomElements($array = array (1.5,2,1), $count = 1),
         'accepted_from' => $faker->name
     ];
 });

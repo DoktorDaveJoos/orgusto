@@ -13,7 +13,6 @@ class RestaurantTableSeeder extends Seeder
     {
         DB::table('restaurants')->insert([
             'name' => 'Amboss',
-            'table_count' => 20,
             'user_id' => 1,
             'employees' => '["Felix Forstenhäusler", "David Joos"]'
         ]);

@@ -14,21 +14,20 @@ class CreateReservationsTable extends Migration
     public function up()
     {
         Schema::create('reservations', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('table_id');
             $table->timestamps();
             $table->string('name');
             $table->integer('length');
-            $table->bigIncrements('id');
             $table->string('accepted_from');
             $table->integer('person_count');
             $table->dateTime('starting_at');
-            $table->unsignedBigInteger('user_id');
             $table->text('notice')->nullable();
-            $table->json('tables')->nullable();
             $table->string('color')->nullable();
             $table->string('email')->nullable();
             $table->string('phone_numer')->nullable();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
         }); 
     }
 

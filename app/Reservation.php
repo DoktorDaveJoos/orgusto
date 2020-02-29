@@ -10,12 +10,12 @@ class Reservation extends Model
     use Notifiable;
 
     protected $fillable = [
-        'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'user_id'
+        'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'color', 'email', 'phone_number'
     ];
 
     protected $casts = [
         'starting_at' => 'datetime',
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
 
      /**
@@ -30,7 +30,8 @@ class Reservation extends Model
         return $query->orderBy('starting_at', 'asc');
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function table() {
+        return $this->belongsTo(Table::class);
     }
+
 }

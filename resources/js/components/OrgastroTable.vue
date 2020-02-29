@@ -106,6 +106,7 @@ export default {
   },
   computed: {
     reservationsArray: function() {
+      console.log(this.reservations);
       return Object.keys(this.reservations).map(key => this.reservations[key]);
     }
   }
