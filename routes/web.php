@@ -22,6 +22,8 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/manage', 'ManageController@index')->name('manage');
 Route::get('/reservations', 'ReservationsController@index')->name('reservations');
 Route::get('/restaurant', 'RestaurantController@index')->name('restaurant');
+Route::post('/restaurant', 'RestaurantController@store')->name('restaurant.store');
+Route::patch('/restaurant/{restaurant}', 'RestaurantController@update')->name('restaurant.update');
 
 // For AJAX calls
 Route::get('/reservations/create', 'ReservationsController@create');

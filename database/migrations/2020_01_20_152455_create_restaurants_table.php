@@ -17,7 +17,6 @@ class CreateRestaurantsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('name');
-            $table->unsignedBigInteger('user_id');
             $table->string('contact_email')->nullable();
             $table->string('owner')->nullable();
             $table->string('street')->nullable();
@@ -25,8 +24,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
             $table->json('employees')->nullable();
-            
-            $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Restaurant;
 use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
@@ -14,11 +15,27 @@ class RestaurantController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Restaurant::class, 'restaurant');
     }
-
 
     public function index()
     {
        return view('home');
+    }
+
+    public function update(Request $request, Restaurant $restaurant) {
+        // PATCH /restaurants/1
+
+
+        return "full lord";
+    }
+
+    public function store(Request $request)
+    {
+
+
+        dd(auth()->user()->access_level);
+
+       return "gaylord";
     }
 }

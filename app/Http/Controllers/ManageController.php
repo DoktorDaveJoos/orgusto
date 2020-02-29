@@ -20,11 +20,10 @@ class ManageController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index()
     {
-        $userData = User::with(['reservations', 'restaurants'])->find(Auth::user()->id);
-        // dd($userData->reservations->toArray());
-        return view('manage', ['userData' => $userData]);
+        $userData = Auth::user()->load(['restaurants.tables']);
+        dd($userData->toArray());
+        return view('manage', ['userData' => Auth::user()->load(['restaurants.tables'])]);
     }
 }

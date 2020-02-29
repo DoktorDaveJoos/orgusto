@@ -15,9 +15,9 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('table_id');
             $table->timestamps();
             $table->string('name');
+            $table->unsignedBigInteger('table_id');
             $table->integer('length');
             $table->string('accepted_from');
             $table->integer('person_count');
@@ -26,9 +26,10 @@ class CreateReservationsTable extends Migration
             $table->string('color')->nullable();
             $table->string('email')->nullable();
             $table->string('phone_numer')->nullable();
-
+            
             $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
-        }); 
+        });
+
     }
 
     /**

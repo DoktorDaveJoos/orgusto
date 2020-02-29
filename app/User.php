@@ -39,6 +39,6 @@ class User extends Authenticatable
 
     public function restaurants()
     {
-        return $this->hasMany(Restaurant::class);
+        return $this->belongsToMany(Restaurant::class)->withPivot(['role']);
     }
 }

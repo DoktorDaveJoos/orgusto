@@ -1,6 +1,9 @@
 <?php
 
+use App\Restaurant;
+use App\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class RestaurantTableSeeder extends Seeder
 {
@@ -11,10 +14,12 @@ class RestaurantTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('restaurants')->insert([
-            'name' => 'Amboss',
-            'user_id' => 1,
-            'employees' => '["Felix Forstenhäusler", "David Joos"]'
-        ]);
+
+        $user = User::first();
+        $user->restaurants()->save(
+            Restaurant::create(['name' => 'Amboss']),
+            ['role' => 'admin']
+        );
+
     }
 }
