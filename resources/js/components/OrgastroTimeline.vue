@@ -1,5 +1,5 @@
 <template>
-  <div class="py-2 text-center sticky top-0 bg-white mx-8 z-10">
+  <div class="py-2 text-center sticky top-0 bg-white mx-8" style="z-index: 5;">
     <div class="w-full flex flex-row">
       <div class="w-1/6 border-r text-gray-600 font-light text-lg text-right"><span class="p-2">Hours</span></div>
       <div class="w-1/6 border-r text-gray-600 font-light text-lg text-left" v-for="i in 5" :key="i">

@@ -1,7 +1,7 @@
 <template>
   <div class="mx-8 my-4 bg-gray-100 rounded-full flex flex-row">
     <!-- Header -->
-    <div class="w-1/6 m-0 p-1 rounded-full bg-gray-300 text-gray-600 flex flex-row">
+    <div class="w-1/6 m-0 p-1 rounded-l-full bg-gray-300 text-gray-600 flex flex-row">
       <div class="w-1/2 text-center flex flex-col">
         <span class="font-thin text-xs">Table nr.</span>
         <span class="w-full text-center">{{ tnumber }}</span>
@@ -18,8 +18,8 @@
         <div v-if="isEdgeSlot(i) !== 0" class="m-0 flex flex-row w-full">
           <div
             v-if="isEdgeSlot(i) === 2"
-            :class="slotColor(i)"
-            class="m-0 flex flex-row w-full rounded-l-full flex flex-row"
+            :class="slotColorAndBorder(i)"
+            class="m-0 flex flex-row w-full flex flex-row"
           >
             <span
               class="absolute overflow-x-visible text-gray-700 self-center pl-4 text-sm font-light z-0"
@@ -50,7 +50,7 @@ export default {
   },
   props: {
     tnumber: {
-      type: String,
+      type: Number,
       required: true
     },
     reservations: {}
@@ -100,13 +100,18 @@ export default {
       );
     },
 
+    slotColorAndBorder: function(index) {
+      return [
+        "bg-" + this.getReservation(index).color + "-200",
+        index === 0 ? null : "rounded-l-full"
+      ]
+    },
     slotColor: function(index) {
       return "bg-" + this.getReservation(index).color + "-200";
     }
   },
   computed: {
     reservationsArray: function() {
-      console.log(this.reservations);
       return Object.keys(this.reservations).map(key => this.reservations[key]);
     }
   }

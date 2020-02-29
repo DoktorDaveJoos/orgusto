@@ -6105,7 +6105,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: {
     tnumber: {
-      type: String,
+      type: Number,
       required: true
     },
     reservations: {}
@@ -6140,6 +6140,9 @@ __webpack_require__.r(__webpack_exports__);
         return slotTime >= moment(reservation.starting_at) && slotTime < moment(reservation.starting_at).add(reservation.length, "h").toDate();
       });
     },
+    slotColorAndBorder: function slotColorAndBorder(index) {
+      return ["bg-" + this.getReservation(index).color + "-200", index === 0 ? null : "rounded-l-full"];
+    },
     slotColor: function slotColor(index) {
       return "bg-" + this.getReservation(index).color + "-200";
     }
@@ -6148,7 +6151,6 @@ __webpack_require__.r(__webpack_exports__);
     reservationsArray: function reservationsArray() {
       var _this = this;
 
-      console.log(this.reservations);
       return Object.keys(this.reservations).map(function (key) {
         return _this.reservations[key];
       });
@@ -6226,15 +6228,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-timepicker",
   data: function data() {
     return {
-      attributes: [{
-        key: "today",
-        highlight: true,
-        dates: new Date()
-      }]
+      date: new Date(),
+      inputProps: {
+        "class": "text-gray-600 rounded-b-lg bg-gray-300 text-center w-full pb-2 cursor-pointer"
+      }
     };
   }
 });
@@ -64644,7 +64648,7 @@ var render = function() {
         "div",
         {
           staticClass:
-            "w-1/6 m-0 p-1 rounded-full bg-gray-300 text-gray-600 flex flex-row"
+            "w-1/6 m-0 p-1 rounded-l-full bg-gray-300 text-gray-600 flex flex-row"
         },
         [
           _c("div", { staticClass: "w-1/2 text-center flex flex-col" }, [
@@ -64685,8 +64689,8 @@ var render = function() {
                               "div",
                               {
                                 staticClass:
-                                  "m-0 flex flex-row w-full rounded-l-full flex flex-row",
-                                class: _vm.slotColor(i)
+                                  "m-0 flex flex-row w-full flex flex-row",
+                                class: _vm.slotColorAndBorder(i)
                               },
                               [
                                 _c(
@@ -64754,7 +64758,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "py-2 text-center sticky top-0 bg-white mx-8 z-10" },
+    {
+      staticClass: "py-2 text-center sticky top-0 bg-white mx-8",
+      staticStyle: { "z-index": "5" }
+    },
     [
       _c(
         "div",
@@ -64866,22 +64873,39 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "sticky top-0 p-2" },
+    { staticClass: "flex flex-col" },
     [
-      _c("vc-calendar", {
+      _vm._m(0),
+      _vm._v(" "),
+      _c("vc-date-picker", {
+        attrs: { "input-props": _vm.inputProps, "input-debounce": 500 },
         model: {
-          value: this.attributes,
+          value: _vm.date,
           callback: function($$v) {
-            _vm.$set(this, "attributes", $$v)
+            _vm.date = $$v
           },
-          expression: "this.attributes"
+          expression: "date"
         }
       })
     ],
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "text-left text-sm text-gray-600 font-thin text-center bg-gray-300 rounded-t-lg"
+      },
+      [_c("span", { staticClass: "w-1/3" }, [_vm._v("Date")])]
+    )
+  }
+]
 render._withStripped = true
 
 
