@@ -6228,16 +6228,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-timepicker",
   data: function data() {
     return {
       date: new Date(),
       inputProps: {
-        "class": "text-gray-600 rounded-b-lg bg-gray-300 text-center w-full pb-2 cursor-pointer"
+        "class": "text-gray-600 rounded-full bg-gray-300 text-center w-full pb-2 cursor-pointer"
       }
     };
   }
@@ -64688,8 +64685,7 @@ var render = function() {
                           ? _c(
                               "div",
                               {
-                                staticClass:
-                                  "m-0 flex flex-row w-full flex flex-row",
+                                staticClass: "m-0 flex flex-row w-full",
                                 class: _vm.slotColorAndBorder(i)
                               },
                               [
@@ -64871,41 +64867,18 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "flex flex-col" },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c("vc-date-picker", {
-        attrs: { "input-props": _vm.inputProps, "input-debounce": 500 },
-        model: {
-          value: _vm.date,
-          callback: function($$v) {
-            _vm.date = $$v
-          },
-          expression: "date"
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "text-left text-sm text-gray-600 font-thin text-center bg-gray-300 rounded-t-lg"
+  return _c("vc-date-picker", {
+    attrs: { "input-props": _vm.inputProps, "input-debounce": 500 },
+    model: {
+      value: _vm.date,
+      callback: function($$v) {
+        _vm.date = $$v
       },
-      [_c("span", { staticClass: "w-1/3" }, [_vm._v("Date")])]
-    )
-  }
-]
+      expression: "date"
+    }
+  })
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

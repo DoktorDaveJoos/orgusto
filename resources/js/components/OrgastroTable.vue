@@ -19,7 +19,7 @@
           <div
             v-if="isEdgeSlot(i) === 2"
             :class="slotColorAndBorder(i)"
-            class="m-0 flex flex-row w-full flex flex-row"
+            class="m-0 flex flex-row w-full"
           >
             <span
               class="absolute overflow-x-visible text-gray-700 self-center pl-4 text-sm font-light z-0"
