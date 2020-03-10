@@ -14,10 +14,10 @@
                     <orgastro-timepicker></orgastro-timepicker>
                 </div>
                 <div class="w-5/6 flex flex-row justify-between px-1 self-stretch">
-                    <button class="text-gray-600  hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none">
+                    <button class="text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <button class="text-gray-600  hover:bg-gray-300 w-1/12 h-full rounded-lg focus:outline-none">
+                    <button class="text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>

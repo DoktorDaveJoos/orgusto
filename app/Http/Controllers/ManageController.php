@@ -25,14 +25,12 @@ class ManageController extends Controller
     public function byDate($date)
     {
 
-
         $tables = Auth::user()->restaurants()->first()->tables()->with(['reservations' => function ($query) {
             $query->whereBetween('starting_at', [date('2020-01-01'), date('2020-02-26 18:00:00')]);
         }])->get();
 
-
-
         dd($tables->toArray());
         return view('manage', ['tables' => Auth::user()->restaurants->first()->tables()->sortByTableNumber()->reservations->whereBetween('starting_at', [$from, $to])->get()]);
+    
     }
 }
