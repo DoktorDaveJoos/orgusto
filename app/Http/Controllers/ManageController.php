@@ -22,15 +22,17 @@ class ManageController extends Controller
         return view('manage', ['tables' => Auth::user()->restaurants->first()->tables()->sortByTableNumber()->with('reservations')->get()]);
     }
 
-    public function byDate($date)
+    public function scoped($date, $scopedHour)
     {
 
-        $tables = Auth::user()->restaurants()->first()->tables()->with(['reservations' => function ($query) {
-            $query->whereBetween('starting_at', [date('2020-01-01'), date('2020-02-26 18:00:00')]);
-        }])->get();
+        $from = date($date." 00:00:00");
+        $to = date($date." 23:59:59");
 
-        dd($tables->toArray());
-        return view('manage', ['tables' => Auth::user()->restaurants->first()->tables()->sortByTableNumber()->reservations->whereBetween('starting_at', [$from, $to])->get()]);
+        $tables = Auth::user()->restaurants()->first()->tables()->with(['reservations' => function ($query) use($from, $to) {
+            $query->whereBetween('starting_at', [$from, $to]);
+        }])->sortByTableNumber()->get();
+
+        return view('manage', ['tables' => $tables, 'date' => $date, 'scopedHour' => $scopedHour]);
     
     }
 }

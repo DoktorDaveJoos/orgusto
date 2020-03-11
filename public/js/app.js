@@ -6238,7 +6238,103 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     date: function date(newDate, oldDate) {
-      location.href = location.href + "&date=" + moment(newDate).format('YYYY-MM-DD');
+      this.$bus.$emit("scopeEvent", {
+        msg: "scope event",
+        type: "date",
+        value: moment(newDate).format("YYYY-MM-DD")
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeButton.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoScopeButton.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "orgusto-scope-button",
+  props: {
+    direction: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$bus.$emit("scopeEvent", {
+        msg: "scope event",
+        type: "scopeHour",
+        value: this.direction
+      });
+    }
+  },
+  computed: {
+    iconClass: function iconClass() {
+      return "fas fa-chevron-" + this.direction;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeManager.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoScopeManager.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "orgusto-scope-manager",
+  props: {
+    date: {
+      type: String,
+      required: true
+    },
+    scope: {
+      type: String,
+      required: true
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // Register event listener
+    this.$bus.$on("scopeEvent", function (event) {
+      return _this.handleEvent(event);
+    });
+  },
+  methods: {
+    handleEvent: function handleEvent(event) {
+      console.log(window.location);
+
+      if (event.type === "date") {
+        location.href = window.location.origin + "/manage/" + event.value + "/" + this.scope;
+      }
+
+      if (event.type === "scopeHour") {
+        location.href = window.location.origin + "/manage/" + this.date + "/" + event.value;
+      }
     }
   }
 });
@@ -64778,7 +64874,7 @@ var render = function() {
               },
               [
                 _c("span", { staticClass: "p-1" }, [
-                  _vm._v(_vm._s(_vm.mapToHour(i)))
+                  _vm._v(_vm._s(_vm.mapToHour(i - 1)))
                 ])
               ]
             )
@@ -64880,6 +64976,66 @@ var render = function() {
       expression: "date"
     }
   })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeButton.vue?vue&type=template&id=3264a5d8&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoScopeButton.vue?vue&type=template&id=3264a5d8& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "button",
+    {
+      staticClass:
+        "text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.handleClick()
+        }
+      }
+    },
+    [_c("i", { class: _vm.iconClass })]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82339,6 +82495,8 @@ var map = {
 	"./components/OrgastroTable.vue": "./resources/js/components/OrgastroTable.vue",
 	"./components/OrgastroTimeline.vue": "./resources/js/components/OrgastroTimeline.vue",
 	"./components/OrgastroTimepicker.vue": "./resources/js/components/OrgastroTimepicker.vue",
+	"./components/OrgustoScopeButton.vue": "./resources/js/components/OrgustoScopeButton.vue",
+	"./components/OrgustoScopeManager.vue": "./resources/js/components/OrgustoScopeManager.vue",
 	"./components/ReservationEmptyItem.vue": "./resources/js/components/ReservationEmptyItem.vue",
 	"./components/ReservationListItem.vue": "./resources/js/components/ReservationListItem.vue"
 };
@@ -82410,13 +82568,26 @@ files.keys().map(function (key) {
 // Vue.component('reservation-list-item', require('./components/ReservationListItem.vue').default);
 
 /**
+ * Event Bus for inter vue component communication
+ */
+
+Object.defineProperty(Vue.prototype, '$bus', {
+  get: function get() {
+    return this.$root.bus;
+  }
+});
+var bus = new Vue({});
+/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
 var app = new Vue({
-  el: '#app'
+  el: '#app',
+  data: {
+    bus: bus
+  }
 });
 
 /***/ }),
@@ -82874,6 +83045,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgastroTimepicker_vue_vue_type_template_id_f9b35afe___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgastroTimepicker_vue_vue_type_template_id_f9b35afe___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoScopeButton.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/OrgustoScopeButton.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OrgustoScopeButton_vue_vue_type_template_id_3264a5d8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrgustoScopeButton.vue?vue&type=template&id=3264a5d8& */ "./resources/js/components/OrgustoScopeButton.vue?vue&type=template&id=3264a5d8&");
+/* harmony import */ var _OrgustoScopeButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrgustoScopeButton.vue?vue&type=script&lang=js& */ "./resources/js/components/OrgustoScopeButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrgustoScopeButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrgustoScopeButton_vue_vue_type_template_id_3264a5d8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _OrgustoScopeButton_vue_vue_type_template_id_3264a5d8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/OrgustoScopeButton.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoScopeButton.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/OrgustoScopeButton.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./OrgustoScopeButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoScopeButton.vue?vue&type=template&id=3264a5d8&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/OrgustoScopeButton.vue?vue&type=template&id=3264a5d8& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeButton_vue_vue_type_template_id_3264a5d8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./OrgustoScopeButton.vue?vue&type=template&id=3264a5d8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeButton.vue?vue&type=template&id=3264a5d8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeButton_vue_vue_type_template_id_3264a5d8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeButton_vue_vue_type_template_id_3264a5d8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoScopeManager.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/OrgustoScopeManager.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OrgustoScopeManager_vue_vue_type_template_id_60bdf0bb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb& */ "./resources/js/components/OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb&");
+/* harmony import */ var _OrgustoScopeManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrgustoScopeManager.vue?vue&type=script&lang=js& */ "./resources/js/components/OrgustoScopeManager.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrgustoScopeManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrgustoScopeManager_vue_vue_type_template_id_60bdf0bb___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _OrgustoScopeManager_vue_vue_type_template_id_60bdf0bb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/OrgustoScopeManager.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoScopeManager.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/OrgustoScopeManager.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./OrgustoScopeManager.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeManager.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeManager_vue_vue_type_template_id_60bdf0bb___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoScopeManager.vue?vue&type=template&id=60bdf0bb&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeManager_vue_vue_type_template_id_60bdf0bb___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoScopeManager_vue_vue_type_template_id_60bdf0bb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

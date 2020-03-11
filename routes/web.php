@@ -21,7 +21,8 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/manage', 'ManageController@index')->name('manage');
-Route::get('/manage/{date}', 'ManageController@byDate')->name('manage.byDate');
+Route::redirect('/manage', '/manage/'.date('Y-m-d').'/16');
+Route::get('/manage/{date}/{scopeHour}', 'ManageController@scoped')->name('manage.scoped');
 
 Route::get('/restaurant', 'RestaurantController@index')->name('restaurant');
 Route::post('/restaurant', 'RestaurantController@store')->name('restaurant.store');

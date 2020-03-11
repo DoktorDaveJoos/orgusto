@@ -33,6 +33,19 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 // Vue.component('delete-button', require('./components/DeleteButton.vue').default);
 // Vue.component('reservation-list-item', require('./components/ReservationListItem.vue').default);
 
+
+/**
+ * Event Bus for inter vue component communication
+ */
+
+Object.defineProperty(Vue.prototype, '$bus', {
+    get() {
+        return this.$root.bus;
+    }
+});
+
+var bus = new Vue({});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -41,4 +54,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 const app = new Vue({
     el: '#app',
+    data: {
+        bus: bus
+    }
 });

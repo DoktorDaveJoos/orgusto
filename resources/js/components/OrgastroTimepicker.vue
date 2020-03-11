@@ -16,8 +16,11 @@ export default {
   },
   watch: {
     date: function(newDate, oldDate) {
-      
-      location.href = location.href + "&date=" + moment(newDate).format('YYYY-MM-DD');
+      this.$bus.$emit("scopeEvent", {
+        msg: "scope event",
+        type: "date",
+        value: moment(newDate).format("YYYY-MM-DD")
+      })
     }
   }
 };

@@ -104,7 +104,7 @@ export default {
       return [
         "bg-" + this.getReservation(index).color + "-200",
         index === 0 ? null : "rounded-l-full"
-      ]
+      ];
     },
     slotColor: function(index) {
       return "bg-" + this.getReservation(index).color + "-200";

@@ -4,29 +4,25 @@
 
 <div class="absolute mt-2 w-full flex flex-row">
 
+    <orgusto-scope-manager date="{{ $date ?? date('Y-m-d') }}" scope="{{ $scopedHour ?? '17' }}"></orgusto-scope-manager>
+
 
     <div class="w-full pl-4">
-
         <div class="mx-8">
-
             <div class="flex flex-row py-4">
                 <div class="w-1/6">
                     <orgastro-timepicker></orgastro-timepicker>
                 </div>
                 <div class="w-5/6 flex flex-row justify-between px-1 self-stretch">
-                    <button class="text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <orgusto-scope-button direction="left"></orgusto-scope-button>
+                    <orgusto-scope-button direction="right"></orgusto-scope-button>
                 </div>
             </div>
 
 
         </div>
 
-        <orgastro-timeline ihour="16"></orgastro-timeline>
+        <orgastro-timeline ihour="{{ $scopedHour ?? '16' }}"></orgastro-timeline>
 
         @foreach($tables as $table)
 

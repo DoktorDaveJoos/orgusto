@@ -3,7 +3,7 @@
     <div class="w-full flex flex-row">
       <div class="w-1/6 border-r text-gray-600 font-light text-lg text-right"><span class="p-2">Hours</span></div>
       <div class="w-1/6 border-r text-gray-600 font-light text-lg text-left" v-for="i in 5" :key="i">
-        <span class="p-1">{{ mapToHour(i) }}</span>
+        <span class="p-1">{{ mapToHour(i - 1) }}</span>
       </div>
     </div>
     <div class="w-full flex flex-row">
