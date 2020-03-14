@@ -23,16 +23,15 @@ export default {
 
       if (event.type === "date") {
         location.href =
-          window.location.origin +
-          "/manage/" +
-          event.value +
-          "/" +
-          this.scope;
+          window.location.origin + "/manage/" + event.value + "/" + this.scope;
       }
 
       if (event.type === "scopeHour") {
+
+        const newScope = event.value === "left" ? parseInt(this.scope) - 1 : parseInt(this.scope) + 1;
+
         location.href =
-          window.location.origin + "/manage/" + this.date + "/" + event.value;
+            window.location.origin + "/manage/" + this.date + "/" + newScope;
       }
     }
   }

@@ -6096,19 +6096,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
-  data: function data() {
-    return {
-      timeline: {
-        currStart: moment("2020-02-26 17:00:00")
-      }
-    };
-  },
   props: {
     tnumber: {
       type: Number,
       required: true
     },
-    reservations: {}
+    reservations: Array,
+    timelineStart: String
   },
   methods: {
     slotHasReservation: function slotHasReservation(slot) {
@@ -6122,7 +6116,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     isEdgeSlot: function isEdgeSlot(slot) {
       var reservation = this.getReservation(slot);
-      var slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
+      var slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
       if (slotTime.isSame(reservation.starting_at)) {
         return 2;
@@ -6135,7 +6129,7 @@ __webpack_require__.r(__webpack_exports__);
       return 0;
     },
     getReservation: function getReservation(slot) {
-      var slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
+      var slotTime = moment(this.timelineStart).add(slot * 15, "m");
       return this.reservationsArray.find(function (reservation) {
         return slotTime >= moment(reservation.starting_at) && slotTime < moment(reservation.starting_at).add(reservation.length, "h").toDate();
       });
@@ -6333,7 +6327,8 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (event.type === "scopeHour") {
-        location.href = window.location.origin + "/manage/" + this.date + "/" + event.value;
+        var newScope = event.value === "left" ? parseInt(this.scope) - 1 : parseInt(this.scope) + 1;
+        location.href = window.location.origin + "/manage/" + this.date + "/" + newScope;
       }
     }
   }

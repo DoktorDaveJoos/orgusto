@@ -26,7 +26,7 @@
 
         @foreach($tables as $table)
 
-        <orgastro-table :tnumber="{{ $table->table_number }}" :reservations="{{ $table->reservations }}"></orgastro-table>
+        <orgastro-table timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tnumber="{{ $table->table_number }}" :reservations="{{ $table->reservations }}"></orgastro-table>
 
         @endforeach
     </div>

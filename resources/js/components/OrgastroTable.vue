@@ -41,19 +41,13 @@
 <script>
 export default {
   name: "orgastro-table",
-  data() {
-    return {
-      timeline: {
-        currStart: moment("2020-02-26 17:00:00")
-      }
-    };
-  },
   props: {
     tnumber: {
       type: Number,
       required: true
     },
-    reservations: {}
+    reservations: Array,
+    timelineStart: String
   },
   methods: {
     slotHasReservation: function(slot) {
@@ -68,7 +62,7 @@ export default {
 
     isEdgeSlot: function(slot) {
       const reservation = this.getReservation(slot);
-      const slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
+      const slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
       if (slotTime.isSame(reservation.starting_at)) {
         return 2;
@@ -88,7 +82,7 @@ export default {
     },
 
     getReservation: function(slot) {
-      const slotTime = moment(this.timeline.currStart).add(slot * 15, "m");
+      const slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
       return this.reservationsArray.find(
         reservation =>
