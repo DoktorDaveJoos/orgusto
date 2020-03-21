@@ -6,7 +6,6 @@
 
     <orgusto-scope-manager date="{{ $date ?? date('Y-m-d') }}" scope="{{ $scopedHour ?? '17' }}"></orgusto-scope-manager>
 
-
     <div class="w-full pl-4">
         <div class="mx-8">
             <div class="flex flex-row py-4">
@@ -22,7 +21,7 @@
 
         </div>
 
-        <orgastro-timeline ihour="{{ $scopedHour ?? '16' }}"></orgastro-timeline>
+        <orgastro-timeline ihour="{{ $scopedHour ?? '17' }}"></orgastro-timeline>
 
         @foreach($tables as $table)
 

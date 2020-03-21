@@ -6094,6 +6094,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
   props: {
@@ -6320,15 +6324,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleEvent: function handleEvent(event) {
-      console.log(window.location);
-
       if (event.type === "date") {
-        location.href = window.location.origin + "/manage/" + event.value + "/" + this.scope;
+        location.href = window.location.origin + "/manage?date=" + event.value + "&hour=" + this.scope;
       }
 
       if (event.type === "scopeHour") {
         var newScope = event.value === "left" ? parseInt(this.scope) - 1 : parseInt(this.scope) + 1;
-        location.href = window.location.origin + "/manage/" + this.date + "/" + newScope;
+        location.href = window.location.origin + "/manage?date=" + this.date + "&hour=" + newScope;
       }
     }
   }
@@ -64816,7 +64818,9 @@ var render = function() {
                         [_vm._v(" ")]
                       )
                 ])
-              : _c("div", { staticClass: "p-0 h-full" })
+              : _c("div", { staticClass: "p-0 h-full flex flex-row w-full" }, [
+                  _vm._m(0, true)
+                ])
           ]
         )
       })
@@ -64824,7 +64828,16 @@ var render = function() {
     2
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "self-center w-full text-center" }, [
+      _c("i", { staticClass: "fas fa-plus" })
+    ])
+  }
+]
 render._withStripped = true
 
 

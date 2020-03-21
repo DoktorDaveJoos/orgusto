@@ -33,7 +33,11 @@
         </div>
         <div v-else :class="slotColor(i)" class="m-0 flex flex-row w-full">&nbsp;</div>
       </div>
-      <div v-else class="p-0 h-full"></div>
+      <div v-else class="p-0 h-full flex flex-row w-full">
+        <div class="self-center w-full text-center">
+          <i class="fas fa-plus"></i>
+        </div>
+      </div>
     </div>
   </div>
 </template>
