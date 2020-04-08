@@ -33,12 +33,17 @@
         </div>
         <div v-else :class="slotColor(i)" class="m-0 flex flex-row w-full">&nbsp;</div>
       </div>
-      <div v-else class="p-0 h-full flex flex-row w-full">
+      <div
+        v-else
+        class="p-0 flex flex-row w-full text-gray-200 hover:text-gray-400 cursor-pointer"
+        @click="addNewReservationAt(i)"
+      >
         <div class="self-center w-full text-center">
           <i class="fas fa-plus"></i>
         </div>
       </div>
     </div>
+    <orgusto-modal-wrapper :is-open="modalIsOpen"></orgusto-modal-wrapper>
   </div>
 </template>
 
@@ -52,6 +57,11 @@ export default {
     },
     reservations: Array,
     timelineStart: String
+  },
+  data() {
+    return {
+      modalIsOpen: false
+    };
   },
   methods: {
     slotHasReservation: function(slot) {
@@ -81,7 +91,6 @@ export default {
       ) {
         return 1;
       }
-
       return 0;
     },
 
@@ -106,6 +115,11 @@ export default {
     },
     slotColor: function(index) {
       return "bg-" + this.getReservation(index).color + "-200";
+    },
+    addNewReservationAt: function(slot) {
+      const slotTime = moment(this.timelineStart).add(slot * 15, "m");
+      console.log("should be changed");
+      this.modalIsOpen = true;
     }
   },
   computed: {

@@ -10,7 +10,7 @@
         <div class="mx-8">
             <div class="flex flex-row py-4">
                 <div class="w-1/6">
-                    <orgastro-timepicker></orgastro-timepicker>
+                    <orgastro-timepicker date="{{ $date }}"></orgastro-timepicker>
                 </div>
                 <div class="w-5/6 flex flex-row justify-between px-1 self-stretch">
                     <orgusto-scope-button direction="left"></orgusto-scope-button>

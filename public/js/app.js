@@ -6098,6 +6098,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
   props: {
@@ -6107,6 +6112,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     reservations: Array,
     timelineStart: String
+  },
+  data: function data() {
+    return {
+      modalIsOpen: false
+    };
   },
   methods: {
     slotHasReservation: function slotHasReservation(slot) {
@@ -6143,6 +6153,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     slotColor: function slotColor(index) {
       return "bg-" + this.getReservation(index).color + "-200";
+    },
+    addNewReservationAt: function addNewReservationAt(slot) {
+      var slotTime = moment(this.timelineStart).add(slot * 15, "m");
+      console.log("should be changed");
+      this.modalIsOpen = true;
     }
   },
   computed: {
@@ -6226,13 +6241,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-timepicker",
+  props: {
+    date: {
+      type: String,
+      required: true
+    }
+  },
   data: function data() {
     return {
-      date: new Date(),
       inputProps: {
         "class": "text-gray-600 rounded-full bg-gray-300 py-2 text-center w-full cursor-pointer self-center"
       }
     };
+  },
+  computed: {
+    computedDate: {
+      get: function get() {
+        return new Date(this.date);
+      },
+      set: function set(val) {
+        if (!moment(this.date).isSame(moment(val), 'date')) {
+          this.date = val;
+        }
+      }
+    }
   },
   watch: {
     date: function date(newDate, oldDate) {
@@ -6241,6 +6273,101 @@ __webpack_require__.r(__webpack_exports__);
         type: "date",
         value: moment(newDate).format("YYYY-MM-DD")
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoModalWrapper.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoModalWrapper.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "orgusto-modal-wrapper",
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true
     }
   }
 });
@@ -64818,12 +64945,24 @@ var render = function() {
                         [_vm._v(" ")]
                       )
                 ])
-              : _c("div", { staticClass: "p-0 h-full flex flex-row w-full" }, [
-                  _vm._m(0, true)
-                ])
+              : _c(
+                  "div",
+                  {
+                    staticClass:
+                      "p-0 flex flex-row w-full text-gray-200 hover:text-gray-400 cursor-pointer",
+                    on: {
+                      click: function($event) {
+                        return _vm.addNewReservationAt(i)
+                      }
+                    }
+                  },
+                  [_vm._m(0, true)]
+                )
           ]
         )
-      })
+      }),
+      _vm._v(" "),
+      _c("orgusto-modal-wrapper", { attrs: { "is-open": _vm.modalIsOpen } })
     ],
     2
   )
@@ -64977,15 +65116,213 @@ var render = function() {
   return _c("vc-date-picker", {
     attrs: { "input-props": _vm.inputProps, "input-debounce": 500 },
     model: {
-      value: _vm.date,
+      value: _vm.computedDate,
       callback: function($$v) {
-        _vm.date = $$v
+        _vm.computedDate = $$v
       },
-      expression: "date"
+      expression: "computedDate"
     }
   })
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.isOpen,
+          expression: "isOpen"
+        }
+      ],
+      staticClass:
+        "z-40 fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
+    },
+    [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isOpen,
+              expression: "isOpen"
+            }
+          ],
+          staticClass: "fixed inset-0 transition-opacity"
+        },
+        [_c("div", { staticClass: "absolute inset-0 bg-gray-500 opacity-75" })]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isOpen,
+              expression: "isOpen"
+            }
+          ],
+          staticClass:
+            "z-50 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full"
+        },
+        [
+          _c("div", { staticClass: "bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4" }, [
+            _c("div", { staticClass: "sm:flex sm:items-start" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "h-6 w-6 text-red-600",
+                      attrs: {
+                        stroke: "currentColor",
+                        fill: "none",
+                        viewBox: "0 0 24 24"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round",
+                          "stroke-width": "2",
+                          d:
+                            "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        }
+                      })
+                    ]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+            },
+            [
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto"
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.isOpen = false
+                          _vm.setTimeout(function() {
+                            return (_vm.isOpen = true)
+                          }, 1000)
+                        }
+                      }
+                    },
+                    [_vm._v("Deactivate")]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto"
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline transition ease-in-out duration-150 sm:text-sm sm:leading-5",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.isOpen = false
+                          _vm.setTimeout(function() {
+                            return (_vm.isOpen = true)
+                          }, 1000)
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left" },
+      [
+        _c(
+          "h3",
+          { staticClass: "text-lg leading-6 font-medium text-gray-900" },
+          [_vm._v("Deactivate account")]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "mt-2" }, [
+          _c("p", { staticClass: "text-sm leading-5 text-gray-500" }, [
+            _vm._v(
+              "Are you sure you want to deactivate your account? All of your data will be permanantly removed. This action cannot be undone."
+            )
+          ])
+        ])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -82503,6 +82840,7 @@ var map = {
 	"./components/OrgastroTable.vue": "./resources/js/components/OrgastroTable.vue",
 	"./components/OrgastroTimeline.vue": "./resources/js/components/OrgastroTimeline.vue",
 	"./components/OrgastroTimepicker.vue": "./resources/js/components/OrgastroTimepicker.vue",
+	"./components/OrgustoModalWrapper.vue": "./resources/js/components/OrgustoModalWrapper.vue",
 	"./components/OrgustoScopeButton.vue": "./resources/js/components/OrgustoScopeButton.vue",
 	"./components/OrgustoScopeManager.vue": "./resources/js/components/OrgustoScopeManager.vue",
 	"./components/ReservationEmptyItem.vue": "./resources/js/components/ReservationEmptyItem.vue",
@@ -83053,6 +83391,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgastroTimepicker_vue_vue_type_template_id_f9b35afe___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgastroTimepicker_vue_vue_type_template_id_f9b35afe___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoModalWrapper.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/OrgustoModalWrapper.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _OrgustoModalWrapper_vue_vue_type_template_id_49e1c4a8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8& */ "./resources/js/components/OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8&");
+/* harmony import */ var _OrgustoModalWrapper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrgustoModalWrapper.vue?vue&type=script&lang=js& */ "./resources/js/components/OrgustoModalWrapper.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrgustoModalWrapper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrgustoModalWrapper_vue_vue_type_template_id_49e1c4a8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _OrgustoModalWrapper_vue_vue_type_template_id_49e1c4a8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/OrgustoModalWrapper.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoModalWrapper.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/OrgustoModalWrapper.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoModalWrapper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./OrgustoModalWrapper.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoModalWrapper.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoModalWrapper_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoModalWrapper_vue_vue_type_template_id_49e1c4a8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoModalWrapper.vue?vue&type=template&id=49e1c4a8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoModalWrapper_vue_vue_type_template_id_49e1c4a8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_OrgustoModalWrapper_vue_vue_type_template_id_49e1c4a8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
