@@ -21,11 +21,12 @@
 
         </div>
 
-        <orgastro-timeline ihour="{{ $scopedHour ?? '17' }}"></orgastro-timeline>
+        <orgusto-timeline ihour="{{ $scopedHour ?? '17' }}"></orgusto-timeline>
 
         @foreach($tables as $table)
 
-        <orgastro-table timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tnumber="{{ $table->table_number }}" :reservations="{{ $table->reservations }}"></orgastro-table>
+        <orgusto-table timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tnumber="{{ $table->table_number }}" :reservations="{{ $table->reservations }}">
+        </orgusto-table>
 
         @endforeach
     </div>

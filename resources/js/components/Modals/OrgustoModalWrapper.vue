@@ -1,0 +1,59 @@
+<template>
+  <div @keydown.esc="handleClose">
+    <div
+      v-show="isOpen"
+      class="z-40 fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
+    >
+      <!-- Gray background -->
+      <transition name="fade">
+        <div v-show="isOpen" @click="handleClose" class="fixed inset-0 transition-opacity">
+          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+      </transition>
+
+      <!-- Modal -->
+      <transition name="scale">
+        <div v-show="isOpen" class="z-50 overflow-hidden w-full sm:w-1/2 xl:1/3">
+          <slot></slot>
+        </div>
+      </transition>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "orgusto-modal-wrapper",
+  props: {
+    isOpen: {
+      type: Boolean,
+      required: true
+    },
+    handleClose: {
+      type: Function,
+      required: false
+    }
+  }
+};
+</script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease-out;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s ease-out;
+}
+.scale-enter,
+.scale-leave-to {
+  opacity: 0;
+  transform: translate(0, 20px);
+}
+</style>

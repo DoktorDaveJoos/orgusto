@@ -43,7 +43,20 @@
         </div>
       </div>
     </div>
-    <orgusto-modal-wrapper :is-open="modalIsOpen"></orgusto-modal-wrapper>
+
+    <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="() => this.modalIsOpen = false">
+      <reservation-empty-item>
+        <template v-slot:optional-close>
+          <button
+            class="rounded-full border-2 text-gray-700 px-3 py-1 hover:border-red-300 hover:text-red-500 text-sm font-light focus:no-underline focus:border-red-400 focus:outline-none focus:shadow-outline"
+            @click="() => this.modalIsOpen = false"
+          >
+            <i class="fas fa-ban mr-1"></i>
+            cancel
+          </button>
+        </template>
+      </reservation-empty-item>
+    </orgusto-modal-wrapper>
   </div>
 </template>
 
