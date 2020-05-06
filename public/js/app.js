@@ -6281,6 +6281,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
   props: {
@@ -6334,6 +6335,9 @@ __webpack_require__.r(__webpack_exports__);
     addNewReservationAt: function addNewReservationAt(slot) {
       var slotTime = moment(this.timelineStart).add(slot * 15, "m");
       this.slotClicked(this.table, slotTime);
+    },
+    getTime: function getTime(slot) {
+      return moment(this.timelineStart).add(slot * 15, "m").format("HH:mm");
     }
   },
   computed: {
@@ -6629,6 +6633,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-empty-item",
   props: {
@@ -6647,60 +6654,45 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      displayError: false,
-      datePickerStyle: "rounded bg-gray-100 focus:bg-white focus:outline-none font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700",
-      dateOptions: ["Today", "Tomorrow", "Other"],
-      hourOptions: "24",
-      minuteOptions: "4",
-      colorOptions: ["gray", "blue", "green", "red", "orange", "yellow", "indigo"],
-      tableOptions: "20",
+      displayError: undefined,
+      colorOptions: ["gray", "blue", "green", "red", "orange", "indigo"],
       users: ["Felix Forstenhäusler", "David Joos"],
-      notRequired: ["notice", "color"],
-      errorMap: new Map([["name", "name or group"], ["starting_at", "time"], ["accepted_from", "employee"], ["length", "duration"], ["persons", "persons"], ["tables", "tables"]]),
       // values from input:
-      inputValues: {
+      input: {
         name: "",
         notice: "",
         starting_at: "",
-        hours: null,
-        minutes: null,
+        hours: 18,
+        minutes: 0,
         date: new Date(),
         person_count: "",
         length: "",
         accepted_from: "",
-        card_color: "gray",
+        color: "gray",
         tables: []
       }
     };
   },
   methods: {
     saveBtnPressed: function saveBtnPressed() {
-      this.computeStartingAt();
+      var _this = this;
 
-      if (this.errorList.length > 0) {
-        this.displayError = true;
-      } else {
-        var request = {
-          name: this.inputValues.name,
-          notice: this.inputValues.notice,
-          starting_at: this.inputValues.starting_at,
-          person_count: this.inputValues.person_count,
-          length: this.inputValues.length,
-          accepted_from: this.inputValues.accepted_from,
-          tables: this.inputValues.tables.map(function (table) {
-            return table.id;
-          }),
-          color: this.inputValues.card_color
-        };
-        axios.post("/reservations", request).then(function (res) {
-          if (res.status === 200) {
-            location.reload();
-          }
-        })["catch"](function (err) {
-          return console.log(err);
-        });
-        this.displayError = false;
-      }
+      var request = Object.assign({}, this.input);
+      var _this$input = this.input,
+          date = _this$input.date,
+          hours = _this$input.hours,
+          minutes = _this$input.minutes;
+      request.starting_at = moment(date).hours(hours).minutes(minutes).seconds(0).format("YYYY-MM-DD HH:mm:ss");
+      request.tables = this.input.tables.map(function (table) {
+        return table.id;
+      });
+      axios.post("/reservations", request).then(function (res) {
+        if (res.status === 200) {
+          location.reload();
+        }
+      })["catch"](function (err) {
+        return _this.displayError = err;
+      });
     },
     halfAnHourStep: function halfAnHourStep(val) {
       return val / 2;
@@ -6712,46 +6704,32 @@ __webpack_require__.r(__webpack_exports__);
       return val.table_number;
     },
     onChange: function onChange(event) {
-      this.inputValues[event.target.id] = event.target.value;
-    },
-    onDayChange: function onDayChange(event) {
-      this.inputValues.dateDd = event.target.value;
-
-      if (this.inputValues.dateDd === "Other") {
-        this.open = !this.open;
-      }
+      this.input[event.target.id] = event.target.value;
     },
     onChangeTable: function onChangeTable(tableString) {
       var newTable = JSON.parse(tableString);
-      var found = this.inputValues.tables.filter(function (table) {
+      var found = this.input.tables.filter(function (table) {
         return table.id === newTable.id;
       });
-      if (found.length === 0) this.inputValues.tables.push(newTable);
+      if (found.length === 0) this.input.tables.push(newTable);
     },
     remove: function remove(event) {
-      this.inputValues.tables = this.inputValues.tables.filter(function (table) {
+      this.input.tables = this.input.tables.filter(function (table) {
         return table.id.toString() !== event.target.id;
       });
-      console.log(this.inputValues.tables);
-    },
-    computeStartingAt: function computeStartingAt() {
-      var reservationDate = new Date(Date.parse(this.inputValues.date));
-      reservationDate.setHours(parseInt(this.inputValues.hours));
-      reservationDate.setMinutes(parseInt(this.inputValues.minutes));
-      this.inputValues.starting_at = reservationDate;
-      this.inputValues.starting_at = moment(this.inputValues.starting_at).format("YYYY-MM-DD HH:mm:ss");
+      console.log(this.input.tables);
     },
     clearView: function clearView(exceptions) {
-      var _this = this;
+      var _this2 = this;
 
-      Object.keys(this.inputValues).forEach(function (key) {
+      Object.keys(this.input).forEach(function (key) {
         var found = exceptions.filter(function (e) {
           return e === key;
         });
-        if (!found) _this.inputValues[key] = "";
+        if (!found) _this2.input[key] = "";
       });
-      this.inputValues.card_color = "gray";
-      this.inputValues.tables = [];
+      this.input.color = "gray";
+      this.input.tables = [];
     },
     checkNotNull: function checkNotNull(val) {
       if (val === undefined || val === null || val.length === 0) {
@@ -6763,34 +6741,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     color: function color() {
-      return "bg-" + this.inputValues.card_color + "-200";
-    },
-    hashInput: function hashInput() {
-      var _this2 = this;
-
-      return Object.keys(this.inputValues).map(function (input) {
-        return _this2.inputValues[input].toString();
-      }).reduce(function (prev, cur) {
-        return prev.concat(cur);
-      });
-    },
-    errorList: function errorList() {
-      var _this3 = this;
-
-      return Object.keys(this.inputValues).filter(function (input) {
-        return !_this3.notRequired.includes(input);
-      }).filter(function (required) {
-        return _this3.inputValues[required].length === 0;
-      }).map(function (missing) {
-        return _this3.errorMap.get(missing);
-      });
+      return "bg-" + this.input.color + "-200";
     },
     tableSeats: function tableSeats() {
-      var tables = this.inputValues.tables;
+      var tables = this.input.tables;
       if (!this.checkNotNull(tables)) return "20";
 
       if (tables.length === 1) {
-        console.log(tables[0]);
         return tables[0].seats;
       }
 
@@ -6807,13 +6764,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     date: function date(newDate, _) {
-      this.inputValues.date = newDate.toDate();
-      this.inputValues.hours = newDate.hour();
-      this.inputValues.minutes = newDate.minute();
+      this.input.date = newDate.toDate();
+      this.input.hours = newDate.hour();
+      this.input.minutes = newDate.minute();
     },
     table: function table(newTable, _) {
       this.clearView(["date", "hours", "minutes"]);
-      this.inputValues.tables.push(newTable);
+      this.input.tables.push(newTable);
     }
   }
 });
@@ -65666,14 +65623,25 @@ var render = function() {
                   "div",
                   {
                     staticClass:
-                      "p-0 flex flex-row w-full text-gray-200 hover:text-gray-400 cursor-pointer",
+                      "p-0 switchChild flex w-full text-gray-200 hover:text-gray-400 cursor-pointer",
                     on: {
                       click: function($event) {
                         return _vm.addNewReservationAt(i)
                       }
                     }
                   },
-                  [_vm._m(0, true)]
+                  [
+                    _vm._m(0, true),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass:
+                          "self-center w-full text-center hidden text-sm"
+                      },
+                      [_vm._v(_vm._s(_vm.getTime(i)))]
+                    )
+                  ]
                 )
           ]
         )
@@ -65912,7 +65880,7 @@ var render = function() {
       _c(
         "div",
         {
-          key: _vm.inputValues.card_color,
+          key: _vm.input.color,
           staticClass: "w-full rounded-t-lg px-4 py-2",
           class: _vm.color
         },
@@ -65934,13 +65902,18 @@ var render = function() {
                   _c("i", { staticClass: "fas fa-clock text-gray-700 mr-4" }),
                   _vm._v(" "),
                   _c("vc-date-picker", {
-                    attrs: { "input-props": { class: _vm.datePickerStyle } },
+                    attrs: {
+                      "input-props": {
+                        class:
+                          "rounded bg-gray-100 focus:bg-white focus:outline-none font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700"
+                      }
+                    },
                     model: {
-                      value: _vm.inputValues.date,
+                      value: _vm.input.date,
                       callback: function($$v) {
-                        _vm.$set(_vm.inputValues, "date", $$v)
+                        _vm.$set(_vm.input, "date", $$v)
                       },
-                      expression: "inputValues.date"
+                      expression: "input.date"
                     }
                   })
                 ],
@@ -65957,11 +65930,8 @@ var render = function() {
                   _c("orgastro-dropdown", {
                     attrs: {
                       onChange: _vm.onChange,
-                      init:
-                        _vm.inputValues.hours !== null
-                          ? _vm.inputValues.hours
-                          : 18,
-                      options: _vm.hourOptions,
+                      init: _vm.input.hours,
+                      options: 24,
                       id: "hours",
                       unit: "h",
                       "additional-classes": "bg-gray-100",
@@ -65972,11 +65942,8 @@ var render = function() {
                   _c("orgastro-dropdown", {
                     attrs: {
                       onChange: _vm.onChange,
-                      init:
-                        _vm.inputValues.minutes !== null
-                          ? _vm.inputValues.minutes
-                          : 0,
-                      options: _vm.minuteOptions,
+                      init: _vm.input.minutes,
+                      options: 4,
                       operation: _vm.quarterHourStep,
                       id: "minutes",
                       unit: "m",
@@ -66021,19 +65988,19 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.inputValues.name,
-                expression: "inputValues.name"
+                value: _vm.input.name,
+                expression: "input.name"
               }
             ],
             staticClass: "focus:outline-none w-full",
             attrs: { placeholder: "Some name or a group", type: "text" },
-            domProps: { value: _vm.inputValues.name },
+            domProps: { value: _vm.input.name },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.$set(_vm.inputValues, "name", $event.target.value)
+                _vm.$set(_vm.input, "name", $event.target.value)
               }
             }
           })
@@ -66045,8 +66012,8 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.inputValues.notice,
-                expression: "inputValues.notice"
+                value: _vm.input.notice,
+                expression: "input.notice"
               }
             ],
             staticClass: "focus:outline-none w-full",
@@ -66055,13 +66022,13 @@ var render = function() {
               resize: "none",
               placeholder: "Some further information"
             },
-            domProps: { value: _vm.inputValues.notice },
+            domProps: { value: _vm.input.notice },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.$set(_vm.inputValues, "notice", $event.target.value)
+                _vm.$set(_vm.input, "notice", $event.target.value)
               }
             }
           })
@@ -66119,7 +66086,7 @@ var render = function() {
             _c("orgastro-dropdown", {
               attrs: {
                 onChange: _vm.onChange,
-                id: "card_color",
+                id: "color",
                 title: "Color",
                 options: _vm.colorOptions,
                 "additional-classes":
@@ -66145,7 +66112,7 @@ var render = function() {
               "div",
               { staticClass: "w-full md:w-1/3 m-2" },
               [
-                _vm.inputValues.tables.length > 0
+                _vm.input.tables.length > 0
                   ? _c(
                       "label",
                       {
@@ -66161,7 +66128,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _vm._l(this.inputValues.tables, function(table) {
+                _vm._l(this.input.tables, function(table) {
                   return _c(
                     "button",
                     {
@@ -66182,27 +66149,15 @@ var render = function() {
         ),
         _vm._v(" "),
         _vm.displayError
-          ? _c("div", { key: _vm.hashInput, staticClass: "flex w-full mt-2" }, [
+          ? _c("div", { staticClass: "flex w-full mt-2" }, [
               _c(
-                "span",
+                "div",
                 {
                   staticClass:
-                    "bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2 w-full",
+                    "bg-red-200 text-gray-900 text-sm opacity-75 w-8/12 rounded-lg p-4 mt-2 mb-2 w-full",
                   attrs: { role: "alert" }
                 },
-                [
-                  _vm._v(
-                    "\n        Following fields must not be empty:\n        "
-                  ),
-                  _c(
-                    "ul",
-                    { staticClass: "list-disc px-4" },
-                    _vm._l(_vm.errorList, function(entry) {
-                      return _c("li", { key: entry }, [_vm._v(_vm._s(entry))])
-                    }),
-                    0
-                  )
-                ]
+                [_c("span", [_vm._v(_vm._s(_vm.displayError.toString()))])]
               )
             ])
           : _vm._e()

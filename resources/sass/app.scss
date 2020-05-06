@@ -31,4 +31,17 @@
     min-width: 6rem !important;
 }
 
+.switchChild:hover {
+    @apply flex-col;
+    @apply justify-center;
+}
+
+.switchChild:hover > div {
+    @apply text-sm;
+}
+
+.switchChild:hover > span {
+    @apply block;
+}
+
 @import "tailwindcss/utilities";

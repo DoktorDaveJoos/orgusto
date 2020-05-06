@@ -35,12 +35,13 @@
       </div>
       <div
         v-else
-        class="p-0 flex flex-row w-full text-gray-200 hover:text-gray-400 cursor-pointer"
+        class="p-0 switchChild flex w-full text-gray-200 hover:text-gray-400 cursor-pointer"
         @click="addNewReservationAt(i)"
       >
         <div class="self-center w-full text-center">
           <i class="fas fa-plus"></i>
         </div>
+        <span class="self-center w-full text-center hidden text-sm">{{ getTime(i) }}</span>
       </div>
     </div>
   </div>
@@ -119,6 +120,12 @@ export default {
     addNewReservationAt(slot) {
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
       this.slotClicked(this.table, slotTime);
+    },
+
+    getTime(slot) {
+      return moment(this.timelineStart)
+        .add(slot * 15, "m")
+        .format("HH:mm");
     }
   },
   computed: {
