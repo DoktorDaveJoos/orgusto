@@ -4,11 +4,11 @@
     <div class="w-1/6 m-0 p-1 rounded-l-full bg-gray-300 text-gray-600 flex flex-row">
       <div class="w-1/2 text-center flex flex-col">
         <span class="font-thin text-xs">Table nr.</span>
-        <span class="w-full text-center">{{ tnumber }}</span>
+        <span class="w-full text-center">{{ table.table_number }}</span>
       </div>
       <div class="w-1/2 text-center flex flex-col">
         <span class="font-thin text-xs">Seats</span>
-        <span class="w-full text-center">{{ Math.floor(Math.random() * 10) }}</span>
+        <span class="w-full text-center">{{ table.seats }}</span>
       </div>
     </div>
 
@@ -43,20 +43,6 @@
         </div>
       </div>
     </div>
-
-    <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="() => this.modalIsOpen = false">
-      <reservation-empty-item>
-        <template v-slot:optional-close>
-          <button
-            class="rounded-full border-2 text-gray-700 px-3 py-1 hover:border-red-300 hover:text-red-500 text-sm font-light focus:no-underline focus:border-red-400 focus:outline-none focus:shadow-outline"
-            @click="() => this.modalIsOpen = false"
-          >
-            <i class="fas fa-ban mr-1"></i>
-            cancel
-          </button>
-        </template>
-      </reservation-empty-item>
-    </orgusto-modal-wrapper>
   </div>
 </template>
 
@@ -64,20 +50,19 @@
 export default {
   name: "orgastro-table",
   props: {
-    tnumber: {
-      type: Number,
+    table: {
+      type: Object,
       required: true
     },
-    reservations: Array,
+    tables: {
+      type: Array,
+      required: true
+    },
+    slotClicked: Function,
     timelineStart: String
   },
-  data() {
-    return {
-      modalIsOpen: false
-    };
-  },
   methods: {
-    slotHasReservation: function(slot) {
+    slotHasReservation(slot) {
       if (this.reservations.length === 0) {
         return false;
       }
@@ -87,7 +72,7 @@ export default {
       } else return false;
     },
 
-    isEdgeSlot: function(slot) {
+    isEdgeSlot(slot) {
       const reservation = this.getReservation(slot);
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
@@ -107,7 +92,7 @@ export default {
       return 0;
     },
 
-    getReservation: function(slot) {
+    getReservation(slot) {
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
       return this.reservationsArray.find(
@@ -120,23 +105,27 @@ export default {
       );
     },
 
-    slotColorAndBorder: function(index) {
+    slotColorAndBorder(slot) {
       return [
-        "bg-" + this.getReservation(index).color + "-200",
-        index === 0 ? null : "rounded-l-full"
+        "bg-" + this.getReservation(slot).color + "-200",
+        slot === 0 ? null : "rounded-l-full"
       ];
     },
-    slotColor: function(index) {
-      return "bg-" + this.getReservation(index).color + "-200";
+
+    slotColor(slot) {
+      return "bg-" + this.getReservation(slot).color + "-200";
     },
-    addNewReservationAt: function(slot) {
+
+    addNewReservationAt(slot) {
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
-      console.log("should be changed");
-      this.modalIsOpen = true;
+      this.slotClicked(this.table, slotTime);
     }
   },
   computed: {
-    reservationsArray: function() {
+    reservations() {
+      return this.table.reservations;
+    },
+    reservationsArray() {
       return Object.keys(this.reservations).map(key => this.reservations[key]);
     }
   }

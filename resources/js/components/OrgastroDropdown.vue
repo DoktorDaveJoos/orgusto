@@ -1,19 +1,21 @@
 <template>
-  <div class="w-full md:w-1/3 pr-3 mb-6 md:mb-0">
+  <div class="w-full md:w-1/3 m-2">
     <label
       v-if="title"
-      class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+      class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
     >{{ title }}</label>
-    <div class="relative">
+    <div class="relative" :class="containerClass">
       <select
         :id="id"
-        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 font-semibold text-sm py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        class="appearance-none cursor-pointer w-full text-gray-700 font-semibold text-sm py-2 px-4 pr-8 rounded focus:outline-none"
+        :class="additionalClasses"
         @change="reset ? resetMiddleware($event, reset, onChange) : onChange($event)"
       >
-        <option v-if="init" :value="init">{{ init }}</option>
+        <option v-if="init" :value="init">{{ init }} {{ unit && init !== '-' ? unit : null }}</option>
         <option
           v-for="option in parseOptions(options)"
-          v-bind:key="option"
+          v-bind:key="option instanceof Object ? option.id : option"
+          :id="option instanceof Object ? JSON.stringify(option) : option"
           :value="operation ? operation(option) : option"
         >{{ operation ? operation(option) : option }} {{ unit ? unit : null }}</option>
       </select>
@@ -61,6 +63,15 @@ export default {
     },
     reset: {
       type: String
+    },
+    additionalClasses: {
+      type: String
+    },
+    containerClass: {
+      type: String
+    },
+    parseMiddleware: {
+      type: Function
     }
   },
   methods: {
@@ -68,7 +79,7 @@ export default {
       return options instanceof Array ? options : parseInt(options);
     },
     resetMiddleware: (event, reset, thenApply) => {
-      let tmp = event.target.value;
+      const tmp = event.target.options[event.target.selectedIndex].id;
       event.target.value = reset;
       thenApply(tmp);
     }

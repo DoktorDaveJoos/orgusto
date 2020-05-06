@@ -17,24 +17,14 @@
                     <orgusto-scope-button direction="right"></orgusto-scope-button>
                 </div>
             </div>
-
-
         </div>
 
         <orgusto-timeline ihour="{{ $scopedHour ?? '17' }}"></orgusto-timeline>
 
-        @foreach($tables as $table)
+        <orgusto-tables timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tables="{{ $tables }}"></orgusto-tables>
 
-        <orgusto-table timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tnumber="{{ $table->table_number }}" :reservations="{{ $table->reservations }}">
-        </orgusto-table>
-
-        @endforeach
     </div>
 
-
 </div>
-
-
-
 
 @endsection

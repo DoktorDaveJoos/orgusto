@@ -16,19 +16,28 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Auth::routes();
-
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::get('/manage', 'ManageController@index')->name('manage');
+Auth::routes();
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/restaurant', 'RestaurantController@index')->name('restaurant');
-Route::post('/restaurant', 'RestaurantController@store')->name('restaurant.store');
-Route::patch('/restaurant/{restaurant}', 'RestaurantController@update')->name('restaurant.update');
+    Route::get('/manage', 'ManageController@index')->name('manage.show');
 
-Route::get('/reservations', 'ReservationsController@index')->name('reservations');
-Route::get('/reservations/create', 'ReservationsController@create')->name('reservations.create');
-Route::get('/reservations/{reservation}', 'ReservationsController@show')->name('reservations.show');
-Route::post('/reservations', 'ReservationsController@store')->name('reservations.store');
-Route::put('/reservations/{reservation}', 'ReservationsController@update')->name('reservations.update');
-Route::delete('/reservations/{reservation}', 'ReservationsController@destroy')->name('reservations->destroy');
+    Route::prefix('/restaurants')->group(function () {
+
+        Route::get('/', 'RestaurantController@index')->name('restaurants.show');
+        Route::post('/', 'RestaurantController@store')->name('restaurants.store');
+
+        Route::put('/{restaurant}', 'RestaurantController@update')->name('restaurant.update');
+        Route::delete('/{restaurant}', 'RestaurantController@destroy')->name('restaurant.destroy');
+    });
+
+    Route::prefix('/reservations')->group(function () {
+
+        Route::get('/', 'ReservationsController@index')->name('reservations.show');
+        Route::post('/', 'ReservationsController@store')->name('reservations.store');
+
+        Route::put('/{reservation}', 'ReservationsController@update')->name('reservation.update');
+        Route::delete('/{reservation}', 'ReservationsController@destroy')->name('reservation.destroy');
+    });
+});

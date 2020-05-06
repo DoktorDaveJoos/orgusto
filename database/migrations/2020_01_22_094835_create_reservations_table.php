@@ -18,6 +18,7 @@ class CreateReservationsTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->integer('length');
+            $table->boolean('done')->default(false);
             $table->string('accepted_from');
             $table->integer('person_count');
             $table->dateTime('starting_at');
@@ -26,7 +27,6 @@ class CreateReservationsTable extends Migration
             $table->string('email')->nullable();
             $table->string('phone_numer')->nullable();
         });
-
     }
 
     /**

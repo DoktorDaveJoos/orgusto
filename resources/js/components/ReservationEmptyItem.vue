@@ -1,46 +1,47 @@
 <template>
-  <div class="bg-white shadow-md mx-auto rounded-lg min-w-full">
-    <div
-      class="w-full rounded-t-lg p-3 flex justify-between"
-      :class="color"
-      :key="inputValues.card_color"
-    >
-      <div class="flex w-2/4 relative">
-        <div class="font-bold text-sm text-gray-700 self-center mr-2 static">
-          <i class="fas fa-clock self-center"></i>
-        </div>
-
-        <div class="self-center">
+  <div class="relative bg-white shadow-md mx-auto rounded-lg min-w-full">
+    <!-- Card head -->
+    <div class="w-full rounded-t-lg px-4 py-2" :class="color" :key="inputValues.card_color">
+      <div class="flex flex-col-reverse sm:flex-row justify-between items-center">
+        <div class="flex-1 flex flex-row justify-center items-center w-full my-2">
+          <i class="fas fa-clock text-gray-700 mr-4"></i>
           <vc-date-picker v-model="inputValues.date" :input-props="{class: datePickerStyle}"></vc-date-picker>
         </div>
-        <div class="flex w-3/4">
+
+        <div class="flex-1 flex flex-grow justify-center items-center sm:justify-start w-full">
           <orgastro-dropdown
             :onChange="onChange"
-            :init="inputValues.hours"
-            id="hours"
+            :init="inputValues.hours !== null ? inputValues.hours : 18"
             :options="hourOptions"
+            id="hours"
             unit="h"
+            additional-classes="bg-gray-100"
+            container-class="orgusto-timepicker"
           ></orgastro-dropdown>
+
           <orgastro-dropdown
             :onChange="onChange"
-            id="minutes"
-            :init="inputValues.minutes"
+            :init="inputValues.minutes !== null ? inputValues.minutes : 0"
             :options="minuteOptions"
-            :operation="tenMinutesStep"
+            :operation="quarterHourStep"
+            id="minutes"
+            unit="m"
+            additional-classes="bg-gray-100"
+            container-class="orgusto-timepicker"
           ></orgastro-dropdown>
         </div>
-      </div>
 
-      <div class="self-center">
-        <button
-          class="rounded-full border-2 text-gray-700 px-3 py-1 hover:border-green-300 hover:text-green-500 text-sm font-light focus:no-underline focus:border-green-400 focus:outline-none focus:shadow-outline"
-          v-on:click="saveBtnPressed"
-        >
-          <i class="fas fa-save mr-1"></i>
-          save
-        </button>
+        <div class="flex-1 flex flex-row sm:justify-end w-full">
+          <button
+            class="orgusto-button bg-gray-300 hover:bg-green-300 hover:text-gray-900 transition-color duration-200 ease-in-out w-full"
+            v-on:click="saveBtnPressed"
+          >
+            <i class="fas fa-save"></i>
+            save
+          </button>
 
-        <slot name="optional-close"></slot>
+          <slot name="optional-close"></slot>
+        </div>
       </div>
     </div>
 
@@ -53,24 +54,25 @@
           type="text"
         />
       </div>
+
       <div class="text-gray-700 text-base mb-2">
         <textarea
-          class="focus:outline-none"
+          class="focus:outline-none w-full"
           rows="2"
           resize="none"
-          style="width: 100%"
           placeholder="Some further information"
           v-model="inputValues.notice"
         />
       </div>
 
-      <div class="flex">
+      <div class="flex flex-row">
         <orgastro-dropdown
           :onChange="onChange"
           id="person_count"
           init="-"
           title="Persons"
-          options="20"
+          :options="tableSeats"
+          additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400"
         ></orgastro-dropdown>
         <orgastro-dropdown
           :onChange="onChange"
@@ -80,6 +82,7 @@
           options="8"
           unit="h"
           :operation="halfAnHourStep"
+          additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400"
         ></orgastro-dropdown>
         <orgastro-dropdown
           :onChange="onChange"
@@ -87,15 +90,17 @@
           init="-"
           title="Employee"
           :options="users"
+          additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400"
         ></orgastro-dropdown>
       </div>
 
-      <div class="flex mt-3">
+      <div class="flex flex-row mt-3">
         <orgastro-dropdown
           :onChange="onChange"
           id="card_color"
           title="Color"
           :options="colorOptions"
+          additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400 flex-1"
         ></orgastro-dropdown>
 
         <orgastro-dropdown
@@ -104,10 +109,12 @@
           init="-"
           reset="-"
           title="Add table"
-          :options="tableOptions"
+          :options="tables"
+          :operation="parseTableNumber"
+          additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400 flex-1"
         ></orgastro-dropdown>
 
-        <div>
+        <div class="w-full md:w-1/3 m-2">
           <label
             v-if="inputValues.tables.length > 0"
             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -115,14 +122,14 @@
             Booked tables
             <span class="text-xs font-light">click on number to remove</span>
           </label>
-          <div class>
-            <button
-              class="self-center pt-2 font-semibold text-sm mx-2 p-2 rounded-full hover:bg-red-400 bg-gray-200 focus:outline-none"
-              v-for="table in this.inputValues.tables"
-              v-bind:key="table"
-              @click="remove"
-            >{{ table }}</button>
-          </div>
+
+          <button
+            class="self-center pt-2 font-semibold text-sm mx-2 p-2 rounded-full hover:bg-red-400 bg-gray-200 focus:outline-none"
+            v-for="table in this.inputValues.tables"
+            v-bind:key="table.id"
+            :id="table.id"
+            @click="remove"
+          >{{ table.table_number }}</button>
         </div>
       </div>
       <div v-if="displayError" class="flex w-full mt-2" :key="hashInput">
@@ -140,16 +147,30 @@
 <script>
 export default {
   name: "reservation-empty-item",
-  data: function() {
+  props: {
+    table: {
+      type: Object,
+      required: false
+    },
+    tables: {
+      type: Array,
+      required: false
+    },
+    date: {
+      type: Object,
+      required: false
+    }
+  },
+  data() {
     return {
       displayError: false,
 
       datePickerStyle:
-        "rounded bg-gray-100 focues:bg-white font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700",
+        "rounded bg-gray-100 focus:bg-white focus:outline-none font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700",
 
       dateOptions: ["Today", "Tomorrow", "Other"],
-      hourOptions: ["16", "17", "18", "19", "20", "21", "22"],
-      minuteOptions: "6",
+      hourOptions: "24",
+      minuteOptions: "4",
 
       colorOptions: [
         "gray",
@@ -182,9 +203,9 @@ export default {
         notice: "",
         starting_at: "",
 
-        hours: new Date(Date.now()).getHours().toString() + " h",
-        minutes: new Date(Date.now()).getMinutes().toString(),
-        date: new Date(Date.now()),
+        hours: null,
+        minutes: null,
+        date: new Date(),
 
         person_count: "",
         length: "",
@@ -197,13 +218,7 @@ export default {
     };
   },
   methods: {
-    toggleBtnPressed: function() {
-      this.btnPressed = !this.btnPressed;
-    },
-    toggleNameClicked: function() {
-      this.nameClicked = !this.nameClicked;
-    },
-    saveBtnPressed: function() {
+    saveBtnPressed() {
       this.computeStartingAt();
       if (this.errorList.length > 0) {
         this.displayError = true;
@@ -215,13 +230,17 @@ export default {
           person_count: this.inputValues.person_count,
           length: this.inputValues.length,
           accepted_from: this.inputValues.accepted_from,
-          tables: this.inputValues.tables,
+          tables: this.inputValues.tables.map(table => table.id),
           color: this.inputValues.card_color
         };
 
         axios
           .post("/reservations", request)
-          .then(res => console.log(res))
+          .then(res => {
+            if (res.status === 200) {
+              location.reload();
+            }
+          })
           .catch(err => console.log(err));
 
         this.displayError = false;
@@ -230,31 +249,35 @@ export default {
     halfAnHourStep: val => {
       return val / 2;
     },
-    tenMinutesStep: val => {
-      return (val - 1) * 10;
+    quarterHourStep: val => {
+      return (val - 1) * 15;
     },
-    onChange: function(event) {
+    parseTableNumber: val => {
+      return val.table_number;
+    },
+    onChange(event) {
       this.inputValues[event.target.id] = event.target.value;
     },
-    onDayChange: function(event) {
+    onDayChange(event) {
       this.inputValues.dateDd = event.target.value;
       if (this.inputValues.dateDd === "Other") {
         this.open = !this.open;
       }
     },
-    onChangeTable: function(val) {
-      const index = this.inputValues.tables.indexOf(val);
-      if (index === -1) {
-        this.inputValues.tables.push(val);
-      }
+    onChangeTable(tableString) {
+      const newTable = JSON.parse(tableString);
+      const found = this.inputValues.tables.filter(
+        table => table.id === newTable.id
+      );
+      if (found.length === 0) this.inputValues.tables.push(newTable);
     },
-    remove: function(event) {
-      const index = this.inputValues.tables.indexOf(event.target.innerText);
-      if (index > -1) {
-        this.inputValues.tables.splice(index, 1);
-      }
+    remove(event) {
+      this.inputValues.tables = this.inputValues.tables.filter(
+        table => table.id.toString() !== event.target.id
+      );
+      console.log(this.inputValues.tables);
     },
-    computeStartingAt: function() {
+    computeStartingAt() {
       let reservationDate = new Date(Date.parse(this.inputValues.date));
 
       reservationDate.setHours(parseInt(this.inputValues.hours));
@@ -264,6 +287,22 @@ export default {
       this.inputValues.starting_at = moment(
         this.inputValues.starting_at
       ).format("YYYY-MM-DD HH:mm:ss");
+    },
+    clearView(exceptions) {
+      Object.keys(this.inputValues).forEach(key => {
+        const found = exceptions.filter(e => e === key);
+        if (!found) this.inputValues[key] = "";
+      });
+
+      this.inputValues.card_color = "gray";
+      this.inputValues.tables = [];
+    },
+
+    checkNotNull: val => {
+      if (val === undefined || val === null || val.length === 0) {
+        return false;
+      }
+      return true;
     }
   },
   computed: {
@@ -280,6 +319,32 @@ export default {
         .filter(input => !this.notRequired.includes(input))
         .filter(required => this.inputValues[required].length === 0)
         .map(missing => this.errorMap.get(missing));
+    },
+    tableSeats() {
+      const { tables } = this.inputValues;
+      if (!this.checkNotNull(tables)) return "20";
+      if (tables.length === 1) {
+        console.log(tables[0]);
+        return tables[0].seats;
+      }
+      if (tables.length > 1) {
+        const accumulated = {};
+        tables.reduce((prev, curr) =>
+          Object.assign(accumulated, { seats: prev.seats + curr.seats })
+        );
+        return accumulated.seats;
+      }
+    }
+  },
+  watch: {
+    date(newDate, _) {
+      this.inputValues.date = newDate.toDate();
+      this.inputValues.hours = newDate.hour();
+      this.inputValues.minutes = newDate.minute();
+    },
+    table(newTable, _) {
+      this.clearView(["date", "hours", "minutes"]);
+      this.inputValues.tables.push(newTable);
     }
   }
 };

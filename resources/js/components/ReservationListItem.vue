@@ -1,6 +1,6 @@
 <template>
-  <div class="shadow-md mb-2 mt-2 rounded-lg hover:shadow-xl w-8/12 self-center">
-    <div class="w-full bg-gray-200 rounded-lg p-3 flex justify-between">
+  <div class="shadow-md mb-2 mt-2 rounded-lg w-8/12 max-w-5xl self-center">
+    <div class="w-full bg-gray-200 rounded-t-lg p-3 flex justify-between">
       <div class="font-bold text-sm text-gray-700 self-center">
         <i class="fas fa-clock self-center"></i>
         {{ this.reservation.starting_at | moment("dddd, MMMM Do YYYY") }}
@@ -42,12 +42,10 @@
 </template>
 
 <script>
-
-
 export default {
   name: "reservation-list-item",
   props: {
-      reservation: {
+    reservation: {
       type: Object,
       required: true
     }

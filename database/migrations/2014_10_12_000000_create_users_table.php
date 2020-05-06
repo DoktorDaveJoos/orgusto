@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('access_level')->default('user');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->bigInteger('selected_restaurant')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

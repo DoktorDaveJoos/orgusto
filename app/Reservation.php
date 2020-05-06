@@ -18,7 +18,7 @@ class Reservation extends Model
         'created_at' => 'datetime',
     ];
 
-     /**
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -27,11 +27,11 @@ class Reservation extends Model
 
     public function scopeClosest($query)
     {
-        return $query->orderBy('starting_at', 'asc');
+        return $query->orderBy('starting_at', 'desc');
     }
 
-    public function table() {
+    public function tables()
+    {
         return $this->belongsToMany(Table::class);
     }
-
 }

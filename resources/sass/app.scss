@@ -1,10 +1,34 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url("https://fonts.googleapis.com/css?family=Nunito");
 
 // Variables
-@import 'variables';
+@import "variables";
 
 // Tailwind
 @import "tailwindcss/base";
 @import "tailwindcss/components";
+
+// Custom
+.orgusto-button {
+    @apply flex;
+    @apply flex-row;
+    @apply items-center;
+    @apply text-gray-700;
+    @apply justify-center;
+    @apply font-semibold;
+    @apply rounded-full;
+    @apply text-sm;
+    @apply px-3;
+    @apply py-2;
+    @apply m-2;
+}
+
+.orgusto-button > svg {
+    @apply mr-2;
+}
+
+.orgusto-timepicker {
+    min-width: 6rem !important;
+}
+
 @import "tailwindcss/utilities";

@@ -17,11 +17,11 @@ class UsersTableSeeder extends Seeder
             'id' => 1,
             'access_level' => 'admin',
             'email' => 'joos.code@gmail.com',
+            'selected_restaurant' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('test')
         ]);
 
         factory(App\User::class, 10)->create();
-
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Reservation;
+use App\Restaurant;
 
 class ReservationsController extends Controller
 {
@@ -22,29 +23,41 @@ class ReservationsController extends Controller
 
     public function index()
     {
-        $reservations = Reservation::closest()->simplePaginate(20);
+        $actualRestaurant = Restaurant::where('id', auth()->user()->selected_restaurant)->first();
 
-        return view('reservations', ['reservations' => $reservations]);
+        if ($actualRestaurant->id) {
+
+            $reservations = Reservation::whereHas('tables', function ($q) use ($actualRestaurant) {
+                $q->where('restaurant_id', $actualRestaurant->id);
+            })->closest()->simplePaginate(20);
+
+            if (request()->wantsJson()) {
+                return $reservations;
+            }
+
+            $tables = $actualRestaurant->tables()->sortByTableNumber()->get();
+
+            return view('reservations', ['reservations' => $reservations, 'tables' => $tables]);
+        }
+
+        // No restaurants
+        return view('restaurants');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'person_count' => 'required',
             'starting_at' => 'required|date',
-            'length' => 'required',
             'accepted_from' => 'required',
-            'tables' => 'required'
+            'person_count' => 'required',
+            'length' => 'required',
+            'tables' => 'required',
+            'name' => 'required',
         ]);
 
-        $reservation = Reservation::create(array_merge($request->all(), ['user_id' => Auth::id()]));
-
+        $reservation = Reservation::create($request->all());
+        $reservation->tables()->attach($request->tables);
         $reservation->save();
-    }
-
-    public function create() {
-        return view('create');
     }
 
     public function show(Reservation $reservation)

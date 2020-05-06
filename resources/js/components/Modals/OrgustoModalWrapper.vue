@@ -2,7 +2,7 @@
   <div @keydown.esc="handleClose">
     <div
       v-show="isOpen"
-      class="z-40 fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center"
+      class="z-40 fixed bottom-0 inset-x-0 px-4 pb-4 lg:inset-0 lg:flex lg:items-center lg:justify-center"
     >
       <!-- Gray background -->
       <transition name="fade">
@@ -13,7 +13,7 @@
 
       <!-- Modal -->
       <transition name="scale">
-        <div v-show="isOpen" class="z-50 overflow-hidden w-full sm:w-1/2 xl:1/3">
+        <div v-show="isOpen" class="z-50 overflow-hidden w-full lg:w-2/3 xl:1/3 max-w-5xl">
           <slot></slot>
         </div>
       </transition>
