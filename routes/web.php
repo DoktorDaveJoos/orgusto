@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationsController;
+use App\Restaurant;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'RestaurantController@index')->name('restaurants.show');
         Route::post('/', 'RestaurantController@store')->name('restaurants.store');
 
+        Route::get('/{restaurant}', 'RestaurantController@show')->name('restaurant.show');
         Route::put('/{restaurant}', 'RestaurantController@update')->name('restaurant.update');
         Route::delete('/{restaurant}', 'RestaurantController@destroy')->name('restaurant.destroy');
     });
