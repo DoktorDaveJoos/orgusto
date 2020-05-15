@@ -11,10 +11,11 @@
         "php": "^7.2",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.2",
+        "laravel/nova": "~2.0",
         "laravel/telescope": "^2.1",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.1",
-        "laravel/nova": "~2.0"
+        "livewire/livewire": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

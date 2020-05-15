@@ -27,11 +27,6 @@ class RestaurantController extends Controller
         return view('restaurants', ['restaurants' => $restaurants]);
     }
 
-    public function show(Restaurant $restaurant)
-    {
-        return $restaurant;
-    }
-
     public function update(Request $request, Restaurant $restaurant)
     {
         // PATCH /restaurants/1

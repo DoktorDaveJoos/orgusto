@@ -29,9 +29,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'RestaurantController@index')->name('restaurants.show');
         Route::post('/', 'RestaurantController@store')->name('restaurants.store');
 
-        Route::get('/{restaurant}', 'RestaurantController@show')->name('restaurant.show');
-        Route::put('/{restaurant}', 'RestaurantController@update')->name('restaurant.update');
-        Route::delete('/{restaurant}', 'RestaurantController@destroy')->name('restaurant.destroy');
+        Route::prefix('/{restaurant}')->group(function () {
+            Route::livewire('/', 'edit-restaurant')->name('restaurant.show');
+            Route::put('/', 'RestaurantController@update')->name('restaurant.update');
+            Route::delete('/', 'RestaurantController@destroy')->name('restaurant.destroy');
+
+            Route::livewire('/{table}', 'edit-table')->name('restaurant.table.show');
+        });
     });
 
     Route::prefix('/reservations')->group(function () {
