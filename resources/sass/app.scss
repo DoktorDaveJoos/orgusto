@@ -17,14 +17,32 @@
     @apply justify-center;
     @apply font-semibold;
     @apply rounded-full;
+    @apply my-auto;
     @apply text-sm;
     @apply px-3;
     @apply py-2;
-    @apply m-2;
 }
 
 .orgusto-button > svg {
     @apply mr-2;
+}
+
+.orgusto-button:focus {
+    @apply outline-none;
+}
+
+.orgusto-input {
+    @apply leading-tight;
+    @apply text-gray-800;
+    @apply rounded-full;
+    @apply bg-gray-200;
+    @apply font-light;
+    @apply text-sm;
+    @apply p-2;
+}
+
+.orgusto-input:focus {
+    @apply outline-none;
 }
 
 .orgusto-timepicker {
@@ -32,8 +50,8 @@
 }
 
 .switchChild:hover {
-    @apply flex-col;
     @apply justify-center;
+    @apply flex-col;
 }
 
 .switchChild:hover > div {

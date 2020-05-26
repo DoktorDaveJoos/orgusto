@@ -24,6 +24,10 @@ class ManageController extends Controller
     public function index(Request $request)
     {
 
+        if (!auth()->user()->selected_restaurant) {
+            return redirect(route('restaurants.show'));
+        }
+
         $date = $request->get('date') ?? date('Y-m-d');
         $from = date($date . " 00:00:00");
         $to = date($date . " 23:59:59");

@@ -25,12 +25,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/manage', 'ManageController@index')->name('manage.show');
 
     Route::prefix('/restaurants')->group(function () {
-
         Route::get('/', 'RestaurantController@index')->name('restaurants.show');
         Route::post('/', 'RestaurantController@store')->name('restaurants.store');
 
         Route::prefix('/{restaurant}')->group(function () {
             Route::livewire('/', 'edit-restaurant')->name('restaurant.show');
+
             Route::put('/', 'RestaurantController@update')->name('restaurant.update');
             Route::delete('/', 'RestaurantController@destroy')->name('restaurant.destroy');
 

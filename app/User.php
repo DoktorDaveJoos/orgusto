@@ -41,4 +41,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Restaurant::class)->withPivot(['role']);
     }
+
+    public function validated()
+    {
+        return $this->email_verified_at < date("Y-m-d H:i:s");
+    }
 }

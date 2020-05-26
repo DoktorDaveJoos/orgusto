@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.vue')
 
 @section('content')
 <div class="flex flex-col justify-around">

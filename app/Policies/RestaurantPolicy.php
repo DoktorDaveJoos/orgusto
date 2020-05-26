@@ -30,7 +30,8 @@ class RestaurantPolicy
      */
     public function view(User $user, Restaurant $restaurant)
     {
-        //
+        $restaurant = $user->restaurants->find($restaurant->id);
+        return $restaurant->pivot->role === 'admin';
     }
 
     /**
@@ -41,7 +42,7 @@ class RestaurantPolicy
      */
     public function create(User $user)
     {
-        return ($user->access_level === 'admin');
+        return ($user->access_level === 'premium');
     }
 
     /**
@@ -54,7 +55,7 @@ class RestaurantPolicy
     public function update(User $user, Restaurant $restaurant)
     {
         $restaurant = $user->restaurants->find($restaurant->id);
-        return $restaurant->pivot->role === 'owner';
+        return $restaurant->pivot->role === 'admin';
     }
 
     /**
@@ -66,7 +67,8 @@ class RestaurantPolicy
      */
     public function delete(User $user, Restaurant $restaurant)
     {
-        //
+        $restaurant = $user->restaurants->find($restaurant->id);
+        return $restaurant->pivot->role === 'admin';
     }
 
     /**
@@ -78,7 +80,8 @@ class RestaurantPolicy
      */
     public function restore(User $user, Restaurant $restaurant)
     {
-        //
+        $restaurant = $user->restaurants->find($restaurant->id);
+        return $restaurant->pivot->role === 'admin';
     }
 
     /**
@@ -90,6 +93,7 @@ class RestaurantPolicy
      */
     public function forceDelete(User $user, Restaurant $restaurant)
     {
-        //
+        $restaurant = $user->restaurants->find($restaurant->id);
+        return $restaurant->pivot->role === 'admin';
     }
 }

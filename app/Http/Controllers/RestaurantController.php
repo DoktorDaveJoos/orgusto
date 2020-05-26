@@ -21,7 +21,6 @@ class RestaurantController extends Controller
 
     public function index()
     {
-
         $restaurants = auth()->user()->restaurants()->get();
 
         return view('restaurants', ['restaurants' => $restaurants]);
@@ -30,7 +29,6 @@ class RestaurantController extends Controller
     public function update(Request $request, Restaurant $restaurant)
     {
         // PATCH /restaurants/1
-        return "full lord";
     }
 
     public function store(Request $request)

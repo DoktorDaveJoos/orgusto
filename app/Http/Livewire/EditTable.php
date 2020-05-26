@@ -11,18 +11,13 @@ class EditTable extends Component
     public $table;
     public $restaurant;
 
-
-    public $number;
     public $seats;
     public $description;
+    public $table_number;
 
-    protected $casts = [
-        'updated_at' => 'date'
-    ];
-
-    public function getUpdatedAtForHumans()
+    public function getTableUpdatedAtForHumans()
     {
-        return $this->updated_at->format('Y-m-d H:i:s');
+        return $this->table->updated_at->format('Y-m-d H:i:s');
     }
 
     public function mount(Table $table, Restaurant $restaurant)
@@ -30,38 +25,60 @@ class EditTable extends Component
         $this->table = $table;
         $this->restaurant = $restaurant;
 
-        $this->table_number = $table->table_number;
         $this->seats = $table->seats;
         $this->description = $table->description;
+        $this->table_number = $table->table_number;
+    }
+
+    public function updated($field, $value)
+    {
+        $this->validateOnly($field, [
+            'table_number' => 'integer',
+            'seats' => 'integer',
+            'description' => 'string|nullable|max:255'
+        ]);
+
+        if ($this->table[$field] != $value) {
+            $this->emit('activateSubmit');
+        }
     }
 
     public function submit()
     {
         $this->validate([
-            'number' => 'required',
-            'seats' => 'required',
-            'description' => 'max:255',
+            'table_number' => 'integer',
+            'seats' => 'integer',
+            'description' => 'string|nullable|max:255'
         ]);
 
-        if ($this->table_id) {
-            $table = Table::find($this->table_id);
-            $table->table_number = $this->number;
-            $table->seats = $this->seats;
-            $table->description = $this->description;
-            if ($table->isDirty()) {
-                $table->save();
-
-                if ($table->wasChanged()) {
-                    session()->flash('message', 'Table was successfully updated.');
+        $message = "";
+        if ($this->table) {
+            $this->table->seats = $this->seats;
+            $this->table->description = $this->description;
+            $this->table->table_number = $this->table_number;
+            if ($this->table->isDirty()) {
+                $this->table->save();
+                if ($this->table->wasChanged()) {
+                    $message = 'Table was successfully updated.';
+                } else {
+                    $message = 'Something went wrong!';
                 }
+            } else {
+                $message = 'Table has not changed.';
             }
         } else {
-            Restaurant::find($this->restaurant_id)->tables()->create([
-                'table_number' => $this->number,
+            $newTable = Restaurant::find($this->restaurant->id)->tables()->create([
                 'seats' => $this->seats,
-                'description' => $this->description
+                'description' => $this->description,
+                'table_number' => $this->table_number
             ]);
+            if ($newTable) {
+                $message = 'Table successfully created';
+            } else {
+                $message = 'Could not create table. Please contact service team.';
+            }
         }
+        session()->flash('message', $message);
     }
 
     public function render()
