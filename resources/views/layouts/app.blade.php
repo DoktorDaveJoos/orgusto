@@ -28,7 +28,7 @@
 <body>
     @include('layouts.nav')
     <div id="app">
-        <main class="py-4 flex flex-col w-full content-center">
+        <main class="py-4 flex flex-col w-full content-center bg-gray-100">
             @yield('content')
         </main>
     </div>

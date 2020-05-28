@@ -5,7 +5,6 @@
  */
 
 require('./bootstrap');
-require('./fontawesome');
 
 window.Vue = require('vue');
 import VCalendar from 'v-calendar';

@@ -16,6 +16,8 @@ class EditRestaurant extends Component
 
     public $contact_email;
     public $street_number;
+    public $d_seat_count;
+    public $seat_bound;
     public $zip_code;
     public $tables;
     public $street;
@@ -23,11 +25,13 @@ class EditRestaurant extends Component
     public $name;
     public $city;
 
+    public $is_dirty;
+
     protected $listeners = ['userAdded' => 'handleUserAdded'];
 
     public function handleUserAdded($message)
     {
-        session()->flash('account-operations', $message);
+        session()->flash('message', $message);
     }
 
     public function getRestaurantUpdatedAtForHumans()
@@ -43,9 +47,13 @@ class EditRestaurant extends Component
     public function mount(Restaurant $restaurant)
     {
 
+        $this->is_dirty = false;
+
         $this->restaurant = $restaurant;
         $this->authorize('view', $this->restaurant);
 
+        $this->seat_bound = $restaurant->seat_reservation_bound;
+        $this->d_seat_count = $restaurant->default_table_seats;
         $this->contact_email = $restaurant->contact_email;
         $this->street_number = $restaurant->street_number;
         $this->zip_code = $restaurant->zip_code;
@@ -59,18 +67,27 @@ class EditRestaurant extends Component
 
     public function updated($field, $value)
     {
-        $this->validateOnly($field, [
+        $isValidated = $this->validateOnly($field, [
             'contact_email' => 'email:rfc|nullable',
             'street' => 'string|nullable|max:255',
+            'd_seat_count' => 'integer|required',
             'owner' => 'string|nullable|max:255',
             'city' => 'string|nullable|max:255',
+            'seat_bound' => 'boolean|required',
             'street_number' => 'integer',
             'name' => 'string|required',
             'zip_code' => 'integer',
         ]);
 
-        if ($this->restaurant[$field] != $value) {
-            $this->emit('activateSubmit');
+        if ($isValidated) {
+            $this->is_dirty = $this->restaurant->contact_email != $this->contact_email ||
+                $this->restaurant->zip_code != $this->zip_code ||
+                $this->restaurant->street != $this->street ||
+                $this->restaurant->owner != $this->owner ||
+                $this->restaurant->name != $this->name ||
+                $this->restaurant->city != $this->city ||
+                $this->restaurant->seat_reservation_bound != $this->seat_bound ||
+                $this->restaurant->default_table_seats != $this->d_seat_count;
         }
     }
 
@@ -81,9 +98,11 @@ class EditRestaurant extends Component
         $this->validate([
             'street_number' => 'integer|nullable',
             'street' => 'string|nullable|max:255',
+            'd_seat_count' => 'integer|required',
             'owner' => 'string|nullable|max:255',
             'contact_email' => 'email|required',
             'city' => 'string|nullable|max:255',
+            'seat_bound' => 'boolean|required',
             'zip_code' => 'integer|nullable',
             'name' => 'string|required',
         ]);
@@ -96,6 +115,8 @@ class EditRestaurant extends Component
             $this->restaurant->owner = $this->owner;
             $this->restaurant->name = $this->name;
             $this->restaurant->city = $this->city;
+            $this->restaurant->seat_reservation_bound = $this->seat_bound;
+            $this->restaurant->default_table_seats = $this->d_seat_count;
 
 
             $this->restaurant->save();
@@ -112,6 +133,8 @@ class EditRestaurant extends Component
             $newRestaurant->owner = $this->owner;
             $newRestaurant->name = $this->name;
             $newRestaurant->city = $this->city;
+            $this->restaurant->seat_reservation_bound = $this->seat_bound;
+            $this->restaurant->default_table_seats = $this->d_seat_count;
             $newRestaurant->save();
             if ($newRestaurant) {
                 $message = 'Restaurant successfully created';
@@ -130,13 +153,13 @@ class EditRestaurant extends Component
 
         $newTable = $this->restaurant->tables()->create([
             'table_number' => $max_table_number,
-            'seats' => 4,
+            'seats' => $this->d_seat_count,
         ]);
 
         if ($newTable) {
-            session()->flash('table-operations', 'Table with number: ' . $newTable->table_number . ' created');
+            session()->flash('message', 'Table with number: ' . $newTable->table_number . ' created');
         } else {
-            session()->flash('table-operations', 'Table with number: ' . $newTable->table_number . ' not created. Contact service team.');
+            session()->flash('message', 'Table with number: ' . $newTable->table_number . ' not created. Contact service team.');
         }
 
         $this->tables = $this->restaurant->tables()->get();
@@ -148,9 +171,9 @@ class EditRestaurant extends Component
 
         $deleted = Table::destroy($id);
         if ($deleted) {
-            session()->flash('table-operations', 'Table deleted');
+            session()->flash('message', 'Table deleted');
         } else {
-            session()->flash('table-operations', 'Table not deleted. Contact service team.');
+            session()->flash('message', 'Table not deleted. Contact service team.');
         }
         $this->tables = $this->restaurant->tables()->get();
     }
@@ -160,7 +183,7 @@ class EditRestaurant extends Component
         $this->authorize('update', $this->restaurant);
         $user = User::find($id);
         $this->restaurant->users()->detach($id);
-        session()->flash('account-operations', 'User: ' . $user->email . ' successfully detached from restaurant.');
+        session()->flash('message', 'User: ' . $user->email . ' successfully detached from restaurant.');
     }
 
     public function render()

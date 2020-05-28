@@ -21,28 +21,40 @@
     @apply text-sm;
     @apply px-3;
     @apply py-2;
-}
 
-.orgusto-button > svg {
-    @apply mr-2;
-}
+    &:disabled {
+        @apply text-gray-400;
+        @apply cursor-default;
 
-.orgusto-button:focus {
-    @apply outline-none;
+        &:hover {
+            @apply bg-current;
+        }
+    }
+
+    &:focus {
+        @apply outline-none;
+    }
 }
 
 .orgusto-input {
     @apply leading-tight;
     @apply text-gray-800;
-    @apply rounded-full;
     @apply bg-gray-200;
-    @apply font-light;
     @apply text-sm;
+    @apply rounded;
     @apply p-2;
-}
 
-.orgusto-input:focus {
-    @apply outline-none;
+    &:hover {
+        @apply font-semibold;
+    }
+
+    &:focus {
+        @apply border;
+        @apply border-gray-600;
+        @apply bg-white;
+        @apply font-semibold;
+        @apply outline-none;
+    }
 }
 
 .orgusto-timepicker {
@@ -60,6 +72,70 @@
 
 .switchChild:hover > span {
     @apply block;
+}
+
+.notification {
+    @apply fixed;
+    @apply bottom-0;
+    @apply right-0;
+    @apply m-8;
+    @apply flex;
+    @apply flex-row;
+    @apply items-center;
+    @apply justify-between;
+    @apply bg-purple-600;
+    @apply p-4;
+    @apply rounded-md;
+    @apply font-semibold;
+    @apply text-sm;
+    @apply leading-tight;
+    @apply text-white;
+    @apply shadow-lg;
+}
+
+.unchecked {
+    @apply absolute;
+    @apply block;
+    @apply w-6;
+    @apply h-6;
+    @apply mt-1;
+    @apply ml-1;
+    @apply bg-white;
+    @apply rounded-full;
+    @apply shadow;
+    @apply inset-y-0;
+    @apply left-0;
+    @apply bg-gray-400;
+    @apply transition-transform;
+    @apply duration-300;
+    @apply ease-in-out;
+}
+
+.unchecked:focus-within {
+    @apply shadow-outline;
+}
+
+.checked {
+    @apply absolute;
+    @apply block;
+    @apply w-6;
+    @apply h-6;
+    @apply mt-1;
+    @apply ml-1;
+    @apply rounded-full;
+    @apply shadow;
+    @apply inset-y-0;
+    @apply left-0;
+    @apply transition-transform;
+    @apply duration-300;
+    @apply ease-in-out;
+    @apply transform;
+    @apply bg-gray-600;
+    @apply translate-x-full;
+}
+
+.unchecked:focus-within {
+    @apply shadow-outline;
 }
 
 @import "tailwindcss/utilities";

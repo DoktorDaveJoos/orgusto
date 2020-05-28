@@ -23,6 +23,8 @@ class CreateRestaurantsTable extends Migration
             $table->integer('street_number')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
+            $table->integer('default_table_seats')->default(4);
+            $table->boolean('seat_reservation_bound')->default(true);
         });
     }
 
