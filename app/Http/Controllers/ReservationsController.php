@@ -23,7 +23,7 @@ class ReservationsController extends Controller
 
     public function index()
     {
-        $actualRestaurant = Restaurant::where('id', auth()->user()->selected_restaurant)->first();
+        $actualRestaurant = auth()->user()->restaurants()->first();
 
         if ($actualRestaurant->id) {
 

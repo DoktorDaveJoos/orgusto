@@ -15,6 +15,8 @@ class EditTable extends Component
     public $description;
     public $table_number;
 
+    public $is_dirty;
+
     public function getTableUpdatedAtForHumans()
     {
         return $this->table->updated_at->format('Y-m-d H:i:s');
@@ -28,6 +30,8 @@ class EditTable extends Component
         $this->seats = $table->seats;
         $this->description = $table->description;
         $this->table_number = $table->table_number;
+
+        $this->is_dirty = false;
     }
 
     public function updated($field, $value)
@@ -38,46 +42,21 @@ class EditTable extends Component
             'description' => 'string|nullable|max:255'
         ]);
 
-        if ($this->table[$field] != $value) {
-            $this->emit('activateSubmit');
-        }
+        $this->is_dirty = $this->table->table_number != $this->table_number ||
+            $this->table->seats != $this->seats ||
+            $this->table->description != $this->description;
     }
 
     public function submit()
     {
-        $this->validate([
-            'table_number' => 'integer',
-            'seats' => 'integer',
+        $validated = $this->validate([
+            'table_number' => 'required|integer',
+            'seats' => 'required|integer',
             'description' => 'string|nullable|max:255'
         ]);
 
-        $message = "";
-        if ($this->table) {
-            $this->table->seats = $this->seats;
-            $this->table->description = $this->description;
-            $this->table->table_number = $this->table_number;
-            if ($this->table->isDirty()) {
-                $this->table->save();
-                if ($this->table->wasChanged()) {
-                    $message = 'Table was successfully updated.';
-                } else {
-                    $message = 'Something went wrong!';
-                }
-            } else {
-                $message = 'Table has not changed.';
-            }
-        } else {
-            $newTable = Restaurant::find($this->restaurant->id)->tables()->create([
-                'seats' => $this->seats,
-                'description' => $this->description,
-                'table_number' => $this->table_number
-            ]);
-            if ($newTable) {
-                $message = 'Table successfully created';
-            } else {
-                $message = 'Could not create table. Please contact service team.';
-            }
-        }
+        $this->table->update($validated);
+        $message = $this->table->wasChanged() ? 'Table successfully changed' : 'Something went wrong';
         session()->flash('message', $message);
     }
 

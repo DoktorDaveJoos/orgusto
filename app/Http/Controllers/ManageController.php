@@ -24,7 +24,9 @@ class ManageController extends Controller
     public function index(Request $request)
     {
 
-        if (!auth()->user()->selected_restaurant) {
+        $actualRestaurant = auth()->user()->restaurants()->first();
+
+        if (!$actualRestaurant) {
             return redirect(route('restaurants.show'));
         }
 
@@ -33,8 +35,6 @@ class ManageController extends Controller
         $to = date($date . " 23:59:59");
 
         $scopedHour = $request->get('hour') ?? 17;
-
-        $actualRestaurant = Restaurant::where('id', auth()->user()->selected_restaurant)->first();
 
         $tables = $actualRestaurant->tables()->with(['reservations' => function ($query) use ($from, $to) {
             $query->whereBetween('starting_at', [$from, $to]);

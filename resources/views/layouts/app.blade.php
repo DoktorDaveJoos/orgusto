@@ -25,11 +25,13 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-gray-100">
     @include('layouts.nav')
     <div id="app">
-        <main class="py-4 flex flex-col w-full content-center bg-gray-100">
-            @yield('content')
+        <main class="py-4 flex flex-col w-full justify-center">
+            <div class="flex flex-col max-w-5xl px-10 w-full self-center">
+                @yield('content')
+            </div>
         </main>
     </div>
 

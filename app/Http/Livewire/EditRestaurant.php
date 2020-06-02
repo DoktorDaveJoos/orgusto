@@ -16,8 +16,8 @@ class EditRestaurant extends Component
 
     public $contact_email;
     public $street_number;
-    public $d_seat_count;
-    public $seat_bound;
+    public $default_table_seats;
+    public $seat_reservation_bound;
     public $zip_code;
     public $tables;
     public $street;
@@ -52,8 +52,8 @@ class EditRestaurant extends Component
         $this->restaurant = $restaurant;
         $this->authorize('view', $this->restaurant);
 
-        $this->seat_bound = $restaurant->seat_reservation_bound;
-        $this->d_seat_count = $restaurant->default_table_seats;
+        $this->seat_reservation_bound = $restaurant->seat_reservation_bound;
+        $this->default_table_seats = $restaurant->default_table_seats;
         $this->contact_email = $restaurant->contact_email;
         $this->street_number = $restaurant->street_number;
         $this->zip_code = $restaurant->zip_code;
@@ -68,14 +68,14 @@ class EditRestaurant extends Component
     public function updated($field, $value)
     {
         $isValidated = $this->validateOnly($field, [
-            'contact_email' => 'email:rfc|nullable',
-            'street' => 'string|nullable|max:255',
-            'd_seat_count' => 'integer|required',
-            'owner' => 'string|nullable|max:255',
-            'city' => 'string|nullable|max:255',
-            'seat_bound' => 'boolean|required',
+            'seat_reservation_bound' => 'boolean',
+            'default_table_seats' => 'integer',
+            'contact_email' => 'email:rfc',
+            'street' => 'string|max:255',
             'street_number' => 'integer',
-            'name' => 'string|required',
+            'owner' => 'string|max:255',
+            'name' => 'string|max:255',
+            'city' => 'string|max:255',
             'zip_code' => 'integer',
         ]);
 
@@ -86,8 +86,8 @@ class EditRestaurant extends Component
                 $this->restaurant->owner != $this->owner ||
                 $this->restaurant->name != $this->name ||
                 $this->restaurant->city != $this->city ||
-                $this->restaurant->seat_reservation_bound != $this->seat_bound ||
-                $this->restaurant->default_table_seats != $this->d_seat_count;
+                $this->restaurant->seat_reservation_bound != $this->seat_reservation_bound ||
+                $this->restaurant->default_table_seats != $this->default_table_seats;
         }
     }
 
@@ -95,53 +95,22 @@ class EditRestaurant extends Component
     {
         $this->authorize('update', $this->restaurant);
 
-        $this->validate([
-            'street_number' => 'integer|nullable',
-            'street' => 'string|nullable|max:255',
-            'd_seat_count' => 'integer|required',
-            'owner' => 'string|nullable|max:255',
-            'contact_email' => 'email|required',
-            'city' => 'string|nullable|max:255',
-            'seat_bound' => 'boolean|required',
-            'zip_code' => 'integer|nullable',
-            'name' => 'string|required',
+        $validated = $this->validate([
+            'default_table_seats' => 'required|integer',
+            'seat_reservation_bound' => 'boolean',
+            'street' => 'nullable|string|max:255',
+            'street_number' => 'nullable|integer',
+            'owner' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'zip_code' => 'nullable|integer',
+            'contact_email' => 'email:rfc',
         ]);
 
-        $message = "";
-        if ($this->restaurant) {
-            $this->restaurant->contact_email = $this->contact_email;
-            $this->restaurant->zip_code = $this->zip_code;
-            $this->restaurant->street = $this->street;
-            $this->restaurant->owner = $this->owner;
-            $this->restaurant->name = $this->name;
-            $this->restaurant->city = $this->city;
-            $this->restaurant->seat_reservation_bound = $this->seat_bound;
-            $this->restaurant->default_table_seats = $this->d_seat_count;
+        $this->restaurant->update($validated);
+        $this->is_dirty = false;
+        $message = $this->restaurant->wasChanged() ? 'Successfully updated restaurant' : 'Something went wrong';
 
-
-            $this->restaurant->save();
-            if ($this->restaurant->wasChanged()) {
-                $message = 'Restaurant was successfully updated.';
-            } else {
-                $message = 'Restaurant has not changed!';
-            }
-        } else {
-            $newRestaurant = new Restaurant;
-            $newRestaurant->contact_email = $this->contact_email;
-            $newRestaurant->zip_code = $this->zip_code;
-            $newRestaurant->street = $this->street;
-            $newRestaurant->owner = $this->owner;
-            $newRestaurant->name = $this->name;
-            $newRestaurant->city = $this->city;
-            $this->restaurant->seat_reservation_bound = $this->seat_bound;
-            $this->restaurant->default_table_seats = $this->d_seat_count;
-            $newRestaurant->save();
-            if ($newRestaurant) {
-                $message = 'Restaurant successfully created';
-            } else {
-                $message = 'Could not create Restaurant. Please contact service team.';
-            }
-        }
         session()->flash('message', $message);
     }
 
@@ -153,7 +122,7 @@ class EditRestaurant extends Component
 
         $newTable = $this->restaurant->tables()->create([
             'table_number' => $max_table_number,
-            'seats' => $this->d_seat_count,
+            'seats' => $this->default_table_seats,
         ]);
 
         if ($newTable) {

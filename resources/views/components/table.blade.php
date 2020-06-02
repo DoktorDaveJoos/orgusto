@@ -4,7 +4,7 @@
       {{ $table_head }}
     </tr>
   </thead>
-  <tbody class="bg-white">
+  <tbody class="bg-white rounded-lg">
     {{ $table_body }}
   </tbody>
 </table>

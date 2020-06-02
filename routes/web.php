@@ -1,8 +1,5 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ReservationsController;
-use App\Restaurant;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,12 +14,21 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::prefix('/invitation')->group(function () {
+    Route::get('/{user}', 'InvitationController@show')->name('invitation.show');
+    Route::post('/{user}', 'InvitationController@update')->name('invitation.update');
+});
+
 Auth::routes();
+
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/manage', 'ManageController@index')->name('manage.show');
+
+    Route::livewire('/users/{user}', 'edit-user')->name('user.show');
 
     Route::prefix('/restaurants')->group(function () {
         Route::get('/', 'RestaurantController@index')->name('restaurants.show');
@@ -32,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
             Route::livewire('/', 'edit-restaurant')->name('restaurant.show');
 
             Route::put('/', 'RestaurantController@update')->name('restaurant.update');
-            Route::delete('/', 'RestaurantController@destroy')->name('restaurant.destroy');
+            Route::post('/delete', 'RestaurantController@destroy')->name('restaurant.destroy');
 
             Route::livewire('/{table}', 'edit-table')->name('restaurant.table.show');
         });

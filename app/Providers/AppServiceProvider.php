@@ -45,5 +45,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.notification', 'notification');
 
         Blade::component('components.form-input', 'forminput');
+
+        Blade::component('components.modal', 'modal');
     }
 }

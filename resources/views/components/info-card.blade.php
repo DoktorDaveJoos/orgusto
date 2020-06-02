@@ -1,4 +1,4 @@
-<div class="bg-white mt-6 overflow-hidden rounded-t-lg border-b border-gray-200">
+<div class="bg-white w-full shadow-lg mt-6 overflow-hidden rounded-lg">
   <div class="flex flex-row content-center justify-between bg-gray-200 px-4 py-4 sm:px-6">
     <h3 class="text-lg self-center leading-6 font-medium text-gray-900">
       {{ $title }}
