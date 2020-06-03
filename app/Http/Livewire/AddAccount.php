@@ -19,7 +19,6 @@ class AddAccount extends Component
     public $action_button_text;
     public $is_disabled;
     public $anon_is_disabled;
-    public $tab_active;
 
     public function mount(Restaurant $restaurant)
     {
@@ -27,7 +26,6 @@ class AddAccount extends Component
 
         $this->action_button_text = 'add';
         $this->is_disabled = true;
-        $this->tab_active = 'email';
     }
 
     public function updated($field)
@@ -35,11 +33,6 @@ class AddAccount extends Component
         $this->validateOnly($field, [
             'searchTerm' => 'email'
         ]);
-    }
-
-    public function tabActive($isActive)
-    {
-        $this->tab_active = $isActive;
     }
 
     public function addAccount()
