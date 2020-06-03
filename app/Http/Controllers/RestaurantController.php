@@ -28,30 +28,41 @@ class RestaurantController extends Controller
 
     public function update(Request $request, Restaurant $restaurant)
     {
-        // Livewire.
+        // See livewire/edit-restaurant
     }
 
     public function store(CreateRestaurant $request)
     {
-        // $this->authorize('create');
 
-        $new_restaurant = Restaurant::create($request->validated());
-        // Make creator 'admin' automatically
-        auth()->user()->restaurants()->attach($new_restaurant->id, ['role' => 'admin']);
+        $user = auth()->user();
 
-        if ($request->wantsJson()) {
-            return $new_restaurant;
+        if ($user->can('create', Restaurant::class)) {
+            $new_restaurant = Restaurant::create($request->validated());
+            // Make creator 'admin' automatically
+            $user->restaurants()->attach($new_restaurant->id, ['role' => 'admin']);
+
+            if ($request->wantsJson()) {
+                return $new_restaurant;
+            }
+
+            return redirect()->route('restaurant.show', ['restaurant' => $new_restaurant->id]);
         }
 
-        return redirect()->route('restaurant.show', ['restaurant' => $new_restaurant->id]);
+        return redirect()->route('restaurants.show')->withErrors(['Something went wrong. Please contact service team.']);
     }
 
     public function destroy(DeleteRestaurant $request, Restaurant $restaurant)
     {
-        if ($request->validated()['name'] == $restaurant->name) {
-            Restaurant::destroy($restaurant->id);
+
+        if (auth()->user()->can('delete', $restaurant)) {
+            if ($request->validated()['name'] == $restaurant->name) {
+                Restaurant::destroy($restaurant->id);
+            }
+
+            $request->session()->flash('message', 'Successfully deleted restaurant.');
+            return redirect()->route('restaurants.show');
         }
 
-        return redirect()->route('restaurants.show');
+        return redirect()->route('restaurants.show')->withErrors(['Something went wrong. Please contact service team.']);
     }
 }

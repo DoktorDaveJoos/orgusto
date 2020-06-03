@@ -1,4 +1,4 @@
-<div x-data="{ openModal: false }" x-show="openModal" @open-modal.window="openModal = true" @close-add-account.window="openModal = false" class="fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center">
+<div x-data="{ openModal: false, tab: 'anon' }" x-show="openModal" @open-modal.window="openModal = true" @close-add-account.window="openModal = false" class="fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center">
     <!--
             Background overlay, show/hide based on modal state.
             
@@ -23,21 +23,21 @@
             From: "opacity-100 translate-y-0 sm:scale-100"
             To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         -->
-    <div x-data="{tab: '{{ $tab_active }}' }" class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
                 <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10">
                     <i class="fas fa-user-friends"></i>
                 </div>
 
-                <div class="flex flex-col px-4">
+                <div class="flex flex-col px-4 w-full">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 flex flex-row" id="modal-headline">
-                        Add Account
+                        Add Employee
                         <div wire:loading wire:target="addAccount" class="loader h-6 w-6 ml-4"></div>
                     </h3>
-                    <div class="flex border-b border-gray-200 my-4">
-                        <button class="mr-4 text-sm leading-tight uppercase text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-400': tab === 'email'}" wire:click="tabActive('email')"">Via email</button>
-                        <button class=" text-sm leading-tight uppercase text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-400': tab === 'anon'}" wire:click="tabActive('anon')">Via name</button>
+                    <div class="flex border-b border-gray-400 my-4 w-full">
+                        <button class="text-sm p-2 leading-tight text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-500 text-gray-800': tab === 'anon'}" @click="tab = 'anon'">Name</button>
+                        <button class="mr-4 text-sm p-2 leading-tight text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-500 text-gray-800': tab === 'email'}" @click="tab = 'email'">Account</button>
                     </div>
 
                     <div x-show="tab === 'email'" class="mt-3 text-center sm:mt-0 sm:text-left">
@@ -58,17 +58,17 @@
                         @error('searchTerm') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
                         @endforminput
                     </div>
-                    <div x-show="tab === 'anon'" class="mt-3 text-center sm:mt-0 sm:text-left">
-                        <div class="mt-2">
-                            <p class="text-sm leading-5 text-gray-500">
-                                Add an anonymous account.
+                    <div x-show="tab === 'anon'" class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                        <div class="mt-2 text-gray-600 w-full">
+                            <p class="text-sm leading-5">
+                                Add an employee.
                             </p>
                             <br>
-                            <p class="text-sm leading-5 font-semibold text-gray-500">
+                            <p class="text-sm leading-5 font-semibold text-gray-800">
                                 Important note:
                             </p>
-                            <p class="text-sm leading-5 text-gray-500">
-                                Anynomous accounts can not login by themselves.
+                            <p class="text-sm leading-5">
+                                Employees added by name can't login themeselves. If a login is required please add an employee account.
                             </p>
                         </div>
                         @forminput(['label' => 'Name'])
@@ -89,7 +89,7 @@
                 </button>
             </span>
             <span class="mt-3 flex sm:mt-0 sm:w-auto">
-                <button x-on:click="openModal = false" type="button" class="orgusto-button hover:bg-gray-600 hover:text-white">
+                <button x-on:click="openModal = false" type="button" class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out">
                     Cancel
                 </button>
             </span>

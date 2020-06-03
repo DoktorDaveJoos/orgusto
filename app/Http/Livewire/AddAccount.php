@@ -78,7 +78,7 @@ class AddAccount extends Component
         $anonymous_user->email = 'anonymous@' . $anonymous_user->id;
         $anonymous_user->save();
         $this->restaurant->users()->attach($anonymous_user->id, ['role' => 'user']);
-        $this->emitTo('edit-restaurant', 'userAdded', 'Anonymous user: ' . $anonymous_user->name . ' successfully added.');
+        $this->emitTo('edit-restaurant', 'userAdded', 'Employee: ' . $anonymous_user->name . ' successfully added.');
         $this->dispatchBrowserEvent('close-add-account');
     }
 

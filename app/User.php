@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->email_verified_at < date("Y-m-d H:i:s");
     }
+
+    public function isPremium()
+    {
+        return $this->access_level === 'premium';
+    }
 }

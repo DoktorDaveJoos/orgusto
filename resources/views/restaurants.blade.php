@@ -16,6 +16,20 @@
 </div>
 @endif
 
+@if($errors->any())
+<div x-data="{ open: true }" x-show="open" class="flex flex-row items-center justify-between bg-red-600 p-4 my-4 rounded-md font-semibold text-sm leading-tight text-white w-full shadow-md">
+  <div class="flex flex-row items-center">
+    <div class="p-2 px-3 mr-2 bg-red-700 rounded-md">
+      <i class="fas fa-exclamation-triangle text-white"></i>
+    </div>
+    {{ $errors->first() }}
+  </div>
+  <button @click="open = false">
+    <i class="fas fa-times text-white"></i>
+  </button>
+</div>
+@endif
+
 @infocard(['title' => 'Restaurants'])
 @slot('optional_button')
 <button x-data @click="$dispatch('open-add')" class="orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-colors duration-150 ease-in-out">
@@ -98,6 +112,7 @@
 <h3 class="text-lg leading-6 font-medium text-gray-900 flex flex-row justify-center sm:justify-start" id="modal-headline">
   Add Restaurant
 </h3>
+@if(auth()->user()->isPremium())
 <form method="POST" action="/restaurants" class="w-full -ml-2">
   @csrf
   @forminput(['label' => 'Restaurant name'])
@@ -113,7 +128,30 @@
     </button>
   </div>
 </form>
+@else
+<div class="w-full leading-tight text-sm text-gray-600">
+  <p class="my-4">
+    <span class="font-semibold text-gray-900">This feature is only for premium users.</span>
+    <br><br>
+    Right now this application is only for test purposes - please contact service team to inquire premium status for your account.
+    <br><br>
+    Thanks,<br>
+    Orgusto Team
+  </p>
+  <div class="bg-gray-50 flex flex-row-reverse">
+    <button x-on:click="openModal = false" type="button" class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out mr-4">
+      Close
+    </button>
+  </div>
+</div>
+@endif
 
 @endmodal
+
+@if (session()->has('message'))
+@notification
+{{ session('message') }}
+@endnotification
+@endif
 
 @endsection
