@@ -2109,7 +2109,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       inputProps: {
-        "class": "text-gray-600 rounded-full bg-gray-300 py-2 text-center w-full cursor-pointer self-center"
+        "class": "text-gray-600 shadow-lg rounded-full bg-gray-200 p-2 text-center w-full cursor-pointer self-center hover:text-gray-800 transition-color duration-200 ease-in-out"
       }
     };
   },
@@ -2119,7 +2119,7 @@ __webpack_require__.r(__webpack_exports__);
         return new Date(this.date);
       },
       set: function set(val) {
-        if (!moment(this.date).isSame(moment(val), 'date')) {
+        if (!moment(this.date).isSame(moment(val), "date")) {
           this.date = val;
         }
       }
@@ -2287,6 +2287,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-table",
   props: {
@@ -2307,9 +2309,7 @@ __webpack_require__.r(__webpack_exports__);
         return false;
       }
 
-      if (this.getReservation(slot) !== undefined) {
-        return true;
-      } else return false;
+      return this.getReservation(slot) !== undefined;
     },
     isEdgeSlot: function isEdgeSlot(slot) {
       var reservation = this.getReservation(slot);
@@ -2335,7 +2335,8 @@ __webpack_require__.r(__webpack_exports__);
       return ["bg-" + this.getReservation(slot).color + "-200", slot === 0 ? null : "rounded-l-full"];
     },
     slotColor: function slotColor(slot) {
-      return "bg-" + this.getReservation(slot).color + "-200";
+      var rounded_right = slot === 19 ? " rounded-r-full" : "";
+      return "bg-" + this.getReservation(slot).color + "-200" + rounded_right;
     },
     addNewReservationAt: function addNewReservationAt(slot) {
       var slotTime = moment(this.timelineStart).add(slot * 15, "m");
@@ -2404,6 +2405,10 @@ __webpack_require__.r(__webpack_exports__);
       type: Array,
       required: true
     },
+    restaurant: {
+      type: Object,
+      required: true
+    },
     timelineStart: String
   },
   data: function data() {
@@ -2439,6 +2444,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2641,6 +2654,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-empty-item",
   props: {
@@ -2655,13 +2669,16 @@ __webpack_require__.r(__webpack_exports__);
     date: {
       type: Object,
       required: false
+    },
+    restaurant: {
+      type: Object,
+      required: true
     }
   },
   data: function data() {
     return {
       displayError: undefined,
       colorOptions: ["gray", "blue", "green", "red", "orange", "indigo"],
-      users: ["Felix Forstenhäusler", "David Joos"],
       // values from input:
       input: {
         name: "",
@@ -2672,7 +2689,7 @@ __webpack_require__.r(__webpack_exports__);
         date: new Date(),
         person_count: "",
         length: "",
-        accepted_from: "",
+        user: "",
         color: "gray",
         tables: []
       }
@@ -2691,6 +2708,7 @@ __webpack_require__.r(__webpack_exports__);
       request.tables = this.input.tables.map(function (table) {
         return table.id;
       });
+      request.user_id = this.input.user.id;
       axios.post("/reservations", request).then(function (res) {
         if (res.status === 200) {
           location.reload();
@@ -2708,8 +2726,17 @@ __webpack_require__.r(__webpack_exports__);
     parseTableNumber: function parseTableNumber(val) {
       return val.table_number;
     },
+    parseUserName: function parseUserName(val) {
+      return val.name;
+    },
     onChange: function onChange(event) {
       this.input[event.target.id] = event.target.value;
+    },
+    onChangeUser: function onChangeUser(event) {
+      var found = this.employees.find(function (user) {
+        return user.name === event.target.value;
+      });
+      if (found) this.input.user = found;
     },
     onChangeTable: function onChangeTable(tableString) {
       var newTable = JSON.parse(tableString);
@@ -2722,7 +2749,6 @@ __webpack_require__.r(__webpack_exports__);
       this.input.tables = this.input.tables.filter(function (table) {
         return table.id.toString() !== event.target.id;
       });
-      console.log(this.input.tables);
     },
     clearView: function clearView(exceptions) {
       var _this2 = this;
@@ -2765,6 +2791,9 @@ __webpack_require__.r(__webpack_exports__);
         });
         return accumulated.seats;
       }
+    },
+    employees: function employees() {
+      return this.restaurant.users;
     }
   },
   watch: {
@@ -52386,7 +52415,7 @@ var render = function() {
           "label",
           {
             staticClass:
-              "uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              "uppercase tracking-wide text-gray-700 font-semibold text-xs mb-2"
           },
           [_vm._v(_vm._s(_vm.title))]
         )
@@ -52533,7 +52562,7 @@ var render = function() {
     "button",
     {
       staticClass:
-        "text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none",
+        "text-gray-600 shadow-lg bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none",
       on: {
         click: function($event) {
           return _vm.handleClick()
@@ -52591,18 +52620,18 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "mx-8 my-4 bg-gray-100 rounded-full flex flex-row" },
+    { staticClass: "mx-8 my-4 shadow-lg rounded-full flex flex-row bg-white" },
     [
       _c(
         "div",
         {
           staticClass:
-            "w-1/6 m-0 p-1 rounded-l-full bg-gray-300 text-gray-600 flex flex-row"
+            "w-1/6 rounded-l-full border-r border-gray-300 m-0 p-2 bg-gray-200 text-gray-600 flex flex-row"
         },
         [
           _c("div", { staticClass: "w-1/2 text-center flex flex-col" }, [
-            _c("span", { staticClass: "font-thin text-xs" }, [
-              _vm._v("Table nr.")
+            _c("span", { staticClass: "uppercase leading-tight text-xs" }, [
+              _vm._v("Table")
             ]),
             _vm._v(" "),
             _c("span", { staticClass: "w-full text-center" }, [
@@ -52611,7 +52640,9 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "w-1/2 text-center flex flex-col" }, [
-            _c("span", { staticClass: "font-thin text-xs" }, [_vm._v("Seats")]),
+            _c("span", { staticClass: "uppercase leading-tight text-xs" }, [
+              _vm._v("Seats")
+            ]),
             _vm._v(" "),
             _c("span", { staticClass: "w-full text-center" }, [
               _vm._v(_vm._s(_vm.table.seats))
@@ -52645,7 +52676,7 @@ var render = function() {
                                   "span",
                                   {
                                     staticClass:
-                                      "absolute overflow-x-visible text-gray-700 self-center pl-4 text-sm font-light z-0"
+                                      "absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
                                   },
                                   [_vm._v(_vm._s(_vm.getReservation(i).name))]
                                 )
@@ -52678,7 +52709,7 @@ var render = function() {
                   "div",
                   {
                     staticClass:
-                      "p-0 switchChild flex w-full text-gray-200 hover:text-gray-400 cursor-pointer",
+                      "p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer",
                     on: {
                       click: function($event) {
                         return _vm.addNewReservationAt(i)
@@ -52690,10 +52721,7 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "span",
-                      {
-                        staticClass:
-                          "self-center w-full text-center hidden text-sm"
-                      },
+                      { staticClass: "w-full text-center hidden text-xs" },
                       [_vm._v(_vm._s(_vm.getTime(i)))]
                     )
                   ]
@@ -52711,7 +52739,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "self-center w-full text-center" }, [
-      _c("i", { staticClass: "fas fa-plus" })
+      _c("i", { staticClass: "fas fa-plus text-xs" })
     ])
   }
 ]
@@ -52758,7 +52786,12 @@ var render = function() {
         },
         [
           _c("reservation-empty-item", {
-            attrs: { table: _vm.table, tables: _vm.tables, date: _vm.date },
+            attrs: {
+              table: _vm.table,
+              tables: _vm.tables,
+              date: _vm.date,
+              restaurant: _vm.restaurant
+            },
             scopedSlots: _vm._u([
               {
                 key: "optional-close",
@@ -52814,7 +52847,7 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "py-2 text-center sticky top-0 bg-white mx-8",
+      staticClass: "py-2 text-center sticky top-0 mx-8 text-gray-600",
       staticStyle: { "z-index": "5" }
     },
     [
@@ -52830,7 +52863,7 @@ var render = function() {
               {
                 key: i,
                 staticClass:
-                  "w-1/6 border-r text-gray-600 font-light text-lg text-left"
+                  "w-1/6 border-r border-gray-500 font-light text-lg text-left"
               },
               [
                 _c("span", { staticClass: "p-1" }, [
@@ -52859,7 +52892,7 @@ var render = function() {
                   {
                     key: j,
                     staticClass:
-                      "w-1/4 border-r font-light text-sm text-gray-600 text-left"
+                      "w-1/4 border-r border-gray-500 font-light text-sm text-left"
                   },
                   [
                     _c("span", { staticClass: "p-1" }, [
@@ -52886,7 +52919,7 @@ var staticRenderFns = [
       "div",
       {
         staticClass:
-          "w-1/6 border-r text-gray-600 font-light text-lg text-right"
+          "w-1/6 border-r border-gray-500 font-light text-lg text-right"
       },
       [_c("span", { staticClass: "p-2" }, [_vm._v("Hours")])]
     )
@@ -52899,7 +52932,7 @@ var staticRenderFns = [
       "div",
       {
         staticClass:
-          "w-1/6 border-r font-light text-sm text-gray-600 text-right"
+          "w-1/6 border-r border-gray-500 font-light text-sm text-right"
       },
       [_c("span", { staticClass: "p-2" }, [_vm._v("Minutes")])]
     )
@@ -52929,14 +52962,15 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "relative bg-white shadow-md mx-auto rounded-lg min-w-full"
+      staticClass:
+        "relative shadow-lg bg-white mx-auto rounded-lg w-full max-w-5xl"
     },
     [
       _c(
         "div",
         {
           key: _vm.input.color,
-          staticClass: "w-full rounded-t-lg px-4 py-2",
+          staticClass: "w-full rounded-t-lg px-4 py-4",
           class: _vm.color
         },
         [
@@ -53036,8 +53070,8 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "p-4" }, [
-        _c("div", { staticClass: "text-xl text-gray-700 mb-2 w-full" }, [
+      _c("div", { staticClass: "p-2" }, [
+        _c("div", { staticClass: "text-xl text-gray-700 p-2 mb-2 w-full" }, [
           _c("input", {
             directives: [
               {
@@ -53061,7 +53095,7 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "text-gray-700 text-base mb-2" }, [
+        _c("div", { staticClass: "text-gray-700 p-2 text-base mb-2" }, [
           _c("textarea", {
             directives: [
               {
@@ -53121,11 +53155,12 @@ var render = function() {
             _vm._v(" "),
             _c("orgastro-dropdown", {
               attrs: {
-                onChange: _vm.onChange,
-                id: "accepted_from",
+                onChange: _vm.onChangeUser,
+                id: "user_id",
                 init: "-",
                 title: "Employee",
-                options: _vm.users,
+                options: _vm.employees,
+                operation: _vm.parseUserName,
                 "additional-classes":
                   "bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400"
               }

@@ -48,11 +48,11 @@ class ReservationsController extends Controller
     {
         $request->validate([
             'starting_at' => 'required|date',
-            'accepted_from' => 'required',
-            'person_count' => 'required',
+            'person_count' => 'integer|required',
+            'user_id' => 'integer|required',
             'length' => 'required',
             'tables' => 'required',
-            'name' => 'required',
+            'name' => 'string|required',
         ]);
 
         $reservation = Reservation::create($request->all());

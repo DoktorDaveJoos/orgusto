@@ -15,19 +15,19 @@ export default {
     return {
       inputProps: {
         class:
-          "text-gray-600 rounded-full bg-gray-300 py-2 text-center w-full cursor-pointer self-center"
+          "text-gray-600 shadow-lg rounded-full bg-gray-200 p-2 text-center w-full cursor-pointer self-center hover:text-gray-800 transition-color duration-200 ease-in-out"
       }
     };
   },
   computed: {
     computedDate: {
-      get () {
+      get() {
         return new Date(this.date);
       },
-      set (val) {
-        if (!moment(this.date).isSame(moment(val), 'date')) {
+      set(val) {
+        if (!moment(this.date).isSame(moment(val), "date")) {
           this.date = val;
-        } 
+        }
       }
     }
   },
@@ -37,7 +37,7 @@ export default {
         msg: "scope event",
         type: "date",
         value: moment(newDate).format("YYYY-MM-DD")
-      })
+      });
     }
   }
 };

@@ -1,16 +1,24 @@
 <template>
-  <div class="py-2 text-center sticky top-0 bg-white mx-8" style="z-index: 5;">
+  <div class="py-2 text-center sticky top-0 mx-8 text-gray-600" style="z-index: 5;">
     <div class="w-full flex flex-row">
-      <div class="w-1/6 border-r text-gray-600 font-light text-lg text-right"><span class="p-2">Hours</span></div>
-      <div class="w-1/6 border-r text-gray-600 font-light text-lg text-left" v-for="i in 5" :key="i">
+      <div class="w-1/6 border-r border-gray-500 font-light text-lg text-right">
+        <span class="p-2">Hours</span>
+      </div>
+      <div
+        class="w-1/6 border-r border-gray-500 font-light text-lg text-left"
+        v-for="i in 5"
+        :key="i"
+      >
         <span class="p-1">{{ mapToHour(i - 1) }}</span>
       </div>
     </div>
     <div class="w-full flex flex-row">
-      <div class="w-1/6 border-r font-light text-sm text-gray-600 text-right"><span class="p-2">Minutes</span></div>
+      <div class="w-1/6 border-r border-gray-500 font-light text-sm text-right">
+        <span class="p-2">Minutes</span>
+      </div>
       <div class="w-1/6 flex flex-row" v-for="i in 5" :key="i">
         <div
-          class="w-1/4 border-r font-light text-sm text-gray-600 text-left"
+          class="w-1/4 border-r border-gray-500 font-light text-sm text-left"
           v-for="j in 4"
           :key="j"
         >

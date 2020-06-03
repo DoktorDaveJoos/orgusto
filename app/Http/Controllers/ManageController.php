@@ -24,7 +24,7 @@ class ManageController extends Controller
     public function index(Request $request)
     {
 
-        $actualRestaurant = auth()->user()->restaurants()->first();
+        $actualRestaurant = auth()->user()->restaurants()->with('users')->first();
 
         if (!$actualRestaurant) {
             return redirect(route('restaurants.show'));
@@ -40,6 +40,6 @@ class ManageController extends Controller
             $query->whereBetween('starting_at', [$from, $to]);
         }])->sortByTableNumber()->get();
 
-        return view('manage', ['tables' => $tables, 'date' => $date, 'scopedHour' => $scopedHour]);
+        return view('manage', ['tables' => $tables, 'date' => $date, 'scopedHour' => $scopedHour, 'restaurant' => $actualRestaurant]);
     }
 }

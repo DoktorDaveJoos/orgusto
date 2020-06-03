@@ -2,8 +2,6 @@
 
 @section('content')
 
-
-
 <orgusto-scope-manager date="{{ $date ?? date('Y-m-d') }}" scope="{{ $scopedHour ?? '17' }}"></orgusto-scope-manager>
 
 <div class="w-full pl-4">
@@ -21,7 +19,7 @@
 
     <orgusto-timeline ihour="{{ $scopedHour ?? '17' }}"></orgusto-timeline>
 
-    <orgusto-tables timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tables="{{ $tables }}"></orgusto-tables>
+    <orgusto-tables timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tables="{{ $tables }}" :restaurant="{{ $restaurant }}"></orgusto-tables>
 
 </div>
 

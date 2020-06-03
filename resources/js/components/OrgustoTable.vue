@@ -1,13 +1,15 @@
 <template>
-  <div class="mx-8 my-4 bg-gray-100 rounded-full flex flex-row">
+  <div class="mx-8 my-4 shadow-lg rounded-full flex flex-row bg-white">
     <!-- Header -->
-    <div class="w-1/6 m-0 p-1 rounded-l-full bg-gray-300 text-gray-600 flex flex-row">
+    <div
+      class="w-1/6 rounded-l-full border-r border-gray-300 m-0 p-2 bg-gray-200 text-gray-600 flex flex-row"
+    >
       <div class="w-1/2 text-center flex flex-col">
-        <span class="font-thin text-xs">Table nr.</span>
+        <span class="uppercase leading-tight text-xs">Table</span>
         <span class="w-full text-center">{{ table.table_number }}</span>
       </div>
       <div class="w-1/2 text-center flex flex-col">
-        <span class="font-thin text-xs">Seats</span>
+        <span class="uppercase leading-tight text-xs">Seats</span>
         <span class="w-full text-center">{{ table.seats }}</span>
       </div>
     </div>
@@ -22,7 +24,7 @@
             class="m-0 flex flex-row w-full"
           >
             <span
-              class="absolute overflow-x-visible text-gray-700 self-center pl-4 text-sm font-light z-0"
+              class="absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
             >{{ getReservation(i).name }}</span>
           </div>
           <div
@@ -35,13 +37,13 @@
       </div>
       <div
         v-else
-        class="p-0 switchChild flex w-full text-gray-200 hover:text-gray-400 cursor-pointer"
+        class="p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer"
         @click="addNewReservationAt(i)"
       >
         <div class="self-center w-full text-center">
-          <i class="fas fa-plus"></i>
+          <i class="fas fa-plus text-xs"></i>
         </div>
-        <span class="self-center w-full text-center hidden text-sm">{{ getTime(i) }}</span>
+        <span class="w-full text-center hidden text-xs">{{ getTime(i) }}</span>
       </div>
     </div>
   </div>
@@ -68,9 +70,7 @@ export default {
         return false;
       }
 
-      if (this.getReservation(slot) !== undefined) {
-        return true;
-      } else return false;
+      return this.getReservation(slot) !== undefined;
     },
 
     isEdgeSlot(slot) {
@@ -114,7 +114,8 @@ export default {
     },
 
     slotColor(slot) {
-      return "bg-" + this.getReservation(slot).color + "-200";
+      const rounded_right = slot === 19 ? " rounded-r-full" : "";
+      return "bg-" + this.getReservation(slot).color + "-200" + rounded_right;
     },
 
     addNewReservationAt(slot) {

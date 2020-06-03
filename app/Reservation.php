@@ -10,7 +10,7 @@ class Reservation extends Model
     use Notifiable;
 
     protected $fillable = [
-        'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'
+        'user_id', 'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'
     ];
 
     protected $casts = [
@@ -33,5 +33,10 @@ class Reservation extends Model
     public function tables()
     {
         return $this->belongsToMany(Table::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -1,7 +1,7 @@
 <template>
-  <div class="relative bg-white shadow-md mx-auto rounded-lg min-w-full">
+  <div class="relative shadow-lg bg-white mx-auto rounded-lg w-full max-w-5xl">
     <!-- Card head -->
-    <div class="w-full rounded-t-lg px-4 py-2" :class="color" :key="input.color">
+    <div class="w-full rounded-t-lg px-4 py-4" :class="color" :key="input.color">
       <div class="flex flex-col-reverse sm:flex-row justify-between items-center">
         <div class="flex-1 flex flex-row justify-center items-center w-full my-2">
           <i class="fas fa-clock text-gray-700 mr-4"></i>
@@ -48,8 +48,8 @@
       </div>
     </div>
 
-    <div class="p-4">
-      <div class="text-xl text-gray-700 mb-2 w-full">
+    <div class="p-2">
+      <div class="text-xl text-gray-700 p-2 mb-2 w-full">
         <input
           class="focus:outline-none w-full"
           v-model="input.name"
@@ -58,7 +58,7 @@
         />
       </div>
 
-      <div class="text-gray-700 text-base mb-2">
+      <div class="text-gray-700 p-2 text-base mb-2">
         <textarea
           class="focus:outline-none w-full"
           rows="2"
@@ -88,11 +88,12 @@
           additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400"
         ></orgastro-dropdown>
         <orgastro-dropdown
-          :onChange="onChange"
-          id="accepted_from"
+          :onChange="onChangeUser"
+          id="user_id"
           init="-"
           title="Employee"
-          :options="users"
+          :options="employees"
+          :operation="parseUserName"
           additional-classes="bg-gray-200 focus:bg-white border border-gray-200 focus:border-gray-400"
         ></orgastro-dropdown>
       </div>
@@ -162,6 +163,10 @@ export default {
     date: {
       type: Object,
       required: false
+    },
+    restaurant: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -169,8 +174,6 @@ export default {
       displayError: undefined,
 
       colorOptions: ["gray", "blue", "green", "red", "orange", "indigo"],
-
-      users: ["Felix Forstenhäusler", "David Joos"],
 
       // values from input:
       input: {
@@ -182,7 +185,7 @@ export default {
         date: new Date(),
         person_count: "",
         length: "",
-        accepted_from: "",
+        user: "",
         color: "gray",
         tables: []
       }
@@ -198,6 +201,7 @@ export default {
         .seconds(0)
         .format("YYYY-MM-DD HH:mm:ss");
       request.tables = this.input.tables.map(table => table.id);
+      request.user_id = this.input.user.id;
 
       axios
         .post("/reservations", request)
@@ -217,8 +221,17 @@ export default {
     parseTableNumber: val => {
       return val.table_number;
     },
+    parseUserName: val => {
+      return val.name;
+    },
     onChange(event) {
       this.input[event.target.id] = event.target.value;
+    },
+    onChangeUser(event) {
+      const found = this.employees.find(
+        user => user.name === event.target.value
+      );
+      if (found) this.input.user = found;
     },
     onChangeTable(tableString) {
       const newTable = JSON.parse(tableString);
@@ -229,7 +242,6 @@ export default {
       this.input.tables = this.input.tables.filter(
         table => table.id.toString() !== event.target.id
       );
-      console.log(this.input.tables);
     },
     clearView(exceptions) {
       Object.keys(this.input).forEach(key => {
@@ -264,6 +276,9 @@ export default {
         );
         return accumulated.seats;
       }
+    },
+    employees() {
+      return this.restaurant.users;
     }
   },
   watch: {

@@ -10,7 +10,7 @@
     ></orgusto-table>
 
     <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="closeModal">
-      <reservation-empty-item :table="table" :tables="tables" :date="date">
+      <reservation-empty-item :table="table" :tables="tables" :date="date" :restaurant="restaurant">
         <template v-slot:optional-close>
           <button
             class="orgusto-button bg-gray-300 hover:bg-red-300 hover:text-gray-900 transition-color duration-200 ease-in-out w-full"
@@ -31,6 +31,10 @@ export default {
   props: {
     tables: {
       type: Array,
+      required: true
+    },
+    restaurant: {
+      type: Object,
       required: true
     },
     timelineStart: String
