@@ -36,10 +36,10 @@
 
         <div class="flex-1 flex flex-row sm:justify-end w-full">
           <button
-            class="orgusto-button bg-gray-300 hover:bg-green-300 hover:text-gray-900 transition-color duration-200 ease-in-out w-full"
+            class="orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-color duration-200 ease-in-out mx-2"
             v-on:click="saveBtnPressed"
           >
-            <i class="fas fa-save"></i>
+            <i class="fas fa-save mr-2"></i>
             save
           </button>
 
@@ -136,12 +136,11 @@
           >{{ table.table_number }}</button>
         </div>
       </div>
-      <div v-if="displayError" class="flex w-full mt-2">
-        <div
-          class="bg-red-200 text-gray-900 text-sm opacity-75 w-8/12 rounded-lg p-4 mt-2 mb-2 w-full"
-          role="alert"
-        >
-          <span>{{ displayError.toString() }}</span>
+
+      <div v-if="displayError" class="leading-tight p-4 text-sm text-red-600 font-semibold">
+        <p>Following errros occured:</p>
+        <div v-for="(error, i, l) in displayError.errors" :key="i" class="pl-4 pt-2">
+          <p v-for="(errorItem, j) in error" :key="j" class="text-xs">{{ l + 1 }}. {{ errorItem }}</p>
         </div>
       </div>
     </div>
@@ -209,8 +208,11 @@ export default {
           if (res.status === 200) {
             location.reload();
           }
+          if (res.status === 422) {
+            console.log(res);
+          }
         })
-        .catch(err => (this.displayError = err));
+        .catch(err => (this.displayError = err.response.data));
     },
     halfAnHourStep: val => {
       return val / 2;

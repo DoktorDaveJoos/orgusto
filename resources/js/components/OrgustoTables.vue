@@ -13,12 +13,9 @@
       <reservation-empty-item :table="table" :tables="tables" :date="date" :restaurant="restaurant">
         <template v-slot:optional-close>
           <button
-            class="orgusto-button bg-gray-300 hover:bg-red-300 hover:text-gray-900 transition-color duration-200 ease-in-out w-full"
+            class="orgusto-button text-gray-600 hover:text-white hover:bg-gray-600 transition-color duration-200 ease-in-out"
             @click="closeModal"
-          >
-            <i class="fas fa-ban"></i>
-            cancel
-          </button>
+          >cancel</button>
         </template>
       </reservation-empty-item>
     </orgusto-modal-wrapper>

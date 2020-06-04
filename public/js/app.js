@@ -2395,9 +2395,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgusto-tables",
   props: {
@@ -2654,7 +2651,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-empty-item",
   props: {
@@ -2713,8 +2709,12 @@ __webpack_require__.r(__webpack_exports__);
         if (res.status === 200) {
           location.reload();
         }
+
+        if (res.status === 422) {
+          console.log(res);
+        }
       })["catch"](function (err) {
-        return _this.displayError = err;
+        return _this.displayError = err.response.data;
       });
     },
     halfAnHourStep: function halfAnHourStep(val) {
@@ -52801,13 +52801,10 @@ var render = function() {
                       "button",
                       {
                         staticClass:
-                          "orgusto-button bg-gray-300 hover:bg-red-300 hover:text-gray-900 transition-color duration-200 ease-in-out w-full",
+                          "orgusto-button text-gray-600 hover:text-white hover:bg-gray-600 transition-color duration-200 ease-in-out",
                         on: { click: _vm.closeModal }
                       },
-                      [
-                        _c("i", { staticClass: "fas fa-ban" }),
-                        _vm._v("\n          cancel\n        ")
-                      ]
+                      [_vm._v("cancel")]
                     )
                   ]
                 },
@@ -53052,11 +53049,11 @@ var render = function() {
                     "button",
                     {
                       staticClass:
-                        "orgusto-button bg-gray-300 hover:bg-green-300 hover:text-gray-900 transition-color duration-200 ease-in-out w-full",
+                        "orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-color duration-200 ease-in-out mx-2",
                       on: { click: _vm.saveBtnPressed }
                     },
                     [
-                      _c("i", { staticClass: "fas fa-save" }),
+                      _c("i", { staticClass: "fas fa-save mr-2" }),
                       _vm._v("\n          save\n        ")
                     ]
                   ),
@@ -53239,17 +53236,30 @@ var render = function() {
         ),
         _vm._v(" "),
         _vm.displayError
-          ? _c("div", { staticClass: "flex w-full mt-2" }, [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "bg-red-200 text-gray-900 text-sm opacity-75 w-8/12 rounded-lg p-4 mt-2 mb-2 w-full",
-                  attrs: { role: "alert" }
-                },
-                [_c("span", [_vm._v(_vm._s(_vm.displayError.toString()))])]
-              )
-            ])
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "leading-tight p-4 text-sm text-red-600 font-semibold"
+              },
+              [
+                _c("p", [_vm._v("Following errros occured:")]),
+                _vm._v(" "),
+                _vm._l(_vm.displayError.errors, function(error, i, l) {
+                  return _c(
+                    "div",
+                    { key: i, staticClass: "pl-4 pt-2" },
+                    _vm._l(error, function(errorItem, j) {
+                      return _c("p", { key: j, staticClass: "text-xs" }, [
+                        _vm._v(_vm._s(l + 1) + ". " + _vm._s(errorItem))
+                      ])
+                    }),
+                    0
+                  )
+                })
+              ],
+              2
+            )
           : _vm._e()
       ])
     ]

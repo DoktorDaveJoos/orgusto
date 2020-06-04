@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateReservation;
 use App\Reservation;
-use App\Restaurant;
 
 class ReservationsController extends Controller
 {
@@ -44,18 +41,9 @@ class ReservationsController extends Controller
         return view('restaurants');
     }
 
-    public function store(Request $request)
+    public function store(CreateReservation $request)
     {
-        $request->validate([
-            'starting_at' => 'required|date',
-            'person_count' => 'integer|required',
-            'user_id' => 'integer|required',
-            'length' => 'required',
-            'tables' => 'required',
-            'name' => 'string|required',
-        ]);
-
-        $reservation = Reservation::create($request->all());
+        $reservation = Reservation::create($request->validated());
         $reservation->tables()->attach($request->tables);
         $reservation->save();
     }
