@@ -24,7 +24,7 @@ class CreateReservationsTable extends Migration
             $table->text('notice')->nullable();
             $table->string('color')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone_numer')->nullable();
+            $table->string('phone_number')->nullable();
             $table->unsignedBigInteger('user_id');
         });
     }

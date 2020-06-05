@@ -1,35 +1,60 @@
 @extends('layouts.vue')
 
 @section('content')
-<div class="flex flex-col justify-around">
 
 
+@livewire('search-reservation')
 
-    <div class="flex flex-row border-b-4 justify-end p-2 text-white mb-2 mt-2 w-8/12 self-center max-w-5xl">
+@foreach ($reservations as $reservation)
 
-        <input type="text" placeholder="Search" class="leading-tight rounded-full my-2 bg-gray-300 text-gray-800 px-4 focus:outline-none">
+@infocard(['optional_color' => $reservation->color])
 
-        <button class="orgusto-button bg-blue-200">
-            Reservation
-        </button>
+@slot('title')
+<span class="text-gray-800 text-base font-normal">
+    {{ $reservation->name }}
+</span>
+<span class="border-r-2 border-gray-600 ml-1 mr-2">
 
-    </div>
+</span>
+<span class="text-gray-600 text-sm font-normal">
+    {{ $reservation->getHumanReadableDate() }}
+</span>
+@endslot
 
-    <div class="mb-2 mt-2 rounded-lg w-8/12 self-center hover:shadow-lg max-w-5xl">
-        <reservation-empty-item :tables="{{ $tables }}">
-        </reservation-empty-item>
-    </div>
-
-    @foreach ($reservations as $reservation)
-
-    <reservation-list-item :reservation="{{ $reservation }}"></reservation-list-item>
-
-    @endforeach
-
-    <div class="flex flex-col justify-around">
-
-        {{ $reservations->links() }}
-
-    </div>
+@if($reservation->notice)
+<div class="p-4 border-b border-gray-200 text-sm text-gray-600 leading-tight">
+    {{ $reservation->notice }}
 </div>
+@endif
+
+<div class="p-3">
+    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
+        <i class="fas fa-hourglass"></i>
+        {{ $reservation->length }} h
+    </span>
+    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
+        <i class="fas fa-user-friends"></i>
+        {{ $reservation->person_count }} Persons
+    </span>
+    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">{{ $reservation->user->name }}</span>
+
+    @if ($reservation->email)
+    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
+        <i class="fas fa-envelope"></i>
+        {{ $reservation->email }}
+    </span>
+    @endif
+    @if ($reservation->phone_number)
+    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
+        <i class="fas fa-phone"></i>
+        {{ $reservation->phone_number }}
+    </span>
+    @endif
+
+</div>
+
+@endinfocard
+
+@endforeach
+
 @endsection
