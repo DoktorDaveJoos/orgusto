@@ -5,10 +5,12 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Scout\Searchable;
 
 class Reservation extends Model
 {
     use Notifiable;
+    use Searchable;
 
     protected $fillable = [
         'user_id', 'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'

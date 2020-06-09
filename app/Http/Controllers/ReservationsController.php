@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReservation;
+use Illuminate\Http\Request;
 use App\Reservation;
 
 class ReservationsController extends Controller
@@ -18,15 +19,20 @@ class ReservationsController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $actualRestaurant = auth()->user()->restaurants()->first();
 
         if ($actualRestaurant->id) {
 
-            $reservations = Reservation::whereHas('tables', function ($q) use ($actualRestaurant) {
-                $q->where('restaurant_id', $actualRestaurant->id);
-            })->closest()->simplePaginate(20);
+            $reservation = $request->get('reservation');
+            if ($reservation) {
+                $reservations = Reservation::where('id', $reservation)->get();
+            } else {
+                $reservations = Reservation::whereHas('tables', function ($q) use ($actualRestaurant) {
+                    $q->where('restaurant_id', $actualRestaurant->id);
+                })->closest()->simplePaginate(20);
+            }
 
             if (request()->wantsJson()) {
                 return $reservations;

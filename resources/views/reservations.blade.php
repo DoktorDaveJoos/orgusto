@@ -2,8 +2,15 @@
 
 @section('content')
 
+<div class="w-full flex justify-center">
+    <div class="w-full max-w-5xl flex justify-between">
+        <div class="w-full max-w-sm">
+            @livewire('search-reservation')
+        </div>
+    </div>
 
-@livewire('search-reservation')
+
+</div>
 
 @foreach ($reservations as $reservation)
 
