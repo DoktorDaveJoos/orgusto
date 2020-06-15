@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Restaurant;
 use App\Table;
 use App\User;
+use App\Reservation;
 use Livewire\Component;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -138,8 +139,15 @@ class EditRestaurant extends Component
     {
         $this->authorize('delete', $this->restaurant);
 
+        $table_reservations = Table::find($id)->reservations()->get();
+
         $deleted = Table::destroy($id);
         if ($deleted) {
+            foreach ($table_reservations as $reservation) {
+                if (sizeof($reservation->tables()->get()->toArray()) <= 1) {
+                    Reservation::destroy($reservation->id);
+                }
+            }
             session()->flash('message', 'Table deleted');
         } else {
             session()->flash('message', 'Table not deleted. Contact service team.');

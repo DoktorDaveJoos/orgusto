@@ -7,7 +7,6 @@ use Livewire\Component;
 
 class SearchReservation extends Component
 {
-
     public $searchTerm;
     public $results;
 
