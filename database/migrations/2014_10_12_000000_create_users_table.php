@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('type');
+            $table->string('type')->default('registered');
             $table->string('access_level')->default('free');
             $table->timestamp('email_verified_at')->nullable();
             $table->bigInteger('selected_restaurant')->nullable();
