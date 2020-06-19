@@ -2876,6 +2876,389 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchReservation.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SearchReservation.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "search-reservations-bar",
+  props: ["searchEndpoint", "reservationEndpoint"],
+  mounted: function mounted() {
+    var _this = this,
+        _url$searchParams$get;
+
+    document.addEventListener("click", function (e) {
+      return _this.handleClickOutside(e.target.id);
+    });
+    var url = new URL(location.href);
+    this.urlSearchQuery = this.searchQuery = (_url$searchParams$get = url.searchParams.get("searchQuery")) !== null && _url$searchParams$get !== void 0 ? _url$searchParams$get : "";
+    var from = url.searchParams.get("from");
+    var to = url.searchParams.get("to");
+
+    if (from && to) {
+      from = moment(from);
+      to = moment(to);
+      console.log(from.diff(to, "weeks"), from, to);
+
+      if (moment().startOf("day").diff(from, "days") === -1) {
+        this.dateFilter = "Tomorrow";
+      } else if (from.diff(to, "weeks") === -1) {
+        this.dateFilter = "Next week";
+      } else if (from.diff(to, "months") === -1) {
+        this.dateFilter = "Next month";
+      } else if (from.isSame(to)) {
+        this.singleDate = from;
+      } else {
+        this.range = {
+          start: from,
+          end: to
+        };
+      }
+    }
+  },
+  data: function data() {
+    return {
+      results: [],
+      searchQuery: "",
+      searchQueryIsDirty: false,
+      isShowingRecommendations: false,
+      isCalculating: false,
+      isShowingFilter: false,
+      isShowingDateFilter: false,
+      dateFilter: "Today",
+      dateModeIndicator: "fastForward",
+      urlSearchQuery: "",
+      range: {
+        start: new Date(),
+        end: new Date()
+      },
+      singleDate: new Date(),
+      quickFilter: ["Today", "Tomorrow", "Next week", "Next month"]
+    };
+  },
+  methods: {
+    handleClickOutside: function handleClickOutside(id) {
+      if (id !== "options-menu" && !id.includes("dateFilterDetail")) {
+        this.isShowingDateFilter = false;
+      }
+
+      this.isShowingRecommendations = false;
+    },
+    searchOnType: function searchOnType() {
+      var _this2 = this;
+
+      if (this.searchQuery !== this.urlSearchQuery) {
+        axios.post(this.searchEndpoint, {
+          searchQuery: this.searchQuery,
+          from: this.dateForRequest.from,
+          to: this.dateForRequest.to
+        }).then(function (res) {
+          _this2.results = res.data;
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      } else {
+        this.urlSearchQuery = "";
+      }
+    },
+    expensiveOperation: _.debounce(function () {
+      var _this3 = this;
+
+      this.isCalculating = true;
+      setTimeout(function () {
+        _this3.searchOnType();
+      }, 500);
+    }, 500),
+    handleSubmit: function handleSubmit() {
+      var queryParams = {};
+      if (this.searchQuery.length > 0) queryParams.searchQuery = this.searchQuery;
+
+      if (this.dateFilter !== "Today") {
+        queryParams.from = this.dateForRequest.from;
+        queryParams.to = this.dateForRequest.to;
+      }
+
+      queryParams = $.param(queryParams);
+      if (queryParams.length > 0) queryParams = "?" + queryParams;
+      var queryString = this.reservationEndpoint + queryParams;
+      location.assign(queryString);
+    },
+    setDateFilter: function setDateFilter(val) {
+      this.dateModeIndicator = "fastForward";
+      this.dateFilter = val;
+    }
+  },
+  watch: {
+    searchQuery: function searchQuery() {
+      this.searchQueryIsDirty = true;
+      this.expensiveOperation();
+
+      if (this.searchQuery === "") {
+        this.isShowingRecommendations = false;
+      }
+    },
+    range: function range() {
+      var from = moment(this.range.start).format("DD.MM.YY");
+      var to = moment(this.range.end).format("DD.MM.YY");
+      this.dateFilter = from + " → " + to;
+      this.dateModeIndicator = "range";
+      this.isShowingDateFilter = false;
+    },
+    singleDate: function singleDate() {
+      this.dateFilter = "↓ " + moment(this.singleDate).format("DD.MM.YY");
+      this.dateModeIndicator = "singleDate";
+    },
+    results: function results() {
+      this.isShowingRecommendations = this.searchQuery.length > 0;
+    }
+  },
+  computed: {
+    filteredQuickFilter: function filteredQuickFilter() {
+      var _this4 = this;
+
+      return this.quickFilter.filter(function (a) {
+        return a !== _this4.dateFilter;
+      });
+    },
+    quickFilterIncludes: function quickFilterIncludes() {
+      return this.quickFilter.includes(this.dateFilter);
+    },
+    hasResults: function hasResults() {
+      return this.results.length > 0;
+    },
+    dateForRequest: function dateForRequest() {
+      var from = moment();
+      var to;
+
+      if (this.dateModeIndicator === "fastForward") {
+        if (this.dateFilter === "Today") {
+          to = from;
+        } else if (this.dateFilter === "Tomorrow") {
+          to = moment().add(1, "days");
+          from = to;
+        } else if (this.dateFilter === "Next week") {
+          to = moment().add(1, "week");
+        } else if (this.dateFilter === "Next month") {
+          to = moment().add(1, "month");
+        }
+      } else if (this.dateModeIndicator === "singleDate") {
+        from = moment(this.singleDate);
+        to = from;
+      } else if (this.dateModeIndicator === "range") {
+        from = moment(this.range.start);
+        to = moment(this.range.end);
+      }
+
+      from = from.format("YYYY-MM-DD");
+      to = to.format("YYYY-MM-DD");
+      return {
+        from: from,
+        to: to
+      };
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Modals/OrgustoModalWrapper.vue?vue&type=style&index=0&lang=css&":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Modals/OrgustoModalWrapper.vue?vue&type=style&index=0&lang=css& ***!
@@ -52525,7 +52908,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("vc-date-picker", {
+  return _c("v-date-picker", {
     attrs: { "input-props": _vm.inputProps, "input-debounce": 500 },
     model: {
       value: _vm.computedDate,
@@ -53397,6 +53780,512 @@ var staticRenderFns = [
       [
         _c("i", { staticClass: "fas fa-edit" }),
         _vm._v("\n        edit\n      ")
+      ]
+    )
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchReservation.vue?vue&type=template&id=2a02cfae&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SearchReservation.vue?vue&type=template&id=2a02cfae& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "w-full max-w-5xl flex justify-between content-center h-12 mb-6"
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "group mt-1 relative rounded-full border-2 border-gray-400 focus-within:border-blue-400 shadow-lg bg-white pl-10 flex flex-row w-2/3 mr-4"
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.searchQuery,
+                expression: "searchQuery"
+              }
+            ],
+            staticClass:
+              "bg-white pl-2 form-input block w-full sm:text-sm sm:leading-5 focus:outline-none",
+            attrs: {
+              id: "reservations.search",
+              placeholder: "Search name, email, phone number..."
+            },
+            domProps: { value: _vm.searchQuery },
+            on: {
+              keyup: function($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.handleSubmit($event)
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.searchQuery = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _vm.isShowingRecommendations
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "origin-top-right absolute right-0 mt-12 w-full border border-gray-400 bg-white rounded-lg shadow-lg"
+                },
+                [
+                  _vm.hasResults
+                    ? _c(
+                        "div",
+                        {
+                          attrs: {
+                            role: "menu",
+                            "aria-orientation": "vertical",
+                            "aria-labelledby": "options-menu"
+                          }
+                        },
+                        [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c("hr"),
+                          _vm._v(" "),
+                          _vm._l(_vm.results, function(result) {
+                            return _c(
+                              "div",
+                              { key: result.id, staticClass: "py-1" },
+                              [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 text-left",
+                                    attrs: {
+                                      href:
+                                        _vm.reservationEndpoint +
+                                        "/" +
+                                        result.id,
+                                      role: "menuitem"
+                                    }
+                                  },
+                                  [
+                                    _c("span", {
+                                      domProps: {
+                                        innerHTML: _vm._s(result.name)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("span", {
+                                      staticClass: "text-xs text-gray-500",
+                                      class: result.found_notice
+                                        ? ""
+                                        : "hidden",
+                                      domProps: {
+                                        innerHTML: _vm._s(result.notice)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("span", {
+                                      staticClass: "text-xs text-gray-500",
+                                      class: result.found_email ? "" : "hidden",
+                                      domProps: {
+                                        innerHTML: _vm._s(result.email)
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("span", {
+                                      staticClass: "text-xs text-gray-500",
+                                      class: result.found_phone_number
+                                        ? ""
+                                        : "hidden",
+                                      domProps: {
+                                        innerHTML: _vm._s(result.phone_number)
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]
+                            )
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "border-t border-gray-200" })
+                        ],
+                        2
+                      )
+                    : _c("div", { staticClass: "p-4" }, [_vm._m(2)])
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "focus:outline-none leading-tight h-full w-12 rounded-r-full transition-colors duration-150 ease-in-out",
+              class: _vm.isShowingFilter
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-600",
+              on: {
+                click: function($event) {
+                  _vm.isShowingFilter = !_vm.isShowingFilter
+                }
+              }
+            },
+            [_vm._m(3)]
+          ),
+          _vm._v(" "),
+          _vm.isShowingFilter && !_vm.isShowingRecommendations
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "origin-top-right absolute right-0 mt-12 w-full border border-gray-400 bg-white rounded-lg shadow-lg"
+                },
+                [_vm._m(4)]
+              )
+            : _vm._e()
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "group mt-1 relative rounded-full border-2 border-gray-400 focus-within:border-blue-400 shadow-lg bg-white pl-10 flex flex-row w-1/3"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            },
+            [
+              _c(
+                "span",
+                { staticClass: "text-gray-600 sm:text-sm sm:leading-5 mx-2" },
+                [
+                  _vm.quickFilterIncludes
+                    ? _c("i", { staticClass: "fas fa-fast-forward" })
+                    : _c("i", { staticClass: "fas fa-calendar-day" })
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-full flex flex-row justify-center" }, [
+            _c("div", { staticClass: "relative inline-block text-left" }, [
+              _c("div", { staticClass: "h-full" }, [
+                _c("span", { staticClass: "h-full" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "justify-center h-full w-full px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-600 hover:text-indigo-500 focus:outline-none focus:outline-none transition ease-in-out duration-150",
+                      attrs: {
+                        id: "options-menu",
+                        type: "button",
+                        "aria-haspopup": "true",
+                        "aria-expanded": "true"
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.isShowingDateFilter = !_vm.isShowingDateFilter
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.dateFilter))]
+                  )
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm.isShowingDateFilter
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "origin-bottom-left border border-gray-400 -ml-10 absolute mt-12 w-full right-auto rounded-md shadow-lg",
+                  attrs: { id: "dateFilterDetail" }
+                },
+                [
+                  _c("div", { staticClass: "rounded-md bg-white shadow-xs" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "py-1",
+                        attrs: {
+                          role: "menu",
+                          "aria-orientation": "vertical",
+                          "aria-labelledby": "options-menu"
+                        }
+                      },
+                      [
+                        _vm._l(_vm.filteredQuickFilter, function(entry) {
+                          return _c(
+                            "button",
+                            {
+                              key: entry,
+                              staticClass:
+                                "block w-full px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 text-center",
+                              attrs: { role: "menuitem" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.setDateFilter(entry)
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "flex justify-between items-center"
+                                },
+                                [
+                                  _c("i", {
+                                    staticClass:
+                                      "fas fa-fast-forward text-gray-500 hover:text-gray-600"
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "flex-1 text-center" },
+                                    [_vm._v(_vm._s(entry))]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "v-date-picker",
+                          {
+                            attrs: {
+                              mode: "range",
+                              popover: {
+                                placement: "bottom",
+                                visibility: "click"
+                              }
+                            },
+                            model: {
+                              value: _vm.range,
+                              callback: function($$v) {
+                                _vm.range = $$v
+                              },
+                              expression: "range"
+                            }
+                          },
+                          [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "block w-full px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 text-center",
+                                attrs: { href: "#", role: "menuitem" }
+                              },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "flex justify-between items-center hover:text-gray-800",
+                                    attrs: { id: "dateFilterDetailgeneralDiv" }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass:
+                                        "fas fa-calendar-alt text-gray-500",
+                                      attrs: { id: "dateFilterDetailIcon" }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "flex-1 text-center",
+                                        attrs: { id: "dateFilterDetailDiv" }
+                                      },
+                                      [_vm._v("Date range")]
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ],
+                      2
+                    )
+                  ])
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "v-date-picker",
+            {
+              attrs: { popover: { placement: "bottom", visibility: "click" } },
+              model: {
+                value: _vm.singleDate,
+                callback: function($$v) {
+                  _vm.singleDate = $$v
+                },
+                expression: "singleDate"
+              }
+            },
+            [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "focus:outline-none bg-gray-200 leading-tight focus:bg-indigo-600 focus:text-white text-gray-600 h-full w-12 rounded-r-full transition-colors duration-150 ease-in-out"
+                },
+                [
+                  _c(
+                    "span",
+                    { staticClass: "sm:text-sm sm:leading-5 mx-2 self-center" },
+                    [_c("i", { staticClass: "fas fa-calendar-alt" })]
+                  )
+                ]
+              )
+            ]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "ml-4 focus:outline-none px-4 text-sm leading-tight mt-1 relative rounded-full font-semibold border-2 border-indigo-300 bg-indigo-100 text-indigo-500 hover:border-indigo-700 hover:bg-indigo-600 hover:text-white shadow-lg text-center transition-colors duration-150 ease-in-out",
+          on: { click: _vm.handleSubmit }
+        },
+        [_vm._m(5)]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+      },
+      [
+        _c(
+          "span",
+          { staticClass: "text-gray-600 sm:text-sm sm:leading-5 mx-2" },
+          [_c("i", { staticClass: "fas fa-search" })]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "py-2" }, [
+      _c("span", { staticClass: "p-4 text-sm text-gray-600" }, [
+        _vm._v("Recommendations:")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "flex flex-row" }, [
+      _c("div", { staticClass: "flex content-center pr-4 pl-2 items-center" }, [
+        _c("div", [
+          _c("i", { staticClass: "fas fa-exclamation-triangle text-gray-700" })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c("p", { staticClass: "text-sm text-gray-700" }, [
+          _vm._v("Sorry, we could not find anything.")
+        ]),
+        _vm._v(" "),
+        _c("p", { staticClass: "text-sm text-gray-500" }, [
+          _vm._v("Please check your search term.")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "span",
+      { staticClass: "sm:text-sm sm:leading-5 mx-2 self-center" },
+      [_c("i", { staticClass: "fas fa-filter" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "bg-white rounded-lg" }, [
+      _c("div", { staticClass: "py-2" }, [
+        _c("span", { staticClass: "p-4 text-sm text-gray-700" }, [
+          _vm._v("Available filters:")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("div")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "flex row justify-between items-baseline" },
+      [
+        _c("div", { staticClass: "mr-2" }, [_vm._v("Update")]),
+        _vm._v(" "),
+        _c("div", [_c("i", { staticClass: "fas fa-redo" })])
       ]
     )
   }
@@ -70389,7 +71278,8 @@ var map = {
 	"./components/OrgustoTables.vue": "./resources/js/components/OrgustoTables.vue",
 	"./components/OrgustoTimeline.vue": "./resources/js/components/OrgustoTimeline.vue",
 	"./components/ReservationEmptyItem.vue": "./resources/js/components/ReservationEmptyItem.vue",
-	"./components/ReservationListItem.vue": "./resources/js/components/ReservationListItem.vue"
+	"./components/ReservationListItem.vue": "./resources/js/components/ReservationListItem.vue",
+	"./components/SearchReservation.vue": "./resources/js/components/SearchReservation.vue"
 };
 
 
@@ -70432,13 +71322,11 @@ __webpack_require__.r(__webpack_exports__);
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+window._ = _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
  // Use v-calendar & v-date-picker components
 
-Vue.use(v_calendar__WEBPACK_IMPORTED_MODULE_0___default.a, {
-  componentPrefix: 'vc' // Use <vc-calendar /> instead of <v-calendar />
-
-});
+Vue.use(v_calendar__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.use(__webpack_require__(/*! vue-moment */ "./node_modules/vue-moment/dist/vue-moment.js"));
 /**
  * The following block of code may be used to automatically register your
@@ -71297,6 +72185,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationListItem_vue_vue_type_template_id_4d6ef422___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationListItem_vue_vue_type_template_id_4d6ef422___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/SearchReservation.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/SearchReservation.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SearchReservation.vue?vue&type=template&id=2a02cfae& */ "./resources/js/components/SearchReservation.vue?vue&type=template&id=2a02cfae&");
+/* harmony import */ var _SearchReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SearchReservation.vue?vue&type=script&lang=js& */ "./resources/js/components/SearchReservation.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SearchReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/SearchReservation.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/SearchReservation.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/SearchReservation.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SearchReservation.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchReservation.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/SearchReservation.vue?vue&type=template&id=2a02cfae&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/SearchReservation.vue?vue&type=template&id=2a02cfae& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SearchReservation.vue?vue&type=template&id=2a02cfae& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SearchReservation.vue?vue&type=template&id=2a02cfae&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

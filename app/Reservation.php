@@ -12,6 +12,8 @@ class Reservation extends Model
     use Notifiable;
     use Searchable;
 
+    public $asYouType = true;
+
     protected $fillable = [
         'user_id', 'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'
     ];
@@ -27,6 +29,16 @@ class Reservation extends Model
      * @var array
      */
     protected $dates = ['starting_at'];
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return $this->only('name', 'notice', 'email', 'phone_number');
+    }
 
     public function getHumanReadableDate()
     {

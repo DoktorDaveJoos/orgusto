@@ -1,5 +1,5 @@
 <template>
-  <vc-date-picker v-model="computedDate" :input-props="inputProps" :input-debounce="500"></vc-date-picker>
+  <v-date-picker v-model="computedDate" :input-props="inputProps" :input-debounce="500"></v-date-picker>
 </template>
 
 <script>

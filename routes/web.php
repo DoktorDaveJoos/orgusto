@@ -48,7 +48,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'ReservationsController@index')->name('reservations.show');
         Route::post('/', 'ReservationsController@store')->name('reservations.store');
 
-        Route::get('/{reservation}', 'ReservationsController@update')->name('reservation.show');
+        Route::post('/search', 'ReservationsController@search')->name('reservations.search');
+
+        Route::get('/{reservation}', 'ReservationsController@show')->name('reservation.show');
         Route::put('/{reservation}', 'ReservationsController@update')->name('reservation.update');
         Route::delete('/{reservation}', 'ReservationsController@destroy')->name('reservation.destroy');
     });

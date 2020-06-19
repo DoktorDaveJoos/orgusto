@@ -63,7 +63,7 @@
         <label for="x123" class="inline-flex items-center cursor-pointer">
             <span x-data="{ isChecked : @if($this->seat_reservation_bound) true @else false @endif }" class="relative">
                 <span class="block h-8 rounded-full shadow-inner bg-gray-200" style="width: 3.5rem"></span>
-                <span class="pl-1" x-bind:class="isChecked ? 'unchecked' : 'checked'">
+                <span class="pl-1 w-6 h-6" x-bind:class="isChecked ? 'unchecked' : 'checked'">
                     <input wire:model="seat_reservation_bound" id="x123" type="checkbox" class="absolute opacity-0 w-0 h-0" />
                     <i class="fas fa-check text-gray-200 transition-opacity duration-300 ease-in-out" style="height: 0.125rem;" x-bind:class="isChecked ? 'opacity-0' : 'opacity-100'"></i>
                 </span>
