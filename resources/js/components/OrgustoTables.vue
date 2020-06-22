@@ -10,7 +10,7 @@
     ></orgusto-table>
 
     <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="closeModal">
-      <reservation-empty-item :table="table" :tables="tables" :date="date" :restaurant="restaurant">
+      <reservation-empty-item :table="table" :tables="tables" :date="date" :employees="employees">
         <template v-slot:optional-close>
           <button
             class="orgusto-button text-gray-600 hover:text-white hover:bg-gray-600 transition-color duration-200 ease-in-out"
@@ -30,7 +30,7 @@ export default {
       type: Array,
       required: true
     },
-    restaurant: {
+    employees: {
       type: Object,
       required: true
     },

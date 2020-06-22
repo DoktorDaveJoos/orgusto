@@ -22,21 +22,21 @@ class ManageController extends Controller
     {
 
         $actualRestaurant = auth()->user()->restaurants()->with('users')->first();
+        $employees = $actualRestaurant->users ?? [];
 
-        if (!$actualRestaurant) {
-            return redirect(route('restaurants.show'));
-        }
-
+        $tables = [];
         $date = $request->get('date') ?? date('Y-m-d');
         $from = date($date . " 00:00:00");
         $to = date($date . " 23:59:59");
-
         $scopedHour = $request->get('hour') ?? 17;
 
-        $tables = $actualRestaurant->tables()->with(['reservations' => function ($query) use ($from, $to) {
-            $query->whereBetween('starting_at', [$from, $to]);
-        }])->sortByTableNumber()->get();
+        if ($actualRestaurant) {
+            $tables = $actualRestaurant->tables()->with(['reservations' => function ($query) use ($from, $to) {
+                $query->whereBetween('starting_at', [$from, $to]);
+            }])->sortByTableNumber()->get();
+        }
 
-        return view('manage', ['tables' => $tables, 'date' => $date, 'scopedHour' => $scopedHour, 'restaurant' => $actualRestaurant]);
+
+        return view('manage', ['tables' => $tables, 'date' => $date, 'scopedHour' => $scopedHour, 'employees' => $employees]);
     }
 }

@@ -143,11 +143,6 @@ class EditRestaurant extends Component
 
         $deleted = Table::destroy($id);
         if ($deleted) {
-            foreach ($table_reservations as $reservation) {
-                if (sizeof($reservation->tables()->get()->toArray()) <= 1) {
-                    Reservation::destroy($reservation->id);
-                }
-            }
             session()->flash('message', 'Table deleted');
         } else {
             session()->flash('message', 'Table not deleted. Contact service team.');

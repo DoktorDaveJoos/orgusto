@@ -10,7 +10,7 @@
 
 @if(sizeof($reservations) === 0)
 
-<div class="flex justify-center p-4 text-lg text-gray-700">
+<div class="orgusto-headline flex justify-center p-4 text-3xl text-gray-700">
     No reservations for this search criteria.
 </div>
 <div class="flex justify-center">

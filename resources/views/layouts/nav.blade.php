@@ -1,6 +1,6 @@
 <nav class="flex items-center justify-between shadow-lg flex-wrap bg-gray-200 p-4 mb-2 sticky top-0 z-50">
   <div>
-    <span class="font-display text-xl font-semibold text-gray-700 pl-4 text-center">{{ ucfirst(config('app.name')) }}</span>
+    <img class="w-40" src="{{ asset('orgusto-logo-svg.svg') }}" />
   </div>
   <div class="pr-4 w-10/12">
     @guest

@@ -2402,7 +2402,7 @@ __webpack_require__.r(__webpack_exports__);
       type: Array,
       required: true
     },
-    restaurant: {
+    employees: {
       type: Object,
       required: true
     },
@@ -2666,8 +2666,8 @@ __webpack_require__.r(__webpack_exports__);
       type: Object,
       required: false
     },
-    restaurant: {
-      type: Object,
+    employees: {
+      type: Array,
       required: true
     }
   },
@@ -2791,9 +2791,6 @@ __webpack_require__.r(__webpack_exports__);
         });
         return accumulated.seats;
       }
-    },
-    employees: function employees() {
-      return this.restaurant.users;
     }
   },
   watch: {
@@ -53003,7 +53000,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "mx-8 my-4 shadow-lg rounded-full flex flex-row bg-white" },
+    {
+      staticClass:
+        "mx-8 my-4 shadow-lg rounded-full flex flex-row bg-white border-2 border-gray-400"
+    },
     [
       _c(
         "div",
@@ -53173,7 +53173,7 @@ var render = function() {
               table: _vm.table,
               tables: _vm.tables,
               date: _vm.date,
-              restaurant: _vm.restaurant
+              employees: _vm.employees
             },
             scopedSlots: _vm._u([
               {

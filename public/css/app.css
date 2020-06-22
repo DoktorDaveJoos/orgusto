@@ -1,4 +1,6 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+@import url(https://fonts.googleapis.com/css?family=Nunito);@import url(https://fonts.googleapis.com/css2?family=Pacifico&display=swap);@charset "UTF-8";
+
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
    ========================================================================== */
@@ -635,6 +637,10 @@ b {
   font-weight: 400;
 }
 
+.orgusto-headline {
+  font-family: "Pacifico", cursive;
+}
+
 .orgusto-button {
   display: -webkit-box;
   display: flex;
@@ -667,7 +673,7 @@ b {
   background-color: transparent;
 }
 
-.orgusto-button:disabled:hover {
+‹ .orgusto-button:disabled:hover {
   background-color: transparent;
   --text-opacity: 1;
   color: #cbd5e0;

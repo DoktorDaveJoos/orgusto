@@ -19,7 +19,18 @@
 
     <orgusto-timeline ihour="{{ $scopedHour ?? '17' }}"></orgusto-timeline>
 
-    <orgusto-tables timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tables="{{ $tables }}" :restaurant="{{ $restaurant }}"></orgusto-tables>
+    @if(sizeof($tables) === 0)
+
+    <div class="orgusto-headline flex justify-center p-4 text-3xl text-gray-700">
+        You don't have any tables so far.
+    </div>
+    <div class="flex justify-center">
+        {!! file_get_contents('img/empty_space.svg') !!}
+    </div>
+
+    @else
+    <orgusto-tables timeline-start="{{ $date.' '.$scopedHour.':00:00' }}" :tables="{{ $tables }}" :employees="{{ $employees }}"></orgusto-tables>
+    @endif
 
 </div>
 

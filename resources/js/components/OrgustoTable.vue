@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-8 my-4 shadow-lg rounded-full flex flex-row bg-white">
+  <div class="mx-8 my-4 shadow-lg rounded-full flex flex-row bg-white border-2 border-gray-400">
     <!-- Header -->
     <div
       class="w-1/6 rounded-l-full border-r border-gray-300 m-0 p-2 bg-gray-200 text-gray-600 flex flex-row"

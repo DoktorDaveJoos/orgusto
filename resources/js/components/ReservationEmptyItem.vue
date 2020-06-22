@@ -163,8 +163,8 @@ export default {
       type: Object,
       required: false
     },
-    restaurant: {
-      type: Object,
+    employees: {
+      type: Array,
       required: true
     }
   },
@@ -278,9 +278,6 @@ export default {
         );
         return accumulated.seats;
       }
-    },
-    employees() {
-      return this.restaurant.users;
     }
   },
   watch: {

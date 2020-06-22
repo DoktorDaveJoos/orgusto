@@ -1,5 +1,6 @@
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Nunito");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 
 // Variables
 @import "variables";
@@ -16,6 +17,10 @@ body {
 b {
     @apply bg-yellow-400;
     @apply font-normal;
+}
+
+.orgusto-headline {
+    font-family: "Pacifico", cursive;
 }
 
 // Custom
@@ -36,8 +41,7 @@ b {
         @apply text-gray-400;
         @apply cursor-default;
         @apply bg-transparent;
-
-        &:hover {
+        ‹ &:hover {
             @apply bg-transparent;
             @apply text-gray-400;
         }

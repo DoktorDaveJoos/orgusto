@@ -71,7 +71,7 @@
   </div>
 </form>
 @endmodal
-<tr class="hover:bg-gray-100">
+<tr class="">
   <td class="px-6 py-4 whitespace-no-wrap">
     <div class="items-center">
       <div class="leading-5 font-medium text-gray-900">{{ $restaurant->name }}</div>
