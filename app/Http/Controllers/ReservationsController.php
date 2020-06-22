@@ -17,22 +17,6 @@ class ReservationsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
-        $this->middleware(function ($request, $next) {
-
-            $request->restaurant = auth()->user()->restaurants()->first();
-
-            if ($request->restaurant) {
-                return $next($request);
-            }
-
-            if (request()->wantsJson()) {
-                return '{"message": "No restaurants. Please create a Restaurant."}';
-            }
-
-            // No restaurants
-            return view('restaurants');
-        });
     }
 
     public function index(Request $request)
@@ -42,11 +26,13 @@ class ReservationsController extends Controller
         $from = date($from_date . " 00:00:00");
         $to = date($to_date . " 23:59:59");
 
+        $restaurant = auth()->user()->restaurants()->first();
+
         $searchQuery = $request->get('searchQuery');
 
         if (!$searchQuery) {
-            $reservations = Reservation::whereHas('tables', function ($q) use ($request) {
-                $q->where('restaurant_id', $request->restaurant->id);
+            $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
             })->whereBetween('starting_at', [$from, $to])->closest()->simplePaginate(20);
         } else {
             $name_term = $name_term = '%' . $searchQuery . '%';
