@@ -25,31 +25,34 @@ class ReservationsController extends Controller
         $to_date = $request->get('to') ?? date('Y-m-d');
         $from = date($from_date . " 00:00:00");
         $to = date($to_date . " 23:59:59");
+        $searchQuery = $request->get('searchQuery');
+
+        $reservations = [];
 
         $restaurant = auth()->user()->restaurants()->first();
 
-        $searchQuery = $request->get('searchQuery');
+        if ($restaurant) {
+            if (!$searchQuery) {
+                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id);
+                })->whereBetween('starting_at', [$from, $to])->closest()->simplePaginate(20);
+            } else {
+                $name_term = $name_term = '%' . $searchQuery . '%';
+                $constraints = [
+                    ['name', 'like', $name_term],
+                    ['starting_at', '>=', $from],
+                    ['starting_at', '<=', $to]
+                ];
 
-        if (!$searchQuery) {
-            $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                $q->where('restaurant_id', $restaurant->id);
-            })->whereBetween('starting_at', [$from, $to])->closest()->simplePaginate(20);
-        } else {
-            $name_term = $name_term = '%' . $searchQuery . '%';
-            $constraints = [
-                ['name', 'like', $name_term],
-                ['starting_at', '>=', $from],
-                ['starting_at', '<=', $to]
-            ];
-
-            $found_by_name = Reservation::where($constraints)->get();
-            $results = Reservation::search($searchQuery)->get();
-            $reservations = $results
-                ->filter(function ($reservation, $key) use ($from, $to) {
-                    return $reservation->starting_at >= $from && $reservation->starting_at <= $to;
-                })
-                ->merge($found_by_name)
-                ->unique();
+                $found_by_name = Reservation::where($constraints)->get();
+                $results = Reservation::search($searchQuery)->get();
+                $reservations = $results
+                    ->filter(function ($reservation, $key) use ($from, $to) {
+                        return $reservation->starting_at >= $from && $reservation->starting_at <= $to;
+                    })
+                    ->merge($found_by_name)
+                    ->unique();
+            }
         }
 
         if (request()->wantsJson()) {
