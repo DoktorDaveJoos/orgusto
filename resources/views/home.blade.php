@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="flex flex-col justify-around">
 
-    <h1>WELCOME TO ORGASTRO</h1>
-
+<div class="w-full h-full flex justify-center">
+  <img class="absolute" src="{{ asset('img/start-page-response-frame.svg')}}" />
+  <img class="absolute pt-4" src="{{ asset('img/start-page-welcome.svg')}}" />
 </div>
+
 @endsection

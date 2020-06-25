@@ -25,9 +25,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
+<body>
     @include('layouts.nav')
-    <div id="app" class="sm:p-4">
+    <div id="app">
         @yield('content')
     </div>
 
