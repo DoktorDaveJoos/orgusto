@@ -2,10 +2,8 @@
 
 @section('content')
 
-<div class="w-full flex justify-center">
-
+<div class="w-full flex justify-center mt-4">
     <search-reservation search-endpoint="{{ route('reservations.search') }}" reservation-endpoint="{{ route('reservations.show') }}"></search-reservation>
-
 </div>
 
 @if(sizeof($reservations) === 0)

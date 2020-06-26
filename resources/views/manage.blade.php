@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <orgusto-scope-manager date="{{ $date ?? date('Y-m-d') }}" scope="{{ $scopedHour ?? '17' }}"></orgusto-scope-manager>
 
 <div class="w-full pl-4">
@@ -33,6 +34,7 @@
     @endif
 
 </div>
+
 
 
 

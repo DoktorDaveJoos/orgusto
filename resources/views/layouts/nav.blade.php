@@ -17,10 +17,20 @@
       <div class="flex flex-1 justify-between items-center">
 
         <div class="flex-1 flex justify-center text-gray-600">
-          <a class="p-2 text-center hover:text-blue-600 {{ request()->routeIs('home*') ? 'text-blue-600 font-semibold' : '' }}" href="{{ route('home') }}">{{ __('Home') }}</a>
-          <a class="p-2 text-center hover:text-blue-600 {{ request()->routeIs('reservations*') ? 'text-blue-600 font-semibold' : '' }}" href="{{ route('reservations.show') }}">{{ __('Reservations') }}</a>
-          <a class="p-2 text-center hover:text-blue-600 {{ request()->routeIs('manage*') ? 'text-blue-600 font-semibold' : '' }}" href="{{ route('manage.show') }}">{{ __('Tables') }}</a>
-          <a class="p-2 text-center hover:text-blue-600 {{ request()->routeIs('restaurant*') ? 'text-blue-600 font-semibold' : '' }}" href="{{ route('restaurants.show') }}">{{ __('Restaurants') }}</a>
+          <a href="{{ route('reservations.show') }}" class="px-4 flex flex-col justify-center {{ request()->routeIs('reservations*') ? 'text-gray-800' : '' }}">
+            <i class="text-lg text-center far fa-calendar"></i>
+            <span class="text-xs pt-1">{{ __('Reservations') }}</span>
+          </a>
+          <a href="{{ route('manage.show') }}" class="px-4 flex flex-col justify-center {{ request()->routeIs('manage*') ? 'text-gray-800' : '' }}">
+            <i class="text-lg text-center fa fa-stream"></i>
+            <span class="text-xs pt-1">{{ __('Tables') }}</span>
+          </a>
+          <a href="{{ route('restaurants.show') }}" class="px-4 flex flex-col justify-center {{ request()->routeIs('restaurant*') ? 'text-gray-800' : '' }}">
+            <i class="text-lg text-center fas fa-store-alt"></i>
+            <span class="text-xs pt-1">{{ __('Restaurants') }}</span>
+          </a>
+
+
         </div>
         <div>
           <span class="text-gray-600 text-center hover:border-gray-600 pr-2">Hi, {{ Auth::user()->name }}</span>
