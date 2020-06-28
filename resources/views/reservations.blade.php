@@ -6,7 +6,7 @@
     <search-reservation search-endpoint="{{ route('reservations.search') }}" reservation-endpoint="{{ route('reservations.show') }}"></search-reservation>
 </div>
 
-@if(sizeof($reservations) === 0)
+@if($empty_search)
 
 <div class="orgusto-headline flex justify-center p-4 text-3xl text-gray-700">
     No reservations for this search criteria.
@@ -16,56 +16,64 @@
 </div>
 @endif
 
-@foreach ($reservations as $reservation)
-
-@infocard(['optional_color' => $reservation->color])
-
-@slot('title')
-<span class="text-gray-800 text-base font-normal">
-    {{ $reservation->name }}
-</span>
-<span class="border-r-2 border-gray-600 ml-1 mr-2">
-
-</span>
-<span class="text-gray-600 text-sm font-normal">
-    {{ $reservation->getHumanReadableDate() }}
-</span>
+@infocard(['title' => $card_title])
+@table
+@slot('table_head')
 @endslot
 
-@if($reservation->notice)
-<div class="p-4 border-b border-gray-200 text-sm text-gray-600 leading-tight">
-    {{ $reservation->notice }}
-</div>
-@endif
+@slot('table_body')
+@foreach($reservations as $reservation)
+<tr class="hover:bg-{{ $reservation->color }}-100">
+    <td class="px-6 py-4 flex text-left border-l-8 border-{{ $reservation->color }}-400">
+        <div class="flex-1 flex flex-row">
 
-<div class="p-3">
-    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
-        <i class="fas fa-hourglass"></i>
-        {{ $reservation->length }} h
-    </span>
-    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
-        <i class="fas fa-user-friends"></i>
-        {{ $reservation->person_count }} Persons
-    </span>
-    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">{{ $reservation->user->name }}</span>
+            <div class="leading-5 text-gray-800 mr-8">{{ $reservation->name }}</div>
 
-    @if ($reservation->email)
-    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
-        <i class="fas fa-envelope"></i>
-        {{ $reservation->email }}
-    </span>
-    @endif
-    @if ($reservation->phone_number)
-    <span class="inline-block bg-gray-200 rounded-full shadow px-3 py-1 text-xs leading-tight text-gray-600 mr-2">
-        <i class="fas fa-phone"></i>
-        {{ $reservation->phone_number }}
-    </span>
-    @endif
+            <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
+                <i class="text-white pr-1 fas fa-calendar-day"></i>
+                {{ $reservation->getHumanReadableDate() }}
+            </div>
 
+            <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
+                <i class="text-white pr-1 fas fa-clock"></i>
+                {{ $reservation->getHumanReadableTime() }}
+            </div>
+
+            <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
+                <i class="text-white pr-1 fas fa-user-friends"></i>{{ $reservation->person_count }} Persons
+            </div>
+
+            @if($reservation->email)
+            <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
+                <i class="text-white pr-1 fas fa-envelope"></i>{{ $reservation->email }}
+            </div>
+            @endif
+
+            @if($reservation->phone_number)
+            <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
+                <i class="text-white pr-1 fas fa-phone-alt"></i>{{ $reservation->phone_number }}
+            </div>
+            @endif
+        </div>
+        <div class="flex">
+            <button class="text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-edit mr-1"></i>Edit</button>
+            <orgusto-modal-wrapper :is-open="true" :handle-close="() => {}">
+                <reservation-item>
+                </reservation-item>
+            </orgusto-modal-wrapper>
+            <button class="ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-trash-alt mr-1"></i>Delete</button>
+        </div>
+    </td>
+
+</tr>
+@endforeach
+@endslot
+@endtable
+
+<div class="p-1 px-5 text-gray-600 text-xs font-light">
+    {{ $reservations->links() }}
 </div>
 
 @endinfocard
-
-@endforeach
 
 @endsection

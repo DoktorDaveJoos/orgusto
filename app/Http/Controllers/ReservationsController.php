@@ -27,9 +27,13 @@ class ReservationsController extends Controller
         $to = date($to_date . " 23:59:59");
         $searchQuery = $request->get('searchQuery');
 
+        $empty_search = false;
+        $card_title = "Reservations";
+
         $reservations = [];
 
         $restaurant = auth()->user()->restaurants()->first();
+
 
         if ($restaurant) {
             if (!$searchQuery) {
@@ -53,13 +57,19 @@ class ReservationsController extends Controller
                     ->merge($found_by_name)
                     ->unique();
             }
+
+            if (sizeof($reservations) < 1) {
+                $empty_search = true;
+                $card_title = "... upcoming reservations";
+                $reservations = Reservation::where('starting_at', '>', date('Y-m-d'))->paginate(15);
+            }
         }
 
         if (request()->wantsJson()) {
             return $reservations;
         }
 
-        return view('reservations', ['reservations' => $reservations]);
+        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title]);
     }
 
     public function show(Reservation $reservation)

@@ -56,6 +56,11 @@ class Reservation extends Model
         }
     }
 
+    public function getHumanReadableTime()
+    {
+        return $this->starting_at->format('H:i');
+    }
+
     public function scopeClosest($query)
     {
         return $query->orderBy('starting_at', 'desc');

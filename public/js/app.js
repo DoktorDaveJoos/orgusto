@@ -2649,8 +2649,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-empty-item",
   props: {
@@ -2802,6 +2800,461 @@ __webpack_require__.r(__webpack_exports__);
     table: function table(newTable, _) {
       this.clearView(["date", "hours", "minutes"]);
       this.input.tables.push(newTable);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItem.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "reservation-item",
+  props: ["reservation"],
+  data: function data() {
+    return {
+      color: "gray",
+      date: "",
+      time: "",
+      reservationTitle: "",
+      reservationNotice: "",
+      showAdditionalNotice: false
+    };
+  },
+  methods: {
+    setColor: function setColor(color) {
+      this.color = color.toString();
+    },
+    setDate: function setDate(date) {
+      this.date = date;
+    },
+    setTime: function setTime(time) {
+      this.time = time;
+    }
+  },
+  computed: {
+    title: function title() {
+      return this.reservation && this.reservation.name ? this.reservation.name : "New Reservation";
+    },
+    borderColor: function borderColor() {
+      return "border-" + this.color + "-400";
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["setColor"]
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["setDate"],
+  data: function data() {
+    return {
+      datepicker: "today",
+      choosenDate: "",
+      singleDate: new Date()
+    };
+  },
+  methods: {
+    setDatePicker: function setDatePicker(indicator) {
+      this.choosenDate = "";
+      this.datepicker = indicator;
+
+      if (indicator === "today") {
+        this.setDate(moment());
+      } else if (indicator === "tomorrow") {
+        this.setDate(moment().add(1, "days"));
+      } else if (indicator === "datomorrow") {
+        this.setDate(moment().add(2, "days"));
+      }
+    }
+  },
+  watch: {
+    singleDate: function singleDate(newVal, oldVal) {
+      this.datepicker = "";
+      this.choosenDate = moment(newVal).format("DD.MM.YYYY");
+      this.setDate(moment(newVal));
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  props: ["active", "setSingleTime", "hours", "minute"],
+  data: function data() {
+    var _this$hours, _this$minute;
+
+    return {
+      hour: (_this$hours = this.hours) !== null && _this$hours !== void 0 ? _this$hours : "17",
+      minutes: (_this$minute = this.minute) !== null && _this$minute !== void 0 ? _this$minute : "00"
+    };
+  },
+  methods: {
+    setHour: function setHour(hour) {
+      this.hour = hour.toString();
+      this.setSingleTime(this.time);
+    },
+    setMinutes: function setMinutes(minute) {
+      this.minutes = minute.toString();
+      this.setSingleTime(this.time);
+    }
+  },
+  computed: {
+    time: function time() {
+      return this.hour + ":" + this.minutes;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["setTime"],
+  data: function data() {
+    return {
+      hourpicker: "17",
+      minutepicker: "00",
+      singleTimePickerActive: false
+    };
+  },
+  methods: {
+    setHour: function setHour(hour) {
+      this.hourpicker = hour.toString();
+      this.singleTimePickerActive = false;
+      this.setTime(this.time);
+    },
+    setMinute: function setMinute(minute) {
+      this.minutepicker = minute.toString();
+      this.singleTimePickerActive = false;
+      this.setTime(this.time);
+    },
+    setSingleTime: function setSingleTime(time) {
+      console.log("got time: ", time);
+      this.hourpicker = "other";
+      this.minutepicker = "other";
+      this.singleTimePickerActive = true;
+      this.setTime(time);
+    }
+  },
+  computed: {
+    time: function time() {
+      var hour = this.hourpicker !== "other" ? this.hourpicker : "17";
+      var minute = this.minutepicker !== "other" ? this.minutepicker : "00";
+      return this.hourpicker + ":" + this.minutepicker;
     }
   }
 });
@@ -3269,6 +3722,25 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".fade-enter-active,\n.fade-leave-active {\n  -webkit-transition: opacity 0.2s ease-out;\n  transition: opacity 0.2s ease-out;\n}\n.fade-enter,\n.fade-leave-to {\n  opacity: 0;\n}\n.scale-enter-active,\n.scale-leave-active {\n  -webkit-transition: all 0.3s ease-out;\n  transition: all 0.3s ease-out;\n}\n.scale-enter,\n.scale-leave-to {\n  opacity: 0;\n  -webkit-transform: translate(0, 20px);\n          transform: translate(0, 20px);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".popper .popper__arrow {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n}\n.popper[x-placement^=\"bottom\"] {\n  margin-top: 10px;\n}\n.popper[x-placement^=\"bottom\"] .popper__arrow {\n  top: 0;\n  left: 20px !important;\n  margin-top: 0;\n  content: \"\";\n  position: absolute;\n  display: block;\n  width: 12px;\n  height: 12px;\n  border-top: inherit;\n  border-left: inherit;\n  background: inherit;\n  z-index: -1;\n  -webkit-transform: translateY(-50%) rotate(45deg);\n          transform: translateY(-50%) rotate(45deg);\n}\n", ""]);
 
 // exports
 
@@ -52020,6 +52492,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./SingleTimePicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -52754,8 +53256,7 @@ var render = function() {
                     expression: "isOpen"
                   }
                 ],
-                staticClass:
-                  "z-50 overflow-hidden w-full lg:w-2/3 xl:1/3 max-w-5xl"
+                staticClass: "z-50 w-full lg:w-2/3 xl:1/3 max-w-5xl"
               },
               [_vm._t("default")],
               2
@@ -53370,13 +53871,7 @@ var render = function() {
                 [
                   _c("i", { staticClass: "fas fa-clock text-gray-700 mr-4" }),
                   _vm._v(" "),
-                  _c("vc-date-picker", {
-                    attrs: {
-                      "input-props": {
-                        class:
-                          "rounded bg-gray-100 focus:bg-white focus:outline-none font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700"
-                      }
-                    },
+                  _c("v-date-picker", {
                     model: {
                       value: _vm.input.date,
                       callback: function($$v) {
@@ -53647,6 +54142,835 @@ var render = function() {
       ])
     ]
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4& ***!
+  \******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "relative shadow-lg bg-white mx-auto rounded-lg w-full max-w-5xl"
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "bg-white w-full shadow-lg max-w-5xl self-center mt-6 overflow-hidden rounded-lg"
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "orgusto-honey flex flex-row content-center justify-between px-4 py-4 sm:px-6 border-b-4",
+              class: _vm.borderColor
+            },
+            [
+              _c(
+                "h3",
+                {
+                  staticClass:
+                    "text-lg self-center leading-6 font-medium text-gray-900"
+                },
+                [_vm._v(_vm._s(_vm.title))]
+              ),
+              _vm._v(" "),
+              _c("color-switcher", { attrs: { "set-color": _vm.setColor } })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("date-picker", { attrs: { "set-date": _vm.setDate } }),
+          _vm._v(" "),
+          _c("time-picker", { attrs: { "set-time": _vm.setTime } }),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex p-4 justify-between" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.reservationTitle,
+                  expression: "reservationTitle"
+                }
+              ],
+              staticClass:
+                "h-12 w-2/3 px-4 font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
+              attrs: { placeholder: "Name of the guest / group", type: "text" },
+              domProps: { value: _vm.reservationTitle },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.reservationTitle = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.showAdditionalNotice,
+                    expression: "!showAdditionalNotice"
+                  }
+                ],
+                staticClass:
+                  "h-12 flex flex-row px-4 items-center text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight focus:outline-none hover:shadow-inner ml-4",
+                on: {
+                  click: function($event) {
+                    _vm.showAdditionalNotice = !_vm.showAdditionalNotice
+                  }
+                }
+              },
+              [
+                _vm._v("\n        Notice\n        "),
+                _c("i", { staticClass: "fas fa-sticky-note ml-2" })
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _vm.showAdditionalNotice
+            ? _c("div", { staticClass: "flex p-4" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.reservationNotice,
+                      expression: "reservationNotice"
+                    }
+                  ],
+                  staticClass:
+                    "h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
+                  attrs: {
+                    placeholder: "Some additional information ...",
+                    type: "text"
+                  },
+                  domProps: { value: _vm.reservationNotice },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.reservationNotice = $event.target.value
+                    }
+                  }
+                })
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._m(0)
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "flex flex-col p-4" }, [
+      _c(
+        "span",
+        {
+          staticClass:
+            "uppercase font-semibold text-xs text-gray-600 leading-tight mb-1"
+        },
+        [_vm._v("Number of people")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex justify-between" }, [
+        _c("div", [
+          _c(
+            "button",
+            {
+              staticClass:
+                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
+            },
+            [_vm._v("2")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
+            },
+            [_vm._v("3")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
+            },
+            [_vm._v("4")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
+            },
+            [_vm._v("5")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
+            },
+            [_vm._v("6")]
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass:
+              "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
+          },
+          [
+            _vm._v("\n          More\n          "),
+            _c("i", { staticClass: "fas fa-user-friends ml-2" })
+          ]
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=template&id=4121b718&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=template&id=4121b718& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("button", {
+      staticClass:
+        "rounded-full h-8 w-8 bg-red-400 shadow-lg focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.setColor("red")
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", {
+      staticClass:
+        "rounded-full h-8 w-8 bg-green-400 shadow-lg focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.setColor("green")
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", {
+      staticClass:
+        "rounded-full h-8 w-8 bg-blue-400 shadow-lg focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.setColor("blue")
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", {
+      staticClass:
+        "rounded-full h-8 w-8 bg-indigo-400 shadow-lg focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.setColor("indigo")
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", {
+      staticClass:
+        "rounded-full h-8 w-8 bg-purple-400 shadow-lg focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.setColor("purple")
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", {
+      staticClass:
+        "rounded-full h-8 w-8 bg-gray-400 shadow-lg focus:outline-none",
+      on: {
+        click: function($event) {
+          return _vm.setColor("gray")
+        }
+      }
+    })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "p-4 flex justify-between" }, [
+    _c("div", { staticClass: "flex flex-row" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+          class:
+            _vm.datepicker === "today"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setDatePicker("today")
+            }
+          }
+        },
+        [_vm._v("Today")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+          class:
+            _vm.datepicker === "tomorrow"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setDatePicker("tomorrow")
+            }
+          }
+        },
+        [_vm._v("Tomorrow")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+          class:
+            _vm.datepicker === "datomorrow"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setDatePicker("datomorrow")
+            }
+          }
+        },
+        [_vm._v("Day after tomorrow")]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      [
+        _c(
+          "v-date-picker",
+          {
+            attrs: { popover: { visibility: "click" } },
+            model: {
+              value: _vm.singleDate,
+              callback: function($$v) {
+                _vm.singleDate = $$v
+              },
+              expression: "singleDate"
+            }
+          },
+          [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+                class:
+                  _vm.choosenDate !== ""
+                    ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                    : ""
+              },
+              [
+                _vm._v(
+                  "\n        " +
+                    _vm._s(
+                      _vm.choosenDate !== "" ? _vm.choosenDate : "Choose date"
+                    ) +
+                    "\n        "
+                ),
+                _c("i", { staticClass: "ml-2 fas fa-calendar-alt" })
+              ]
+            )
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "popper",
+    {
+      attrs: {
+        trigger: "clickToOpen",
+        options: {
+          placement: "bottom-start"
+        }
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "popper rounded-lg p-2 border border-gray-400 bg-white"
+        },
+        [
+          _c("div", [
+            _c("div", { staticClass: "flex justify-center mb-1" }, [
+              _c(
+                "span",
+                {
+                  staticClass:
+                    "text-center text-xs text-gray-500 uppercase font-light leading-tight"
+                },
+                [_vm._v("Choosen time")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex justify-around mb-2" }, [
+              _c(
+                "span",
+                { staticClass: "text-lg text-gray-800 font-semibold" },
+                [_vm._v(_vm._s(_vm.hour))]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                { staticClass: "text-lg text-gray-800 font-semibold" },
+                [_vm._v(":")]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                { staticClass: "text-lg text-gray-800 font-semibold" },
+                [_vm._v(_vm._s(_vm.minutes))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "flex flex-col overflow-y-scroll h-64 items-center text-gray-800 text-sm p-2"
+                },
+                _vm._l(24, function(a, b) {
+                  return _c(
+                    "span",
+                    {
+                      key: b,
+                      staticClass:
+                        "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
+                      class:
+                        _vm.hour === b.toString()
+                          ? "bg-blue-600 text-white"
+                          : "",
+                      on: {
+                        click: function($event) {
+                          return _vm.setHour(b)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(b))]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "flex flex-col h-64 items-center text-gray-800 text-sm p-2"
+                },
+                [
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
+                      class:
+                        _vm.minutes === "00" ? "bg-blue-600 text-white" : "",
+                      on: {
+                        click: function($event) {
+                          return _vm.setMinutes("00")
+                        }
+                      }
+                    },
+                    [_vm._v("00")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
+                      class:
+                        _vm.minutes === "15" ? "bg-blue-600 text-white" : "",
+                      on: {
+                        click: function($event) {
+                          return _vm.setMinutes("15")
+                        }
+                      }
+                    },
+                    [_vm._v("15")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
+                      class:
+                        _vm.minutes === "30" ? "bg-blue-600 text-white" : "",
+                      on: {
+                        click: function($event) {
+                          return _vm.setMinutes("30")
+                        }
+                      }
+                    },
+                    [_vm._v("30")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
+                      class:
+                        _vm.minutes === "45" ? "bg-blue-600 text-white" : "",
+                      on: {
+                        click: function($event) {
+                          return _vm.setMinutes("45")
+                        }
+                      }
+                    },
+                    [_vm._v("45")]
+                  )
+                ]
+              )
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class: _vm.active
+            ? "border-2 border-blue-400 text-gray-800 font-semibold"
+            : "",
+          attrs: { slot: "reference" },
+          slot: "reference"
+        },
+        [
+          _vm._v(
+            "\n    " +
+              _vm._s(
+                _vm.active ? _vm.hour + ":" + _vm.minutes : "Choose time"
+              ) +
+              "\n    "
+          ),
+          _c("i", { staticClass: "ml-2 fas fa-clock" })
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "p-4 flex justify-between" }, [
+    _c("div", { staticClass: "flex flex-row" }, [
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.hourpicker === "17"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setHour("17")
+            }
+          }
+        },
+        [_vm._v("17")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.hourpicker === "18"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setHour("18")
+            }
+          }
+        },
+        [_vm._v("18")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.hourpicker === "19"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setHour("19")
+            }
+          }
+        },
+        [_vm._v("19")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+          class:
+            _vm.hourpicker === "20"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setHour("20")
+            }
+          }
+        },
+        [_vm._v("20")]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "flex flex-row items-center text-gray-800 mr-4" },
+        [_vm._v(":")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.minutepicker === "00"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setMinute("00")
+            }
+          }
+        },
+        [_vm._v("00")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.minutepicker === "15"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setMinute("15")
+            }
+          }
+        },
+        [_vm._v("15")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.minutepicker === "30"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setMinute("30")
+            }
+          }
+        },
+        [_vm._v("30")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "h-12 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+          class:
+            _vm.minutepicker === "45"
+              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              : "",
+          on: {
+            click: function($event) {
+              return _vm.setMinute("45")
+            }
+          }
+        },
+        [_vm._v("45")]
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      [
+        _c("single-time-picker", {
+          attrs: {
+            active: _vm.singleTimePickerActive,
+            hours: _vm.hourpicker,
+            minute: _vm.minutepicker,
+            "set-single-time": _vm.setSingleTime
+          }
+        })
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -59207,6 +60531,18 @@ Object.defineProperty(exports, '__esModule', { value: true });
 })));
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/vue-popperjs/dist/vue-popper.min.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/vue-popperjs/dist/vue-popper.min.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,t){ true?module.exports=t(__webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")):undefined}(this,function(e){"use strict";function t(e,t,o){e&&t&&o&&(document.addEventListener?e.addEventListener(t,o,!1):e.attachEvent("on"+t,o))}function o(e,t,o){e&&t&&(document.removeEventListener?e.removeEventListener(t,o,!1):e.detachEvent("on"+t,o))}e=e&&e.hasOwnProperty("default")?e.default:e;var n={props:{tagName:{type:String,default:"span"},trigger:{type:String,default:"hover",validator:function(e){return["clickToOpen","click","clickToToggle","hover","focus"].indexOf(e)>-1}},delayOnMouseOver:{type:Number,default:10},delayOnMouseOut:{type:Number,default:10},disabled:{type:Boolean,default:!1},content:String,enterActiveClass:String,leaveActiveClass:String,boundariesSelector:String,reference:{},forceShow:{type:Boolean,default:!1},dataValue:{default:null},appendToBody:{type:Boolean,default:!1},visibleArrow:{type:Boolean,default:!0},transition:{type:String,default:""},stopPropagation:{type:Boolean,default:!1},preventDefault:{type:Boolean,default:!1},options:{type:Object,default:function(){return{}}},rootClass:{type:String,default:""}},data:function(){return{referenceElm:null,popperJS:null,showPopper:!1,currentPlacement:"",popperOptions:{placement:"bottom",computeStyle:{gpuAcceleration:!1}}}},watch:{showPopper:function(e){e?(this.$emit("show",this),this.popperJS&&this.popperJS.enableEventListeners(),this.updatePopper()):(this.popperJS&&this.popperJS.disableEventListeners(),this.$emit("hide",this))},forceShow:{handler:function(e){this[e?"doShow":"doClose"]()},immediate:!0},disabled:function(e){e&&(this.showPopper=!1)}},created:function(){this.appendedArrow=!1,this.appendedToBody=!1,this.popperOptions=Object.assign(this.popperOptions,this.options)},mounted:function(){switch(this.referenceElm=this.reference||this.$slots.reference[0].elm,this.popper=this.$slots.default[0].elm,this.trigger){case"clickToOpen":t(this.referenceElm,"click",this.doShow),t(document,"click",this.handleDocumentClick);break;case"click":case"clickToToggle":t(this.referenceElm,"click",this.doToggle),t(document,"click",this.handleDocumentClick);break;case"hover":t(this.referenceElm,"mouseover",this.onMouseOver),t(this.popper,"mouseover",this.onMouseOver),t(this.referenceElm,"mouseout",this.onMouseOut),t(this.popper,"mouseout",this.onMouseOut);break;case"focus":t(this.referenceElm,"focus",this.onMouseOver),t(this.popper,"focus",this.onMouseOver),t(this.referenceElm,"blur",this.onMouseOut),t(this.popper,"blur",this.onMouseOut)}},methods:{doToggle:function(e){this.stopPropagation&&e.stopPropagation(),this.preventDefault&&e.preventDefault(),this.forceShow||(this.showPopper=!this.showPopper)},doShow:function(){this.showPopper=!0},doClose:function(){this.showPopper=!1},doDestroy:function(){this.showPopper||(this.popperJS&&(this.popperJS.destroy(),this.popperJS=null),this.appendedToBody&&(this.appendedToBody=!1,document.body.removeChild(this.popper.parentElement)))},createPopper:function(){var t=this;this.$nextTick(function(){if(t.visibleArrow&&t.appendArrow(t.popper),t.appendToBody&&!t.appendedToBody&&(t.appendedToBody=!0,document.body.appendChild(t.popper.parentElement)),t.popperJS&&t.popperJS.destroy&&t.popperJS.destroy(),t.boundariesSelector){var o=document.querySelector(t.boundariesSelector);o&&(t.popperOptions.modifiers=Object.assign({},t.popperOptions.modifiers),t.popperOptions.modifiers.preventOverflow=Object.assign({},t.popperOptions.modifiers.preventOverflow),t.popperOptions.modifiers.preventOverflow.boundariesElement=o)}t.popperOptions.onCreate=function(){t.$emit("created",t),t.$nextTick(t.updatePopper)},t.popperJS=new e(t.referenceElm,t.popper,t.popperOptions)})},destroyPopper:function(){o(this.referenceElm,"click",this.doToggle),o(this.referenceElm,"mouseup",this.doClose),o(this.referenceElm,"mousedown",this.doShow),o(this.referenceElm,"focus",this.doShow),o(this.referenceElm,"blur",this.doClose),o(this.referenceElm,"mouseout",this.onMouseOut),o(this.referenceElm,"mouseover",this.onMouseOver),o(document,"click",this.handleDocumentClick),this.showPopper=!1,this.doDestroy()},appendArrow:function(e){if(!this.appendedArrow){this.appendedArrow=!0;var t=document.createElement("div");t.setAttribute("x-arrow",""),t.className="popper__arrow",e.appendChild(t)}},updatePopper:function(){this.popperJS?this.popperJS.scheduleUpdate():this.createPopper()},onMouseOver:function(){var e=this;clearTimeout(this._timer),this._timer=setTimeout(function(){e.showPopper=!0},this.delayOnMouseOver)},onMouseOut:function(){var e=this;clearTimeout(this._timer),this._timer=setTimeout(function(){e.showPopper=!1},this.delayOnMouseOut)},handleDocumentClick:function(e){this.$el&&this.referenceElm&&!this.elementContains(this.$el,e.target)&&!this.elementContains(this.referenceElm,e.target)&&this.popper&&!this.elementContains(this.popper,e.target)&&(this.$emit("documentClick",this),this.forceShow||(this.showPopper=!1))},elementContains:function(e,t){return"function"==typeof e.contains&&e.contains(t)}},destroyed:function(){this.destroyPopper()}};const r=n;n.__file="popper.js.vue";return function(e,t,o,n,r,s,i,p,c,a){"function"==typeof i&&(c=p,p=i,i=!1);const d="function"==typeof o?o.options:o;let l;if(e&&e.render&&(d.render=e.render,d.staticRenderFns=e.staticRenderFns,d._compiled=!0,r&&(d.functional=!0)),n&&(d._scopeId=n),s?(l=function(e){(e=e||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext)||"undefined"==typeof __VUE_SSR_CONTEXT__||(e=__VUE_SSR_CONTEXT__),t&&t.call(this,c(e)),e&&e._registeredComponents&&e._registeredComponents.add(s)},d._ssrRegister=l):t&&(l=i?function(){t.call(this,a(this.$root.$options.shadowRoot))}:function(e){t.call(this,p(e))}),l)if(d.functional){const e=d.render;d.render=function(t,o){return l.call(o),e(t,o)}}else{const e=d.beforeCreate;d.beforeCreate=e?[].concat(e,l):[l]}return o}({render:function(){var e=this,t=e.$createElement,o=e._self._c||t;return o(e.tagName,{tag:"component"},[o("transition",{attrs:{name:e.transition,"enter-active-class":e.enterActiveClass,"leave-active-class":e.leaveActiveClass},on:{"after-leave":e.doDestroy}},[o("span",{directives:[{name:"show",rawName:"v-show",value:!e.disabled&&e.showPopper,expression:"!disabled && showPopper"}],ref:"popper",class:e.rootClass},[e._t("default",[e._v(e._s(e.content))])],2)]),e._v(" "),e._t("reference")],2)},staticRenderFns:[]},void 0,r,void 0,!1,void 0,void 0,void 0)});
+
 
 /***/ }),
 
@@ -71278,6 +72614,11 @@ var map = {
 	"./components/OrgustoTables.vue": "./resources/js/components/OrgustoTables.vue",
 	"./components/OrgustoTimeline.vue": "./resources/js/components/OrgustoTimeline.vue",
 	"./components/ReservationEmptyItem.vue": "./resources/js/components/ReservationEmptyItem.vue",
+	"./components/ReservationItem.vue": "./resources/js/components/ReservationItem.vue",
+	"./components/ReservationItems/ColorSwitcher.vue": "./resources/js/components/ReservationItems/ColorSwitcher.vue",
+	"./components/ReservationItems/DatePicker.vue": "./resources/js/components/ReservationItems/DatePicker.vue",
+	"./components/ReservationItems/SingleTimePicker.vue": "./resources/js/components/ReservationItems/SingleTimePicker.vue",
+	"./components/ReservationItems/TimePicker.vue": "./resources/js/components/ReservationItems/TimePicker.vue",
 	"./components/ReservationListItem.vue": "./resources/js/components/ReservationListItem.vue",
 	"./components/SearchReservation.vue": "./resources/js/components/SearchReservation.vue"
 };
@@ -72116,6 +73457,369 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationEmptyItem_vue_vue_type_template_id_b7ba2302___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationEmptyItem_vue_vue_type_template_id_b7ba2302___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItem.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/ReservationItem.vue ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReservationItem.vue?vue&type=template&id=06e8e1e4& */ "./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4&");
+/* harmony import */ var _ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReservationItem.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItem.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/ReservationItem.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ReservationItem.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4& ***!
+  \************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ReservationItem.vue?vue&type=template&id=06e8e1e4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/ColorSwitcher.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/ColorSwitcher.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ColorSwitcher_vue_vue_type_template_id_4121b718___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ColorSwitcher.vue?vue&type=template&id=4121b718& */ "./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=template&id=4121b718&");
+/* harmony import */ var _ColorSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ColorSwitcher.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ColorSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ColorSwitcher_vue_vue_type_template_id_4121b718___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ColorSwitcher_vue_vue_type_template_id_4121b718___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/ColorSwitcher.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ColorSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ColorSwitcher.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ColorSwitcher_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=template&id=4121b718&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=template&id=4121b718& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ColorSwitcher_vue_vue_type_template_id_4121b718___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ColorSwitcher.vue?vue&type=template&id=4121b718& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=template&id=4121b718&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ColorSwitcher_vue_vue_type_template_id_4121b718___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ColorSwitcher_vue_vue_type_template_id_4121b718___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/DatePicker.vue":
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DatePicker.vue ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=template&id=6fe83608& */ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608&");
+/* harmony import */ var _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/DatePicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./DatePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./DatePicker.vue?vue&type=template&id=6fe83608& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=template&id=422b4c7a& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a&");
+/* harmony import */ var _SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/SingleTimePicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SingleTimePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./SingleTimePicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a& ***!
+  \******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./SingleTimePicker.vue?vue&type=template&id=422b4c7a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/TimePicker.vue":
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/TimePicker.vue ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TimePicker.vue?vue&type=template&id=24252d5b& */ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b&");
+/* harmony import */ var _TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TimePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/TimePicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TimePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TimePicker.vue?vue&type=template&id=24252d5b& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

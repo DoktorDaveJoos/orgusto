@@ -13,7 +13,7 @@
 
       <!-- Modal -->
       <transition name="scale">
-        <div v-show="isOpen" class="z-50 overflow-hidden w-full lg:w-2/3 xl:1/3 max-w-5xl">
+        <div v-show="isOpen" class="z-50 w-full lg:w-2/3 xl:1/3 max-w-5xl">
           <slot></slot>
         </div>
       </transition>

@@ -5,10 +5,8 @@
       <div class="flex flex-col-reverse sm:flex-row justify-between items-center">
         <div class="flex-1 flex flex-row justify-center items-center w-full my-2">
           <i class="fas fa-clock text-gray-700 mr-4"></i>
-          <vc-date-picker
-            v-model="input.date"
-            :input-props="{class: 'rounded bg-gray-100 focus:bg-white focus:outline-none font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700'}"
-          ></vc-date-picker>
+          <v-date-picker v-model="input.date"></v-date-picker>
+          <!-- :input-props="{class: 'rounded bg-gray-100 focus:bg-white focus:outline-none font-semibold text-sm self-center p-2 px-3 mr-2 text-gray-700'}" -->
         </div>
 
         <div class="flex-1 flex flex-grow justify-center items-center sm:justify-start w-full">
