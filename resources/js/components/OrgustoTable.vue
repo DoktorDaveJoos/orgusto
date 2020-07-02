@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     slotHasReservation(slot) {
-      if (this.reservations.length === 0) {
+      if (this.reservations.duration === 0) {
         return false;
       }
 
@@ -77,14 +77,14 @@ export default {
       const reservation = this.getReservation(slot);
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
-      if (slotTime.isSame(reservation.starting_at)) {
+      if (slotTime.isSame(reservation.start)) {
         return 2;
       }
 
       if (
         slotTime.add(15, "m").isSame(
-          moment(reservation.starting_at)
-            .add(reservation.length, "h")
+          moment(reservation.start)
+            .add(reservation.duration, "h")
             .toDate()
         )
       ) {
@@ -98,10 +98,10 @@ export default {
 
       return this.reservationsArray.find(
         reservation =>
-          slotTime >= moment(reservation.starting_at) &&
+          slotTime >= moment(reservation.start) &&
           slotTime <
-            moment(reservation.starting_at)
-              .add(reservation.length, "h")
+            moment(reservation.start)
+              .add(reservation.duration, "h")
               .toDate()
       );
     },

@@ -20,10 +20,10 @@ class CreateReservation extends FormRequest
     public function messages()
     {
         return [
-            'starting_at' => 'A date for the reservation is required',
-            'person_count.required' => 'Persons is required',
+            'start' => 'A date for the reservation is required',
+            'persons.required' => 'Persons is required',
             'user_id.required' => 'Employee is required',
-            'length.required' => 'Duration of the reservation is required',
+            'duration.required' => 'Duration of the reservation is required',
             'name.required' => 'Title or name of the reservation is required',
             'phone_number' => 'Phone number should be phone number.'
         ];
@@ -37,10 +37,11 @@ class CreateReservation extends FormRequest
     public function rules()
     {
         return [
-            'starting_at' => 'required|date',
-            'person_count' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date',
+            'persons' => 'required',
             'user_id' => 'integer|required',
-            'length' => 'required',
+            'duration' => 'required',
             'tables' => 'array|required',
             'name' => 'required',
             'email' => 'email',

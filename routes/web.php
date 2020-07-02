@@ -54,4 +54,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{reservation}', 'ReservationsController@update')->name('reservation.update');
         Route::delete('/{reservation}', 'ReservationsController@destroy')->name('reservation.destroy');
     });
+
+    Route::prefix('/tables')->group(function () {
+        Route::get('/', 'TablesController@index')->name('tables.index');
+    });
 });

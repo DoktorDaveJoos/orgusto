@@ -15,11 +15,11 @@ class Reservation extends Model
     public $asYouType = true;
 
     protected $fillable = [
-        'user_id', 'name', 'notice', 'person_count', 'starting_at', 'length', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'
+        'user_id', 'name', 'notice', 'persons', 'start', 'end', 'duration', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'
     ];
 
     protected $casts = [
-        'starting_at' => 'datetime',
+        'start' => 'datetime',
         'created_at' => 'datetime',
     ];
 
@@ -28,7 +28,7 @@ class Reservation extends Model
      *
      * @var array
      */
-    protected $dates = ['starting_at'];
+    protected $dates = ['start'];
 
     /**
      * Get the indexable data array for the model.
@@ -44,7 +44,7 @@ class Reservation extends Model
     {
         $today = Carbon::now();
         $today->setTime(0, 0, 0); // reset time part, to prevent partial comparison
-        $diff = $this->starting_at->diff($today)->days;
+        $diff = $this->start->diff($today)->days;
         if ($diff == 0) {
             return "today";
         } else if ($diff == 1) {
@@ -52,18 +52,18 @@ class Reservation extends Model
         } else if ($diff == -1) {
             return "yesterday";
         } else {
-            return $this->starting_at->format("D d.m, H:i") . " Uhr";
+            return $this->start->format("D d.m, H:i") . " Uhr";
         }
     }
 
     public function getHumanReadableTime()
     {
-        return $this->starting_at->format('H:i');
+        return $this->start->format('H:i');
     }
 
     public function scopeClosest($query)
     {
-        return $query->orderBy('starting_at', 'desc');
+        return $query->orderBy('start', 'desc');
     }
 
     public function tables()

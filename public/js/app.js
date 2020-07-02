@@ -2305,7 +2305,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     slotHasReservation: function slotHasReservation(slot) {
-      if (this.reservations.length === 0) {
+      if (this.reservations.duration === 0) {
         return false;
       }
 
@@ -2315,11 +2315,11 @@ __webpack_require__.r(__webpack_exports__);
       var reservation = this.getReservation(slot);
       var slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
-      if (slotTime.isSame(reservation.starting_at)) {
+      if (slotTime.isSame(reservation.start)) {
         return 2;
       }
 
-      if (slotTime.add(15, "m").isSame(moment(reservation.starting_at).add(reservation.length, "h").toDate())) {
+      if (slotTime.add(15, "m").isSame(moment(reservation.start).add(reservation.duration, "h").toDate())) {
         return 1;
       }
 
@@ -2328,7 +2328,7 @@ __webpack_require__.r(__webpack_exports__);
     getReservation: function getReservation(slot) {
       var slotTime = moment(this.timelineStart).add(slot * 15, "m");
       return this.reservationsArray.find(function (reservation) {
-        return slotTime >= moment(reservation.starting_at) && slotTime < moment(reservation.starting_at).add(reservation.length, "h").toDate();
+        return slotTime >= moment(reservation.start) && slotTime < moment(reservation.start).add(reservation.duration, "h").toDate();
       });
     },
     slotColorAndBorder: function slotColorAndBorder(slot) {
@@ -2677,12 +2677,12 @@ __webpack_require__.r(__webpack_exports__);
       input: {
         name: "",
         notice: "",
-        starting_at: "",
+        start: "",
         hours: 18,
         minutes: 0,
         date: new Date(),
-        person_count: "",
-        length: "",
+        persons: "",
+        duration: "",
         user: "",
         color: "gray",
         tables: []
@@ -2691,29 +2691,29 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     saveBtnPressed: function saveBtnPressed() {
-      var _this = this;
-
       var request = Object.assign({}, this.input);
       var _this$input = this.input,
           date = _this$input.date,
           hours = _this$input.hours,
           minutes = _this$input.minutes;
-      request.starting_at = moment(date).hours(hours).minutes(minutes).seconds(0).format("YYYY-MM-DD HH:mm:ss");
+      request.start = moment(date).hours(hours).minutes(minutes).seconds(0).format("YYYY-MM-DD HH:mm:ss");
       request.tables = this.input.tables.map(function (table) {
         return table.id;
       });
       request.user_id = this.input.user.id;
-      axios.post("/reservations", request).then(function (res) {
-        if (res.status === 200) {
-          location.reload();
-        }
-
-        if (res.status === 422) {
-          console.log(res);
-        }
-      })["catch"](function (err) {
-        return _this.displayError = err.response.data;
-      });
+      request.end = moment(request.start).add("hours", request.duration);
+      request.end = request.end.format("YYYY-MM-DD HH:mm:ss");
+      console.log(request.duration); //   axios
+      //     .post("/reservations", request)
+      //     .then(res => {
+      //       if (res.status === 200) {
+      //         location.reload();
+      //       }
+      //       if (res.status === 422) {
+      //         console.log(res);
+      //       }
+      //     })
+      //     .catch(err => (this.displayError = err.response.data));
     },
     halfAnHourStep: function halfAnHourStep(val) {
       return val / 2;
@@ -2749,13 +2749,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     clearView: function clearView(exceptions) {
-      var _this2 = this;
+      var _this = this;
 
       Object.keys(this.input).forEach(function (key) {
         var found = exceptions.filter(function (e) {
           return e === key;
         });
-        if (!found) _this2.input[key] = "";
+        if (!found) _this.input[key] = "";
       });
       this.input.color = "gray";
       this.input.tables = [];
@@ -2882,21 +2882,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-item",
-  props: ["reservation"],
+  props: ["reservation", "employees", "tablesEndpoint", "reservationsEndpoint"],
   data: function data() {
     return {
       color: "gray",
       date: "",
       time: "",
+      persons: "",
+      email: "",
+      employee: "",
+      duration: {},
+      phone_number: "",
       reservationTitle: "",
       reservationNotice: "",
       showAdditionalNotice: false
@@ -2911,7 +2909,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     setTime: function setTime(time) {
       this.time = time;
-    }
+    },
+    setPersons: function setPersons(persons) {
+      this.persons = persons;
+    },
+    setEmployee: function setEmployee(employee) {
+      this.employee = employee.id;
+    },
+    setDuration: function setDuration(duration) {
+      this.duration = duration;
+    },
+    setTables: function setTables(tables) {}
   },
   computed: {
     title: function title() {
@@ -2919,6 +2927,20 @@ __webpack_require__.r(__webpack_exports__);
     },
     borderColor: function borderColor() {
       return "border-" + this.color + "-400";
+    },
+    processedDate: function processedDate() {
+      var splittedTime = this.time.split(":");
+      return moment(this.date).set({
+        hours: splittedTime[0],
+        minutes: splittedTime[1]
+      }).format("DD-MM-YYYY HH:mm[:00]");
+    },
+    filterData: function filterData() {
+      return {
+        date: this.processedDate,
+        persons: this.persons,
+        duration: this.duration
+      };
     }
   }
 });
@@ -3045,6 +3067,332 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  props: ["setDuration"],
+  data: function data() {
+    return {
+      preselectedTimes: [{
+        h: "1",
+        m: "00"
+      }, {
+        h: "1",
+        m: "30"
+      }, {
+        h: "2",
+        m: "00"
+      }, {
+        h: "2",
+        m: "30"
+      }, {
+        h: "3",
+        m: "00"
+      }, {
+        h: "4",
+        m: "00"
+      }],
+      moreChoices: [{
+        h: "3",
+        m: "30"
+      }, {
+        h: "4",
+        m: "30"
+      }, {
+        h: "8",
+        m: "00"
+      }, {
+        h: "12",
+        m: "00"
+      }],
+      durationpicker: {
+        h: "2",
+        m: "00"
+      }
+    };
+  },
+  methods: {
+    setDurationLocal: function setDurationLocal(duration) {
+      this.durationpicker = duration;
+      this.setDuration(JSON.stringify(this.durationpicker));
+    },
+    comparePicked: function comparePicked(aTime) {
+      return aTime.h === this.durationpicker.h && aTime.m === this.durationpicker.m;
+    }
+  },
+  computed: {
+    moreIsActive: function moreIsActive() {
+      var _this = this;
+
+      return this.moreChoices.find(function (elem) {
+        return elem.h === _this.durationpicker.h && elem.m === _this.durationpicker.m;
+      }) !== undefined;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  props: ["employees", "setEmployee"],
+  data: function data() {
+    return {
+      selectedEmployee: {
+        name: ""
+      }
+    };
+  },
+  methods: {
+    setEmployeeLocal: function setEmployeeLocal(employee) {
+      this.selectedEmployee = employee;
+      this.setEmployee(this.selectedEmployee);
+    }
+  },
+  computed: {
+    preselected: function preselected() {
+      //TODO: Parse cookie - check last one used
+      if (this.employees.length <= 3) {
+        return this.employees;
+      }
+
+      var preselected = this.employees.slice(0, 3);
+      return preselected;
+    },
+    rest: function rest() {
+      var _this = this;
+
+      return this.employees.filter(function (empl) {
+        return _this.preselected.find(function (empl_pre) {
+          return empl_pre.name === empl.name;
+        }) === undefined;
+      });
+    },
+    hasRest: function hasRest() {
+      return this.rest && this.rest.length !== undefined && this.rest.length > 0;
+    },
+    isNotInPreselected: function isNotInPreselected() {
+      var _this2 = this;
+
+      return this.rest.find(function (empl) {
+        return _this2.selectedEmployee.name === empl.name;
+      }) !== undefined;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
+/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
+  },
+  props: ["setPersons"],
+  data: function data() {
+    return {
+      personpicker: "2"
+    };
+  },
+  methods: {
+    setPerson: function setPerson(persons) {
+      this.personpicker = persons.toString();
+      this.setPersons(this.personpicker);
+    }
+  },
+  computed: {
+    moreIsActive: function moreIsActive() {
+      return parseInt(this.personpicker) > 6;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js& ***!
@@ -3149,6 +3497,52 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     time: function time() {
       return this.hour + ":" + this.minutes;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["filterData", "setTables", "tablesEndpoint"],
+  data: function data() {
+    return {
+      tables: []
+    };
+  },
+  watch: {
+    filterData: function filterData(n, o) {
+      var _this = this;
+
+      if (n.date !== undefined && n.date !== "Invalid date") {
+        var duration = JSON.parse(n.duration);
+        var request = Object.assign({}); // TODO: At time to date
+
+        request.date = n.date;
+        request.end = moment(request.start).add("hours", n.duration.h).add("minutes", n.duration.m).format("YYYY-MM-DD HH:mm:ss");
+        var queryParams = $.param(this.filterData);
+        console.log(queryParams);
+        axios.get(this.tablesEndpoint + "?" + queryParams).then(function (res) {
+          return _this.tables = res.data;
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      }
     }
   }
 });
@@ -3722,6 +4116,63 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".fade-enter-active,\n.fade-leave-active {\n  -webkit-transition: opacity 0.2s ease-out;\n  transition: opacity 0.2s ease-out;\n}\n.fade-enter,\n.fade-leave-to {\n  opacity: 0;\n}\n.scale-enter-active,\n.scale-leave-active {\n  -webkit-transition: all 0.3s ease-out;\n  transition: all 0.3s ease-out;\n}\n.scale-enter,\n.scale-leave-to {\n  opacity: 0;\n  -webkit-transform: translate(0, 20px);\n          transform: translate(0, 20px);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".popper .popper__arrow {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n}\n.popper[x-placement^=\"bottom\"] {\n  margin-top: 10px;\n}\n.popper[x-placement^=\"bottom\"] .popper__arrow {\n  top: 0;\n  left: 20px !important;\n  margin-top: 0;\n  content: \"\";\n  position: absolute;\n  display: block;\n  width: 12px;\n  height: 12px;\n  border-top: inherit;\n  border-left: inherit;\n  background: inherit;\n  z-index: -1;\n  -webkit-transform: translateY(-50%) rotate(45deg);\n          transform: translateY(-50%) rotate(45deg);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".popper .popper__arrow {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n}\n.popper[x-placement^=\"bottom\"] {\n  margin-top: 10px;\n}\n.popper[x-placement^=\"bottom\"] .popper__arrow {\n  top: 0;\n  left: 20px !important;\n  margin-top: 0;\n  content: \"\";\n  position: absolute;\n  display: block;\n  width: 12px;\n  height: 12px;\n  border-top: inherit;\n  border-left: inherit;\n  background: inherit;\n  z-index: -1;\n  -webkit-transform: translateY(-50%) rotate(45deg);\n          transform: translateY(-50%) rotate(45deg);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".popper .popper__arrow {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n}\n.popper[x-placement^=\"bottom\"] {\n  margin-top: 10px;\n}\n.popper[x-placement^=\"bottom\"] .popper__arrow {\n  top: 0;\n  left: 20px !important;\n  margin-top: 0;\n  content: \"\";\n  position: absolute;\n  display: block;\n  width: 12px;\n  height: 12px;\n  border-top: inherit;\n  border-left: inherit;\n  background: inherit;\n  z-index: -1;\n  -webkit-transform: translateY(-50%) rotate(45deg);\n          transform: translateY(-50%) rotate(45deg);\n}\n", ""]);
 
 // exports
 
@@ -52492,6 +52943,96 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./DurationPicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeePicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonPicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css& ***!
@@ -54005,7 +54546,7 @@ var render = function() {
             _c("orgastro-dropdown", {
               attrs: {
                 onChange: _vm.onChange,
-                id: "person_count",
+                id: "persons",
                 init: "-",
                 title: "Persons",
                 options: _vm.tableSeats,
@@ -54017,7 +54558,7 @@ var render = function() {
             _c("orgastro-dropdown", {
               attrs: {
                 onChange: _vm.onChange,
-                id: "length",
+                id: "duration",
                 init: "-",
                 title: "Duration",
                 options: "8",
@@ -54201,9 +54742,17 @@ var render = function() {
             1
           ),
           _vm._v(" "),
+          _c("employee-picker", {
+            attrs: { employees: _vm.employees, "set-employee": _vm.setEmployee }
+          }),
+          _vm._v(" "),
           _c("date-picker", { attrs: { "set-date": _vm.setDate } }),
           _vm._v(" "),
           _c("time-picker", { attrs: { "set-time": _vm.setTime } }),
+          _vm._v(" "),
+          _c("person-picker", { attrs: { "set-persons": _vm.setPersons } }),
+          _vm._v(" "),
+          _c("duration-picker", { attrs: { "set-duration": _vm.setDuration } }),
           _vm._v(" "),
           _c("div", { staticClass: "flex p-4 justify-between" }, [
             _c("input", {
@@ -54216,7 +54765,7 @@ var render = function() {
                 }
               ],
               staticClass:
-                "h-12 w-2/3 px-4 font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
+                "h-12 w-full px-4 font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
               attrs: { placeholder: "Name of the guest / group", type: "text" },
               domProps: { value: _vm.reservationTitle },
               on: {
@@ -54232,16 +54781,11 @@ var render = function() {
             _c(
               "button",
               {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: !_vm.showAdditionalNotice,
-                    expression: "!showAdditionalNotice"
-                  }
-                ],
                 staticClass:
                   "h-12 flex flex-row px-4 items-center text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight focus:outline-none hover:shadow-inner ml-4",
+                class: _vm.showAdditionalNotice
+                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                  : "",
                 on: {
                   click: function($event) {
                     _vm.showAdditionalNotice = !_vm.showAdditionalNotice
@@ -54285,91 +54829,68 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _vm._m(0)
+          _c("div", { staticClass: "flex p-4" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.email,
+                  expression: "email"
+                }
+              ],
+              staticClass:
+                "h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400 mr-4",
+              attrs: { placeholder: "Email", type: "email" },
+              domProps: { value: _vm.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.email = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.phone_number,
+                  expression: "phone_number"
+                }
+              ],
+              staticClass:
+                "h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
+              attrs: { placeholder: "Phone number", type: "phone" },
+              domProps: { value: _vm.phone_number },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.phone_number = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("table-picker", {
+            attrs: {
+              "tables-endpoint": _vm.tablesEndpoint,
+              "filter-data": _vm.filterData,
+              "set-tables": _vm.setTables
+            }
+          })
         ],
         1
       )
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col p-4" }, [
-      _c(
-        "span",
-        {
-          staticClass:
-            "uppercase font-semibold text-xs text-gray-600 leading-tight mb-1"
-        },
-        [_vm._v("Number of people")]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "flex justify-between" }, [
-        _c("div", [
-          _c(
-            "button",
-            {
-              staticClass:
-                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-            },
-            [_vm._v("2")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-            },
-            [_vm._v("3")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-            },
-            [_vm._v("4")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-            },
-            [_vm._v("5")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-            },
-            [_vm._v("6")]
-          )
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass:
-              "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-          },
-          [
-            _vm._v("\n          More\n          "),
-            _c("i", { staticClass: "fas fa-user-friends ml-2" })
-          ]
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -54583,6 +55104,452 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex flex-col px-4 pt-1 pb-4" }, [
+    _c(
+      "span",
+      {
+        staticClass:
+          "uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
+      },
+      [_vm._v("Duration")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "flex justify-between" },
+      [
+        _c(
+          "div",
+          _vm._l(_vm.preselectedTimes, function(t) {
+            return _c(
+              "button",
+              {
+                key: (t.h + t.m).toString(),
+                staticClass:
+                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+                class: _vm.comparePicked(t)
+                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                  : "",
+                on: {
+                  click: function($event) {
+                    return _vm.setDurationLocal(t)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "flex items-baseline" }, [
+                  _c("div", [_vm._v(_vm._s(t.h))]),
+                  _vm._v(":\n          "),
+                  _c("div", { staticClass: "text-xs" }, [_vm._v(_vm._s(t.m))]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "ml-1" }, [_vm._v("h")])
+                ])
+              ]
+            )
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c(
+          "popper",
+          {
+            attrs: {
+              trigger: "clickToOpen",
+              options: { placement: "bottom-start" }
+            }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "popper rounded-lg p-2 border border-gray-400 bg-white"
+              },
+              [
+                _c("div", { staticClass: "flex justify-center mb-1" }, [
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "text-center text-xs text-gray-500 uppercase font-light leading-tight"
+                    },
+                    [_vm._v("Duration")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "flex flex-col text-gray-800" },
+                  _vm._l(_vm.moreChoices, function(a) {
+                    return _c(
+                      "span",
+                      {
+                        key: (a.h + a.m).toString(),
+                        staticClass:
+                          "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                        class: _vm.comparePicked(a)
+                          ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
+                          : "",
+                        on: {
+                          click: function($event) {
+                            return _vm.setDurationLocal(a)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(a.h) + " : " + _vm._s(a.m) + " h")]
+                    )
+                  }),
+                  0
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+                class: _vm.moreIsActive
+                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                  : "",
+                attrs: { slot: "reference" },
+                slot: "reference"
+              },
+              [
+                _vm._v(
+                  "\n        " +
+                    _vm._s(
+                      _vm.moreIsActive
+                        ? _vm.durationpicker.h +
+                            ":" +
+                            _vm.durationpicker.m +
+                            " h"
+                        : "More"
+                    ) +
+                    "\n        "
+                ),
+                _c("i", { staticClass: "fas fa-stopwatch ml-2" })
+              ]
+            )
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "p-4 flex justify-between" },
+    [
+      _c(
+        "div",
+        { staticClass: "flex flex-row" },
+        _vm._l(_vm.preselected, function(employee) {
+          return _c(
+            "button",
+            {
+              key: employee.id,
+              staticClass:
+                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+              class:
+                _vm.selectedEmployee.name === employee.name
+                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                  : "",
+              on: {
+                click: function($event) {
+                  return _vm.setEmployeeLocal(employee)
+                }
+              }
+            },
+            [_vm._v(_vm._s(employee.name))]
+          )
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _vm.hasRest
+        ? _c(
+            "popper",
+            {
+              attrs: {
+                trigger: "clickToOpen",
+                options: { placement: "bottom-start" }
+              }
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "popper rounded-lg p-2 border border-gray-400 bg-white"
+                },
+                [
+                  _c("div", { staticClass: "flex justify-center mb-1" }, [
+                    _c(
+                      "span",
+                      {
+                        staticClass:
+                          "text-center text-xs text-gray-500 uppercase font-light leading-tight"
+                      },
+                      [_vm._v("Employees")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "flex flex-wrap w-32 text-gray-800" },
+                    _vm._l(_vm.rest, function(employee) {
+                      return _c(
+                        "span",
+                        {
+                          key: employee.id,
+                          staticClass:
+                            "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                          class:
+                            _vm.selectedEmployee.name === employee.name
+                              ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
+                              : "",
+                          on: {
+                            click: function($event) {
+                              return _vm.setEmployeeLocal(employee)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(employee.name))]
+                      )
+                    }),
+                    0
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm.preselected.length === 3 && this.employees.length > 0
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+                      class: _vm.isNotInPreselected
+                        ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                        : "",
+                      attrs: { slot: "reference" },
+                      slot: "reference"
+                    },
+                    [
+                      _vm._v(
+                        "\n      " +
+                          _vm._s(
+                            _vm.isNotInPreselected
+                              ? this.selectedEmployee.name
+                              : "Other"
+                          ) +
+                          "\n      "
+                      ),
+                      _c("i", { staticClass: "fas fa-address-book ml-2" })
+                    ]
+                  )
+                : _vm._e()
+            ]
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "flex flex-col px-4 pb-1 pt-2" }, [
+    _c(
+      "span",
+      {
+        staticClass:
+          "uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
+      },
+      [_vm._v("Number of people")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "flex justify-between" },
+      [
+        _c(
+          "div",
+          _vm._l(6, function(a) {
+            return _c(
+              "button",
+              {
+                key: a,
+                staticClass:
+                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+                class:
+                  _vm.personpicker === a.toString()
+                    ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                    : "",
+                on: {
+                  click: function($event) {
+                    return _vm.setPerson(a)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(a))]
+            )
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c(
+          "popper",
+          {
+            attrs: {
+              trigger: "clickToOpen",
+              options: { placement: "bottom-start" }
+            }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "popper rounded-lg p-2 border border-gray-400 bg-white"
+              },
+              [
+                _c("div", { staticClass: "flex justify-center mb-1" }, [
+                  _c(
+                    "span",
+                    {
+                      staticClass:
+                        "text-center text-xs text-gray-500 uppercase font-light leading-tight"
+                    },
+                    [_vm._v("Persons")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "flex flex-wrap w-32 text-gray-800" },
+                  _vm._l(15, function(a) {
+                    return _c(
+                      "span",
+                      {
+                        key: a,
+                        staticClass:
+                          "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                        class:
+                          _vm.personpicker === (a + 6).toString()
+                            ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
+                            : "",
+                        on: {
+                          click: function($event) {
+                            return _vm.setPerson(a + 6)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(a + 6))]
+                    )
+                  }),
+                  0
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+                class: _vm.moreIsActive
+                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                  : "",
+                attrs: { slot: "reference" },
+                slot: "reference"
+              },
+              [
+                _vm._v(
+                  "\n        " +
+                    _vm._s(_vm.moreIsActive ? _vm.personpicker : "More") +
+                    "\n        "
+                ),
+                _c("i", { staticClass: "fas fa-user-friends ml-2" })
+              ]
+            )
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a&":
 /*!************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a& ***!
@@ -54779,6 +55746,41 @@ var render = function() {
         ]
       )
     ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "flex flex-row overflow-y-auto" },
+    _vm._l(_vm.tables, function(table) {
+      return _c(
+        "div",
+        { key: table.id, staticClass: "border border-gray-400 p-4" },
+        [_vm._v(_vm._s(table))]
+      )
+    }),
+    0
   )
 }
 var staticRenderFns = []
@@ -55016,7 +56018,7 @@ var render = function() {
                 "\n      " +
                   _vm._s(
                     _vm._f("moment")(
-                      this.reservation.starting_at,
+                      this.reservation.start,
                       "dddd, MMMM Do YYYY"
                     )
                   ) +
@@ -55080,7 +56082,7 @@ var render = function() {
               _c("i", { staticClass: "fas fa-user-friends" }),
               _vm._v(
                 "\n        " +
-                  _vm._s(this.reservation.person_count) +
+                  _vm._s(this.reservation.persons) +
                   " Persons\n      "
               )
             ]
@@ -72617,7 +73619,11 @@ var map = {
 	"./components/ReservationItem.vue": "./resources/js/components/ReservationItem.vue",
 	"./components/ReservationItems/ColorSwitcher.vue": "./resources/js/components/ReservationItems/ColorSwitcher.vue",
 	"./components/ReservationItems/DatePicker.vue": "./resources/js/components/ReservationItems/DatePicker.vue",
+	"./components/ReservationItems/DurationPicker.vue": "./resources/js/components/ReservationItems/DurationPicker.vue",
+	"./components/ReservationItems/EmployeePicker.vue": "./resources/js/components/ReservationItems/EmployeePicker.vue",
+	"./components/ReservationItems/PersonPicker.vue": "./resources/js/components/ReservationItems/PersonPicker.vue",
 	"./components/ReservationItems/SingleTimePicker.vue": "./resources/js/components/ReservationItems/SingleTimePicker.vue",
+	"./components/ReservationItems/TablePicker.vue": "./resources/js/components/ReservationItems/TablePicker.vue",
 	"./components/ReservationItems/TimePicker.vue": "./resources/js/components/ReservationItems/TimePicker.vue",
 	"./components/ReservationListItem.vue": "./resources/js/components/ReservationListItem.vue",
 	"./components/SearchReservation.vue": "./resources/js/components/SearchReservation.vue"
@@ -73669,6 +74675,267 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/ReservationItems/DurationPicker.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DurationPicker.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=template&id=470b1762& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762&");
+/* harmony import */ var _DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/DurationPicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./DurationPicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./DurationPicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./DurationPicker.vue?vue&type=template&id=470b1762& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/EmployeePicker.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/EmployeePicker.vue ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=template&id=d50ed008& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008&");
+/* harmony import */ var _EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/EmployeePicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeePicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeePicker.vue?vue&type=template&id=d50ed008& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/PersonPicker.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/PersonPicker.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=template&id=42682c3a& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a&");
+/* harmony import */ var _PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/PersonPicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonPicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonPicker.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonPicker.vue?vue&type=template&id=42682c3a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue":
 /*!***********************************************************************!*\
   !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue ***!
@@ -73751,6 +75018,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/TablePicker.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/TablePicker.vue ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TablePicker.vue?vue&type=template&id=08c82d0c& */ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c&");
+/* harmony import */ var _TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReservationItems/TablePicker.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TablePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TablePicker.vue?vue&type=template&id=08c82d0c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

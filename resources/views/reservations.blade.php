@@ -40,7 +40,7 @@
             </div>
 
             <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
-                <i class="text-white pr-1 fas fa-user-friends"></i>{{ $reservation->person_count }} Persons
+                <i class="text-white pr-1 fas fa-user-friends"></i>{{ $reservation->persons }} Persons
             </div>
 
             @if($reservation->email)
@@ -58,7 +58,7 @@
         <div class="flex">
             <button class="text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-edit mr-1"></i>Edit</button>
             <orgusto-modal-wrapper :is-open="true" :handle-close="() => {}">
-                <reservation-item>
+                <reservation-item :employees="{{ $employees }}" tables-endpoint="{{ route('tables.index') }}" reservatinos-endpoint="{{ route('reservations.store') }}">
                 </reservation-item>
             </orgusto-modal-wrapper>
             <button class="ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-trash-alt mr-1"></i>Delete</button>

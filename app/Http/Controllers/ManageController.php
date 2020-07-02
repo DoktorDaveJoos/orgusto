@@ -32,8 +32,12 @@ class ManageController extends Controller
 
         if ($actualRestaurant) {
             $tables = $actualRestaurant->tables()->with(['reservations' => function ($query) use ($from, $to) {
-                $query->whereBetween('starting_at', [$from, $to]);
+                $query->whereBetween('start', [$from, $to]);
             }])->sortByTableNumber()->get();
+        }
+
+        if ($request->wantsJson()) {
+            return $tables;
         }
 
 

@@ -69,7 +69,7 @@
       <div class="flex flex-row">
         <orgastro-dropdown
           :onChange="onChange"
-          id="person_count"
+          id="persons"
           init="-"
           title="Persons"
           :options="tableSeats"
@@ -77,7 +77,7 @@
         ></orgastro-dropdown>
         <orgastro-dropdown
           :onChange="onChange"
-          id="length"
+          id="duration"
           init="-"
           title="Duration"
           options="8"
@@ -176,12 +176,12 @@ export default {
       input: {
         name: "",
         notice: "",
-        starting_at: "",
+        start: "",
         hours: 18,
         minutes: 0,
         date: new Date(),
-        person_count: "",
-        length: "",
+        persons: "",
+        duration: "",
         user: "",
         color: "gray",
         tables: []
@@ -192,7 +192,7 @@ export default {
     saveBtnPressed() {
       var request = Object.assign({}, this.input);
       const { date, hours, minutes } = this.input;
-      request.starting_at = moment(date)
+      request.start = moment(date)
         .hours(hours)
         .minutes(minutes)
         .seconds(0)
@@ -200,17 +200,22 @@ export default {
       request.tables = this.input.tables.map(table => table.id);
       request.user_id = this.input.user.id;
 
-      axios
-        .post("/reservations", request)
-        .then(res => {
-          if (res.status === 200) {
-            location.reload();
-          }
-          if (res.status === 422) {
-            console.log(res);
-          }
-        })
-        .catch(err => (this.displayError = err.response.data));
+      request.end = moment(request.start).add("hours", request.duration);
+      request.end = request.end.format("YYYY-MM-DD HH:mm:ss");
+
+      console.log(request.duration);
+
+      //   axios
+      //     .post("/reservations", request)
+      //     .then(res => {
+      //       if (res.status === 200) {
+      //         location.reload();
+      //       }
+      //       if (res.status === 422) {
+      //         console.log(res);
+      //       }
+      //     })
+      //     .catch(err => (this.displayError = err.response.data));
     },
     halfAnHourStep: val => {
       return val / 2;

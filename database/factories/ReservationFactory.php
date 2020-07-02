@@ -10,11 +10,15 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'name' => $faker->name,
         'created_at' => now(),
         'notice' => $faker->text,
-        'person_count' => $faker->randomDigitNotNull,
+        'persons' => $faker->randomDigitNotNull,
         'user_id' => 1,
-        'starting_at' => $faker->randomElement($array = array(
-            '2020-02-26 17:00:00',
-            '2020-02-26 19:00:00'
+        'start' => $faker->randomElement($array = array(
+            '2020-07-06 17:00:00',
+            '2020-07-06 19:00:00'
+        )),
+        'end' => $faker->randomElement($array = array(
+            '2020-07-06 20:00:00',
+            '2020-07-06 21:00:00'
         )),
         'color' => $faker->randomElement($array = array(
             'green',
@@ -22,6 +26,6 @@ $factory->define(Reservation::class, function (Faker $faker) {
             'gray',
             'blue'
         )),
-        'length' => $faker->randomElement($array = array(1.5, 2, 1)),
+        'duration' => $faker->randomElement($array = array(1.5, 2, 1)),
     ];
 });

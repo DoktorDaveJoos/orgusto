@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateReservation;
 use Illuminate\Http\Request;
 use App\Reservation;
+use Carbon\Carbon;
 
 class ReservationsController extends Controller
 {
@@ -34,25 +35,26 @@ class ReservationsController extends Controller
 
         $restaurant = auth()->user()->restaurants()->first();
 
+        $employees = $restaurant->users ?? [];
 
         if ($restaurant) {
             if (!$searchQuery) {
                 $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
                     $q->where('restaurant_id', $restaurant->id);
-                })->whereBetween('starting_at', [$from, $to])->closest()->simplePaginate(20);
+                })->whereBetween('start', [$from, $to])->closest()->simplePaginate(20);
             } else {
                 $name_term = $name_term = '%' . $searchQuery . '%';
                 $constraints = [
                     ['name', 'like', $name_term],
-                    ['starting_at', '>=', $from],
-                    ['starting_at', '<=', $to]
+                    ['start', '>=', $from],
+                    ['start', '<=', $to]
                 ];
 
                 $found_by_name = Reservation::where($constraints)->get();
                 $results = Reservation::search($searchQuery)->get();
                 $reservations = $results
                     ->filter(function ($reservation, $key) use ($from, $to) {
-                        return $reservation->starting_at >= $from && $reservation->starting_at <= $to;
+                        return $reservation->start >= $from && $reservation->start <= $to;
                     })
                     ->merge($found_by_name)
                     ->unique();
@@ -61,7 +63,7 @@ class ReservationsController extends Controller
             if (sizeof($reservations) < 1) {
                 $empty_search = true;
                 $card_title = "... upcoming reservations";
-                $reservations = Reservation::where('starting_at', '>', date('Y-m-d'))->paginate(15);
+                $reservations = Reservation::where('start', '>', date('Y-m-d'))->paginate(15);
             }
         }
 
@@ -69,7 +71,7 @@ class ReservationsController extends Controller
             return $reservations;
         }
 
-        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title]);
+        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title, 'employees' => $employees]);
     }
 
     public function show(Reservation $reservation)
@@ -81,6 +83,8 @@ class ReservationsController extends Controller
     {
         $reservation = Reservation::create($request->validated());
         $reservation->tables()->attach($request->tables);
+        // $reservation->end = new Carbon($reservation->start);
+        // $reservation->end->addHours($reservation->duration);
         $reservation->save();
     }
 
@@ -106,8 +110,8 @@ class ReservationsController extends Controller
 
         $constraints = [
             ['name', 'like', $name_term],
-            ['starting_at', '>=', $from],
-            ['starting_at', '<=', $to]
+            ['start', '>=', $from],
+            ['start', '<=', $to]
         ];
 
         $found_by_name = Reservation::where($constraints)->get();
@@ -116,7 +120,7 @@ class ReservationsController extends Controller
 
         $results = $results
             ->filter(function ($reservation, $key) use ($from, $to) {
-                return $reservation->starting_at >= $from && $reservation->starting_at <= $to;
+                return $reservation->start >= $from && $reservation->start <= $to;
             })
             ->merge($found_by_name)
             ->unique()

@@ -27,6 +27,6 @@ class Table extends Model
 
     public function reservationsBetween($from, $to)
     {
-        return $this->reservations()->whereBetween('starting_at', [$from, $to]);
+        return $this->reservations()->whereBetween('start', [$from, $to]);
     }
 }

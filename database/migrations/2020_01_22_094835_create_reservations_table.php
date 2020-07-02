@@ -17,10 +17,11 @@ class CreateReservationsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('name');
-            $table->integer('length');
+            $table->integer('duration');
             $table->boolean('done')->default(false);
-            $table->integer('person_count');
-            $table->dateTime('starting_at');
+            $table->integer('persons');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->text('notice')->nullable();
             $table->string('color')->nullable();
             $table->string('email')->nullable();
