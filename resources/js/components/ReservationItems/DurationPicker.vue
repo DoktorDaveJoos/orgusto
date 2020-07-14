@@ -1,21 +1,14 @@
 <template>
-  <div class="flex flex-col px-4 pt-1 pb-4">
-    <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-1">Duration</span>
+  <div class="flex flex-col px-4 pt-2 pb-4">
     <div class="flex justify-between">
-      <div>
-        <button
+      <div class="flex space-x-4">
+        <select-button
           v-for="t in preselectedTimes"
           :key="(t.h + t.m).toString()"
-          class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-          :class="comparePicked(t) ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-          @click="setDurationLocal(t)"
-        >
-          <div class="flex items-baseline">
-            <div>{{ t.h }}</div>:
-            <div class="text-xs">{{ t.m }}</div>
-            <span class="ml-1">h</span>
-          </div>
-        </button>
+          :selected="() => comparePicked(t)"
+          :handle="() => setDurationLocal(t)"
+          :value="t.h + ':' + t.m + 'h'"
+        ></select-button>
       </div>
 
       <popper trigger="clickToOpen" :options="{placement: 'bottom-start'}">
@@ -37,16 +30,12 @@
           </div>
         </div>
 
-        <button
+        <select-button
           slot="reference"
-          class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-          :class="moreIsActive ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        >
-          {{ moreIsActive ? durationpicker.h + ":" + durationpicker.m + " h" : "More" }}
-          <i
-            class="fas fa-stopwatch ml-2"
-          ></i>
-        </button>
+          :selected="() => moreIsActive"
+          :value="moreIsActive ? durationpicker.h + ':' + durationpicker.m + 'h' : 'More'"
+          icon="fas fa-stopwatch"
+        ></select-button>
       </popper>
     </div>
   </div>
@@ -59,7 +48,7 @@ export default {
   components: {
     popper: Popper
   },
-  props: ["setDuration"],
+  props: ["init"],
   data() {
     return {
       preselectedTimes: [
@@ -76,13 +65,17 @@ export default {
         { h: "8", m: "00" },
         { h: "12", m: "00" }
       ],
-      durationpicker: { h: "2", m: "00" }
+      durationpicker: this.init
     };
   },
   methods: {
     setDurationLocal(duration) {
+      console.log(duration);
+
       this.durationpicker = duration;
-      this.setDuration(JSON.stringify(this.durationpicker));
+
+      // const stringDuration = JSON.stringify(this.durationpicker);
+      this.$emit("duration:chosen", this.durationpicker);
     },
     comparePicked(aTime) {
       return (

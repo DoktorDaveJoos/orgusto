@@ -1,31 +1,17 @@
 <template>
-  <div class="p-4 flex justify-between">
-    <div class="flex flex-row">
-      <button
-        class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-        :class="datepicker === 'today' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        @click="setDatePicker('today')"
-      >Today</button>
-      <button
-        class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-        :class="datepicker === 'tomorrow' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        @click="setDatePicker('tomorrow')"
-      >Tomorrow</button>
-      <button
-        class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-        :class="datepicker === 'datomorrow' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        @click="setDatePicker('datomorrow')"
-      >Day after tomorrow</button>
+  <div class="p-4 pb-2 flex justify-between">
+    <div class="flex flex-row space-x-4">
+      <select-button value="today" :handle="setDatePicker" :selected="isSelected"></select-button>
+      <select-button value="tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
+      <select-button value="day after tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
     </div>
     <div>
       <v-date-picker v-model="singleDate" :popover="{ visibility: 'click' }">
-        <button
-          class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-          :class="choosenDate !== '' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        >
-          {{ choosenDate !== '' ? choosenDate : 'Choose date' }}
-          <i class="ml-2 fas fa-calendar-alt"></i>
-        </button>
+        <select-button
+          :value="chosenDate !== '' ? chosenDate : 'Choose date'"
+          :selected="() => chosenDate !== ''"
+          icon="fas fa-calendar-alt"
+        ></select-button>
       </v-date-picker>
     </div>
   </div>
@@ -33,31 +19,37 @@
 
 <script>
 export default {
-  props: ["setDate"],
+  props: ["init"],
   data() {
     return {
       datepicker: "today",
-      choosenDate: "",
-      singleDate: new Date()
+      chosenDate: "",
+      singleDate: this.init
     };
   },
   methods: {
     setDatePicker(indicator) {
-      this.choosenDate = "";
+      this.chosenDate = "";
       this.datepicker = indicator;
       if (indicator === "today") {
         this.setDate(moment());
       } else if (indicator === "tomorrow") {
         this.setDate(moment().add(1, "days"));
-      } else if (indicator === "datomorrow") {
+      } else if (indicator === "day after tomorrow") {
         this.setDate(moment().add(2, "days"));
       }
+    },
+    setDate(date) {
+      this.$emit("date:chosen", date);
+    },
+    isSelected(indicator) {
+      return this.datepicker === indicator;
     }
   },
   watch: {
     singleDate(newVal, oldVal) {
       this.datepicker = "";
-      this.choosenDate = moment(newVal).format("DD.MM.YYYY");
+      this.chosenDate = moment(newVal).format("DD.MM.YYYY");
       this.setDate(moment(newVal));
     }
   }

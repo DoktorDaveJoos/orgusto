@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Restaurant::class)->withPivot(['role']);
     }
 
+    public function firstRestaurant()
+    {
+        return $this->restaurants()->first();
+    }
+
     public function reservations()
     {
         return $this->belongsToMany(Reservation::class);

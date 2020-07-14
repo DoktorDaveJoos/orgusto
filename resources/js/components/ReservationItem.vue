@@ -2,65 +2,83 @@
   <div class="relative shadow-lg bg-white mx-auto rounded-lg w-full max-w-5xl">
     <div class="bg-white w-full shadow-lg max-w-5xl self-center mt-6 overflow-hidden rounded-lg">
       <div
-        class="orgusto-honey flex flex-row content-center justify-between px-4 py-4 sm:px-6 border-b-4"
+        class="orgusto-honey flex flex-row items-center justify-between p-4 py-5 sm:px-6 border-b-4"
         :class="borderColor"
       >
-        <h3 class="text-lg self-center leading-6 font-medium text-gray-900">{{ title }}</h3>
+        <h3 class="text-lg self-center leading-6 font-medium text-gray-800">{{ title }}</h3>
         <color-switcher :set-color="setColor"></color-switcher>
       </div>
 
-      <employee-picker :employees="employees" :set-employee="setEmployee"></employee-picker>
-      <date-picker :set-date="setDate"></date-picker>
-      <time-picker :set-time="setTime"></time-picker>
-      <person-picker :set-persons="setPersons"></person-picker>
-      <duration-picker :set-duration="setDuration"></duration-picker>
-
-      <div class="flex p-4 justify-between">
+      <employee-picker :employees="employees" v-on:employee:chosen="setEmployee"></employee-picker>
+      <hr />
+      <date-picker :init="date"></date-picker>
+      <time-picker :init="time" v-on:time:chosen="setTime"></time-picker>
+      <hr />
+      <person-picker :init="persons" v-on:person:chosen="setPersons"></person-picker>
+      <duration-picker :init="duration" v-on:duration:chosen="setDuration"></duration-picker>
+      <hr />
+      <div class="flex p-4 pb-2 justify-between">
         <input
-          class="h-12 w-full px-4 font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400"
+          class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
+          :class="reservationTitle ? 'border-indigo-400 text-gray-800' : ''"
           placeholder="Name of the guest / group"
           type="text"
           v-model="reservationTitle"
         />
-        <button
-          @click="showAdditionalNotice = !showAdditionalNotice"
-          class="h-12 flex flex-row px-4 items-center text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight focus:outline-none hover:shadow-inner ml-4"
-          :class="showAdditionalNotice ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        >
-          Notice
-          <i class="fas fa-sticky-note ml-2"></i>
-        </button>
+        <select-button
+          :handle="() => showAdditionalNotice = !showAdditionalNotice"
+          :selected="() => showAdditionalNotice"
+          icon="fas fa-sticky-note"
+          value="notice"
+        ></select-button>
       </div>
 
-      <div class="flex p-4" v-if="showAdditionalNotice">
+      <div class="flex px-4 py-2" v-if="showAdditionalNotice">
         <input
-          class="h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400"
+          class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
+          :class="reservationNotice ? 'border-indigo-400 text-gray-800' : ''"
           placeholder="Some additional information ..."
           type="text"
           v-model="reservationNotice"
         />
       </div>
 
-      <div class="flex p-4">
+      <div class="flex p-4 pt-2">
         <input
-          class="h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400 mr-4"
+          class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
+          :class="email ? 'border-indigo-400 text-gray-800' : ''"
           placeholder="Email"
           type="email"
           v-model="email"
         />
         <input
-          class="h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400"
+          class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
+          :class="phone_number ? 'border-indigo-400 text-gray-800' : ''"
           placeholder="Phone number"
           type="phone"
           v-model="phone_number"
         />
       </div>
+      <hr />
 
       <table-picker
         :tables-endpoint="tablesEndpoint"
         :filter-data="filterData"
-        :set-tables="setTables"
+        v-on:tables:chosen="setTables"
       ></table-picker>
+
+      <hr />
+
+      <div class="flex justify-end p-4">
+        <button
+          @click="this.$emit('modal:close')"
+          class="p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out"
+        >Cancel</button>
+        <button
+          @click="handleSubmit()"
+          class="p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out"
+        >{{ this.reservation ? 'Updated' : 'Save' }}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -71,13 +89,15 @@ export default {
   props: ["reservation", "employees", "tablesEndpoint", "reservationsEndpoint"],
   data() {
     return {
+      // TODO: Read that from cookie
       color: "gray",
-      date: "",
-      time: "",
-      persons: "",
+      date: new Date(),
+      time: "18:00",
+      persons: "2",
+      duration: { h: "2", m: "00" },
+      tables: [],
       email: "",
       employee: "",
-      duration: {},
       phone_number: "",
       reservationTitle: "",
       reservationNotice: "",
@@ -89,6 +109,7 @@ export default {
       this.color = color.toString();
     },
     setDate(date) {
+      console.log(date);
       this.date = date;
     },
     setTime(time) {
@@ -103,7 +124,34 @@ export default {
     setDuration(duration) {
       this.duration = duration;
     },
-    setTables(tables) {}
+    setTables(tables) {
+      this.tables = tables;
+    },
+    handleSubmit() {
+      const request = this.validate();
+
+      axios
+        .post(this.reservationsEndpoint, request)
+        .then(res => console.log(res))
+        .catch(err => console.log(err.response));
+    },
+    validate() {
+      const request = Object.assign({
+        color: this.color,
+        start: this.processedDate,
+        end: this.processedEndDate,
+        persons: this.persons,
+        duration: this.processedDuration,
+        tables: this.tables,
+        email: this.email,
+        employee: this.employee,
+        phone_number: this.phone_number,
+        name: this.reservationTitle,
+        notice: this.reservationNotice
+      });
+
+      return request;
+    }
   },
   computed: {
     title() {
@@ -121,7 +169,16 @@ export default {
           hours: splittedTime[0],
           minutes: splittedTime[1]
         })
-        .format("DD-MM-YYYY HH:mm[:00]");
+        .format("YYYY-MM-DD HH:mm[:00]");
+    },
+    processedEndDate() {
+      return moment(this.processedDate)
+        .add("hours", this.duration.h)
+        .add("minutes", this.duration.m)
+        .format("YYYY-MM-DD HH:mm[:00]");
+    },
+    processedDuration() {
+      return this.duration.h + "." + this.duration.m;
     },
     filterData() {
       return {

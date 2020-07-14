@@ -53,14 +53,12 @@
       </div>
     </div>
 
-    <button
+    <select-button
       slot="reference"
-      class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-      :class="active ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-    >
-      {{ active ? hour + ":" + minutes : "Choose time" }}
-      <i class="ml-2 fas fa-clock"></i>
-    </button>
+      :selected="() => active"
+      :value="active ? hour + ':' + minutes : 'Choose time'"
+      icon="fas fa-clock"
+    ></select-button>
   </popper>
 </template>
 

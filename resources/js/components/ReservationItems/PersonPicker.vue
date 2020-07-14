@@ -1,15 +1,17 @@
 <template>
-  <div class="flex flex-col px-4 pb-1 pt-2">
-    <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-1">Number of people</span>
+  <div class="flex flex-col px-4 pb-2 pt-4">
+    <span
+      class="uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
+    >Number of people & duration</span>
     <div class="flex justify-between">
-      <div>
-        <button
+      <div class="flex space-x-4">
+        <select-button
           v-for="a in 6"
           :key="a"
-          class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-          :class="personpicker === a.toString() ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-          @click="setPerson(a)"
-        >{{ a }}</button>
+          :value="a"
+          :handle="setPerson"
+          :selected="() => personpicker === a.toString()"
+        ></select-button>
       </div>
 
       <popper trigger="clickToOpen" :options="{placement: 'bottom-start'}">
@@ -31,14 +33,12 @@
           </div>
         </div>
 
-        <button
+        <select-button
           slot="reference"
-          class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-          :class="moreIsActive ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        >
-          {{ moreIsActive ? personpicker : "More" }}
-          <i class="fas fa-user-friends ml-2"></i>
-        </button>
+          :selected="() => moreIsActive"
+          :value=" moreIsActive ? personpicker : 'More'"
+          icon="fas fa-user-friends"
+        ></select-button>
       </popper>
     </div>
   </div>
@@ -51,16 +51,19 @@ export default {
   components: {
     popper: Popper
   },
-  props: ["setPersons"],
+  props: ["init"],
   data() {
     return {
-      personpicker: "2"
+      personpicker: this.init
     };
   },
   methods: {
     setPerson(persons) {
       this.personpicker = persons.toString();
       this.setPersons(this.personpicker);
+    },
+    setPersons(persons) {
+      this.$emit("persons:chosen", persons);
     }
   },
   computed: {

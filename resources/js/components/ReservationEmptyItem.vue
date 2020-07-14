@@ -205,17 +205,17 @@ export default {
 
       console.log(request.duration);
 
-      //   axios
-      //     .post("/reservations", request)
-      //     .then(res => {
-      //       if (res.status === 200) {
-      //         location.reload();
-      //       }
-      //       if (res.status === 422) {
-      //         console.log(res);
-      //       }
-      //     })
-      //     .catch(err => (this.displayError = err.response.data));
+      axios
+        .post("/reservations", request)
+        .then(res => {
+          if (res.status === 200) {
+            location.reload();
+          }
+          if (res.status === 422) {
+            console.log(res);
+          }
+        })
+        .catch(err => (this.displayError = err.response.data));
     },
     halfAnHourStep: val => {
       return val / 2;

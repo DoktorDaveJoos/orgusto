@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Reservation;
-
-use Carbon\Carbon;
+use App\Http\Requests\GetAvailableTables;
 
 class TablesController extends Controller
 {
@@ -20,39 +17,14 @@ class TablesController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request)
+    public function index(GetAvailableTables $request)
     {
-        $start_date = new Carbon($request->get('date'));
-        $duration = $request->get("duration");
+        $start_date = $request->get('start');
+        $end_date = $request->get('end');
+        $persons = $request->get('persons') ?? 0;
 
-        $tables = [];
+        $restaurant = auth()->user()->firstRestaurant();
 
-        if ($start_date && $duration) {
-            $end_date = clone $start_date;
-
-            $start_date = $start_date->toDateTimeString();
-            $end_date = $end_date->addHours($duration)->toDateTimeString();
-
-            $persons = $request->get('persons') ?? 0;
-
-            $before = [
-                ['start', '<', $start_date],
-                ['end', '<=', $start_date],
-            ];
-
-            $after = [
-                ['start', '>=', $end_date],
-                ['end', '>', $end_date]
-            ];
-
-            $restaurant = auth()->user()->restaurants()->first();
-
-            $tables = $restaurant->tables()->where('seats', '>=', $persons)->doesntHave('reservations')
-                ->orWhereHas('reservations', function ($q) use ($before, $after) {
-                    $q->where($before)->orWhere($after);
-                })->where('seats', '>=', $persons)->get();
-        }
-
-        return $tables;
+        return $restaurant->tables()->availableBetween($start_date, $end_date)->withEnoughSeats($persons)->get();
     }
 }

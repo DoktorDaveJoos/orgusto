@@ -58,7 +58,7 @@
         <div class="flex">
             <button class="text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-edit mr-1"></i>Edit</button>
             <orgusto-modal-wrapper :is-open="true" :handle-close="() => {}">
-                <reservation-item :employees="{{ $employees }}" tables-endpoint="{{ route('tables.index') }}" reservatinos-endpoint="{{ route('reservations.store') }}">
+                <reservation-item :employees="{{ $employees }}" tables-endpoint="{{ route('tables.index') }}" reservations-endpoint="{{ route('reservations.store') }}">
                 </reservation-item>
             </orgusto-modal-wrapper>
             <button class="ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-trash-alt mr-1"></i>Delete</button>

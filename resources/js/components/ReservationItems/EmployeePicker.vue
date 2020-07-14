@@ -1,46 +1,42 @@
 <template>
-  <div class="p-4 flex justify-between">
-    <div class="flex flex-row">
-      <button
-        v-for="employee in preselected"
-        :key="employee.id"
-        class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-        :class="selectedEmployee.name === employee.name ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-        @click="setEmployeeLocal(employee)"
-      >{{ employee.name }}</button>
-    </div>
-
-    <popper v-if="hasRest" trigger="clickToOpen" :options="{placement: 'bottom-start'}">
-      <div class="popper rounded-lg p-2 border border-gray-400 bg-white">
-        <div class="flex justify-center mb-1">
-          <span
-            class="text-center text-xs text-gray-500 uppercase font-light leading-tight"
-          >Employees</span>
-        </div>
-        <hr />
-        <div class="flex flex-wrap w-32 text-gray-800">
-          <span
-            v-for="employee in rest"
-            v-bind:key="employee.id"
-            @click="setEmployeeLocal(employee)"
-            class="flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
-            :class="selectedEmployee.name === employee.name ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
-          >{{ employee.name }}</span>
-        </div>
+  <div class="flex flex-col px-4 pb-4 pt-4">
+    <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-2">Who are you?</span>
+    <div class="flex justify-between">
+      <div class="flex space-x-4">
+        <select-button
+          v-for="employee in preselected"
+          :key="employee.id"
+          :selected="() => selectedEmployee.name === employee.name"
+          :value="employee.name"
+          :handle="setEmployeeLocal"
+        ></select-button>
       </div>
-
-      <button
-        v-if="preselected.length === 3 && this.employees.length > 0"
-        slot="reference"
-        class="h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="isNotInPreselected ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
-      >
-        {{ isNotInPreselected ? this.selectedEmployee.name : 'Other' }}
-        <i
-          class="fas fa-address-book ml-2"
-        ></i>
-      </button>
-    </popper>
+      <popper trigger="clickToOpen" :options="{placement: 'bottom-start'}">
+        <div class="popper rounded-lg p-2 border border-gray-400 bg-white">
+          <div class="flex justify-center mb-1">
+            <span
+              class="text-center text-xs text-gray-500 uppercase font-light leading-tight"
+            >Employees</span>
+          </div>
+          <hr />
+          <div class="flex flex-wrap w-32 text-gray-800">
+            <span
+              v-for="employee in rest"
+              v-bind:key="employee.id"
+              @click="setEmployeeLocal(employee.name)"
+              class="flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
+              :class="selectedEmployee.name === employee.name ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
+            >{{ employee.name }}</span>
+          </div>
+        </div>
+        <select-button
+          slot="reference"
+          :selected="() => isNotInPreselected"
+          :value="isNotInPreselected ? this.selectedEmployee.name : 'Other'"
+          icon="fas fa-address-book"
+        ></select-button>
+      </popper>
+    </div>
   </div>
 </template>
 
@@ -51,7 +47,7 @@ export default {
   components: {
     popper: Popper
   },
-  props: ["employees", "setEmployee"],
+  props: ["employees"],
   data() {
     return {
       selectedEmployee: {
@@ -61,8 +57,16 @@ export default {
   },
   methods: {
     setEmployeeLocal(employee) {
-      this.selectedEmployee = employee;
-      this.setEmployee(this.selectedEmployee);
+      this.selectedEmployee.name = employee;
+      this.$emit(
+        "employee:chosen",
+        this.employees.filter(empl => empl.name === this.selectedEmployee.name)
+      );
+    },
+    hasRest() {
+      return (
+        this.rest && this.rest.length !== undefined && this.rest.length > 0
+      );
     }
   },
   computed: {
@@ -76,22 +80,19 @@ export default {
       const preselected = this.employees.slice(0, 3);
       return preselected;
     },
+    isNotInPreselected() {
+      return (
+        this.rest &&
+        this.rest.length > 0 &&
+        this.rest.find(empl => this.selectedEmployee.name === empl.name) !==
+          undefined
+      );
+    },
     rest() {
       return this.employees.filter(
         empl =>
           this.preselected.find(empl_pre => empl_pre.name === empl.name) ===
           undefined
-      );
-    },
-    hasRest() {
-      return (
-        this.rest && this.rest.length !== undefined && this.rest.length > 0
-      );
-    },
-    isNotInPreselected() {
-      return (
-        this.rest.find(empl => this.selectedEmployee.name === empl.name) !==
-        undefined
       );
     }
   }

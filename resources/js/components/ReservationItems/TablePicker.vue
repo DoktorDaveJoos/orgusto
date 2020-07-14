@@ -1,38 +1,68 @@
 <template>
-  <div class="flex flex-row overflow-y-auto">
-    <div v-for="table in tables" :key="table.id" class="border border-gray-400 p-4">{{ table }}</div>
+  <div class="flex flex-col p-4">
+    <span
+      class="uppercase font-medium text-xs text-gray-800 leading-tight"
+    >Free tables matching your reservation</span>
+    <div class="flex flex-wrap">
+      <div class="my-2 mr-2" v-for="table in tables" :key="table.id">
+        <select-button
+          :value="table.table_number"
+          :selected="() => isActive(table.id)"
+          :handle="() => handleTableClick(table.id)"
+        ></select-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["filterData", "setTables", "tablesEndpoint"],
+  props: ["filterData", "tablesEndpoint"],
   data() {
     return {
-      tables: []
+      tables: [],
+      chosenTables: []
     };
+  },
+  methods: {
+    updateTables(filter) {
+      if (filter.date !== undefined && filter.date !== "Invalid date") {
+        var request = Object.assign({});
+        request.start = filter.date;
+        request.end = moment(request.start)
+          .add("hours", filter.duration.h)
+          .add("minutes", filter.duration.m)
+          .format("YYYY-MM-DD HH:mm:ss");
+
+        const queryParams = $.param(request);
+
+        axios
+          .get(this.tablesEndpoint + "?" + queryParams)
+          .then(res => {
+            this.tables = res.data;
+          })
+          .catch(err => console.log(err));
+      }
+    },
+    handleTableClick(tableId) {
+      if (this.chosenTables.find(id => id === tableId) === undefined) {
+        this.chosenTables.push(tableId);
+      } else {
+        this.chosenTables = this.chosenTables.filter(id => id !== tableId);
+      }
+
+      this.$emit("tables:chosen", this.chosenTables);
+    },
+    isActive(tableId) {
+      return this.chosenTables.find(id => id === tableId) !== undefined;
+    }
+  },
+  mounted() {
+    this.updateTables(this.filterData);
   },
   watch: {
     filterData(n, o) {
-      if (n.date !== undefined && n.date !== "Invalid date") {
-        const duration = JSON.parse(n.duration);
-        var request = Object.assign({});
-
-        // TODO: At time to date
-
-        request.date = n.date;
-        request.end = moment(request.start)
-          .add("hours", n.duration.h)
-          .add("minutes", n.duration.m)
-          .format("YYYY-MM-DD HH:mm:ss");
-
-        const queryParams = $.param(this.filterData);
-        console.log(queryParams);
-        axios
-          .get(this.tablesEndpoint + "?" + queryParams)
-          .then(res => (this.tables = res.data))
-          .catch(err => console.log(err));
-      }
+      this.updateTables(n);
     }
   }
 };

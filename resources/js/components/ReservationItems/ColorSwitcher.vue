@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-row items-center space-x-2">
     <button
       @click="setColor('red')"
       class="rounded-full h-8 w-8 bg-red-400 shadow-lg focus:outline-none"

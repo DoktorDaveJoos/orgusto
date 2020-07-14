@@ -20,6 +20,7 @@ class CreateTablesTable extends Migration
             $table->unsignedBigInteger('restaurant_id');
             $table->integer('seats');
             $table->text('description')->nullable();
+            $table->string('room')->nullable();
 
             $table->foreign('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');
         });

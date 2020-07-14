@@ -1,47 +1,47 @@
 <template>
-  <div class="p-4 flex justify-between">
+  <div class="p-4 pt-2 flex justify-between">
     <div class="flex flex-row">
       <button
-        class="h-12 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="hourpicker === '17' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+        :class="hourpicker === '17' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setHour('17')"
       >17</button>
       <button
-        class="h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="hourpicker === '18' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+        :class="hourpicker === '18' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setHour('18')"
       >18</button>
       <button
-        class="h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="hourpicker === '19' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+        :class="hourpicker === '19' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setHour('19')"
       >19</button>
       <button
-        class="h-12 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4"
-        :class="hourpicker === '20' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4"
+        :class="hourpicker === '20' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setHour('20')"
       >20</button>
 
       <div class="flex flex-row items-center text-gray-800 mr-4">:</div>
 
       <button
-        class="h-12 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="minutepicker === '00' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+        :class="minutepicker === '00' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setMinute('00')"
       >00</button>
       <button
-        class="h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="minutepicker === '15' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+        :class="minutepicker === '15' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setMinute('15')"
       >15</button>
       <button
-        class="h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="minutepicker === '30' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+        :class="minutepicker === '30' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setMinute('30')"
       >30</button>
       <button
-        class="h-12 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner"
-        :class="minutepicker === '45' ? 'border-2 border-blue-400 text-gray-800 font-semibold' : ''"
+        class="h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4"
+        :class="minutepicker === '45' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
         @click="setMinute('45')"
       >45</button>
     </div>
@@ -58,11 +58,11 @@
 
 <script>
 export default {
-  props: ["setTime"],
+  props: ["init"],
   data() {
     return {
-      hourpicker: "17",
-      minutepicker: "00",
+      hourpicker: this.init.split(":")[0],
+      minutepicker: this.init.split(":")[1],
       singleTimePickerActive: false
     };
   },
@@ -78,11 +78,13 @@ export default {
       this.setTime(this.time);
     },
     setSingleTime(time) {
-      console.log("got time: ", time);
       this.hourpicker = "other";
       this.minutepicker = "other";
       this.singleTimePickerActive = true;
       this.setTime(time);
+    },
+    setTime(time) {
+      this.$emit("time:chosen", time);
     }
   },
   computed: {

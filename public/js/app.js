@@ -1899,6 +1899,41 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["handle", "selected", "value", "icon"],
+  computed: {
+    capitalized: function capitalized() {
+      if (isNaN(this.value)) {
+        return this.value.charAt(0).toUpperCase() + this.value.slice(1);
+      }
+
+      return this.value;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteButton.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DeleteButton.vue?vue&type=script&lang=js& ***!
@@ -2691,6 +2726,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     saveBtnPressed: function saveBtnPressed() {
+      var _this = this;
+
       var request = Object.assign({}, this.input);
       var _this$input = this.input,
           date = _this$input.date,
@@ -2703,17 +2740,18 @@ __webpack_require__.r(__webpack_exports__);
       request.user_id = this.input.user.id;
       request.end = moment(request.start).add("hours", request.duration);
       request.end = request.end.format("YYYY-MM-DD HH:mm:ss");
-      console.log(request.duration); //   axios
-      //     .post("/reservations", request)
-      //     .then(res => {
-      //       if (res.status === 200) {
-      //         location.reload();
-      //       }
-      //       if (res.status === 422) {
-      //         console.log(res);
-      //       }
-      //     })
-      //     .catch(err => (this.displayError = err.response.data));
+      console.log(request.duration);
+      axios.post("/reservations", request).then(function (res) {
+        if (res.status === 200) {
+          location.reload();
+        }
+
+        if (res.status === 422) {
+          console.log(res);
+        }
+      })["catch"](function (err) {
+        return _this.displayError = err.response.data;
+      });
     },
     halfAnHourStep: function halfAnHourStep(val) {
       return val / 2;
@@ -2749,13 +2787,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     clearView: function clearView(exceptions) {
-      var _this = this;
+      var _this2 = this;
 
       Object.keys(this.input).forEach(function (key) {
         var found = exceptions.filter(function (e) {
           return e === key;
         });
-        if (!found) _this.input[key] = "";
+        if (!found) _this2.input[key] = "";
       });
       this.input.color = "gray";
       this.input.tables = [];
@@ -2882,18 +2920,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-item",
   props: ["reservation", "employees", "tablesEndpoint", "reservationsEndpoint"],
   data: function data() {
     return {
+      // TODO: Read that from cookie
       color: "gray",
-      date: "",
-      time: "",
-      persons: "",
+      date: new Date(),
+      time: "18:00",
+      persons: "2",
+      duration: {
+        h: "2",
+        m: "00"
+      },
+      tables: [],
       email: "",
       employee: "",
-      duration: {},
       phone_number: "",
       reservationTitle: "",
       reservationNotice: "",
@@ -2905,6 +2966,7 @@ __webpack_require__.r(__webpack_exports__);
       this.color = color.toString();
     },
     setDate: function setDate(date) {
+      console.log(date);
       this.date = date;
     },
     setTime: function setTime(time) {
@@ -2919,7 +2981,33 @@ __webpack_require__.r(__webpack_exports__);
     setDuration: function setDuration(duration) {
       this.duration = duration;
     },
-    setTables: function setTables(tables) {}
+    setTables: function setTables(tables) {
+      this.tables = tables;
+    },
+    handleSubmit: function handleSubmit() {
+      var request = this.validate();
+      axios.post(this.reservationsEndpoint, request).then(function (res) {
+        return console.log(res);
+      })["catch"](function (err) {
+        return console.log(err.response);
+      });
+    },
+    validate: function validate() {
+      var request = Object.assign({
+        color: this.color,
+        start: this.processedDate,
+        end: this.processedEndDate,
+        persons: this.persons,
+        duration: this.processedDuration,
+        tables: this.tables,
+        email: this.email,
+        employee: this.employee,
+        phone_number: this.phone_number,
+        name: this.reservationTitle,
+        notice: this.reservationNotice
+      });
+      return request;
+    }
   },
   computed: {
     title: function title() {
@@ -2933,7 +3021,13 @@ __webpack_require__.r(__webpack_exports__);
       return moment(this.date).set({
         hours: splittedTime[0],
         minutes: splittedTime[1]
-      }).format("DD-MM-YYYY HH:mm[:00]");
+      }).format("YYYY-MM-DD HH:mm[:00]");
+    },
+    processedEndDate: function processedEndDate() {
+      return moment(this.processedDate).add("hours", this.duration.h).add("minutes", this.duration.m).format("YYYY-MM-DD HH:mm[:00]");
+    },
+    processedDuration: function processedDuration() {
+      return this.duration.h + "." + this.duration.m;
     },
     filterData: function filterData() {
       return {
@@ -3019,47 +3113,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["setDate"],
+  props: ["init"],
   data: function data() {
     return {
       datepicker: "today",
-      choosenDate: "",
-      singleDate: new Date()
+      chosenDate: "",
+      singleDate: this.init
     };
   },
   methods: {
     setDatePicker: function setDatePicker(indicator) {
-      this.choosenDate = "";
+      this.chosenDate = "";
       this.datepicker = indicator;
 
       if (indicator === "today") {
         this.setDate(moment());
       } else if (indicator === "tomorrow") {
         this.setDate(moment().add(1, "days"));
-      } else if (indicator === "datomorrow") {
+      } else if (indicator === "day after tomorrow") {
         this.setDate(moment().add(2, "days"));
       }
+    },
+    setDate: function setDate(date) {
+      this.$emit("date:chosen", date);
+    },
+    isSelected: function isSelected(indicator) {
+      return this.datepicker === indicator;
     }
   },
   watch: {
     singleDate: function singleDate(newVal, oldVal) {
       this.datepicker = "";
-      this.choosenDate = moment(newVal).format("DD.MM.YYYY");
+      this.chosenDate = moment(newVal).format("DD.MM.YYYY");
       this.setDate(moment(newVal));
     }
   }
@@ -3121,23 +3207,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ["setDuration"],
+  props: ["init"],
   data: function data() {
     return {
       preselectedTimes: [{
@@ -3172,16 +3247,15 @@ __webpack_require__.r(__webpack_exports__);
         h: "12",
         m: "00"
       }],
-      durationpicker: {
-        h: "2",
-        m: "00"
-      }
+      durationpicker: this.init
     };
   },
   methods: {
     setDurationLocal: function setDurationLocal(duration) {
-      this.durationpicker = duration;
-      this.setDuration(JSON.stringify(this.durationpicker));
+      console.log(duration);
+      this.durationpicker = duration; // const stringDuration = JSON.stringify(this.durationpicker);
+
+      this.$emit("duration:chosen", this.durationpicker);
     },
     comparePicked: function comparePicked(aTime) {
       return aTime.h === this.durationpicker.h && aTime.m === this.durationpicker.m;
@@ -3253,16 +3327,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ["employees", "setEmployee"],
+  props: ["employees"],
   data: function data() {
     return {
       selectedEmployee: {
@@ -3272,8 +3342,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     setEmployeeLocal: function setEmployeeLocal(employee) {
-      this.selectedEmployee = employee;
-      this.setEmployee(this.selectedEmployee);
+      var _this = this;
+
+      this.selectedEmployee.name = employee;
+      this.$emit("employee:chosen", this.employees.filter(function (empl) {
+        return empl.name === _this.selectedEmployee.name;
+      }));
+    },
+    hasRest: function hasRest() {
+      return this.rest && this.rest.length !== undefined && this.rest.length > 0;
     }
   },
   computed: {
@@ -3286,24 +3363,21 @@ __webpack_require__.r(__webpack_exports__);
       var preselected = this.employees.slice(0, 3);
       return preselected;
     },
-    rest: function rest() {
-      var _this = this;
-
-      return this.employees.filter(function (empl) {
-        return _this.preselected.find(function (empl_pre) {
-          return empl_pre.name === empl.name;
-        }) === undefined;
-      });
-    },
-    hasRest: function hasRest() {
-      return this.rest && this.rest.length !== undefined && this.rest.length > 0;
-    },
     isNotInPreselected: function isNotInPreselected() {
       var _this2 = this;
 
-      return this.rest.find(function (empl) {
+      return this.rest && this.rest.length > 0 && this.rest.find(function (empl) {
         return _this2.selectedEmployee.name === empl.name;
       }) !== undefined;
+    },
+    rest: function rest() {
+      var _this3 = this;
+
+      return this.employees.filter(function (empl) {
+        return _this3.preselected.find(function (empl_pre) {
+          return empl_pre.name === empl.name;
+        }) === undefined;
+      });
     }
   }
 });
@@ -3372,16 +3446,19 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ["setPersons"],
+  props: ["init"],
   data: function data() {
     return {
-      personpicker: "2"
+      personpicker: this.init
     };
   },
   methods: {
     setPerson: function setPerson(persons) {
       this.personpicker = persons.toString();
       this.setPersons(this.personpicker);
+    },
+    setPersons: function setPersons(persons) {
+      this.$emit("persons:chosen", persons);
     }
   },
   computed: {
@@ -3404,8 +3481,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
 /* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
 //
 //
 //
@@ -3518,31 +3593,66 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["filterData", "setTables", "tablesEndpoint"],
+  props: ["filterData", "tablesEndpoint"],
   data: function data() {
     return {
-      tables: []
+      tables: [],
+      chosenTables: []
     };
   },
-  watch: {
-    filterData: function filterData(n, o) {
+  methods: {
+    updateTables: function updateTables(filter) {
       var _this = this;
 
-      if (n.date !== undefined && n.date !== "Invalid date") {
-        var duration = JSON.parse(n.duration);
-        var request = Object.assign({}); // TODO: At time to date
-
-        request.date = n.date;
-        request.end = moment(request.start).add("hours", n.duration.h).add("minutes", n.duration.m).format("YYYY-MM-DD HH:mm:ss");
-        var queryParams = $.param(this.filterData);
-        console.log(queryParams);
+      if (filter.date !== undefined && filter.date !== "Invalid date") {
+        var request = Object.assign({});
+        request.start = filter.date;
+        request.end = moment(request.start).add("hours", filter.duration.h).add("minutes", filter.duration.m).format("YYYY-MM-DD HH:mm:ss");
+        var queryParams = $.param(request);
         axios.get(this.tablesEndpoint + "?" + queryParams).then(function (res) {
-          return _this.tables = res.data;
+          _this.tables = res.data;
         })["catch"](function (err) {
           return console.log(err);
         });
       }
+    },
+    handleTableClick: function handleTableClick(tableId) {
+      if (this.chosenTables.find(function (id) {
+        return id === tableId;
+      }) === undefined) {
+        this.chosenTables.push(tableId);
+      } else {
+        this.chosenTables = this.chosenTables.filter(function (id) {
+          return id !== tableId;
+        });
+      }
+
+      this.$emit("tables:chosen", this.chosenTables);
+    },
+    isActive: function isActive(tableId) {
+      return this.chosenTables.find(function (id) {
+        return id === tableId;
+      }) !== undefined;
+    }
+  },
+  mounted: function mounted() {
+    this.updateTables(this.filterData);
+  },
+  watch: {
+    filterData: function filterData(n, o) {
+      this.updateTables(n);
     }
   }
 });
@@ -3617,11 +3727,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["setTime"],
+  props: ["init"],
   data: function data() {
     return {
-      hourpicker: "17",
-      minutepicker: "00",
+      hourpicker: this.init.split(":")[0],
+      minutepicker: this.init.split(":")[1],
       singleTimePickerActive: false
     };
   },
@@ -3637,11 +3747,13 @@ __webpack_require__.r(__webpack_exports__);
       this.setTime(this.time);
     },
     setSingleTime: function setSingleTime(time) {
-      console.log("got time: ", time);
       this.hourpicker = "other";
       this.minutepicker = "other";
       this.singleTimePickerActive = true;
       this.setTime(time);
+    },
+    setTime: function setTime(time) {
+      this.$emit("time:chosen", time);
     }
   },
   computed: {
@@ -53684,6 +53796,48 @@ var r="undefined"!==typeof window&&"undefined"!==typeof document,o=["Edge","Trid
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "button",
+    {
+      staticClass:
+        "h-10 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
+      class: _vm.selected(_vm.value)
+        ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
+        : "",
+      on: {
+        click: function($event) {
+          _vm.handle ? _vm.handle(_vm.value) : null
+        }
+      }
+    },
+    [
+      _vm._v("\n  " + _vm._s(_vm.capitalized) + "\n  "),
+      _vm.icon ? _c("i", { staticClass: "ml-2", class: _vm.icon }) : _vm._e()
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28&":
 /*!***************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28& ***!
@@ -54724,7 +54878,7 @@ var render = function() {
             "div",
             {
               staticClass:
-                "orgusto-honey flex flex-row content-center justify-between px-4 py-4 sm:px-6 border-b-4",
+                "orgusto-honey flex flex-row items-center justify-between p-4 py-5 sm:px-6 border-b-4",
               class: _vm.borderColor
             },
             [
@@ -54732,7 +54886,7 @@ var render = function() {
                 "h3",
                 {
                   staticClass:
-                    "text-lg self-center leading-6 font-medium text-gray-900"
+                    "text-lg self-center leading-6 font-medium text-gray-800"
                 },
                 [_vm._v(_vm._s(_vm.title))]
               ),
@@ -54743,64 +54897,84 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("employee-picker", {
-            attrs: { employees: _vm.employees, "set-employee": _vm.setEmployee }
+            attrs: { employees: _vm.employees },
+            on: { "employee:chosen": _vm.setEmployee }
           }),
           _vm._v(" "),
-          _c("date-picker", { attrs: { "set-date": _vm.setDate } }),
+          _c("hr"),
           _vm._v(" "),
-          _c("time-picker", { attrs: { "set-time": _vm.setTime } }),
+          _c("date-picker", { attrs: { init: _vm.date } }),
           _vm._v(" "),
-          _c("person-picker", { attrs: { "set-persons": _vm.setPersons } }),
+          _c("time-picker", {
+            attrs: { init: _vm.time },
+            on: { "time:chosen": _vm.setTime }
+          }),
           _vm._v(" "),
-          _c("duration-picker", { attrs: { "set-duration": _vm.setDuration } }),
+          _c("hr"),
           _vm._v(" "),
-          _c("div", { staticClass: "flex p-4 justify-between" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.reservationTitle,
-                  expression: "reservationTitle"
-                }
-              ],
-              staticClass:
-                "h-12 w-full px-4 font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
-              attrs: { placeholder: "Name of the guest / group", type: "text" },
-              domProps: { value: _vm.reservationTitle },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+          _c("person-picker", {
+            attrs: { init: _vm.persons },
+            on: { "person:chosen": _vm.setPersons }
+          }),
+          _vm._v(" "),
+          _c("duration-picker", {
+            attrs: { init: _vm.duration },
+            on: { "duration:chosen": _vm.setDuration }
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex p-4 pb-2 justify-between" },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.reservationTitle,
+                    expression: "reservationTitle"
                   }
-                  _vm.reservationTitle = $event.target.value
-                }
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
+                ],
                 staticClass:
-                  "h-12 flex flex-row px-4 items-center text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight focus:outline-none hover:shadow-inner ml-4",
-                class: _vm.showAdditionalNotice
-                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
+                  "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
+                class: _vm.reservationTitle
+                  ? "border-indigo-400 text-gray-800"
                   : "",
+                attrs: {
+                  placeholder: "Name of the guest / group",
+                  type: "text"
+                },
+                domProps: { value: _vm.reservationTitle },
                 on: {
-                  click: function($event) {
-                    _vm.showAdditionalNotice = !_vm.showAdditionalNotice
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.reservationTitle = $event.target.value
                   }
                 }
-              },
-              [
-                _vm._v("\n        Notice\n        "),
-                _c("i", { staticClass: "fas fa-sticky-note ml-2" })
-              ]
-            )
-          ]),
+              }),
+              _vm._v(" "),
+              _c("select-button", {
+                attrs: {
+                  handle: function() {
+                    return (_vm.showAdditionalNotice = !_vm.showAdditionalNotice)
+                  },
+                  selected: function() {
+                    return _vm.showAdditionalNotice
+                  },
+                  icon: "fas fa-sticky-note",
+                  value: "notice"
+                }
+              })
+            ],
+            1
+          ),
           _vm._v(" "),
           _vm.showAdditionalNotice
-            ? _c("div", { staticClass: "flex p-4" }, [
+            ? _c("div", { staticClass: "flex px-4 py-2" }, [
                 _c("input", {
                   directives: [
                     {
@@ -54811,7 +54985,10 @@ var render = function() {
                     }
                   ],
                   staticClass:
-                    "h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
+                    "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
+                  class: _vm.reservationNotice
+                    ? "border-indigo-400 text-gray-800"
+                    : "",
                   attrs: {
                     placeholder: "Some additional information ...",
                     type: "text"
@@ -54829,7 +55006,7 @@ var render = function() {
               ])
             : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "flex p-4" }, [
+          _c("div", { staticClass: "flex p-4 pt-2" }, [
             _c("input", {
               directives: [
                 {
@@ -54840,7 +55017,8 @@ var render = function() {
                 }
               ],
               staticClass:
-                "h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400 mr-4",
+                "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
+              class: _vm.email ? "border-indigo-400 text-gray-800" : "",
               attrs: { placeholder: "Email", type: "email" },
               domProps: { value: _vm.email },
               on: {
@@ -54863,7 +55041,8 @@ var render = function() {
                 }
               ],
               staticClass:
-                "h-12 px-4 w-full font-semibold bg-gray-300 rounded-lg text-gray-800 p-2 leading-tight text-sm focus:bg-gray-200 focus:outline-none border-2 border-gray-300 focus:border-blue-400",
+                "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
+              class: _vm.phone_number ? "border-indigo-400 text-gray-800" : "",
               attrs: { placeholder: "Phone number", type: "phone" },
               domProps: { value: _vm.phone_number },
               on: {
@@ -54877,13 +55056,47 @@ var render = function() {
             })
           ]),
           _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
           _c("table-picker", {
             attrs: {
               "tables-endpoint": _vm.tablesEndpoint,
-              "filter-data": _vm.filterData,
-              "set-tables": _vm.setTables
-            }
-          })
+              "filter-data": _vm.filterData
+            },
+            on: { "tables:chosen": _vm.setTables }
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex justify-end p-4" }, [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out",
+                on: {
+                  click: function($event) {
+                    return this.$emit("modal:close")
+                  }
+                }
+              },
+              [_vm._v("Cancel")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass:
+                  "p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out",
+                on: {
+                  click: function($event) {
+                    return _vm.handleSubmit()
+                  }
+                }
+              },
+              [_vm._v(_vm._s(this.reservation ? "Updated" : "Save"))]
+            )
+          ])
         ],
         1
       )
@@ -54912,7 +55125,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticClass: "flex flex-row items-center space-x-2" }, [
     _c("button", {
       staticClass:
         "rounded-full h-8 w-8 bg-red-400 shadow-lg focus:outline-none",
@@ -54996,62 +55209,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "p-4 flex justify-between" }, [
-    _c("div", { staticClass: "flex flex-row" }, [
-      _c(
-        "button",
-        {
-          staticClass:
-            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
-          class:
-            _vm.datepicker === "today"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
-              : "",
-          on: {
-            click: function($event) {
-              return _vm.setDatePicker("today")
-            }
+  return _c("div", { staticClass: "p-4 pb-2 flex justify-between" }, [
+    _c(
+      "div",
+      { staticClass: "flex flex-row space-x-4" },
+      [
+        _c("select-button", {
+          attrs: {
+            value: "today",
+            handle: _vm.setDatePicker,
+            selected: _vm.isSelected
           }
-        },
-        [_vm._v("Today")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
-          class:
-            _vm.datepicker === "tomorrow"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
-              : "",
-          on: {
-            click: function($event) {
-              return _vm.setDatePicker("tomorrow")
-            }
+        }),
+        _vm._v(" "),
+        _c("select-button", {
+          attrs: {
+            value: "tomorrow",
+            handle: _vm.setDatePicker,
+            selected: _vm.isSelected
           }
-        },
-        [_vm._v("Tomorrow")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
-          class:
-            _vm.datepicker === "datomorrow"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
-              : "",
-          on: {
-            click: function($event) {
-              return _vm.setDatePicker("datomorrow")
-            }
+        }),
+        _vm._v(" "),
+        _c("select-button", {
+          attrs: {
+            value: "day after tomorrow",
+            handle: _vm.setDatePicker,
+            selected: _vm.isSelected
           }
-        },
-        [_vm._v("Day after tomorrow")]
-      )
-    ]),
+        })
+      ],
+      1
+    ),
     _vm._v(" "),
     _c(
       "div",
@@ -55069,28 +55257,17 @@ var render = function() {
             }
           },
           [
-            _c(
-              "button",
-              {
-                staticClass:
-                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
-                class:
-                  _vm.choosenDate !== ""
-                    ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                    : ""
-              },
-              [
-                _vm._v(
-                  "\n        " +
-                    _vm._s(
-                      _vm.choosenDate !== "" ? _vm.choosenDate : "Choose date"
-                    ) +
-                    "\n        "
-                ),
-                _c("i", { staticClass: "ml-2 fas fa-calendar-alt" })
-              ]
-            )
-          ]
+            _c("select-button", {
+              attrs: {
+                value: _vm.chosenDate !== "" ? _vm.chosenDate : "Choose date",
+                selected: function() {
+                  return _vm.chosenDate !== ""
+                },
+                icon: "fas fa-calendar-alt"
+              }
+            })
+          ],
+          1
         )
       ],
       1
@@ -55119,50 +55296,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex flex-col px-4 pt-1 pb-4" }, [
-    _c(
-      "span",
-      {
-        staticClass:
-          "uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
-      },
-      [_vm._v("Duration")]
-    ),
-    _vm._v(" "),
+  return _c("div", { staticClass: "flex flex-col px-4 pt-2 pb-4" }, [
     _c(
       "div",
       { staticClass: "flex justify-between" },
       [
         _c(
           "div",
+          { staticClass: "flex space-x-4" },
           _vm._l(_vm.preselectedTimes, function(t) {
-            return _c(
-              "button",
-              {
-                key: (t.h + t.m).toString(),
-                staticClass:
-                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
-                class: _vm.comparePicked(t)
-                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                  : "",
-                on: {
-                  click: function($event) {
-                    return _vm.setDurationLocal(t)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "flex items-baseline" }, [
-                  _c("div", [_vm._v(_vm._s(t.h))]),
-                  _vm._v(":\n          "),
-                  _c("div", { staticClass: "text-xs" }, [_vm._v(_vm._s(t.m))]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "ml-1" }, [_vm._v("h")])
-                ])
-              ]
-            )
+            return _c("select-button", {
+              key: (t.h + t.m).toString(),
+              attrs: {
+                selected: function() {
+                  return _vm.comparePicked(t)
+                },
+                handle: function() {
+                  return _vm.setDurationLocal(t)
+                },
+                value: t.h + ":" + t.m + "h"
+              }
+            })
           }),
-          0
+          1
         ),
         _vm._v(" "),
         _c(
@@ -55221,34 +55377,21 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass:
-                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
-                class: _vm.moreIsActive
-                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                  : "",
-                attrs: { slot: "reference" },
-                slot: "reference"
+            _c("select-button", {
+              attrs: {
+                slot: "reference",
+                selected: function() {
+                  return _vm.moreIsActive
+                },
+                value: _vm.moreIsActive
+                  ? _vm.durationpicker.h + ":" + _vm.durationpicker.m + "h"
+                  : "More",
+                icon: "fas fa-stopwatch"
               },
-              [
-                _vm._v(
-                  "\n        " +
-                    _vm._s(
-                      _vm.moreIsActive
-                        ? _vm.durationpicker.h +
-                            ":" +
-                            _vm.durationpicker.m +
-                            " h"
-                        : "More"
-                    ) +
-                    "\n        "
-                ),
-                _c("i", { staticClass: "fas fa-stopwatch ml-2" })
-              ]
-            )
-          ]
+              slot: "reference"
+            })
+          ],
+          1
         )
       ],
       1
@@ -55277,126 +55420,115 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "p-4 flex justify-between" },
-    [
-      _c(
-        "div",
-        { staticClass: "flex flex-row" },
-        _vm._l(_vm.preselected, function(employee) {
-          return _c(
-            "button",
-            {
+  return _c("div", { staticClass: "flex flex-col px-4 pb-4 pt-4" }, [
+    _c(
+      "span",
+      {
+        staticClass:
+          "uppercase font-medium text-xs text-gray-800 leading-tight mb-2"
+      },
+      [_vm._v("Who are you?")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "flex justify-between" },
+      [
+        _c(
+          "div",
+          { staticClass: "flex space-x-4" },
+          _vm._l(_vm.preselected, function(employee) {
+            return _c("select-button", {
               key: employee.id,
-              staticClass:
-                "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
-              class:
-                _vm.selectedEmployee.name === employee.name
-                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                  : "",
-              on: {
-                click: function($event) {
-                  return _vm.setEmployeeLocal(employee)
-                }
-              }
-            },
-            [_vm._v(_vm._s(employee.name))]
-          )
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _vm.hasRest
-        ? _c(
-            "popper",
-            {
               attrs: {
-                trigger: "clickToOpen",
-                options: { placement: "bottom-start" }
-              }
-            },
-            [
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "popper rounded-lg p-2 border border-gray-400 bg-white"
+                selected: function() {
+                  return _vm.selectedEmployee.name === employee.name
                 },
-                [
-                  _c("div", { staticClass: "flex justify-center mb-1" }, [
-                    _c(
-                      "span",
-                      {
-                        staticClass:
-                          "text-center text-xs text-gray-500 uppercase font-light leading-tight"
-                      },
-                      [_vm._v("Employees")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
+                value: employee.name,
+                handle: _vm.setEmployeeLocal
+              }
+            })
+          }),
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "popper",
+          {
+            attrs: {
+              trigger: "clickToOpen",
+              options: { placement: "bottom-start" }
+            }
+          },
+          [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "popper rounded-lg p-2 border border-gray-400 bg-white"
+              },
+              [
+                _c("div", { staticClass: "flex justify-center mb-1" }, [
                   _c(
-                    "div",
-                    { staticClass: "flex flex-wrap w-32 text-gray-800" },
-                    _vm._l(_vm.rest, function(employee) {
-                      return _c(
-                        "span",
-                        {
-                          key: employee.id,
-                          staticClass:
-                            "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
-                          class:
-                            _vm.selectedEmployee.name === employee.name
-                              ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
-                              : "",
-                          on: {
-                            click: function($event) {
-                              return _vm.setEmployeeLocal(employee)
-                            }
-                          }
-                        },
-                        [_vm._v(_vm._s(employee.name))]
-                      )
-                    }),
-                    0
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _vm.preselected.length === 3 && this.employees.length > 0
-                ? _c(
-                    "button",
+                    "span",
                     {
                       staticClass:
-                        "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
-                      class: _vm.isNotInPreselected
-                        ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                        : "",
-                      attrs: { slot: "reference" },
-                      slot: "reference"
+                        "text-center text-xs text-gray-500 uppercase font-light leading-tight"
                     },
-                    [
-                      _vm._v(
-                        "\n      " +
-                          _vm._s(
-                            _vm.isNotInPreselected
-                              ? this.selectedEmployee.name
-                              : "Other"
-                          ) +
-                          "\n      "
-                      ),
-                      _c("i", { staticClass: "fas fa-address-book ml-2" })
-                    ]
+                    [_vm._v("Employees")]
                   )
-                : _vm._e()
-            ]
-          )
-        : _vm._e()
-    ],
-    1
-  )
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "flex flex-wrap w-32 text-gray-800" },
+                  _vm._l(_vm.rest, function(employee) {
+                    return _c(
+                      "span",
+                      {
+                        key: employee.id,
+                        staticClass:
+                          "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                        class:
+                          _vm.selectedEmployee.name === employee.name
+                            ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
+                            : "",
+                        on: {
+                          click: function($event) {
+                            return _vm.setEmployeeLocal(employee.name)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(employee.name))]
+                    )
+                  }),
+                  0
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("select-button", {
+              attrs: {
+                slot: "reference",
+                selected: function() {
+                  return _vm.isNotInPreselected
+                },
+                value: _vm.isNotInPreselected
+                  ? this.selectedEmployee.name
+                  : "Other",
+                icon: "fas fa-address-book"
+              },
+              slot: "reference"
+            })
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -55420,14 +55552,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "flex flex-col px-4 pb-1 pt-2" }, [
+  return _c("div", { staticClass: "flex flex-col px-4 pb-2 pt-4" }, [
     _c(
       "span",
       {
         staticClass:
           "uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
       },
-      [_vm._v("Number of people")]
+      [_vm._v("Number of people & duration")]
     ),
     _vm._v(" "),
     _c(
@@ -55436,27 +55568,20 @@ var render = function() {
       [
         _c(
           "div",
+          { staticClass: "flex space-x-4" },
           _vm._l(6, function(a) {
-            return _c(
-              "button",
-              {
-                key: a,
-                staticClass:
-                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
-                class:
-                  _vm.personpicker === a.toString()
-                    ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                    : "",
-                on: {
-                  click: function($event) {
-                    return _vm.setPerson(a)
-                  }
+            return _c("select-button", {
+              key: a,
+              attrs: {
+                value: a,
+                handle: _vm.setPerson,
+                selected: function() {
+                  return _vm.personpicker === a.toString()
                 }
-              },
-              [_vm._v(_vm._s(a))]
-            )
+              }
+            })
           }),
-          0
+          1
         ),
         _vm._v(" "),
         _c(
@@ -55516,27 +55641,19 @@ var render = function() {
               ]
             ),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass:
-                  "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
-                class: _vm.moreIsActive
-                  ? "border-2 border-blue-400 text-gray-800 font-semibold"
-                  : "",
-                attrs: { slot: "reference" },
-                slot: "reference"
+            _c("select-button", {
+              attrs: {
+                slot: "reference",
+                selected: function() {
+                  return _vm.moreIsActive
+                },
+                value: _vm.moreIsActive ? _vm.personpicker : "More",
+                icon: "fas fa-user-friends"
               },
-              [
-                _vm._v(
-                  "\n        " +
-                    _vm._s(_vm.moreIsActive ? _vm.personpicker : "More") +
-                    "\n        "
-                ),
-                _c("i", { staticClass: "fas fa-user-friends ml-2" })
-              ]
-            )
-          ]
+              slot: "reference"
+            })
+          ],
+          1
         )
       ],
       1
@@ -55723,29 +55840,19 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "h-12 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
-          class: _vm.active
-            ? "border-2 border-blue-400 text-gray-800 font-semibold"
-            : "",
-          attrs: { slot: "reference" },
-          slot: "reference"
+      _c("select-button", {
+        attrs: {
+          slot: "reference",
+          selected: function() {
+            return _vm.active
+          },
+          value: _vm.active ? _vm.hour + ":" + _vm.minutes : "Choose time",
+          icon: "fas fa-clock"
         },
-        [
-          _vm._v(
-            "\n    " +
-              _vm._s(
-                _vm.active ? _vm.hour + ":" + _vm.minutes : "Choose time"
-              ) +
-              "\n    "
-          ),
-          _c("i", { staticClass: "ml-2 fas fa-clock" })
-        ]
-      )
-    ]
+        slot: "reference"
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -55770,18 +55877,41 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "flex flex-row overflow-y-auto" },
-    _vm._l(_vm.tables, function(table) {
-      return _c(
-        "div",
-        { key: table.id, staticClass: "border border-gray-400 p-4" },
-        [_vm._v(_vm._s(table))]
-      )
-    }),
-    0
-  )
+  return _c("div", { staticClass: "flex flex-col p-4" }, [
+    _c(
+      "span",
+      {
+        staticClass: "uppercase font-medium text-xs text-gray-800 leading-tight"
+      },
+      [_vm._v("Free tables matching your reservation")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "flex flex-wrap" },
+      _vm._l(_vm.tables, function(table) {
+        return _c(
+          "div",
+          { key: table.id, staticClass: "my-2 mr-2" },
+          [
+            _c("select-button", {
+              attrs: {
+                value: table.table_number,
+                selected: function() {
+                  return _vm.isActive(table.id)
+                },
+                handle: function() {
+                  return _vm.handleTableClick(table.id)
+                }
+              }
+            })
+          ],
+          1
+        )
+      }),
+      0
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -55805,16 +55935,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "p-4 flex justify-between" }, [
+  return _c("div", { staticClass: "p-4 pt-2 flex justify-between" }, [
     _c("div", { staticClass: "flex flex-row" }, [
       _c(
         "button",
         {
           staticClass:
-            "h-12 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
             _vm.hourpicker === "17"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55829,10 +55959,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
             _vm.hourpicker === "18"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55847,10 +55977,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
             _vm.hourpicker === "19"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55865,10 +55995,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner mr-4",
+            "h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4",
           class:
             _vm.hourpicker === "20"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55889,10 +56019,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
             _vm.minutepicker === "00"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55907,10 +56037,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
             _vm.minutepicker === "15"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55925,10 +56055,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
             _vm.minutepicker === "30"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -55943,10 +56073,10 @@ var render = function() {
         "button",
         {
           staticClass:
-            "h-12 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-inner",
+            "h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4",
           class:
             _vm.minutepicker === "45"
-              ? "border-2 border-blue-400 text-gray-800 font-semibold"
+              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
@@ -73606,6 +73736,7 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
+	"./components/Basic/SelectButton.vue": "./resources/js/components/Basic/SelectButton.vue",
 	"./components/DeleteButton.vue": "./resources/js/components/DeleteButton.vue",
 	"./components/Modals/OrgustoModalWrapper.vue": "./resources/js/components/Modals/OrgustoModalWrapper.vue",
 	"./components/OrgastroDropdown.vue": "./resources/js/components/OrgastroDropdown.vue",
@@ -73757,6 +73888,75 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/Basic/SelectButton.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/Basic/SelectButton.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectButton.vue?vue&type=template&id=071581da& */ "./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&");
+/* harmony import */ var _SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectButton.vue?vue&type=script&lang=js& */ "./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Basic/SelectButton.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SelectButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./SelectButton.vue?vue&type=template&id=071581da& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
