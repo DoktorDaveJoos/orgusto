@@ -4,6 +4,9 @@
       class="uppercase font-medium text-xs text-gray-800 leading-tight"
     >Free tables matching your reservation</span>
     <div class="flex flex-wrap">
+      <div v-if="error" class="text-red-400 flex items-center py-2 pr-4 leading-tight">
+        <i class="fas fa-times"></i>
+      </div>
       <div class="my-2 mr-2" v-for="table in tables" :key="table.id">
         <select-button
           :value="table.table_number"
@@ -17,7 +20,7 @@
 
 <script>
 export default {
-  props: ["filterData", "tablesEndpoint"],
+  props: ["filterData", "tablesEndpoint", "error"],
   data() {
     return {
       tables: [],

@@ -5,6 +5,9 @@
     >Number of people & duration</span>
     <div class="flex justify-between">
       <div class="flex space-x-4">
+        <div v-if="error" class="text-red-400 flex items-center leading-tight">
+          <i class="fas fa-times"></i>
+        </div>
         <select-button
           v-for="a in 6"
           :key="a"
@@ -51,7 +54,7 @@ export default {
   components: {
     popper: Popper
   },
-  props: ["init"],
+  props: ["init", "error"],
   data() {
     return {
       personpicker: this.init

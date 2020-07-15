@@ -9,15 +9,37 @@
         <color-switcher :set-color="setColor"></color-switcher>
       </div>
 
-      <employee-picker :employees="employees" v-on:employee:chosen="setEmployee"></employee-picker>
+      <employee-picker
+        :error="errorContainsKey('user_id')"
+        :employees="employees"
+        v-on:employee:chosen="setEmployee"
+      ></employee-picker>
+
       <hr />
       <date-picker :init="date"></date-picker>
       <time-picker :init="time" v-on:time:chosen="setTime"></time-picker>
       <hr />
-      <person-picker :init="persons" v-on:person:chosen="setPersons"></person-picker>
-      <duration-picker :init="duration" v-on:duration:chosen="setDuration"></duration-picker>
+      <person-picker
+        :init="persons"
+        :error="errorContainsKey('persons')"
+        v-on:person:chosen="setPersons"
+      ></person-picker>
+      <duration-picker
+        :init="duration"
+        :error="errorContainsKey('duration')"
+        v-on:duration:chosen="setDuration"
+      ></duration-picker>
+
       <hr />
+
       <div class="flex p-4 pb-2 justify-between">
+        <div
+          v-if="errorContainsKey('name')"
+          class="text-red-400 flex items-center py-2 pr-4 leading-tight"
+        >
+          <i class="fas fa-times"></i>
+        </div>
+
         <input
           class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
           :class="reservationTitle ? 'border-indigo-400 text-gray-800' : ''"
@@ -34,6 +56,12 @@
       </div>
 
       <div class="flex px-4 py-2" v-if="showAdditionalNotice">
+        <div
+          v-if="errorContainsKey('notice')"
+          class="text-red-400 flex items-center p-2 px-4 leading-tight"
+        >
+          <i class="fas fa-times"></i>
+        </div>
         <input
           class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
           :class="reservationNotice ? 'border-indigo-400 text-gray-800' : ''"
@@ -44,6 +72,12 @@
       </div>
 
       <div class="flex p-4 pt-2">
+        <div
+          v-if="errorContainsKey('email')"
+          class="text-red-400 flex items-center p-2 px-4 pl-0 leading-tight"
+        >
+          <i class="fas fa-times"></i>
+        </div>
         <input
           class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
           :class="email ? 'border-indigo-400 text-gray-800' : ''"
@@ -51,6 +85,12 @@
           type="email"
           v-model="email"
         />
+        <div
+          v-if="errorContainsKey('phone_number')"
+          class="text-red-400 flex items-center py-2 pr-4 leading-tight"
+        >
+          <i class="fas fa-times"></i>
+        </div>
         <input
           class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
           :class="phone_number ? 'border-indigo-400 text-gray-800' : ''"
@@ -62,6 +102,7 @@
       <hr />
 
       <table-picker
+        :error="errorContainsKey('tables')"
         :tables-endpoint="tablesEndpoint"
         :filter-data="filterData"
         v-on:tables:chosen="setTables"
@@ -101,7 +142,8 @@ export default {
       phone_number: "",
       reservationTitle: "",
       reservationNotice: "",
-      showAdditionalNotice: false
+      showAdditionalNotice: false,
+      errors: {}
     };
   },
   methods: {
@@ -133,7 +175,10 @@ export default {
       axios
         .post(this.reservationsEndpoint, request)
         .then(res => console.log(res))
-        .catch(err => console.log(err.response));
+        .catch(err => {
+          console.log(err.response);
+          this.errors = err.response.data.errors;
+        });
     },
     validate() {
       const request = Object.assign({
@@ -151,6 +196,16 @@ export default {
       });
 
       return request;
+    },
+    errorContainsKey(key) {
+      console.log(
+        "Contains " +
+          key +
+          ":" +
+          Object.keys(this.errors).find(elem => elem === key) !==
+          undefined
+      );
+      return Object.keys(this.errors).find(elem => elem === key) !== undefined;
     }
   },
   computed: {

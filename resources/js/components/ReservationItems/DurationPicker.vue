@@ -2,6 +2,9 @@
   <div class="flex flex-col px-4 pt-2 pb-4">
     <div class="flex justify-between">
       <div class="flex space-x-4">
+        <div v-if="error" class="text-red-400 flex items-center leading-tight">
+          <i class="fas fa-times"></i>
+        </div>
         <select-button
           v-for="t in preselectedTimes"
           :key="(t.h + t.m).toString()"
@@ -48,7 +51,7 @@ export default {
   components: {
     popper: Popper
   },
-  props: ["init"],
+  props: ["init", "error"],
   data() {
     return {
       preselectedTimes: [

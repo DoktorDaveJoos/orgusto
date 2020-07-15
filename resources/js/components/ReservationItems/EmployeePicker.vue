@@ -3,6 +3,10 @@
     <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-2">Who are you?</span>
     <div class="flex justify-between">
       <div class="flex space-x-4">
+        <div v-if="error" class="text-red-400 flex items-center leading-tight">
+          <i class="fas fa-times"></i>
+        </div>
+
         <select-button
           v-for="employee in preselected"
           :key="employee.id"
@@ -47,7 +51,7 @@ export default {
   components: {
     popper: Popper
   },
-  props: ["employees"],
+  props: ["employees", "error"],
   data() {
     return {
       selectedEmployee: {

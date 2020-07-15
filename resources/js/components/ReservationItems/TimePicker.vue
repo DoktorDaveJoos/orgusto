@@ -1,6 +1,9 @@
 <template>
   <div class="p-4 pt-2 flex justify-between">
     <div class="flex flex-row">
+      <div v-if="error" class="text-red-400 flex items-center leading-tight">
+        <i class="fas fa-times"></i>
+      </div>
       <button
         class="h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
         :class="hourpicker === '17' ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
@@ -58,7 +61,7 @@
 
 <script>
 export default {
-  props: ["init"],
+  props: ["init", "error"],
   data() {
     return {
       hourpicker: this.init.split(":")[0],

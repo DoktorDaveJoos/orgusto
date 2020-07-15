@@ -1,6 +1,9 @@
 <template>
   <div class="p-4 pb-2 flex justify-between">
     <div class="flex flex-row space-x-4">
+      <div v-if="error" class="text-red-400 flex items-center leading-tight">
+        <i class="fas fa-times"></i>
+      </div>
       <select-button value="today" :handle="setDatePicker" :selected="isSelected"></select-button>
       <select-button value="tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
       <select-button value="day after tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
@@ -19,7 +22,7 @@
 
 <script>
 export default {
-  props: ["init"],
+  props: ["init", "error"],
   data() {
     return {
       datepicker: "today",

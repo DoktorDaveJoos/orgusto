@@ -2938,6 +2938,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "reservation-item",
   props: ["reservation", "employees", "tablesEndpoint", "reservationsEndpoint"],
@@ -2958,7 +2999,8 @@ __webpack_require__.r(__webpack_exports__);
       phone_number: "",
       reservationTitle: "",
       reservationNotice: "",
-      showAdditionalNotice: false
+      showAdditionalNotice: false,
+      errors: {}
     };
   },
   methods: {
@@ -2985,11 +3027,14 @@ __webpack_require__.r(__webpack_exports__);
       this.tables = tables;
     },
     handleSubmit: function handleSubmit() {
+      var _this = this;
+
       var request = this.validate();
       axios.post(this.reservationsEndpoint, request).then(function (res) {
         return console.log(res);
       })["catch"](function (err) {
-        return console.log(err.response);
+        console.log(err.response);
+        _this.errors = err.response.data.errors;
       });
     },
     validate: function validate() {
@@ -3007,6 +3052,14 @@ __webpack_require__.r(__webpack_exports__);
         notice: this.reservationNotice
       });
       return request;
+    },
+    errorContainsKey: function errorContainsKey(key) {
+      console.log("Contains " + key + ":" + Object.keys(this.errors).find(function (elem) {
+        return elem === key;
+      }) !== undefined);
+      return Object.keys(this.errors).find(function (elem) {
+        return elem === key;
+      }) !== undefined;
     }
   },
   computed: {
@@ -3113,8 +3166,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["init"],
+  props: ["init", "error"],
   data: function data() {
     return {
       datepicker: "today",
@@ -3207,12 +3263,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ["init"],
+  props: ["init", "error"],
   data: function data() {
     return {
       preselectedTimes: [{
@@ -3327,12 +3386,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ["employees"],
+  props: ["employees", "error"],
   data: function data() {
     return {
       selectedEmployee: {
@@ -3441,12 +3504,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
   },
-  props: ["init"],
+  props: ["init", "error"],
   data: function data() {
     return {
       personpicker: this.init
@@ -3604,8 +3670,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["filterData", "tablesEndpoint"],
+  props: ["filterData", "tablesEndpoint", "error"],
   data: function data() {
     return {
       tables: [],
@@ -3726,8 +3795,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["init"],
+  props: ["init", "error"],
   data: function data() {
     return {
       hourpicker: this.init.split(":")[0],
@@ -54897,7 +54969,10 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("employee-picker", {
-            attrs: { employees: _vm.employees },
+            attrs: {
+              error: _vm.errorContainsKey("user_id"),
+              employees: _vm.employees
+            },
             on: { "employee:chosen": _vm.setEmployee }
           }),
           _vm._v(" "),
@@ -54913,12 +54988,18 @@ var render = function() {
           _c("hr"),
           _vm._v(" "),
           _c("person-picker", {
-            attrs: { init: _vm.persons },
+            attrs: {
+              init: _vm.persons,
+              error: _vm.errorContainsKey("persons")
+            },
             on: { "person:chosen": _vm.setPersons }
           }),
           _vm._v(" "),
           _c("duration-picker", {
-            attrs: { init: _vm.duration },
+            attrs: {
+              init: _vm.duration,
+              error: _vm.errorContainsKey("duration")
+            },
             on: { "duration:chosen": _vm.setDuration }
           }),
           _vm._v(" "),
@@ -54928,6 +55009,17 @@ var render = function() {
             "div",
             { staticClass: "flex p-4 pb-2 justify-between" },
             [
+              _vm.errorContainsKey("name")
+                ? _c(
+                    "div",
+                    {
+                      staticClass:
+                        "text-red-400 flex items-center py-2 pr-4 leading-tight"
+                    },
+                    [_c("i", { staticClass: "fas fa-times" })]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
               _c("input", {
                 directives: [
                   {
@@ -54975,6 +55067,17 @@ var render = function() {
           _vm._v(" "),
           _vm.showAdditionalNotice
             ? _c("div", { staticClass: "flex px-4 py-2" }, [
+                _vm.errorContainsKey("notice")
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "text-red-400 flex items-center p-2 px-4 leading-tight"
+                      },
+                      [_c("i", { staticClass: "fas fa-times" })]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
                 _c("input", {
                   directives: [
                     {
@@ -55007,6 +55110,17 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _c("div", { staticClass: "flex p-4 pt-2" }, [
+            _vm.errorContainsKey("email")
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "text-red-400 flex items-center p-2 px-4 pl-0 leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
+            _vm._v(" "),
             _c("input", {
               directives: [
                 {
@@ -55030,6 +55144,17 @@ var render = function() {
                 }
               }
             }),
+            _vm._v(" "),
+            _vm.errorContainsKey("phone_number")
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "text-red-400 flex items-center py-2 pr-4 leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
             _vm._v(" "),
             _c("input", {
               directives: [
@@ -55060,6 +55185,7 @@ var render = function() {
           _vm._v(" "),
           _c("table-picker", {
             attrs: {
+              error: _vm.errorContainsKey("tables"),
               "tables-endpoint": _vm.tablesEndpoint,
               "filter-data": _vm.filterData
             },
@@ -55214,6 +55340,14 @@ var render = function() {
       "div",
       { staticClass: "flex flex-row space-x-4" },
       [
+        _vm.error
+          ? _c(
+              "div",
+              { staticClass: "text-red-400 flex items-center leading-tight" },
+              [_c("i", { staticClass: "fas fa-times" })]
+            )
+          : _vm._e(),
+        _vm._v(" "),
         _c("select-button", {
           attrs: {
             value: "today",
@@ -55304,21 +55438,33 @@ var render = function() {
         _c(
           "div",
           { staticClass: "flex space-x-4" },
-          _vm._l(_vm.preselectedTimes, function(t) {
-            return _c("select-button", {
-              key: (t.h + t.m).toString(),
-              attrs: {
-                selected: function() {
-                  return _vm.comparePicked(t)
-                },
-                handle: function() {
-                  return _vm.setDurationLocal(t)
-                },
-                value: t.h + ":" + t.m + "h"
-              }
+          [
+            _vm.error
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "text-red-400 flex items-center leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.preselectedTimes, function(t) {
+              return _c("select-button", {
+                key: (t.h + t.m).toString(),
+                attrs: {
+                  selected: function() {
+                    return _vm.comparePicked(t)
+                  },
+                  handle: function() {
+                    return _vm.setDurationLocal(t)
+                  },
+                  value: t.h + ":" + t.m + "h"
+                }
+              })
             })
-          }),
-          1
+          ],
+          2
         ),
         _vm._v(" "),
         _c(
@@ -55437,19 +55583,31 @@ var render = function() {
         _c(
           "div",
           { staticClass: "flex space-x-4" },
-          _vm._l(_vm.preselected, function(employee) {
-            return _c("select-button", {
-              key: employee.id,
-              attrs: {
-                selected: function() {
-                  return _vm.selectedEmployee.name === employee.name
-                },
-                value: employee.name,
-                handle: _vm.setEmployeeLocal
-              }
+          [
+            _vm.error
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "text-red-400 flex items-center leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.preselected, function(employee) {
+              return _c("select-button", {
+                key: employee.id,
+                attrs: {
+                  selected: function() {
+                    return _vm.selectedEmployee.name === employee.name
+                  },
+                  value: employee.name,
+                  handle: _vm.setEmployeeLocal
+                }
+              })
             })
-          }),
-          1
+          ],
+          2
         ),
         _vm._v(" "),
         _c(
@@ -55569,19 +55727,31 @@ var render = function() {
         _c(
           "div",
           { staticClass: "flex space-x-4" },
-          _vm._l(6, function(a) {
-            return _c("select-button", {
-              key: a,
-              attrs: {
-                value: a,
-                handle: _vm.setPerson,
-                selected: function() {
-                  return _vm.personpicker === a.toString()
+          [
+            _vm.error
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "text-red-400 flex items-center leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(6, function(a) {
+              return _c("select-button", {
+                key: a,
+                attrs: {
+                  value: a,
+                  handle: _vm.setPerson,
+                  selected: function() {
+                    return _vm.personpicker === a.toString()
+                  }
                 }
-              }
+              })
             })
-          }),
-          1
+          ],
+          2
         ),
         _vm._v(" "),
         _c(
@@ -55889,27 +56059,40 @@ var render = function() {
     _c(
       "div",
       { staticClass: "flex flex-wrap" },
-      _vm._l(_vm.tables, function(table) {
-        return _c(
-          "div",
-          { key: table.id, staticClass: "my-2 mr-2" },
-          [
-            _c("select-button", {
-              attrs: {
-                value: table.table_number,
-                selected: function() {
-                  return _vm.isActive(table.id)
-                },
-                handle: function() {
-                  return _vm.handleTableClick(table.id)
+      [
+        _vm.error
+          ? _c(
+              "div",
+              {
+                staticClass:
+                  "text-red-400 flex items-center py-2 pr-4 leading-tight"
+              },
+              [_c("i", { staticClass: "fas fa-times" })]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.tables, function(table) {
+          return _c(
+            "div",
+            { key: table.id, staticClass: "my-2 mr-2" },
+            [
+              _c("select-button", {
+                attrs: {
+                  value: table.table_number,
+                  selected: function() {
+                    return _vm.isActive(table.id)
+                  },
+                  handle: function() {
+                    return _vm.handleTableClick(table.id)
+                  }
                 }
-              }
-            })
-          ],
-          1
-        )
-      }),
-      0
+              })
+            ],
+            1
+          )
+        })
+      ],
+      2
     )
   ])
 }
@@ -55937,6 +56120,14 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "p-4 pt-2 flex justify-between" }, [
     _c("div", { staticClass: "flex flex-row" }, [
+      _vm.error
+        ? _c(
+            "div",
+            { staticClass: "text-red-400 flex items-center leading-tight" },
+            [_c("i", { staticClass: "fas fa-times" })]
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "button",
         {
