@@ -11,6 +11,7 @@
 
       <employee-picker
         :error="errorContainsKey('user_id')"
+        :init="employee"
         :employees="employees"
         v-on:employee:chosen="setEmployee"
       ></employee-picker>
@@ -105,6 +106,7 @@
         :error="errorContainsKey('tables')"
         :tables-endpoint="tablesEndpoint"
         :filter-data="filterData"
+        :init="tables"
         v-on:tables:chosen="setTables"
       ></table-picker>
 
@@ -112,13 +114,13 @@
 
       <div class="flex justify-end p-4">
         <button
-          @click="this.$emit('modal:close')"
+          @click="handleClose"
           class="p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out"
         >Cancel</button>
         <button
-          @click="handleSubmit()"
+          @click="handleSubmit"
           class="p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out"
-        >{{ this.reservation ? 'Updated' : 'Save' }}</button>
+        >{{ this.reservation ? 'Update' : 'Save' }}</button>
       </div>
     </div>
   </div>
@@ -127,31 +129,51 @@
 <script>
 export default {
   name: "reservation-item",
-  props: ["reservation", "employees", "tablesEndpoint", "reservationsEndpoint"],
+  props: [
+    "reservation",
+    "employees",
+    "tablesEndpoint",
+    "reservationsEndpoint",
+    "reservation",
+  ],
   data() {
     return {
       // TODO: Read that from cookie
-      color: "gray",
-      date: new Date(),
-      time: "18:00",
-      persons: "2",
-      duration: { h: "2", m: "00" },
-      tables: [],
-      email: "",
-      employee: "",
-      phone_number: "",
-      reservationTitle: "",
-      reservationNotice: "",
-      showAdditionalNotice: false,
-      errors: {}
+      color: this.reservation ? this.reservation.color : "gray",
+      date: this.reservation
+        ? moment(this.reservation.start).toDate()
+        : new Date(),
+      time: this.reservation
+        ? moment(this.reservation.start).format("HH:mm")
+        : "18:00",
+      persons: this.reservation ? this.reservation.persons : 2,
+      duration: this.reservation
+        ? JSON.parse(this.reservation.duration)
+        : { h: "2", m: "00" },
+      tables: this.reservation ? this.reservation.tables : [],
+      email: this.reservation ? this.reservation.email : "",
+      employee: this.reservation ? this.reservation.user_id : "",
+      phone_number: this.reservation ? this.reservation.phone_number : "",
+      reservationTitle: this.reservation ? this.reservation.name : "",
+      reservationNotice: this.reservation ? this.reservation.notice : "",
+      showAdditionalNotice:
+        this.reservation &&
+        this.reservation.notice &&
+        this.reservation.notice.length > 0
+          ? true
+          : false,
+      errors: {},
+      endpoint: "",
     };
+  },
+  mounted() {
+    console.log(this.reservation);
   },
   methods: {
     setColor(color) {
       this.color = color.toString();
     },
     setDate(date) {
-      console.log(date);
       this.date = date;
     },
     setTime(time) {
@@ -172,41 +194,58 @@ export default {
     handleSubmit() {
       const request = this.validate();
 
-      axios
-        .post(this.reservationsEndpoint, request)
-        .then(res => console.log(res))
-        .catch(err => {
-          console.log(err.response);
-          this.errors = err.response.data.errors;
-        });
+      // TODO make this beautiful
+      if (this.reservation) {
+        axios
+          .put(this.reservationsEndpoint, request)
+          .then((res) => {
+            if (res.status === 200) {
+              location.reload();
+            }
+          })
+          .catch((err) => {
+            this.errors = err.response.data.errors;
+          });
+      } else {
+        axios
+          .post(this.reservationsEndpoint, request)
+          .then((res) => {
+            if (res.status === 200) {
+              location.reload();
+            }
+          })
+          .catch((err) => {
+            this.errors = err.response.data.errors;
+          });
+      }
     },
     validate() {
+      const tables = this.tables.map((table) => table.id);
+
       const request = Object.assign({
         color: this.color,
         start: this.processedDate,
         end: this.processedEndDate,
         persons: this.persons,
-        duration: this.processedDuration,
-        tables: this.tables,
+        duration: JSON.parse(JSON.stringify(this.duration)),
+        tables: tables,
         email: this.email,
-        employee: this.employee,
+        user_id: this.employee,
         phone_number: this.phone_number,
         name: this.reservationTitle,
-        notice: this.reservationNotice
+        notice: this.reservationNotice,
       });
 
       return request;
     },
     errorContainsKey(key) {
-      console.log(
-        "Contains " +
-          key +
-          ":" +
-          Object.keys(this.errors).find(elem => elem === key) !==
-          undefined
+      return (
+        Object.keys(this.errors).find((elem) => elem === key) !== undefined
       );
-      return Object.keys(this.errors).find(elem => elem === key) !== undefined;
-    }
+    },
+    handleClose() {
+      this.$emit("modal:close");
+    },
   },
   computed: {
     title() {
@@ -222,7 +261,7 @@ export default {
       return moment(this.date)
         .set({
           hours: splittedTime[0],
-          minutes: splittedTime[1]
+          minutes: splittedTime[1],
         })
         .format("YYYY-MM-DD HH:mm[:00]");
     },
@@ -232,16 +271,13 @@ export default {
         .add("minutes", this.duration.m)
         .format("YYYY-MM-DD HH:mm[:00]");
     },
-    processedDuration() {
-      return this.duration.h + "." + this.duration.m;
-    },
     filterData() {
       return {
         date: this.processedDate,
         persons: this.persons,
-        duration: this.duration
+        duration: this.duration,
       };
-    }
-  }
+    },
+  },
 };
 </script>

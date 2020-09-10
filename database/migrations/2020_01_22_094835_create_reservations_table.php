@@ -17,7 +17,7 @@ class CreateReservationsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('name');
-            $table->integer('duration');
+            $table->json('duration');
             $table->boolean('done')->default(false);
             $table->integer('persons');
             $table->dateTime('start');

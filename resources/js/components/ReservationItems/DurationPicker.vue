@@ -49,7 +49,7 @@ import Popper from "vue-popperjs";
 
 export default {
   components: {
-    popper: Popper
+    popper: Popper,
   },
   props: ["init", "error"],
   data() {
@@ -60,42 +60,38 @@ export default {
         { h: "2", m: "00" },
         { h: "2", m: "30" },
         { h: "3", m: "00" },
-        { h: "4", m: "00" }
+        { h: "4", m: "00" },
       ],
       moreChoices: [
         { h: "3", m: "30" },
         { h: "4", m: "30" },
         { h: "8", m: "00" },
-        { h: "12", m: "00" }
+        { h: "12", m: "00" },
       ],
-      durationpicker: this.init
+      durationpicker: this.init,
     };
   },
   methods: {
     setDurationLocal(duration) {
-      console.log(duration);
-
       this.durationpicker = duration;
-
-      // const stringDuration = JSON.stringify(this.durationpicker);
       this.$emit("duration:chosen", this.durationpicker);
     },
     comparePicked(aTime) {
       return (
         aTime.h === this.durationpicker.h && aTime.m === this.durationpicker.m
       );
-    }
+    },
   },
   computed: {
     moreIsActive() {
       return (
         this.moreChoices.find(
-          elem =>
+          (elem) =>
             elem.h === this.durationpicker.h && elem.m === this.durationpicker.m
         ) !== undefined
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

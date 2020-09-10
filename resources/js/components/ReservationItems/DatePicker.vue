@@ -25,10 +25,28 @@ export default {
   props: ["init", "error"],
   data() {
     return {
-      datepicker: "today",
+      datepicker: "",
       chosenDate: "",
-      singleDate: this.init
+      singleDate: moment(this.init).toDate(),
     };
+  },
+  mounted() {
+    if (this.init) {
+      const iDate = moment(moment(this.init).format("YYYY-MM-DD"));
+      const now = moment(moment().format("YYYY-MM-DD"));
+
+      if (iDate.isSame(now)) {
+        this.datepicker = "today";
+      } else if (iDate.diff(now, "day") === 1) {
+        this.datepicker = "tomorrow";
+      } else if (iDate.diff(now, "day") === 2) {
+        this.datepicker = "day after tomorrow";
+      } else {
+        this.chosenDate = moment(iDate).format("DD.MM.YYYY");
+      }
+    } else {
+      this.datepicker = "today";
+    }
   },
   methods: {
     setDatePicker(indicator) {
@@ -47,15 +65,15 @@ export default {
     },
     isSelected(indicator) {
       return this.datepicker === indicator;
-    }
+    },
   },
   watch: {
     singleDate(newVal, oldVal) {
       this.datepicker = "";
       this.chosenDate = moment(newVal).format("DD.MM.YYYY");
       this.setDate(moment(newVal));
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -15,7 +15,7 @@
           :handle="setEmployeeLocal"
         ></select-button>
       </div>
-      <popper trigger="clickToOpen" :options="{placement: 'bottom-start'}">
+      <popper v-if="hasRest" trigger="clickToOpen" :options="{placement: 'bottom-start'}">
         <div class="popper rounded-lg p-2 border border-gray-400 bg-white">
           <div class="flex justify-center mb-1">
             <span
@@ -49,31 +49,37 @@ import Popper from "vue-popperjs";
 
 export default {
   components: {
-    popper: Popper
+    popper: Popper,
   },
-  props: ["employees", "error"],
+  props: ["employees", "error", "init"],
   data() {
     return {
       selectedEmployee: {
-        name: ""
-      }
+        name: "",
+      },
     };
+  },
+  mounted() {
+    const found = this.employees.find((empl) => empl.id === this.init);
+    if (found) {
+      this.selectedEmployee.name = found.name;
+    }
   },
   methods: {
     setEmployeeLocal(employee) {
       this.selectedEmployee.name = employee;
       this.$emit(
         "employee:chosen",
-        this.employees.filter(empl => empl.name === this.selectedEmployee.name)
+        this.employees.find((empl) => empl.name === this.selectedEmployee.name)
       );
     },
+  },
+  computed: {
     hasRest() {
       return (
         this.rest && this.rest.length !== undefined && this.rest.length > 0
       );
-    }
-  },
-  computed: {
+    },
     preselected() {
       //TODO: Parse cookie - check last one used
 
@@ -88,18 +94,18 @@ export default {
       return (
         this.rest &&
         this.rest.length > 0 &&
-        this.rest.find(empl => this.selectedEmployee.name === empl.name) !==
+        this.rest.find((empl) => this.selectedEmployee.name === empl.name) !==
           undefined
       );
     },
     rest() {
       return this.employees.filter(
-        empl =>
-          this.preselected.find(empl_pre => empl_pre.name === empl.name) ===
+        (empl) =>
+          this.preselected.find((empl_pre) => empl_pre.name === empl.name) ===
           undefined
       );
-    }
-  }
+    },
+  },
 };
 </script>
 

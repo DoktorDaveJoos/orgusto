@@ -41,7 +41,7 @@ class ReservationsController extends Controller
             if (!$searchQuery) {
                 $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
                     $q->where('restaurant_id', $restaurant->id);
-                })->whereBetween('start', [$from, $to])->closest()->simplePaginate(20);
+                })->whereBetween('start', [$from, $to])->with('tables')->closest()->simplePaginate(20);
             } else {
                 $name_term = $name_term = '%' . $searchQuery . '%';
                 $constraints = [
@@ -83,14 +83,14 @@ class ReservationsController extends Controller
     {
         $reservation = Reservation::create($request->validated());
         $reservation->tables()->attach($request->tables);
-        // $reservation->end = new Carbon($reservation->start);
-        // $reservation->end->addHours($reservation->duration);
         $reservation->save();
     }
 
-    public function update(Reservation $reservation)
+    public function update(CreateReservation $request, Reservation $reservation)
     {
-        // TODO
+        $reservation->update($request->validated());
+        $reservation->tables()->sync($request->tables);
+        $reservation->save();
     }
 
     public function destroy(Reservation $reservation)
@@ -114,9 +114,9 @@ class ReservationsController extends Controller
             ['start', '<=', $to]
         ];
 
-        $found_by_name = Reservation::where($constraints)->get();
+        $found_by_name = Reservation::where($constraints)->withPivot('tables')->get();
 
-        $results = Reservation::search($st)->get();
+        $results = Reservation::search($st)->withPivot('tables')->get();
 
         $results = $results
             ->filter(function ($reservation, $key) use ($from, $to) {

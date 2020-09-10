@@ -26,6 +26,6 @@ $factory->define(Reservation::class, function (Faker $faker) {
             'gray',
             'blue'
         )),
-        'duration' => $faker->randomElement($array = array(1.5, 2, 1)),
+        'duration' => "{\"h\": \"2\", \"m\": \"00\"}",
     ];
 });

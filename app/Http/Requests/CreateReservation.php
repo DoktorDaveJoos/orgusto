@@ -44,10 +44,10 @@ class CreateReservation extends FormRequest
             'duration' => 'required',
             'tables' => 'array|required',
             'name' => 'required',
-            'email' => 'email',
+            'email' => 'nullable|email',
             'color' => [Rule::in(['gray', 'indigo', 'blue', 'green', 'red', 'orange'])],
             'notice' => 'max:255',
-            'phone_number' => 'alpha_num'
+            'phone_number' => 'max:15'
         ];
     }
 }

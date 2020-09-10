@@ -151,20 +151,20 @@ export default {
   props: {
     table: {
       type: Object,
-      required: false
+      required: false,
     },
     tables: {
       type: Array,
-      required: false
+      required: false,
     },
     date: {
       type: Object,
-      required: false
+      required: false,
     },
     employees: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -184,8 +184,8 @@ export default {
         duration: "",
         user: "",
         color: "gray",
-        tables: []
-      }
+        tables: [],
+      },
     };
   },
   methods: {
@@ -197,17 +197,17 @@ export default {
         .minutes(minutes)
         .seconds(0)
         .format("YYYY-MM-DD HH:mm:ss");
-      request.tables = this.input.tables.map(table => table.id);
+      request.tables = this.input.tables.map((table) => table.id);
       request.user_id = this.input.user.id;
 
       request.end = moment(request.start).add("hours", request.duration);
       request.end = request.end.format("YYYY-MM-DD HH:mm:ss");
 
-      console.log(request.duration);
+      request.duration = JSON.stringify({ h: "2", m: "00" });
 
       axios
         .post("/reservations", request)
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             location.reload();
           }
@@ -215,18 +215,18 @@ export default {
             console.log(res);
           }
         })
-        .catch(err => (this.displayError = err.response.data));
+        .catch((err) => (this.displayError = err.response.data));
     },
-    halfAnHourStep: val => {
+    halfAnHourStep: (val) => {
       return val / 2;
     },
-    quarterHourStep: val => {
+    quarterHourStep: (val) => {
       return (val - 1) * 15;
     },
-    parseTableNumber: val => {
+    parseTableNumber: (val) => {
       return val.table_number;
     },
-    parseUserName: val => {
+    parseUserName: (val) => {
       return val.name;
     },
     onChange(event) {
@@ -234,38 +234,40 @@ export default {
     },
     onChangeUser(event) {
       const found = this.employees.find(
-        user => user.name === event.target.value
+        (user) => user.name === event.target.value
       );
       if (found) this.input.user = found;
     },
     onChangeTable(tableString) {
       const newTable = JSON.parse(tableString);
-      const found = this.input.tables.filter(table => table.id === newTable.id);
+      const found = this.input.tables.filter(
+        (table) => table.id === newTable.id
+      );
       if (found.length === 0) this.input.tables.push(newTable);
     },
     remove(event) {
       this.input.tables = this.input.tables.filter(
-        table => table.id.toString() !== event.target.id
+        (table) => table.id.toString() !== event.target.id
       );
     },
     clearView(exceptions) {
-      Object.keys(this.input).forEach(key => {
-        const found = exceptions.filter(e => e === key);
+      Object.keys(this.input).forEach((key) => {
+        const found = exceptions.filter((e) => e === key);
         if (!found) this.input[key] = "";
       });
 
       this.input.color = "gray";
       this.input.tables = [];
     },
-    checkNotNull: val => {
+    checkNotNull: (val) => {
       if (val === undefined || val === null || val.length === 0) {
         return false;
       }
       return true;
-    }
+    },
   },
   computed: {
-    color: function() {
+    color: function () {
       return "bg-" + this.input.color + "-200";
     },
     tableSeats() {
@@ -281,7 +283,7 @@ export default {
         );
         return accumulated.seats;
       }
-    }
+    },
   },
   watch: {
     date(newDate, _) {
@@ -292,7 +294,7 @@ export default {
     table(newTable, _) {
       this.clearView(["date", "hours", "minutes"]);
       this.input.tables.push(newTable);
-    }
-  }
+    },
+  },
 };
 </script>

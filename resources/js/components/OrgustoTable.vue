@@ -55,18 +55,18 @@ export default {
   props: {
     table: {
       type: Object,
-      required: true
+      required: true,
     },
     tables: {
       type: Array,
-      required: true
+      required: true,
     },
     slotClicked: Function,
-    timelineStart: String
+    timelineStart: String,
   },
   methods: {
     slotHasReservation(slot) {
-      if (this.reservations.duration === 0) {
+      if (this.reservations.length === 0) {
         return false;
       }
 
@@ -82,11 +82,13 @@ export default {
       }
 
       if (
-        slotTime.add(15, "m").isSame(
-          moment(reservation.start)
-            .add(reservation.duration, "h")
-            .toDate()
-        )
+        slotTime
+          .add(15, "m")
+          .isSame(
+            moment(reservation.start)
+              .add(this.parseDuration(reservation.duration), "h")
+              .toDate()
+          )
       ) {
         return 1;
       }
@@ -97,11 +99,11 @@ export default {
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
 
       return this.reservationsArray.find(
-        reservation =>
+        (reservation) =>
           slotTime >= moment(reservation.start) &&
           slotTime <
             moment(reservation.start)
-              .add(reservation.duration, "h")
+              .add(this.parseDuration(reservation.duration), "h")
               .toDate()
       );
     },
@@ -109,7 +111,7 @@ export default {
     slotColorAndBorder(slot) {
       return [
         "bg-" + this.getReservation(slot).color + "-200",
-        slot === 0 ? null : "rounded-l-full"
+        slot === 0 ? null : "rounded-l-full",
       ];
     },
 
@@ -127,15 +129,22 @@ export default {
       return moment(this.timelineStart)
         .add(slot * 15, "m")
         .format("HH:mm");
-    }
+    },
+    parseDuration(durationJson) {
+      const tmp = JSON.parse(durationJson);
+      const dur = parseFloat(tmp.h) + parseFloat(tmp.m / 60);
+      return dur;
+    },
   },
   computed: {
     reservations() {
       return this.table.reservations;
     },
     reservationsArray() {
-      return Object.keys(this.reservations).map(key => this.reservations[key]);
-    }
-  }
+      return Object.keys(this.reservations).map(
+        (key) => this.reservations[key]
+      );
+    },
+  },
 };
 </script>

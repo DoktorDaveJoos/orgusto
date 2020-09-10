@@ -57,7 +57,7 @@ export default {
   props: ["init", "error"],
   data() {
     return {
-      personpicker: this.init
+      personpicker: this.init.toString()
     };
   },
   methods: {

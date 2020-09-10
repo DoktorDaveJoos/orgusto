@@ -43,6 +43,12 @@
                 <i class="text-white pr-1 fas fa-user-friends"></i>{{ $reservation->persons }} Persons
             </div>
 
+            @foreach($reservation->tables as $table)
+            <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
+                <i class="text-white pr-1 fas fa-chair"></i>{{ $table->table_number }}
+            </div>
+            @endforeach
+
             @if($reservation->email)
             <div class="leading-tight shadow-lg text-xs text-white mr-4 px-2 py-1 rounded-full bg-{{ $reservation->color }}-600">
                 <i class="text-white pr-1 fas fa-envelope"></i>{{ $reservation->email }}
@@ -55,14 +61,7 @@
             </div>
             @endif
         </div>
-        <div class="flex">
-            <button class="text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-edit mr-1"></i>Edit</button>
-            <orgusto-modal-wrapper :is-open="true" :handle-close="() => {}">
-                <reservation-item :employees="{{ $employees }}" tables-endpoint="{{ route('tables.index') }}" reservations-endpoint="{{ route('reservations.store') }}">
-                </reservation-item>
-            </orgusto-modal-wrapper>
-            <button class="ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"><i class="far fa-trash-alt mr-1"></i>Delete</button>
-        </div>
+        <edit-reservation :reservation="{{ $reservation }}" :employees="{{ $employees }}" tables-endpoint="{{ route('tables.index') }}" reservations-endpoint="{{ route('reservation.update', $reservation->id) }}"></edit-reservation>
     </td>
 
 </tr>
