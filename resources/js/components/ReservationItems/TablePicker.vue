@@ -27,6 +27,7 @@ import Filter from '../../models/Filter';
 import Tables from "../../models/Tables";
 import TablesRequest from "../../requests/TablesRequest";
 import {Prop} from "vue/types/options";
+import Table from "../../models/Table";
 
 export default Vue.extend({
     props: {
@@ -46,15 +47,14 @@ export default Vue.extend({
         };
     },
     mounted() {
+        console.log(this.init instanceof Tables);
         this.updateTables(this.filterData);
     },
     methods: {
         updateTables(filter: Filter) {
             const request: TablesRequest = TablesRequest.of(filter);
             axios.get(this.tablesEndpoint + '?' + request.queryParams)
-                .then((res: any) => {
-                    this.tables.merge(res.data);
-                })
+                .then((res: any) => this.tables.merge(res.data))
                 .catch((err: any) => console.log(err));
         },
         handleTableClick(tableId: string) {
@@ -67,7 +67,7 @@ export default Vue.extend({
             this.$emit("tables:chosen", this.chosenTables);
         },
         isActive(tableId: string): boolean {
-            return this.chosenTables.tables.find((id: string) => id === tableId) !== undefined;
+            return this.chosenTables.tables.find((table: Table) => table.id === tableId) === undefined;
         }
     },
     watch: {

@@ -53600,9 +53600,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
-var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var Reservation_1 = __webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts");
+var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./resources/js/models/Filter.ts"));
 exports.default = vue_1.default.extend({
     name: "reservation-item",
     props: {
@@ -53615,30 +53616,14 @@ exports.default = vue_1.default.extend({
     },
     data: function () {
         return {
-            // TODO: Read that from cookie
-            color: this.reservation ? this.reservation.color : "gray",
-            date: this.reservation
-                ? moment_1.default(this.reservation.start).toDate()
-                : new Date(),
-            time: this.reservation
-                ? moment_1.default(this.reservation.start).format("HH:mm")
-                : "18:00",
-            persons: this.reservation ? this.reservation.persons : 2,
-            duration: this.reservation
-                ? JSON.parse(this.reservation.duration)
-                : { h: "2", m: "00" },
-            tables: this.reservation ? this.reservation.tables : [],
-            email: this.reservation ? this.reservation.email : "",
-            employee: this.reservation ? this.reservation.user_id : "",
-            phone_number: this.reservation ? this.reservation.phone_number : "",
-            reservationTitle: this.reservation ? this.reservation.name : "",
-            reservationNotice: this.reservation ? this.reservation.notice : "",
-            showAdditionalNotice: this.reservation &&
-                this.reservation.notice &&
-                this.reservation.notice.length > 0,
+            reservationCopy: Reservation_1.ReservationClass.copyFromReservation(this.reservation),
             errors: {},
             endpoint: "",
+            showAdditionalNotice: false
         };
+    },
+    mounted: function () {
+        console.log(this.reservationCopy);
     },
     methods: {
         setColor: function (color) {
@@ -53664,49 +53649,16 @@ exports.default = vue_1.default.extend({
         },
         handleSubmit: function () {
             var _this = this;
-            var request = this.validate();
-            // TODO make this beautiful
-            if (this.reservation) {
-                axios_1.default
-                    .put(this.reservationsEndpoint, request)
-                    .then(function (res) {
-                    if (res.status === 200) {
-                        location.reload();
-                    }
-                })
-                    .catch(function (err) {
-                    _this.errors = err.response.data.errors;
-                });
-            }
-            else {
-                axios_1.default
-                    .post(this.reservationsEndpoint, request)
-                    .then(function (res) {
-                    if (res.status === 200) {
-                        location.reload();
-                    }
-                })
-                    .catch(function (err) {
-                    _this.errors = err.response.data.errors;
-                });
-            }
-        },
-        validate: function () {
-            var tables = this.tables.map(function (table) { return table.id; });
-            var request = Object.assign({
-                color: this.color,
-                start: this.processedDate,
-                end: this.processedEndDate,
-                persons: this.persons,
-                duration: JSON.parse(JSON.stringify(this.duration)),
-                tables: tables,
-                email: this.email,
-                user_id: this.employee,
-                phone_number: this.phone_number,
-                name: this.reservationTitle,
-                notice: this.reservationNotice,
+            axios_1.default
+                .put(this.reservationsEndpoint, {})
+                .then(function (res) {
+                if (res.status === 200) {
+                    location.reload();
+                }
+            })
+                .catch(function (err) {
+                _this.errors = err.response.data.errors;
             });
-            return request;
         },
         errorContainsKey: function (key) {
             return (Object.keys(this.errors).find(function (elem) { return elem === key; }) !== undefined);
@@ -53722,29 +53674,10 @@ exports.default = vue_1.default.extend({
                 : "New Reservation";
         },
         borderColor: function () {
-            return "border-" + this.color + "-400";
-        },
-        processedDate: function () {
-            var splittedTime = this.time.split(":");
-            return moment_1.default(this.date)
-                .set({
-                hours: splittedTime[0],
-                minutes: splittedTime[1],
-            })
-                .format("YYYY-MM-DD HH:mm[:00]");
-        },
-        processedEndDate: function () {
-            return moment_1.default(this.processedDate)
-                .add("hours", this.duration.h)
-                .add("minutes", this.duration.m)
-                .format("YYYY-MM-DD HH:mm[:00]");
+            return "border-" + this.reservationCopy.color + "-400";
         },
         filterData: function () {
-            return {
-                date: this.processedDate,
-                persons: this.persons,
-                duration: this.duration,
-            };
+            return Filter_1.default.of(this.reservation);
         },
     },
 });
@@ -53787,6 +53720,7 @@ exports.default = vue_1.default.extend({
         };
     },
     mounted: function () {
+        console.log(this.init instanceof Tables_1.default);
         this.updateTables(this.filterData);
     },
     methods: {
@@ -53794,9 +53728,7 @@ exports.default = vue_1.default.extend({
             var _this = this;
             var request = TablesRequest_1.default.of(filter);
             axios_1.default.get(this.tablesEndpoint + '?' + request.queryParams)
-                .then(function (res) {
-                _this.tables.merge(res.data);
-            })
+                .then(function (res) { return _this.tables.merge(res.data); })
                 .catch(function (err) { return console.log(err); });
         },
         handleTableClick: function (tableId) {
@@ -53809,7 +53741,7 @@ exports.default = vue_1.default.extend({
             this.$emit("tables:chosen", this.chosenTables);
         },
         isActive: function (tableId) {
-            return this.chosenTables.tables.find(function (id) { return id === tableId; }) !== undefined;
+            return this.chosenTables.tables.find(function (table) { return table.id === tableId; }) === undefined;
         }
     },
     watch: {
@@ -55032,7 +54964,7 @@ var render = function() {
           _c("employee-picker", {
             attrs: {
               error: _vm.errorContainsKey("user_id"),
-              init: _vm.employee,
+              init: _vm.reservationCopy.employees,
               employees: _vm.employees
             },
             on: { "employee:chosen": _vm.setEmployee }
@@ -55040,10 +54972,10 @@ var render = function() {
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
-          _c("date-picker", { attrs: { init: _vm.date } }),
+          _c("date-picker", { attrs: { init: _vm.reservationCopy.start } }),
           _vm._v(" "),
           _c("time-picker", {
-            attrs: { init: _vm.time },
+            attrs: { init: _vm.reservationCopy.start },
             on: { "time:chosen": _vm.setTime }
           }),
           _vm._v(" "),
@@ -55051,7 +54983,7 @@ var render = function() {
           _vm._v(" "),
           _c("person-picker", {
             attrs: {
-              init: _vm.persons,
+              init: _vm.reservationCopy.persons,
               error: _vm.errorContainsKey("persons")
             },
             on: { "person:chosen": _vm.setPersons }
@@ -55059,7 +54991,7 @@ var render = function() {
           _vm._v(" "),
           _c("duration-picker", {
             attrs: {
-              init: _vm.duration,
+              init: _vm.reservationCopy.duration,
               error: _vm.errorContainsKey("duration")
             },
             on: { "duration:chosen": _vm.setDuration }
@@ -55087,26 +55019,26 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.reservationTitle,
-                    expression: "reservationTitle"
+                    value: _vm.reservationCopy.name,
+                    expression: "reservationCopy.name"
                   }
                 ],
                 staticClass:
                   "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
-                class: _vm.reservationTitle
+                class: _vm.reservationCopy.name
                   ? "border-indigo-400 text-gray-800"
                   : "",
                 attrs: {
                   placeholder: "Name of the guest / group",
                   type: "text"
                 },
-                domProps: { value: _vm.reservationTitle },
+                domProps: { value: _vm.reservationCopy.name },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.reservationTitle = $event.target.value
+                    _vm.$set(_vm.reservationCopy, "name", $event.target.value)
                   }
                 }
               }),
@@ -55145,26 +55077,30 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.reservationNotice,
-                      expression: "reservationNotice"
+                      value: _vm.reservationCopy.notice,
+                      expression: "reservationCopy.notice"
                     }
                   ],
                   staticClass:
                     "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
-                  class: _vm.reservationNotice
+                  class: _vm.reservationCopy.notice
                     ? "border-indigo-400 text-gray-800"
                     : "",
                   attrs: {
                     placeholder: "Some additional information ...",
                     type: "text"
                   },
-                  domProps: { value: _vm.reservationNotice },
+                  domProps: { value: _vm.reservationCopy.notice },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.reservationNotice = $event.target.value
+                      _vm.$set(
+                        _vm.reservationCopy,
+                        "notice",
+                        $event.target.value
+                      )
                     }
                   }
                 })
@@ -55188,21 +55124,23 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.email,
-                  expression: "email"
+                  value: _vm.reservationCopy.email,
+                  expression: "reservationCopy.email"
                 }
               ],
               staticClass:
                 "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
-              class: _vm.email ? "border-indigo-400 text-gray-800" : "",
+              class: _vm.reservationCopy.email
+                ? "border-indigo-400 text-gray-800"
+                : "",
               attrs: { placeholder: "Email", type: "email" },
-              domProps: { value: _vm.email },
+              domProps: { value: _vm.reservationCopy.email },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.email = $event.target.value
+                  _vm.$set(_vm.reservationCopy, "email", $event.target.value)
                 }
               }
             }),
@@ -55223,21 +55161,27 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.phone_number,
-                  expression: "phone_number"
+                  value: _vm.reservationCopy.phone_number,
+                  expression: "reservationCopy.phone_number"
                 }
               ],
               staticClass:
                 "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
-              class: _vm.phone_number ? "border-indigo-400 text-gray-800" : "",
+              class: _vm.reservationCopy.phone_number
+                ? "border-indigo-400 text-gray-800"
+                : "",
               attrs: { placeholder: "Phone number", type: "phone" },
-              domProps: { value: _vm.phone_number },
+              domProps: { value: _vm.reservationCopy.phone_number },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.phone_number = $event.target.value
+                  _vm.$set(
+                    _vm.reservationCopy,
+                    "phone_number",
+                    $event.target.value
+                  )
                 }
               }
             })
@@ -55250,7 +55194,7 @@ var render = function() {
               error: _vm.errorContainsKey("tables"),
               "tables-endpoint": _vm.tablesEndpoint,
               "filter-data": _vm.filterData,
-              init: _vm.tables
+              init: _vm.reservationCopy.tables
             },
             on: { "tables:chosen": _vm.setTables }
           }),
@@ -55265,7 +55209,7 @@ var render = function() {
                   "p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out",
                 on: { click: _vm.handleClose }
               },
-              [_vm._v("Cancel")]
+              [_vm._v("Cancel\n            ")]
             ),
             _vm._v(" "),
             _c(
@@ -55275,7 +55219,12 @@ var render = function() {
                   "p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out",
                 on: { click: _vm.handleSubmit }
               },
-              [_vm._v(_vm._s(this.reservation ? "Update" : "Save"))]
+              [
+                _vm._v(
+                  _vm._s(this.reservation ? "Update" : "Save") +
+                    "\n            "
+                )
+              ]
             )
           ])
         ],
@@ -75863,9 +75812,289 @@ var DateString = /** @class */ (function () {
         var withAdd = moment_1.default(date).add(duration.h, "hours").add(duration.m, "minutes");
         return DateString.ofAny(withAdd);
     };
+    DateString.now = function () {
+        return DateString.ofAny(new Date());
+    };
     return DateString;
 }());
 exports.default = DateString;
+
+
+/***/ }),
+
+/***/ "./resources/js/models/Duration.ts":
+/*!*****************************************!*\
+  !*** ./resources/js/models/Duration.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var DurationClass = /** @class */ (function () {
+    function DurationClass(h, m) {
+        this._h = h;
+        this._m = m;
+    }
+    Object.defineProperty(DurationClass.prototype, "h", {
+        get: function () {
+            return this._h;
+        },
+        set: function (value) {
+            this._h = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(DurationClass.prototype, "m", {
+        get: function () {
+            return this._m;
+        },
+        set: function (value) {
+            this._m = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    DurationClass.boilerPlate = function () {
+        return new DurationClass("2", "00");
+    };
+    return DurationClass;
+}());
+exports.default = DurationClass;
+
+
+/***/ }),
+
+/***/ "./resources/js/models/Filter.ts":
+/*!***************************************!*\
+  !*** ./resources/js/models/Filter.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
+var FilterClass = /** @class */ (function () {
+    function FilterClass(date, duration, persons) {
+        this._date = date;
+        this._duration = duration;
+        this._persons = persons;
+    }
+    Object.defineProperty(FilterClass.prototype, "date", {
+        get: function () {
+            return this._date;
+        },
+        set: function (value) {
+            this._date = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FilterClass.prototype, "duration", {
+        get: function () {
+            return this._duration;
+        },
+        set: function (value) {
+            this._duration = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(FilterClass.prototype, "persons", {
+        get: function () {
+            return this._persons;
+        },
+        set: function (value) {
+            this._persons = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    FilterClass.of = function (reservation) {
+        var date = DateString_1.default.ofAny(reservation.start);
+        return new FilterClass(date, reservation.duration, reservation.persons);
+    };
+    return FilterClass;
+}());
+exports.default = FilterClass;
+// processedEndDate() {
+//     return moment(this.processedDate)
+//         .add("hours", this.duration.h)
+//         .add("minutes", this.duration.m)
+//         .format("YYYY-MM-DD HH:mm[:00]");
+// },
+
+
+/***/ }),
+
+/***/ "./resources/js/models/Reservation.ts":
+/*!********************************************!*\
+  !*** ./resources/js/models/Reservation.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ReservationClass = void 0;
+var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var Tables_1 = __importDefault(__webpack_require__(/*! ./Tables */ "./resources/js/models/Tables.ts"));
+var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
+var Duration_1 = __importDefault(__webpack_require__(/*! ./Duration */ "./resources/js/models/Duration.ts"));
+var ReservationClass = /** @class */ (function () {
+    function ReservationClass(color, duration, email, end, name, notice, persons, phone_number, start, tables) {
+        this._color = color;
+        this._duration = duration;
+        this._email = email;
+        this._end = end;
+        this._name = name;
+        this._notice = notice;
+        this._persons = persons;
+        this._phone_number = phone_number;
+        this._start = start;
+        this._tables = tables;
+    }
+    ReservationClass.instanceOfReservation = function (object) {
+        return 'color' in object &&
+            'name' in object &&
+            'duration' in object &&
+            'persons' in object &&
+            'start' in object &&
+            'end' in object &&
+            'notice' in object &&
+            'email' in object &&
+            'phone_number' in object &&
+            'tables' in object;
+    };
+    ReservationClass.of = function (object) {
+        if (ReservationClass.instanceOfReservation(object)) {
+            return new ReservationClass(object.color, object.duration, object.email, object.end, object.name, object.notice, object.persons, object.phone_number, object.start, object.tables);
+        }
+    };
+    ReservationClass.empty = function () {
+        return new ReservationClass("gray", Duration_1.default.boilerPlate(), null, DateString_1.default.addDuration(DateString_1.default.now(), Duration_1.default.boilerPlate()), "", "", 0, null, DateString_1.default.now(), Tables_1.default.empty());
+    };
+    ReservationClass.copyFromReservation = function (old) {
+        if (ReservationClass.instanceOfReservation(old)) {
+            return lodash_1.default.cloneDeep(old);
+        }
+        else
+            return ReservationClass.empty();
+    };
+    Object.defineProperty(ReservationClass.prototype, "tables", {
+        get: function () {
+            return this._tables;
+        },
+        set: function (value) {
+            this._tables = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "color", {
+        get: function () {
+            return this._color;
+        },
+        set: function (value) {
+            this._color = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "duration", {
+        get: function () {
+            return this._duration;
+        },
+        set: function (value) {
+            this._duration = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "email", {
+        get: function () {
+            return this._email;
+        },
+        set: function (value) {
+            this._email = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "end", {
+        get: function () {
+            return this._end;
+        },
+        set: function (value) {
+            this._end = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "name", {
+        get: function () {
+            return this._name;
+        },
+        set: function (value) {
+            this._name = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "notice", {
+        get: function () {
+            return this._notice;
+        },
+        set: function (value) {
+            this._notice = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "persons", {
+        get: function () {
+            return this._persons;
+        },
+        set: function (value) {
+            this._persons = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "phone_number", {
+        get: function () {
+            return this._phone_number;
+        },
+        set: function (value) {
+            this._phone_number = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReservationClass.prototype, "start", {
+        get: function () {
+            return this._start;
+        },
+        set: function (value) {
+            this._start = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return ReservationClass;
+}());
+exports.ReservationClass = ReservationClass;
 
 
 /***/ }),

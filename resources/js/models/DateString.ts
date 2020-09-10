@@ -31,5 +31,9 @@ export default class DateString {
         const withAdd = moment(date).add(duration.h, "hours").add(duration.m, "minutes");
         return DateString.ofAny(withAdd);
     }
+
+    public static now(): DateString {
+        return DateString.ofAny(new Date());
+    }
 }
 

@@ -2,13 +2,15 @@ import _ from "lodash";
 
 import Duration from "./Duration";
 import Tables from "./Tables";
+import DateString from "./DateString";
+import DurationClass from "./Duration";
 
 export default interface Reservation {
     name: string,
     duration: Duration,
     persons: number,
-    start: Date,
-    end: Date,
+    start: DateString,
+    end: DateString,
     notice?: string,
     color: string,
     email?: string,
@@ -20,15 +22,15 @@ export class ReservationClass implements Reservation {
     private _color: string;
     private _duration: Duration;
     private _email: string;
-    private _end: Date;
+    private _end: DateString;
     private _name: string;
     private _notice: string;
     private _persons: number;
     private _phone_number: string;
-    private _start: Date;
+    private _start: DateString;
     private _tables: Tables;
 
-    constructor(color: string, duration: Duration, email: string, end: Date, name: string, notice: string, persons: number, phone_number: string, start: Date, tables: Tables) {
+    constructor(color: string, duration: Duration, email: string, end: DateString, name: string, notice: string, persons: number, phone_number: string, start: DateString, tables: Tables) {
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -41,23 +43,55 @@ export class ReservationClass implements Reservation {
         this._tables = tables;
     }
 
+    public static instanceOfReservation(object: any): object is Reservation {
+        return 'color' in object &&
+            'name' in object &&
+            'duration' in object &&
+            'persons' in object &&
+            'start' in object &&
+            'end' in object &&
+            'notice' in object &&
+            'email' in object &&
+            'phone_number' in object &&
+            'tables' in object;
+    }
+
     static of(object: any): Reservation {
+        if (ReservationClass.instanceOfReservation(object)) {
+            return new ReservationClass(
+                object.color,
+                object.duration,
+                object.email,
+                object.end,
+                object.name,
+                object.notice,
+                object.persons,
+                object.phone_number,
+                object.start,
+                object.tables
+            )
+        }
+    }
+
+    public static empty(): ReservationClass {
         return new ReservationClass(
-            object.color,
-            object.duration,
-            object.email,
-            object.end,
-            object.name,
-            object.notice,
-            object.persons,
-            object.phone_number,
-            object.start,
-            object.tables
+            "gray",
+            DurationClass.boilerPlate(),
+            null,
+            DateString.addDuration(DateString.now(), DurationClass.boilerPlate()),
+            "",
+            "",
+            0,
+            null,
+            DateString.now(),
+            Tables.empty()
         )
     }
 
     static copyFromReservation(old: Reservation): Reservation {
-        return _.cloneDeep(old);
+        if (ReservationClass.instanceOfReservation(old)) {
+            return _.cloneDeep(old);
+        } else return ReservationClass.empty();
     }
 
     get tables(): Tables {
@@ -80,7 +114,7 @@ export class ReservationClass implements Reservation {
         return this._email;
     }
 
-    get end(): Date {
+    get end(): DateString {
         return this._end;
     }
 
@@ -100,7 +134,7 @@ export class ReservationClass implements Reservation {
         return this._phone_number;
     }
 
-    get start(): Date {
+    get start(): DateString {
         return this._start;
     }
 
@@ -117,7 +151,7 @@ export class ReservationClass implements Reservation {
         this._email = value;
     }
 
-    set end(value: Date) {
+    set end(value: DateString) {
         this._end = value;
     }
 
@@ -137,7 +171,7 @@ export class ReservationClass implements Reservation {
         this._phone_number = value;
     }
 
-    set start(value: Date) {
+    set start(value: DateString) {
         this._start = value;
     }
 
