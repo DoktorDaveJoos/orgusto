@@ -126,16 +126,23 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+
+import axios from 'axios';
+import moment from 'moment';
+import Vue, {PropType} from "vue";
+import Reservation from "../models/Reservation";
+
+export default Vue.extend({
   name: "reservation-item",
-  props: [
-    "reservation",
-    "employees",
-    "tablesEndpoint",
-    "reservationsEndpoint",
-    "reservation",
-  ],
+  props: {
+      reservation: {
+          type: Object as PropType<Reservation>
+      },
+      employees: Array,
+      tablesEndpoint: String,
+      reservationsEndpoint: String
+  },
   data() {
     return {
       // TODO: Read that from cookie
@@ -158,16 +165,11 @@ export default {
       reservationNotice: this.reservation ? this.reservation.notice : "",
       showAdditionalNotice:
         this.reservation &&
-        this.reservation.notice &&
-        this.reservation.notice.length > 0
-          ? true
-          : false,
+          this.reservation.notice &&
+          this.reservation.notice.length > 0,
       errors: {},
       endpoint: "",
     };
-  },
-  mounted() {
-    console.log(this.reservation);
   },
   methods: {
     setColor(color) {
@@ -248,7 +250,7 @@ export default {
     },
   },
   computed: {
-    title() {
+    title() : string {
       return this.reservation && this.reservation.name
         ? this.reservation.name
         : "New Reservation";
@@ -279,5 +281,5 @@ export default {
       };
     },
   },
-};
+});
 </script>

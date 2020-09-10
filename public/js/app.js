@@ -2907,273 +2907,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItem.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "reservation-item",
-  props: ["reservation", "employees", "tablesEndpoint", "reservationsEndpoint", "reservation"],
-  data: function data() {
-    return {
-      // TODO: Read that from cookie
-      color: this.reservation ? this.reservation.color : "gray",
-      date: this.reservation ? moment(this.reservation.start).toDate() : new Date(),
-      time: this.reservation ? moment(this.reservation.start).format("HH:mm") : "18:00",
-      persons: this.reservation ? this.reservation.persons : 2,
-      duration: this.reservation ? JSON.parse(this.reservation.duration) : {
-        h: "2",
-        m: "00"
-      },
-      tables: this.reservation ? this.reservation.tables : [],
-      email: this.reservation ? this.reservation.email : "",
-      employee: this.reservation ? this.reservation.user_id : "",
-      phone_number: this.reservation ? this.reservation.phone_number : "",
-      reservationTitle: this.reservation ? this.reservation.name : "",
-      reservationNotice: this.reservation ? this.reservation.notice : "",
-      showAdditionalNotice: this.reservation && this.reservation.notice && this.reservation.notice.length > 0 ? true : false,
-      errors: {},
-      endpoint: ""
-    };
-  },
-  mounted: function mounted() {
-    console.log(this.reservation);
-  },
-  methods: {
-    setColor: function setColor(color) {
-      this.color = color.toString();
-    },
-    setDate: function setDate(date) {
-      this.date = date;
-    },
-    setTime: function setTime(time) {
-      this.time = time;
-    },
-    setPersons: function setPersons(persons) {
-      this.persons = persons;
-    },
-    setEmployee: function setEmployee(employee) {
-      this.employee = employee.id;
-    },
-    setDuration: function setDuration(duration) {
-      this.duration = duration;
-    },
-    setTables: function setTables(tables) {
-      this.tables = tables;
-    },
-    handleSubmit: function handleSubmit() {
-      var _this = this;
-
-      var request = this.validate(); // TODO make this beautiful
-
-      if (this.reservation) {
-        axios.put(this.reservationsEndpoint, request).then(function (res) {
-          if (res.status === 200) {
-            location.reload();
-          }
-        })["catch"](function (err) {
-          _this.errors = err.response.data.errors;
-        });
-      } else {
-        axios.post(this.reservationsEndpoint, request).then(function (res) {
-          if (res.status === 200) {
-            location.reload();
-          }
-        })["catch"](function (err) {
-          _this.errors = err.response.data.errors;
-        });
-      }
-    },
-    validate: function validate() {
-      var tables = this.tables.map(function (table) {
-        return table.id;
-      });
-      var request = Object.assign({
-        color: this.color,
-        start: this.processedDate,
-        end: this.processedEndDate,
-        persons: this.persons,
-        duration: JSON.parse(JSON.stringify(this.duration)),
-        tables: tables,
-        email: this.email,
-        user_id: this.employee,
-        phone_number: this.phone_number,
-        name: this.reservationTitle,
-        notice: this.reservationNotice
-      });
-      return request;
-    },
-    errorContainsKey: function errorContainsKey(key) {
-      return Object.keys(this.errors).find(function (elem) {
-        return elem === key;
-      }) !== undefined;
-    },
-    handleClose: function handleClose() {
-      this.$emit("modal:close");
-    }
-  },
-  computed: {
-    title: function title() {
-      return this.reservation && this.reservation.name ? this.reservation.name : "New Reservation";
-    },
-    borderColor: function borderColor() {
-      return "border-" + this.color + "-400";
-    },
-    processedDate: function processedDate() {
-      var splittedTime = this.time.split(":");
-      return moment(this.date).set({
-        hours: splittedTime[0],
-        minutes: splittedTime[1]
-      }).format("YYYY-MM-DD HH:mm[:00]");
-    },
-    processedEndDate: function processedEndDate() {
-      return moment(this.processedDate).add("hours", this.duration.h).add("minutes", this.duration.m).format("YYYY-MM-DD HH:mm[:00]");
-    },
-    filterData: function filterData() {
-      return {
-        date: this.processedDate,
-        persons: this.persons,
-        duration: this.duration
-      };
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/ColorSwitcher.vue?vue&type=script&lang=js& ***!
@@ -3745,101 +3478,6 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     time: function time() {
       return this.hour + ":" + this.minutes;
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["filterData", "tablesEndpoint", "error", "init"],
-  data: function data() {
-    return {
-      tables: this.init ? this.init : [],
-      chosenTables: this.init ? this.init : []
-    };
-  },
-  mounted: function mounted() {
-    this.updateTables(this.filterData);
-  },
-  methods: {
-    updateTables: function updateTables(filter) {
-      var _this = this;
-
-      if (filter.date !== undefined && filter.date !== "Invalid date") {
-        var request = Object.assign({});
-        request.start = filter.date;
-        request.end = moment(request.start).add("hours", filter.duration.h).add("minutes", filter.duration.m).format("YYYY-MM-DD HH:mm:ss");
-        var queryParams = $.param(request);
-        axios.get(this.tablesEndpoint + "?" + queryParams).then(function (res) {
-          _this.tables = res.data;
-        })["catch"](function (err) {
-          return console.log(err);
-        });
-      }
-    },
-    handleTableClick: function handleTableClick(tableId) {
-      if (this.chosenTables.find(function (id) {
-        return id === tableId;
-      }) === undefined) {
-        this.chosenTables.push(tableId);
-      } else {
-        this.chosenTables = this.chosenTables.filter(function (id) {
-          return id !== tableId;
-        });
-      } // this.$emit("tables:chosen", this.chosenTables);
-
-    },
-    isActive: function isActive(tableId) {
-      return this.chosenTables.find(function (id) {
-        return id === tableId;
-      }) !== undefined;
-    }
-  },
-  watch: {
-    filterData: function filterData(n, o) {
-      this.updateTables(n);
-    },
-    tables: function tables(n, o) {
-      delete o.pivot; // merge free tables with initial tables
-
-      n = _.union(n, o); // if (this.init) {
-      //   this.init.forEach((table) => {
-      //     const found = n.find((elem) => elem === table);
-      //     if (found === undefined) {
-      //       n.push(table);
-      //     }
-      //   });
-      // }
     }
   }
 });
@@ -53949,6 +53587,239 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=script&lang=ts&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItem.vue?vue&type=script&lang=ts& ***!
+  \******************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+exports.default = vue_1.default.extend({
+    name: "reservation-item",
+    props: {
+        reservation: {
+            type: Object
+        },
+        employees: Array,
+        tablesEndpoint: String,
+        reservationsEndpoint: String
+    },
+    data: function () {
+        return {
+            // TODO: Read that from cookie
+            color: this.reservation ? this.reservation.color : "gray",
+            date: this.reservation
+                ? moment_1.default(this.reservation.start).toDate()
+                : new Date(),
+            time: this.reservation
+                ? moment_1.default(this.reservation.start).format("HH:mm")
+                : "18:00",
+            persons: this.reservation ? this.reservation.persons : 2,
+            duration: this.reservation
+                ? JSON.parse(this.reservation.duration)
+                : { h: "2", m: "00" },
+            tables: this.reservation ? this.reservation.tables : [],
+            email: this.reservation ? this.reservation.email : "",
+            employee: this.reservation ? this.reservation.user_id : "",
+            phone_number: this.reservation ? this.reservation.phone_number : "",
+            reservationTitle: this.reservation ? this.reservation.name : "",
+            reservationNotice: this.reservation ? this.reservation.notice : "",
+            showAdditionalNotice: this.reservation &&
+                this.reservation.notice &&
+                this.reservation.notice.length > 0,
+            errors: {},
+            endpoint: "",
+        };
+    },
+    methods: {
+        setColor: function (color) {
+            this.color = color.toString();
+        },
+        setDate: function (date) {
+            this.date = date;
+        },
+        setTime: function (time) {
+            this.time = time;
+        },
+        setPersons: function (persons) {
+            this.persons = persons;
+        },
+        setEmployee: function (employee) {
+            this.employee = employee.id;
+        },
+        setDuration: function (duration) {
+            this.duration = duration;
+        },
+        setTables: function (tables) {
+            this.tables = tables;
+        },
+        handleSubmit: function () {
+            var _this = this;
+            var request = this.validate();
+            // TODO make this beautiful
+            if (this.reservation) {
+                axios_1.default
+                    .put(this.reservationsEndpoint, request)
+                    .then(function (res) {
+                    if (res.status === 200) {
+                        location.reload();
+                    }
+                })
+                    .catch(function (err) {
+                    _this.errors = err.response.data.errors;
+                });
+            }
+            else {
+                axios_1.default
+                    .post(this.reservationsEndpoint, request)
+                    .then(function (res) {
+                    if (res.status === 200) {
+                        location.reload();
+                    }
+                })
+                    .catch(function (err) {
+                    _this.errors = err.response.data.errors;
+                });
+            }
+        },
+        validate: function () {
+            var tables = this.tables.map(function (table) { return table.id; });
+            var request = Object.assign({
+                color: this.color,
+                start: this.processedDate,
+                end: this.processedEndDate,
+                persons: this.persons,
+                duration: JSON.parse(JSON.stringify(this.duration)),
+                tables: tables,
+                email: this.email,
+                user_id: this.employee,
+                phone_number: this.phone_number,
+                name: this.reservationTitle,
+                notice: this.reservationNotice,
+            });
+            return request;
+        },
+        errorContainsKey: function (key) {
+            return (Object.keys(this.errors).find(function (elem) { return elem === key; }) !== undefined);
+        },
+        handleClose: function () {
+            this.$emit("modal:close");
+        },
+    },
+    computed: {
+        title: function () {
+            return this.reservation && this.reservation.name
+                ? this.reservation.name
+                : "New Reservation";
+        },
+        borderColor: function () {
+            return "border-" + this.color + "-400";
+        },
+        processedDate: function () {
+            var splittedTime = this.time.split(":");
+            return moment_1.default(this.date)
+                .set({
+                hours: splittedTime[0],
+                minutes: splittedTime[1],
+            })
+                .format("YYYY-MM-DD HH:mm[:00]");
+        },
+        processedEndDate: function () {
+            return moment_1.default(this.processedDate)
+                .add("hours", this.duration.h)
+                .add("minutes", this.duration.m)
+                .format("YYYY-MM-DD HH:mm[:00]");
+        },
+        filterData: function () {
+            return {
+                date: this.processedDate,
+                persons: this.persons,
+                duration: this.duration,
+            };
+        },
+    },
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=ts&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=ts& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var Tables_1 = __importDefault(__webpack_require__(/*! ../../models/Tables */ "./resources/js/models/Tables.ts"));
+var TablesRequest_1 = __importDefault(__webpack_require__(/*! ../../requests/TablesRequest */ "./resources/js/requests/TablesRequest.ts"));
+exports.default = vue_1.default.extend({
+    props: {
+        filterData: {
+            type: Object
+        },
+        tablesEndpoint: String,
+        error: Boolean,
+        init: {
+            type: Object
+        }
+    },
+    data: function () {
+        return {
+            tables: Tables_1.default.of(this.init),
+            chosenTables: Tables_1.default.of(this.init),
+        };
+    },
+    mounted: function () {
+        this.updateTables(this.filterData);
+    },
+    methods: {
+        updateTables: function (filter) {
+            var _this = this;
+            var request = TablesRequest_1.default.of(filter);
+            axios_1.default.get(this.tablesEndpoint + '?' + request.queryParams)
+                .then(function (res) {
+                _this.tables.merge(res.data);
+            })
+                .catch(function (err) { return console.log(err); });
+        },
+        handleTableClick: function (tableId) {
+            if (this.chosenTables.tables.find(function (id) { return id === tableId; }) === undefined) {
+                this.chosenTables.tables.push(tableId);
+            }
+            else {
+                this.chosenTables = this.chosenTables.tables.filter(function (id) { return id !== tableId; });
+            }
+            this.$emit("tables:chosen", this.chosenTables);
+        },
+        isActive: function (tableId) {
+            return this.chosenTables.tables.find(function (id) { return id === tableId; }) !== undefined;
+        }
+    },
+    watch: {
+        filterData: 'updateTables',
+    },
+});
+
+
+/***/ }),
+
 /***/ "./node_modules/v-calendar/lib/v-calendar.umd.min.js":
 /*!***********************************************************!*\
   !*** ./node_modules/v-calendar/lib/v-calendar.umd.min.js ***!
@@ -56257,7 +56128,7 @@ var render = function() {
             )
           : _vm._e(),
         _vm._v(" "),
-        _vm._l(_vm.tables, function(table) {
+        _vm._l(_vm.tables.tables, function(table) {
           return _c(
             "div",
             { key: table.id, staticClass: "my-2 mr-2" },
@@ -75119,14 +74990,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************!*\
   !*** ./resources/js/components/ReservationItem.vue ***!
   \*****************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReservationItem.vue?vue&type=template&id=06e8e1e4& */ "./resources/js/components/ReservationItem.vue?vue&type=template&id=06e8e1e4&");
-/* harmony import */ var _ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReservationItem.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReservationItem.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItem.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -75135,7 +75007,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__["render"],
   _ReservationItem_vue_vue_type_template_id_06e8e1e4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -75152,17 +75024,19 @@ component.options.__file = "resources/js/components/ReservationItem.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItem.vue?vue&type=script&lang=ts&":
 /*!******************************************************************************!*\
-  !*** ./resources/js/components/ReservationItem.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItem.vue?vue&type=script&lang=ts& ***!
   \******************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ReservationItem.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/ts-loader??ref--11!../../../node_modules/vue-loader/lib??vue-loader-options!./ReservationItem.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItem.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservationItem_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75674,14 +75548,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!******************************************************************!*\
   !*** ./resources/js/components/ReservationItems/TablePicker.vue ***!
   \******************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TablePicker.vue?vue&type=template&id=08c82d0c& */ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=template&id=08c82d0c&");
-/* harmony import */ var _TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TablePicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -75690,7 +75565,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__["render"],
   _TablePicker_vue_vue_type_template_id_08c82d0c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -75707,17 +75582,19 @@ component.options.__file = "resources/js/components/ReservationItems/TablePicker
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=ts&":
 /*!*******************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=ts& ***!
   \*******************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TablePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./TablePicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TablePicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TablePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75942,6 +75819,161 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SearchReservation_vue_vue_type_template_id_2a02cfae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
+
+
+/***/ }),
+
+/***/ "./resources/js/models/DateString.ts":
+/*!*******************************************!*\
+  !*** ./resources/js/models/DateString.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/**
+ * DateString
+ * Handles valid date string for backend.
+ */
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
+var DateString = /** @class */ (function () {
+    function DateString(date) {
+        this._date = date;
+    }
+    Object.defineProperty(DateString.prototype, "date", {
+        get: function () {
+            return this._date;
+        },
+        set: function (value) {
+            this._date = moment_1.default(value).format("YYYY-MM-DD HH:mm:ss");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    DateString.ofAny = function (date) {
+        return new DateString(moment_1.default(date).format("YYYY-MM-DD HH:mm:ss"));
+    };
+    DateString.addDuration = function (init, duration) {
+        var date = init.date;
+        var withAdd = moment_1.default(date).add(duration.h, "hours").add(duration.m, "minutes");
+        return DateString.ofAny(withAdd);
+    };
+    return DateString;
+}());
+exports.default = DateString;
+
+
+/***/ }),
+
+/***/ "./resources/js/models/Tables.ts":
+/*!***************************************!*\
+  !*** ./resources/js/models/Tables.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var Tables = /** @class */ (function () {
+    function Tables(tables) {
+        this._tables = tables !== null && tables !== void 0 ? tables : [];
+    }
+    Object.defineProperty(Tables.prototype, "tables", {
+        get: function () {
+            return this._tables;
+        },
+        set: function (value) {
+            this._tables = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Tables.empty = function () {
+        return new Tables();
+    };
+    Tables.of = function (tablesObj) {
+        return new Tables(tablesObj);
+    };
+    Tables.prototype.merge = function (newTables) {
+        this._tables = lodash_1.default.union(this.tables, newTables);
+        this._tables.sort(function (a, b) { return a.table_number - b.table_number; });
+    };
+    return Tables;
+}());
+exports.default = Tables;
+
+
+/***/ }),
+
+/***/ "./resources/js/requests/TablesRequest.ts":
+/*!************************************************!*\
+  !*** ./resources/js/requests/TablesRequest.ts ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var DateString_1 = __importDefault(__webpack_require__(/*! ../models/DateString */ "./resources/js/models/DateString.ts"));
+var jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
+var TablesRequest = /** @class */ (function () {
+    function TablesRequest(start, end) {
+        this._start = start;
+        this._end = end;
+    }
+    Object.defineProperty(TablesRequest.prototype, "start", {
+        get: function () {
+            return this._start;
+        },
+        set: function (value) {
+            this._start = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(TablesRequest.prototype, "end", {
+        get: function () {
+            return this._end;
+        },
+        set: function (value) {
+            this._end = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    TablesRequest.of = function (filter) {
+        var start = DateString_1.default.ofAny(filter.date);
+        var end = DateString_1.default.addDuration(start, filter.duration);
+        return new TablesRequest(start, end);
+    };
+    Object.defineProperty(TablesRequest.prototype, "queryParams", {
+        get: function () {
+            var simplified = {
+                start: this.start.date,
+                end: this.end.date
+            };
+            return jquery_1.default.param(simplified);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return TablesRequest;
+}());
+exports.default = TablesRequest;
 
 
 /***/ }),
