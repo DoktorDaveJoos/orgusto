@@ -2951,95 +2951,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["init", "error"],
-  data: function data() {
-    return {
-      datepicker: "",
-      chosenDate: "",
-      singleDate: moment(this.init).toDate()
-    };
-  },
-  mounted: function mounted() {
-    if (this.init) {
-      var iDate = moment(moment(this.init).format("YYYY-MM-DD"));
-      var now = moment(moment().format("YYYY-MM-DD"));
-
-      if (iDate.isSame(now)) {
-        this.datepicker = "today";
-      } else if (iDate.diff(now, "day") === 1) {
-        this.datepicker = "tomorrow";
-      } else if (iDate.diff(now, "day") === 2) {
-        this.datepicker = "day after tomorrow";
-      } else {
-        this.chosenDate = moment(iDate).format("DD.MM.YYYY");
-      }
-    } else {
-      this.datepicker = "today";
-    }
-  },
-  methods: {
-    setDatePicker: function setDatePicker(indicator) {
-      this.chosenDate = "";
-      this.datepicker = indicator;
-
-      if (indicator === "today") {
-        this.setDate(moment());
-      } else if (indicator === "tomorrow") {
-        this.setDate(moment().add(1, "days"));
-      } else if (indicator === "day after tomorrow") {
-        this.setDate(moment().add(2, "days"));
-      }
-    },
-    setDate: function setDate(date) {
-      this.$emit("date:chosen", date);
-    },
-    isSelected: function isSelected(indicator) {
-      return this.datepicker === indicator;
-    }
-  },
-  watch: {
-    singleDate: function singleDate(newVal, oldVal) {
-      this.datepicker = "";
-      this.chosenDate = moment(newVal).format("DD.MM.YYYY");
-      this.setDate(moment(newVal));
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js& ***!
@@ -53622,6 +53533,9 @@ exports.default = vue_1.default.extend({
         setTables: function (tables) {
             console.log(tables);
         },
+        setColor: function (color) {
+            this.reservationCopy.color = color;
+        },
         handleSubmit: function () {
             // axios
             //     .put(this.reservationsEndpoint, {})
@@ -53652,6 +53566,82 @@ exports.default = vue_1.default.extend({
         },
         filterData: function () {
             return Filter_1.default.of(this.reservation);
+        },
+    },
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=ts&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=ts& ***!
+  \******************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var DateString_1 = __importDefault(__webpack_require__(/*! ../../models/DateString */ "./resources/js/models/DateString.ts"));
+exports.default = vue_1.default.extend({
+    props: {
+        init: DateString_1.default,
+        error: String
+    },
+    data: function () {
+        return {
+            datepicker: "",
+            chosenDate: "",
+            singleDate: this.init.asDate(),
+        };
+    },
+    mounted: function () {
+        if (this.init) {
+            if (this.init.isToday()) {
+                this.datepicker = "today";
+            }
+            else if (this.init.diffDaysFromNow() === 1) {
+                this.datepicker = "tomorrow";
+            }
+            else if (this.init.diffDaysFromNow() === 2) {
+                this.datepicker = "day after tomorrow";
+            }
+            else {
+                this.chosenDate = this.init.readableDate();
+            }
+        }
+        else {
+            this.datepicker = "today";
+        }
+    },
+    methods: {
+        setDatePicker: function (indicator) {
+            this.chosenDate = "";
+            this.datepicker = indicator;
+            var now = DateString_1.default.now();
+            if (indicator !== "today") {
+                now.addDays(indicator === "tomorrow" ? 1 : 2);
+            }
+            this.setDate(now.asDate());
+        },
+        setDate: function (date) {
+            this.$emit("date:chosen", date);
+        },
+        isSelected: function (indicator) {
+            return this.datepicker === indicator;
+        },
+    },
+    watch: {
+        singleDate: function (newVal, _) {
+            var date = DateString_1.default.ofAny(newVal);
+            this.datepicker = "";
+            this.chosenDate = date.readableDate();
+            this.setDate(date.asDate());
         },
     },
 });
@@ -54928,9 +54918,16 @@ var render = function() {
                     "text-lg self-center leading-6 font-medium text-gray-800"
                 },
                 [_vm._v(_vm._s(_vm.title))]
-              )
-            ]
+              ),
+              _vm._v(" "),
+              _c("color-switcher", { attrs: { "set-color": _vm.setColor } })
+            ],
+            1
           ),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("date-picker", { attrs: { init: _vm.reservationCopy.start } }),
           _vm._v(" "),
           _c("table-picker", {
             attrs: {
@@ -74823,14 +74820,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************!*\
   !*** ./resources/js/components/ReservationItems/DatePicker.vue ***!
   \*****************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=template&id=6fe83608& */ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=template&id=6fe83608&");
-/* harmony import */ var _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -74839,7 +74837,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__["render"],
   _DatePicker_vue_vue_type_template_id_6fe83608___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -74856,17 +74854,19 @@ component.options.__file = "resources/js/components/ReservationItems/DatePicker.
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=ts&":
 /*!******************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=ts& ***!
   \******************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./DatePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./DatePicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DatePicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DatePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75557,6 +75557,22 @@ var DateString = /** @class */ (function () {
     };
     DateString.now = function () {
         return DateString.ofAny(new Date());
+    };
+    DateString.prototype.asDate = function () {
+        return moment_1.default(this.date).toDate();
+    };
+    DateString.prototype.readableDate = function () {
+        return moment_1.default(this.date).format("DD.MM.YYYY");
+    };
+    DateString.prototype.addDays = function (days) {
+        this.date = moment_1.default(this.date).add(days, "days").toISOString();
+    };
+    DateString.prototype.isToday = function () {
+        return moment_1.default(moment_1.default().format("YYYY-MM-DD")).isSame(moment_1.default(this.date));
+    };
+    DateString.prototype.diffDaysFromNow = function () {
+        var now = moment_1.default(moment_1.default().format("YYYY-MM-DD"));
+        return moment_1.default(this.date).diff(now, 'day');
     };
     return DateString;
 }());

@@ -35,5 +35,26 @@ export default class DateString {
     public static now(): DateString {
         return DateString.ofAny(new Date());
     }
+
+    public asDate(): Date {
+        return moment(this.date).toDate();
+    }
+
+    public readableDate(): string {
+        return moment(this.date).format("DD.MM.YYYY");
+    }
+
+    public addDays(days: number): void {
+        this.date = moment(this.date).add(days, "days").toISOString();
+    }
+
+    public isToday(): boolean {
+        return moment(moment().format("YYYY-MM-DD")).isSame(moment(this.date));
+    }
+
+    public diffDaysFromNow(): number {
+        const now = moment(moment().format("YYYY-MM-DD"));
+        return moment(this.date).diff(now, 'day');
+    }
 }
 

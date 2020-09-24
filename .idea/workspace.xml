@@ -24,22 +24,11 @@
   <component name="ChangeListManager">
     <list default="true" id="07c79524-c3c4-48ea-80d5-b2e276f4728c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ManageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ManageController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ReservationsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ReservationsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/ReservationItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/ReservationItem.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/ReservationItems/TablePicker.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/ReservationItems/TablePicker.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/models/Duration.ts" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/models/Duration.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/models/Filter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/models/Filter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/models/Reservation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/models/Reservation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/models/Table.ts" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/models/Table.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/models/Tables.ts" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/models/Tables.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/manage.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/manage.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/ReservationItems/DatePicker.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/ReservationItems/DatePicker.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/models/DateString.ts" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/models/DateString.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -257,7 +246,7 @@
       <workItem from="1600876790693" duration="618000" />
       <workItem from="1600877983713" duration="265000" />
       <workItem from="1600878403997" duration="4935000" />
-      <workItem from="1600950966588" duration="4468000" />
+      <workItem from="1600950966588" duration="7751000" />
     </task>
     <servers />
   </component>
@@ -406,10 +395,10 @@
       <screen x="0" y="23" width="2560" height="1337" />
     </state>
     <state x="1585" y="331" key="run.anything.popup/-1440.563.1440.877/0.23.2560.1337@0.23.2560.1337" timestamp="1599728535566" />
-    <state x="1210" y="433" width="670" height="676" key="search.everywhere.popup" timestamp="1600957310758">
+    <state x="1210" y="433" width="670" height="676" key="search.everywhere.popup" timestamp="1600958534644">
       <screen x="0" y="23" width="2560" height="1337" />
     </state>
-    <state x="1210" y="433" width="670" height="676" key="search.everywhere.popup/-1440.563.1440.877/0.23.2560.1337@0.23.2560.1337" timestamp="1600957310758" />
+    <state x="1210" y="433" width="670" height="676" key="search.everywhere.popup/-1440.563.1440.877/0.23.2560.1337@0.23.2560.1337" timestamp="1600958534644" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

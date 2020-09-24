@@ -6,7 +6,7 @@
                 :class="borderColor"
             >
                 <h3 class="text-lg self-center leading-6 font-medium text-gray-800">{{ title }}</h3>
-<!--                <color-switcher :set-color="setColor"></color-switcher>-->
+                <color-switcher :set-color="setColor"></color-switcher>
             </div>
 
 <!--            <employee-picker-->
@@ -16,8 +16,8 @@
 <!--                v-on:employee:chosen="setEmployee"-->
 <!--            ></employee-picker>-->
 
-<!--            <hr/>-->
-<!--            <date-picker :init="reservationCopy.start"></date-picker>-->
+            <hr/>
+            <date-picker :init="reservationCopy.start"></date-picker>
 <!--            <time-picker :init="reservationCopy.start" v-on:time:chosen="setTime"></time-picker>-->
 <!--            <hr/>-->
 <!--            <person-picker-->
@@ -153,6 +153,9 @@ export default Vue.extend({
     methods: {
         setTables(tables: Tables): void {
             console.log(tables);
+        },
+        setColor(color: string): void {
+            this.reservationCopy.color = color;
         },
         handleSubmit(): void {
 

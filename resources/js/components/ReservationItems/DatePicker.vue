@@ -1,81 +1,83 @@
 <template>
-  <div class="p-4 pb-2 flex justify-between">
-    <div class="flex flex-row space-x-4">
-      <div v-if="error" class="text-red-400 flex items-center leading-tight">
-        <i class="fas fa-times"></i>
-      </div>
-      <select-button value="today" :handle="setDatePicker" :selected="isSelected"></select-button>
-      <select-button value="tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
-      <select-button value="day after tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
+    <div class="p-4 pb-2 flex justify-between">
+        <div class="flex flex-row space-x-4">
+            <div v-if="error" class="text-red-400 flex items-center leading-tight">
+                <i class="fas fa-times"></i>
+            </div>
+            <select-button value="today" :handle="setDatePicker" :selected="isSelected"></select-button>
+            <select-button value="tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
+            <select-button value="day after tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
+        </div>
+        <div>
+            <v-date-picker v-model="singleDate" :popover="{ visibility: 'click' }">
+                <select-button
+                    :value="chosenDate !== '' ? chosenDate : 'Choose date'"
+                    :selected="() => chosenDate !== ''"
+                    icon="fas fa-calendar-alt"
+                ></select-button>
+            </v-date-picker>
+        </div>
     </div>
-    <div>
-      <v-date-picker v-model="singleDate" :popover="{ visibility: 'click' }">
-        <select-button
-          :value="chosenDate !== '' ? chosenDate : 'Choose date'"
-          :selected="() => chosenDate !== ''"
-          icon="fas fa-calendar-alt"
-        ></select-button>
-      </v-date-picker>
-    </div>
-  </div>
 </template>
 
-<script>
-export default {
-  props: ["init", "error"],
-  data() {
-    return {
-      datepicker: "",
-      chosenDate: "",
-      singleDate: moment(this.init).toDate(),
-    };
-  },
-  mounted() {
-    if (this.init) {
-      const iDate = moment(moment(this.init).format("YYYY-MM-DD"));
-      const now = moment(moment().format("YYYY-MM-DD"));
+<script lang="ts">
 
-      if (iDate.isSame(now)) {
-        this.datepicker = "today";
-      } else if (iDate.diff(now, "day") === 1) {
-        this.datepicker = "tomorrow";
-      } else if (iDate.diff(now, "day") === 2) {
-        this.datepicker = "day after tomorrow";
-      } else {
-        this.chosenDate = moment(iDate).format("DD.MM.YYYY");
-      }
-    } else {
-      this.datepicker = "today";
-    }
-  },
-  methods: {
-    setDatePicker(indicator) {
-      this.chosenDate = "";
-      this.datepicker = indicator;
-      if (indicator === "today") {
-        this.setDate(moment());
-      } else if (indicator === "tomorrow") {
-        this.setDate(moment().add(1, "days"));
-      } else if (indicator === "day after tomorrow") {
-        this.setDate(moment().add(2, "days"));
-      }
+import Vue from 'vue';
+import DateString from "../../models/DateString";
+
+export default Vue.extend({
+    props: {
+        init: DateString,
+        error: String
     },
-    setDate(date) {
-      this.$emit("date:chosen", date);
+    data() {
+        return {
+            datepicker: "",
+            chosenDate: "",
+            singleDate: this.init.asDate(),
+        };
     },
-    isSelected(indicator) {
-      return this.datepicker === indicator;
+    mounted() {
+        if (this.init) {
+            if (this.init.isToday()) {
+                this.datepicker = "today";
+            } else if (this.init.diffDaysFromNow() === 1) {
+                this.datepicker = "tomorrow";
+            } else if (this.init.diffDaysFromNow() === 2) {
+                this.datepicker = "day after tomorrow";
+            } else {
+                this.chosenDate = this.init.readableDate();
+            }
+        } else {
+            this.datepicker = "today";
+        }
     },
-  },
-  watch: {
-    singleDate(newVal, oldVal) {
-      this.datepicker = "";
-      this.chosenDate = moment(newVal).format("DD.MM.YYYY");
-      this.setDate(moment(newVal));
+    methods: {
+        setDatePicker(indicator): void {
+            this.chosenDate = "";
+            this.datepicker = indicator;
+
+            const now = DateString.now();
+            if (indicator !== "today") {
+                now.addDays(indicator === "tomorrow" ? 1 : 2);
+            }
+
+            this.setDate(now.asDate());
+        },
+        setDate(date: Date): void {
+            this.$emit("date:chosen", date);
+        },
+        isSelected(indicator): boolean {
+            return this.datepicker === indicator;
+        },
     },
-  },
-};
+    watch: {
+        singleDate(newVal, _): void {
+            const date: DateString = DateString.ofAny(newVal);
+            this.datepicker = "";
+            this.chosenDate = date.readableDate();
+            this.setDate(date.asDate());
+        },
+    },
+});
 </script>
-
-<style>
-</style>
