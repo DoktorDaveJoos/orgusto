@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateReservation;
 use Illuminate\Http\Request;
 use App\Reservation;
-use Carbon\Carbon;
 
 class ReservationsController extends Controller
 {

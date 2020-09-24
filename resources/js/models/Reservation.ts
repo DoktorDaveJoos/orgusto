@@ -5,32 +5,32 @@ import Tables from "./Tables";
 import DateString from "./DateString";
 import DurationClass from "./Duration";
 
-export default interface Reservation {
+export interface Reservation {
     name: string,
     duration: Duration,
     persons: number,
     start: DateString,
     end: DateString,
-    notice?: string,
+    notice?: string | null,
     color: string,
-    email?: string,
-    phone_number?: string,
+    email?: string | null,
+    phone_number?: string | null,
     tables: Tables
 }
 
-export class ReservationClass implements Reservation {
+export default class ReservationClass implements Reservation {
     private _color: string;
     private _duration: Duration;
-    private _email: string;
+    private _email: string | null;
     private _end: DateString;
     private _name: string;
-    private _notice: string;
+    private _notice: string | null;
     private _persons: number;
-    private _phone_number: string;
+    private _phone_number: string | null;
     private _start: DateString;
     private _tables: Tables;
 
-    constructor(color: string, duration: Duration, email: string, end: DateString, name: string, notice: string, persons: number, phone_number: string, start: DateString, tables: Tables) {
+    constructor(color: string, duration: Duration, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables) {
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -60,17 +60,18 @@ export class ReservationClass implements Reservation {
         if (ReservationClass.instanceOfReservation(object)) {
             return new ReservationClass(
                 object.color,
-                object.duration,
-                object.email,
-                object.end,
+                DurationClass.ofJson(object.duration),
+                object.email ? object.email : null,
+                DateString.ofAny(object.end),
                 object.name,
-                object.notice,
+                object.notice ? object.notice : null,
                 object.persons,
-                object.phone_number,
-                object.start,
-                object.tables
+                object.phone_number ? object.phone_number : null,
+                DateString.ofAny(object.start),
+                Tables.of(object.tables)
             )
         }
+        return ReservationClass.empty();
     }
 
     public static empty(): ReservationClass {
@@ -98,6 +99,30 @@ export class ReservationClass implements Reservation {
         return this._tables;
     }
 
+    get email(): string | null {
+        return this._email;
+    }
+
+    get notice(): string | null {
+        return this._notice;
+    }
+
+    get phone_number(): string | null {
+        return this._phone_number;
+    }
+
+    set email(value: string | null) {
+        this._email = value;
+    }
+
+    set notice(value: string | null) {
+        this._notice = value;
+    }
+
+    set phone_number(value: string | null) {
+        this._phone_number = value;
+    }
+
     set tables(value: Tables) {
         this._tables = value;
     }
@@ -110,10 +135,6 @@ export class ReservationClass implements Reservation {
         return this._duration;
     }
 
-    get email(): string {
-        return this._email;
-    }
-
     get end(): DateString {
         return this._end;
     }
@@ -122,22 +143,13 @@ export class ReservationClass implements Reservation {
         return this._name;
     }
 
-    get notice(): string {
-        return this._notice;
-    }
-
     get persons(): number {
         return this._persons;
-    }
-
-    get phone_number(): string {
-        return this._phone_number;
     }
 
     get start(): DateString {
         return this._start;
     }
-
 
     set color(value: string) {
         this._color = value;
@@ -147,9 +159,7 @@ export class ReservationClass implements Reservation {
         this._duration = value;
     }
 
-    set email(value: string) {
-        this._email = value;
-    }
+
 
     set end(value: DateString) {
         this._end = value;
@@ -159,17 +169,12 @@ export class ReservationClass implements Reservation {
         this._name = value;
     }
 
-    set notice(value: string) {
-        this._notice = value;
-    }
+
 
     set persons(value: number) {
         this._persons = value;
     }
 
-    set phone_number(value: string) {
-        this._phone_number = value;
-    }
 
     set start(value: DateString) {
         this._start = value;

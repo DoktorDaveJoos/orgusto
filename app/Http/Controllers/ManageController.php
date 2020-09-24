@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateReservation;
+use App\Reservation;
 use Illuminate\Http\Request;
 
 
@@ -16,6 +18,14 @@ class ManageController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function someTesting(CreateReservation $r)
+    {
+
+
+
+
     }
 
     public function index(Request $request)

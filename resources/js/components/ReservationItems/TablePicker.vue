@@ -25,9 +25,8 @@ import Vue, {PropType} from 'vue';
 import axios from 'axios';
 import Filter from '../../models/Filter';
 import Tables from "../../models/Tables";
-import TablesRequest from "../../requests/TablesRequest";
-import {Prop} from "vue/types/options";
 import Table from "../../models/Table";
+import TablesRequest from "../../requests/TablesRequest";
 
 export default Vue.extend({
     props: {
@@ -47,27 +46,27 @@ export default Vue.extend({
         };
     },
     mounted() {
-        console.log(this.init instanceof Tables);
         this.updateTables(this.filterData);
     },
     methods: {
-        updateTables(filter: Filter) {
+        updateTables(filter: Filter): void {
             const request: TablesRequest = TablesRequest.of(filter);
             axios.get(this.tablesEndpoint + '?' + request.queryParams)
-                .then((res: any) => this.tables.merge(res.data))
+                .then((res: any) => {
+                    this.tables.merge(res.data);
+                })
                 .catch((err: any) => console.log(err));
         },
-        handleTableClick(tableId: string) {
-            if (this.chosenTables.tables.find((id: string) => id === tableId) === undefined) {
-                this.chosenTables.tables.push(tableId);
-            } else {
-                this.chosenTables = this.chosenTables.tables.filter((id: string) => id !== tableId);
+        handleTableClick(tableId: string): void {
+            const { tables } = this.tables;
+            const table: Table = tables.find(table => table.id === tableId);
+            if (table) {
+                this.chosenTables.mergeTableOrElseRemove(table);
             }
-
-            this.$emit("tables:chosen", this.chosenTables);
+            this.$emit('tables:chosen', this.chosenTables);
         },
         isActive(tableId: string): boolean {
-            return this.chosenTables.tables.find((table: Table) => table.id === tableId) === undefined;
+            return this.chosenTables.tables.find(table => table.id === tableId) !== undefined;
         }
     },
     watch: {
@@ -76,6 +75,3 @@ export default Vue.extend({
 });
 
 </script>
-
-<style>
-</style>

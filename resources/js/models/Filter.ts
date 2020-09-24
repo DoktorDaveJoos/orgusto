@@ -1,6 +1,4 @@
 import Duration from "./Duration";
-
-import moment from 'moment';
 import DateString from "./DateString";
 import Reservation from "./Reservation";
 

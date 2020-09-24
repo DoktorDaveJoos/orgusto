@@ -18,6 +18,8 @@
         </div>
     </div>
 
+    
+
     <orgusto-timeline ihour="{{ $scopedHour ?? '17' }}"></orgusto-timeline>
 
     @if(sizeof($tables) === 0)

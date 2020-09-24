@@ -6,101 +6,101 @@
                 :class="borderColor"
             >
                 <h3 class="text-lg self-center leading-6 font-medium text-gray-800">{{ title }}</h3>
-                <color-switcher :set-color="setColor"></color-switcher>
+<!--                <color-switcher :set-color="setColor"></color-switcher>-->
             </div>
 
-            <employee-picker
-                :error="errorContainsKey('user_id')"
-                :init="reservationCopy.employees"
-                :employees="employees"
-                v-on:employee:chosen="setEmployee"
-            ></employee-picker>
+<!--            <employee-picker-->
+<!--                :error="errorContainsKey('user_id')"-->
+<!--                :init="reservationCopy.employees"-->
+<!--                :employees="employees"-->
+<!--                v-on:employee:chosen="setEmployee"-->
+<!--            ></employee-picker>-->
 
-            <hr/>
-            <date-picker :init="reservationCopy.start"></date-picker>
-            <time-picker :init="reservationCopy.start" v-on:time:chosen="setTime"></time-picker>
-            <hr/>
-            <person-picker
-                :init="reservationCopy.persons"
-                :error="errorContainsKey('persons')"
-                v-on:person:chosen="setPersons"
-            ></person-picker>
-            <duration-picker
-                :init="reservationCopy.duration"
-                :error="errorContainsKey('duration')"
-                v-on:duration:chosen="setDuration"
-            ></duration-picker>
+<!--            <hr/>-->
+<!--            <date-picker :init="reservationCopy.start"></date-picker>-->
+<!--            <time-picker :init="reservationCopy.start" v-on:time:chosen="setTime"></time-picker>-->
+<!--            <hr/>-->
+<!--            <person-picker-->
+<!--                :init="reservationCopy.persons"-->
+<!--                :error="errorContainsKey('persons')"-->
+<!--                v-on:person:chosen="setPersons"-->
+<!--            ></person-picker>-->
+<!--            <duration-picker-->
+<!--                :init="reservationCopy.duration"-->
+<!--                :error="errorContainsKey('duration')"-->
+<!--                v-on:duration:chosen="setDuration"-->
+<!--            ></duration-picker>-->
 
-            <hr/>
+<!--            <hr/>-->
 
-            <div class="flex p-4 pb-2 justify-between">
-                <div
-                    v-if="errorContainsKey('name')"
-                    class="text-red-400 flex items-center py-2 pr-4 leading-tight"
-                >
-                    <i class="fas fa-times"></i>
-                </div>
+<!--            <div class="flex p-4 pb-2 justify-between">-->
+<!--                <div-->
+<!--                    v-if="errorContainsKey('name')"-->
+<!--                    class="text-red-400 flex items-center py-2 pr-4 leading-tight"-->
+<!--                >-->
+<!--                    <i class="fas fa-times"></i>-->
+<!--                </div>-->
 
-                <input
-                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
-                    :class="reservationCopy.name ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Name of the guest / group"
-                    type="text"
-                    v-model="reservationCopy.name"
-                />
-                <select-button
-                    :handle="() => showAdditionalNotice = !showAdditionalNotice"
-                    :selected="() => showAdditionalNotice"
-                    icon="fas fa-sticky-note"
-                    value="notice"
-                ></select-button>
-            </div>
+<!--                <input-->
+<!--                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"-->
+<!--                    :class="reservationCopy.name ? 'border-indigo-400 text-gray-800' : ''"-->
+<!--                    placeholder="Name of the guest / group"-->
+<!--                    type="text"-->
+<!--                    v-model="reservationCopy.name"-->
+<!--                />-->
+<!--                <select-button-->
+<!--                    :handle="() => showAdditionalNotice = !showAdditionalNotice"-->
+<!--                    :selected="() => showAdditionalNotice"-->
+<!--                    icon="fas fa-sticky-note"-->
+<!--                    value="notice"-->
+<!--                ></select-button>-->
+<!--            </div>-->
 
-            <div class="flex px-4 py-2" v-if="showAdditionalNotice">
-                <div
-                    v-if="errorContainsKey('notice')"
-                    class="text-red-400 flex items-center p-2 px-4 leading-tight"
-                >
-                    <i class="fas fa-times"></i>
-                </div>
-                <input
-                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
-                    :class="reservationCopy.notice ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Some additional information ..."
-                    type="text"
-                    v-model="reservationCopy.notice"
-                />
-            </div>
+<!--            <div class="flex px-4 py-2" v-if="showAdditionalNotice">-->
+<!--                <div-->
+<!--                    v-if="errorContainsKey('notice')"-->
+<!--                    class="text-red-400 flex items-center p-2 px-4 leading-tight"-->
+<!--                >-->
+<!--                    <i class="fas fa-times"></i>-->
+<!--                </div>-->
+<!--                <input-->
+<!--                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"-->
+<!--                    :class="reservationCopy.notice ? 'border-indigo-400 text-gray-800' : ''"-->
+<!--                    placeholder="Some additional information ..."-->
+<!--                    type="text"-->
+<!--                    v-model="reservationCopy.notice"-->
+<!--                />-->
+<!--            </div>-->
 
-            <div class="flex p-4 pt-2">
-                <div
-                    v-if="errorContainsKey('email')"
-                    class="text-red-400 flex items-center p-2 px-4 pl-0 leading-tight"
-                >
-                    <i class="fas fa-times"></i>
-                </div>
-                <input
-                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
-                    :class="reservationCopy.email ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Email"
-                    type="email"
-                    v-model="reservationCopy.email"
-                />
-                <div
-                    v-if="errorContainsKey('phone_number')"
-                    class="text-red-400 flex items-center py-2 pr-4 leading-tight"
-                >
-                    <i class="fas fa-times"></i>
-                </div>
-                <input
-                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
-                    :class="reservationCopy.phone_number ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Phone number"
-                    type="phone"
-                    v-model="reservationCopy.phone_number"
-                />
-            </div>
-            <hr/>
+<!--            <div class="flex p-4 pt-2">-->
+<!--                <div-->
+<!--                    v-if="errorContainsKey('email')"-->
+<!--                    class="text-red-400 flex items-center p-2 px-4 pl-0 leading-tight"-->
+<!--                >-->
+<!--                    <i class="fas fa-times"></i>-->
+<!--                </div>-->
+<!--                <input-->
+<!--                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"-->
+<!--                    :class="reservationCopy.email ? 'border-indigo-400 text-gray-800' : ''"-->
+<!--                    placeholder="Email"-->
+<!--                    type="email"-->
+<!--                    v-model="reservationCopy.email"-->
+<!--                />-->
+<!--                <div-->
+<!--                    v-if="errorContainsKey('phone_number')"-->
+<!--                    class="text-red-400 flex items-center py-2 pr-4 leading-tight"-->
+<!--                >-->
+<!--                    <i class="fas fa-times"></i>-->
+<!--                </div>-->
+<!--                <input-->
+<!--                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"-->
+<!--                    :class="reservationCopy.phone_number ? 'border-indigo-400 text-gray-800' : ''"-->
+<!--                    placeholder="Phone number"-->
+<!--                    type="phone"-->
+<!--                    v-model="reservationCopy.phone_number"-->
+<!--                />-->
+<!--            </div>-->
+<!--            <hr/>-->
 
             <table-picker
                 :error="errorContainsKey('tables')"
@@ -130,74 +130,48 @@
 
 <script lang="ts">
 
-import Vue, {PropType} from "vue";
-import axios from 'axios';
-import Reservation, {ReservationClass} from "../models/Reservation";
+import Vue from "vue";
+import ReservationClass from "../models/Reservation";
 import FilterClass, {Filter} from "../models/Filter";
+import Tables from "../models/Tables";
 
 export default Vue.extend({
-    name: "reservation-item",
     props: {
-        reservation: {
-            type: Object as PropType<Reservation>
-        },
+        reservation: Object,
         employees: Array,
         tablesEndpoint: String,
         reservationsEndpoint: String
     },
     data() {
         return {
-            reservationCopy: ReservationClass.copyFromReservation(this.reservation),
+            reservationCopy: ReservationClass.of(this.reservation),
             errors: {},
             endpoint: "",
             showAdditionalNotice: false
         };
     },
-    mounted() {
-        console.log(this.reservationCopy);
-    },
     methods: {
-        setColor(color) {
-            this.color = color.toString();
+        setTables(tables: Tables): void {
+            console.log(tables);
         },
-        setDate(date) {
-            this.date = date;
-        },
-        setTime(time) {
-            this.time = time;
-        },
-        setPersons(persons) {
-            this.persons = persons;
-        },
-        setEmployee(employee) {
-            this.employee = employee.id;
-        },
-        setDuration(duration) {
-            this.duration = duration;
-        },
-        setTables(tables) {
-            this.tables = tables;
-        },
-        handleSubmit() {
+        handleSubmit(): void {
 
-            axios
-                .put(this.reservationsEndpoint, {})
-                .then((res) => {
-                    if (res.status === 200) {
-                        location.reload();
-                    }
-                })
-                .catch((err) => {
-                    this.errors = err.response.data.errors;
-                });
+            // axios
+            //     .put(this.reservationsEndpoint, {})
+            //     .then((res) => {
+            //         if (res.status === 200) {
+            //             location.reload();
+            //         }
+            //     })
+            //     .catch((err) => {
+            //         this.errors = err.response.data.errors;
+            //     });
 
         },
-        errorContainsKey(key) {
-            return (
-                Object.keys(this.errors).find((elem) => elem === key) !== undefined
-            );
+        errorContainsKey(key): boolean {
+            return Object.keys(this.errors).find((elem) => elem === key) !== undefined;
         },
-        handleClose() {
+        handleClose(): void {
             this.$emit("modal:close");
         },
     },
@@ -207,7 +181,7 @@ export default Vue.extend({
                 ? this.reservation.name
                 : "New Reservation";
         },
-        borderColor() {
+        borderColor(): string {
             return "border-" + this.reservationCopy.color + "-400";
         },
         filterData(): Filter {
