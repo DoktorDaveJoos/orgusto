@@ -57,14 +57,14 @@ export default Vue.extend({
             this.chosenDate = "";
             this.datepicker = indicator;
 
-            const now = DateString.now();
+            const date = DateString.now();
             if (indicator !== "today") {
-                now.addDays(indicator === "tomorrow" ? 1 : 2);
+                date.addDays(indicator === "tomorrow" ? 1 : 2);
             }
 
-            this.setDate(now.asDate());
+            this.setDate(date);
         },
-        setDate(date: Date): void {
+        setDate(date: DateString): void {
             this.$emit("date:chosen", date);
         },
         isSelected(indicator): boolean {
@@ -76,7 +76,7 @@ export default Vue.extend({
             const date: DateString = DateString.ofAny(newVal);
             this.datepicker = "";
             this.chosenDate = date.readableDate();
-            this.setDate(date.asDate());
+            this.setDate(date);
         },
     },
 });

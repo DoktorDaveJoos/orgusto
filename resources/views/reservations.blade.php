@@ -61,7 +61,7 @@
             </div>
             @endif
         </div>
-        <edit-reservation :reservation="{{ $reservation }}" :employees="{{ $employees }}" tables-endpoint="{{ route('tables.index') }}" reservations-endpoint="{{ route('reservation.update', $reservation->id) }}"></edit-reservation>
+        <edit-reservation :reservation="{{ $reservation }}" tables-endpoint="{{ route('tables.index') }}" reservations-endpoint="{{ route('reservation.update', $reservation->id) }}"></edit-reservation>
     </td>
 
 </tr>

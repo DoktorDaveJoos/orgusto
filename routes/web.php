@@ -28,7 +28,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/manage', 'ManageController@index')->name('manage.show');
 
-    Route::livewire('/users/{user}', 'edit-user')->name('user.show');
+
+    Route::prefix('/users')->group(function() {
+        Route::livewire('/{user}', 'edit-user')->name('user.show');
+
+        Route::get('/', 'UserController@users')->name('users.show');
+    });
 
     Route::prefix('/restaurants')->group(function () {
         Route::get('/', 'RestaurantController@index')->name('restaurants.show');

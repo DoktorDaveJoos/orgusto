@@ -4,8 +4,11 @@ import Duration from "./Duration";
 import Tables from "./Tables";
 import DateString from "./DateString";
 import DurationClass from "./Duration";
+import Employee from "./Employee";
+import {parseObject} from "../helper/Helper";
+import {ReservationError} from "../exceptions/Exceptions";
 
-export interface Reservation {
+export interface BasicReservation {
     name: string,
     duration: Duration,
     persons: number,
@@ -15,10 +18,11 @@ export interface Reservation {
     color: string,
     email?: string | null,
     phone_number?: string | null,
-    tables: Tables
+    tables: Tables,
+    user: Employee
 }
 
-export default class ReservationClass implements Reservation {
+export default class Reservation implements BasicReservation {
     private _color: string;
     private _duration: Duration;
     private _email: string | null;
@@ -29,8 +33,9 @@ export default class ReservationClass implements Reservation {
     private _phone_number: string | null;
     private _start: DateString;
     private _tables: Tables;
+    user: Employee;
 
-    constructor(color: string, duration: Duration, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables) {
+    constructor(color: string, duration: DurationClass, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables, user: Employee) {
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -41,58 +46,51 @@ export default class ReservationClass implements Reservation {
         this._phone_number = phone_number;
         this._start = start;
         this._tables = tables;
+        this.user = user;
     }
 
-    public static instanceOfReservation(object: any): object is Reservation {
-        return 'color' in object &&
-            'name' in object &&
-            'duration' in object &&
-            'persons' in object &&
-            'start' in object &&
-            'end' in object &&
-            'notice' in object &&
-            'email' in object &&
-            'phone_number' in object &&
-            'tables' in object;
+    public static instanceOfReservation(object: any): object is BasicReservation {
+        const newReservation: any = parseObject(object);
+        const isReservation = 'color' in newReservation &&
+            'name' in newReservation &&
+            'duration' in newReservation &&
+            'persons' in newReservation &&
+            'start' in newReservation &&
+            'end' in newReservation &&
+            'notice' in newReservation &&
+            'email' in newReservation &&
+            'phone_number' in newReservation &&
+            'tables' in newReservation &&
+            'user' in newReservation;
+        if (!isReservation) throw ReservationError.failedParsing(object);
+        else return isReservation;
     }
 
-    static of(object: any): Reservation {
-        if (ReservationClass.instanceOfReservation(object)) {
-            return new ReservationClass(
-                object.color,
-                DurationClass.ofJson(object.duration),
-                object.email ? object.email : null,
-                DateString.ofAny(object.end),
-                object.name,
-                object.notice ? object.notice : null,
-                object.persons,
-                object.phone_number ? object.phone_number : null,
-                DateString.ofAny(object.start),
-                Tables.of(object.tables)
-            )
+    static of(object: any): BasicReservation {
+        try {
+            Reservation.instanceOfReservation(object)
+        } catch (err: any) {
+            console.error(err)
         }
-        return ReservationClass.empty();
-    }
+        const newReservation: any = parseObject(object);
 
-    public static empty(): ReservationClass {
-        return new ReservationClass(
-            "gray",
-            DurationClass.boilerPlate(),
-            null,
-            DateString.addDuration(DateString.now(), DurationClass.boilerPlate()),
-            "",
-            "",
-            0,
-            null,
-            DateString.now(),
-            Tables.empty()
+        return new Reservation(
+            newReservation.color,
+            DurationClass.ofJson(newReservation.duration),
+            newReservation.email ? newReservation.email : null,
+            DateString.ofAny(newReservation.end),
+            newReservation.name,
+            newReservation.notice ? newReservation.notice : null,
+            newReservation.persons,
+            newReservation.phone_number ? newReservation.phone_number : null,
+            DateString.ofAny(newReservation.start),
+            Tables.of(newReservation.tables),
+            Employee.of(newReservation.user)
         )
     }
 
-    static copyFromReservation(old: Reservation): Reservation {
-        if (ReservationClass.instanceOfReservation(old)) {
-            return _.cloneDeep(old);
-        } else return ReservationClass.empty();
+    static copyFromReservation(old: BasicReservation): BasicReservation {
+        return _.cloneDeep(old);
     }
 
     get tables(): Tables {
@@ -159,8 +157,6 @@ export default class ReservationClass implements Reservation {
         this._duration = value;
     }
 
-
-
     set end(value: DateString) {
         this._end = value;
     }
@@ -169,15 +165,11 @@ export default class ReservationClass implements Reservation {
         this._name = value;
     }
 
-
-
     set persons(value: number) {
         this._persons = value;
     }
 
-
     set start(value: DateString) {
         this._start = value;
     }
-
 }

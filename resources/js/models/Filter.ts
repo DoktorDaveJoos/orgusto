@@ -1,6 +1,6 @@
 import Duration from "./Duration";
 import DateString from "./DateString";
-import Reservation from "./Reservation";
+import Reservation from "./BasicReservation";
 
 export interface Filter {
     date?: DateString;

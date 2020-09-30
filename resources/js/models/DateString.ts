@@ -37,24 +37,43 @@ export default class DateString {
     }
 
     public asDate(): Date {
-        return moment(this.date).toDate();
+        return this.asMoment().toDate();
     }
 
     public readableDate(): string {
-        return moment(this.date).format("DD.MM.YYYY");
+        return this.asMoment().format("DD.MM.YYYY");
     }
 
     public addDays(days: number): void {
-        this.date = moment(this.date).add(days, "days").toISOString();
+        this.date = this.asMoment().add(days, "days").toISOString();
     }
 
     public isToday(): boolean {
-        return moment(moment().format("YYYY-MM-DD")).isSame(moment(this.date));
+        return moment(moment().format("YYYY-MM-DD")).isSame(this.asMoment());
     }
 
     public diffDaysFromNow(): number {
         const now = moment(moment().format("YYYY-MM-DD"));
-        return moment(this.date).diff(now, 'day');
+        return this.asMoment().diff(now, 'day');
+    }
+
+    public asMoment(): moment.Moment {
+        return moment(this.date);
+    }
+
+    public setDateOnly(newDate: DateString): void {
+        this.date = this.asMoment()
+            .set('year', newDate.asMoment().get('year'))
+            .set('month', newDate.asMoment().get('month'))
+            .set('date', newDate.asMoment().get('date'))
+            .toISOString();
+    }
+
+    public setTimeOnly(newDate: DateString): void {
+        this.date = this.asMoment()
+            .set('hour', newDate.asMoment().get('hour'))
+            .set('minute', newDate.asMoment().get('minute'))
+            .toISOString();
     }
 }
 

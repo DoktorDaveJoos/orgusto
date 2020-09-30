@@ -21,6 +21,10 @@ class ReservationsController extends Controller
 
     public function index(Request $request)
     {
+
+        //TODO: Refactor hardcore.
+
+
         $from_date = $request->get('from') ?? date('Y-m-d');
         $to_date = $request->get('to') ?? date('Y-m-d');
         $from = date($from_date . " 00:00:00");
@@ -34,13 +38,11 @@ class ReservationsController extends Controller
 
         $restaurant = auth()->user()->restaurants()->first();
 
-        $employees = $restaurant->users ?? [];
-
         if ($restaurant) {
             if (!$searchQuery) {
                 $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
                     $q->where('restaurant_id', $restaurant->id);
-                })->whereBetween('start', [$from, $to])->with('tables')->closest()->simplePaginate(20);
+                })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
             } else {
                 $name_term = $name_term = '%' . $searchQuery . '%';
                 $constraints = [
@@ -62,7 +64,7 @@ class ReservationsController extends Controller
             if (sizeof($reservations) < 1) {
                 $empty_search = true;
                 $card_title = "... upcoming reservations";
-                $reservations = Reservation::where('start', '>', date('Y-m-d'))->paginate(15);
+                $reservations = Reservation::where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
             }
         }
 
@@ -70,7 +72,7 @@ class ReservationsController extends Controller
             return $reservations;
         }
 
-        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title, 'employees' => $employees]);
+        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title]);
     }
 
     public function show(Reservation $reservation)

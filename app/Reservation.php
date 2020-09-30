@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
+use Psy\Util\Json;
 
 class Reservation extends Model
 {
@@ -19,6 +20,7 @@ class Reservation extends Model
     ];
 
     protected $casts = [
+        'duration' => Json::class,
         'start' => 'datetime',
         'created_at' => 'datetime',
     ];

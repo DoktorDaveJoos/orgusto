@@ -2007,9 +2007,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["employees", "tablesEndpoint", "reservationsEndpoint", "reservation"],
+  props: ["tablesEndpoint", "reservationsEndpoint", "reservation"],
   data: function data() {
     return {
       open: false
@@ -2951,561 +2950,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&":
-/*!******************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
-  },
-  props: ["init", "error"],
-  data: function data() {
-    return {
-      preselectedTimes: [{
-        h: "1",
-        m: "00"
-      }, {
-        h: "1",
-        m: "30"
-      }, {
-        h: "2",
-        m: "00"
-      }, {
-        h: "2",
-        m: "30"
-      }, {
-        h: "3",
-        m: "00"
-      }, {
-        h: "4",
-        m: "00"
-      }],
-      moreChoices: [{
-        h: "3",
-        m: "30"
-      }, {
-        h: "4",
-        m: "30"
-      }, {
-        h: "8",
-        m: "00"
-      }, {
-        h: "12",
-        m: "00"
-      }],
-      durationpicker: this.init
-    };
-  },
-  methods: {
-    setDurationLocal: function setDurationLocal(duration) {
-      this.durationpicker = duration;
-      this.$emit("duration:chosen", this.durationpicker);
-    },
-    comparePicked: function comparePicked(aTime) {
-      return aTime.h === this.durationpicker.h && aTime.m === this.durationpicker.m;
-    }
-  },
-  computed: {
-    moreIsActive: function moreIsActive() {
-      var _this = this;
-
-      return this.moreChoices.find(function (elem) {
-        return elem.h === _this.durationpicker.h && elem.m === _this.durationpicker.m;
-      }) !== undefined;
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&":
-/*!******************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
-  },
-  props: ["employees", "error", "init"],
-  data: function data() {
-    return {
-      selectedEmployee: {
-        name: ""
-      }
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    var found = this.employees.find(function (empl) {
-      return empl.id === _this.init;
-    });
-
-    if (found) {
-      this.selectedEmployee.name = found.name;
-    }
-  },
-  methods: {
-    setEmployeeLocal: function setEmployeeLocal(employee) {
-      var _this2 = this;
-
-      this.selectedEmployee.name = employee;
-      this.$emit("employee:chosen", this.employees.find(function (empl) {
-        return empl.name === _this2.selectedEmployee.name;
-      }));
-    }
-  },
-  computed: {
-    hasRest: function hasRest() {
-      return this.rest && this.rest.length !== undefined && this.rest.length > 0;
-    },
-    preselected: function preselected() {
-      //TODO: Parse cookie - check last one used
-      if (this.employees.length <= 3) {
-        return this.employees;
-      }
-
-      var preselected = this.employees.slice(0, 3);
-      return preselected;
-    },
-    isNotInPreselected: function isNotInPreselected() {
-      var _this3 = this;
-
-      return this.rest && this.rest.length > 0 && this.rest.find(function (empl) {
-        return _this3.selectedEmployee.name === empl.name;
-      }) !== undefined;
-    },
-    rest: function rest() {
-      var _this4 = this;
-
-      return this.employees.filter(function (empl) {
-        return _this4.preselected.find(function (empl_pre) {
-          return empl_pre.name === empl.name;
-        }) === undefined;
-      });
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&":
-/*!****************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
-  },
-  props: ["init", "error"],
-  data: function data() {
-    return {
-      personpicker: this.init.toString()
-    };
-  },
-  methods: {
-    setPerson: function setPerson(persons) {
-      this.personpicker = persons.toString();
-      this.setPersons(this.personpicker);
-    },
-    setPersons: function setPersons(persons) {
-      this.$emit("persons:chosen", persons);
-    }
-  },
-  computed: {
-    moreIsActive: function moreIsActive() {
-      return parseInt(this.personpicker) > 6;
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js");
-/* harmony import */ var vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_popperjs__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_0___default.a
-  },
-  props: ["active", "setSingleTime", "hours", "minute"],
-  data: function data() {
-    var _this$hours, _this$minute;
-
-    return {
-      hour: (_this$hours = this.hours) !== null && _this$hours !== void 0 ? _this$hours : "17",
-      minutes: (_this$minute = this.minute) !== null && _this$minute !== void 0 ? _this$minute : "00"
-    };
-  },
-  methods: {
-    setHour: function setHour(hour) {
-      this.hour = hour.toString();
-      this.setSingleTime(this.time);
-    },
-    setMinutes: function setMinutes(minute) {
-      this.minutes = minute.toString();
-      this.setSingleTime(this.time);
-    }
-  },
-  computed: {
-    time: function time() {
-      return this.hour + ":" + this.minutes;
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["init", "error"],
-  data: function data() {
-    return {
-      hourpicker: this.init.split(":")[0],
-      minutepicker: this.init.split(":")[1],
-      singleTimePickerActive: false
-    };
-  },
-  methods: {
-    setHour: function setHour(hour) {
-      this.hourpicker = hour.toString();
-      this.singleTimePickerActive = false;
-      this.setTime(this.time);
-    },
-    setMinute: function setMinute(minute) {
-      this.minutepicker = minute.toString();
-      this.singleTimePickerActive = false;
-      this.setTime(this.time);
-    },
-    setSingleTime: function setSingleTime(time) {
-      this.hourpicker = "other";
-      this.minutepicker = "other";
-      this.singleTimePickerActive = true;
-      this.setTime(time);
-    },
-    setTime: function setTime(time) {
-      this.$emit("time:chosen", time);
-    }
-  },
-  computed: {
-    time: function time() {
-      var hour = this.hourpicker !== "other" ? this.hourpicker : "17";
-      var minute = this.minutepicker !== "other" ? this.minutepicker : "00";
-      return this.hourpicker + ":" + this.minutepicker;
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationListItem.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationListItem.vue?vue&type=script&lang=js& ***!
@@ -3791,7 +3235,6 @@ __webpack_require__.r(__webpack_exports__);
     if (from && to) {
       from = moment(from);
       to = moment(to);
-      console.log(from.diff(to, "weeks"), from, to);
 
       if (moment().startOf("day").diff(from, "days") === -1) {
         this.dateFilter = "Tomorrow";
@@ -53517,7 +52960,6 @@ var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./re
 exports.default = vue_1.default.extend({
     props: {
         reservation: Object,
-        employees: Array,
         tablesEndpoint: String,
         reservationsEndpoint: String
     },
@@ -53531,10 +52973,22 @@ exports.default = vue_1.default.extend({
     },
     methods: {
         setTables: function (tables) {
-            console.log(tables);
         },
         setColor: function (color) {
             this.reservationCopy.color = color;
+        },
+        setDate: function (date) {
+            this.reservationCopy.start.setDateOnly(date);
+        },
+        setTime: function (date) {
+            this.reservationCopy.start.setTimeOnly(date);
+        },
+        setPersons: function (persons) {
+            this.reservationCopy.persons = persons;
+        },
+        setDuration: function (duration) {
+        },
+        setEmployee: function (employee) {
         },
         handleSubmit: function () {
             // axios
@@ -53623,11 +53077,11 @@ exports.default = vue_1.default.extend({
         setDatePicker: function (indicator) {
             this.chosenDate = "";
             this.datepicker = indicator;
-            var now = DateString_1.default.now();
+            var date = DateString_1.default.now();
             if (indicator !== "today") {
-                now.addDays(indicator === "tomorrow" ? 1 : 2);
+                date.addDays(indicator === "tomorrow" ? 1 : 2);
             }
-            this.setDate(now.asDate());
+            this.setDate(date);
         },
         setDate: function (date) {
             this.$emit("date:chosen", date);
@@ -53641,9 +53095,262 @@ exports.default = vue_1.default.extend({
             var date = DateString_1.default.ofAny(newVal);
             this.datepicker = "";
             this.chosenDate = date.readableDate();
-            this.setDate(date.asDate());
+            this.setDate(date);
         },
     },
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=ts&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=ts& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
+var Duration_1 = __importDefault(__webpack_require__(/*! ../../models/Duration */ "./resources/js/models/Duration.ts"));
+exports.default = vue_1.default.extend({
+    components: {
+        popper: vue_popperjs_1.default,
+    },
+    props: {
+        init: Duration_1.default,
+        error: Boolean
+    },
+    data: function () {
+        return {
+            preselectedDurations: [
+                Duration_1.default.of(1, 0),
+                Duration_1.default.of(1, 30),
+                Duration_1.default.of(2, 0),
+                Duration_1.default.of(2, 30),
+                Duration_1.default.of(3, 0),
+                Duration_1.default.of(4, 0)
+            ],
+            moreChoices: [
+                Duration_1.default.of(3, 30),
+                Duration_1.default.of(4, 30),
+                Duration_1.default.of(8, 0),
+                Duration_1.default.of(12, 0)
+            ],
+            duration: this.init,
+        };
+    },
+    methods: {
+        setDuration: function (duration) {
+            this.duration = duration;
+        },
+        thisDurationEquals: function (duration) {
+            return this.duration.equals(duration);
+        },
+    },
+    computed: {
+        moreIsActive: function () {
+            var _this = this;
+            return this.moreChoices.find(function (elem) { return _this.duration.equals(elem); }) !== undefined;
+        },
+    },
+    watch: {
+        duration: function () {
+            this.$emit("duration:chosen", this.duration);
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=ts&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=ts& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
+var Employee_1 = __importDefault(__webpack_require__(/*! ../../models/Employee */ "./resources/js/models/Employee.ts"));
+var Exceptions_1 = __webpack_require__(/*! ../../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+exports.default = vue_1.default.extend({
+    components: {
+        popper: vue_popperjs_1.default,
+    },
+    props: {
+        error: Boolean,
+        init: Employee_1.default
+    },
+    data: function () {
+        return {
+            selected: this.init,
+            employees: Array.of(this.init)
+        };
+    },
+    mounted: function () {
+        this.updateEmployees();
+    },
+    methods: {
+        setEmployeeLocal: function (employee) {
+            this.selected = employee;
+            this.$emit("employee:chosen", this.selected);
+        },
+        updateEmployees: function () {
+            var _this = this;
+            var endpoint = "/users";
+            axios_1.default.get(endpoint).then(function (res) {
+                var responseData = res.data;
+                if (!responseData instanceof Array) {
+                    responseData = Array.of(responseData);
+                }
+                _this.employees = responseData.map(function (entry) { return Employee_1.default.of(entry); });
+            })
+                .catch(function (err) { throw Exceptions_1.EmployeeError.of("Failed fetching Employees, see: " + err); });
+        }
+    },
+    computed: {
+        hasRest: function () {
+            return this.rest !== undefined;
+        },
+        preselected: function () {
+            //TODO: Parse cookie - check last one used
+            if (this.employees.length <= 3) {
+                return this.employees;
+            }
+            return this.employees.slice(0, 3);
+        },
+        isNotInPreselected: function () {
+            // is in rest
+            if (this.rest !== undefined)
+                return false;
+            else
+                return this.rest.includes(this.selected);
+        },
+        rest: function () {
+            return this.employees.slice(3);
+        },
+    },
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=ts&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=ts& ***!
+  \********************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+exports.default = vue_1.default.extend({
+    components: {
+        popper: vue_popperjs_1.default
+    },
+    props: {
+        init: Number,
+        error: Boolean
+    },
+    data: function () {
+        return {
+            persons: this.init,
+        };
+    },
+    methods: {
+        setPerson: function (persons) {
+            this.persons = persons;
+        },
+    },
+    computed: {
+        moreIsActive: function () {
+            return this.persons > 6;
+        }
+    },
+    watch: {
+        persons: function () {
+            this.$emit('person:chosen', this.persons);
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=ts&":
+/*!************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=ts& ***!
+  \************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
+var DateString_1 = __importDefault(__webpack_require__(/*! ../../models/DateString */ "./resources/js/models/DateString.ts"));
+exports.default = vue_1.default.extend({
+    components: {
+        popper: vue_popperjs_1.default
+    },
+    props: {
+        active: Boolean,
+        setSingleTime: Function,
+        time: DateString_1.default
+    },
+    data: function () {
+        return {
+            hour: this.time.asMoment().get('hour'),
+            minute: this.time.asMoment().get('minute'),
+        };
+    },
+    methods: {
+        setHour: function (hour) {
+            this.hour = hour;
+        },
+        setMinutes: function (minute) {
+            this.minute = minute;
+        },
+        emitTime: function () {
+            this.setSingleTime(DateString_1.default.ofAny(this.time
+                .asMoment()
+                .set('hour', this.hour)
+                .set('minute', this.minute)));
+        },
+        addZeros: function (val) {
+            var tmp = val.toString();
+            return tmp.length < 2 ? '0' + tmp : tmp;
+        }
+    },
+    watch: {
+        hour: 'emitTime',
+        minute: 'emitTime'
+    }
 });
 
 
@@ -53711,6 +53418,67 @@ exports.default = vue_1.default.extend({
     watch: {
         filterData: 'updateTables',
     },
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=ts&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/ts-loader??ref--11!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=ts& ***!
+  \******************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var DateString_1 = __importDefault(__webpack_require__(/*! ../../models/DateString */ "./resources/js/models/DateString.ts"));
+exports.default = vue_1.default.extend({
+    props: {
+        init: DateString_1.default,
+        error: String
+    },
+    data: function () {
+        return {
+            hour: this.init.asMoment().get('hour'),
+            minute: this.init.asMoment().get('minute'),
+            time: DateString_1.default.ofAny(this.init),
+            singleTimePickerActive: false
+        };
+    },
+    methods: {
+        setHour: function (hour) {
+            this.hour = hour;
+        },
+        setMinute: function (minute) {
+            if (!this.singleTimePickerActive)
+                this.minute = minute;
+        },
+        setTime: function (time) {
+            this.hour = time.asMoment().get('hour');
+            this.minute = time.asMoment().get('minute');
+        },
+        setSingleTimeState: function () {
+            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+            this.time.asMoment().set('hour', this.hour).set('minute', this.minute);
+            this.$emit("time:chosen", this.time);
+        },
+        getButtonClass: function (minute) {
+            if (this.singleTimePickerActive) {
+                return "opacity-50 cursor-not-allowed hover:shadow-none";
+            }
+            return this.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
+        }
+    },
+    watch: {
+        hour: 'setSingleTimeState',
+        minute: 'setSingleTimeState'
+    }
 });
 
 
@@ -53863,7 +53631,6 @@ var render = function() {
           _c("reservation-item", {
             attrs: {
               reservation: _vm.reservation,
-              employees: _vm.employees,
               "tables-endpoint": _vm.tablesEndpoint,
               "reservations-endpoint": _vm.reservationsEndpoint
             },
@@ -54925,9 +54692,235 @@ var render = function() {
             1
           ),
           _vm._v(" "),
+          _c("employee-picker", {
+            attrs: {
+              error: _vm.errorContainsKey("user_id"),
+              init: _vm.reservationCopy.user
+            },
+            on: { "employee:chosen": _vm.setEmployee }
+          }),
+          _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
-          _c("date-picker", { attrs: { init: _vm.reservationCopy.start } }),
+          _c("date-picker", {
+            attrs: { init: _vm.reservationCopy.start },
+            on: { "date:chosen": _vm.setDate }
+          }),
+          _vm._v(" "),
+          _c("time-picker", {
+            attrs: { init: _vm.reservationCopy.start },
+            on: { "time:chosen": _vm.setTime }
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("person-picker", {
+            attrs: {
+              init: _vm.reservationCopy.persons,
+              error: _vm.errorContainsKey("persons")
+            },
+            on: { "person:chosen": _vm.setPersons }
+          }),
+          _vm._v(" "),
+          _c("duration-picker", {
+            attrs: {
+              init: _vm.reservationCopy.duration,
+              error: _vm.errorContainsKey("duration")
+            },
+            on: { "duration:chosen": _vm.setDuration }
+          }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "flex p-4 pb-2 justify-between" },
+            [
+              _vm.errorContainsKey("name")
+                ? _c(
+                    "div",
+                    {
+                      staticClass:
+                        "text-red-400 flex items-center py-2 pr-4 leading-tight"
+                    },
+                    [_c("i", { staticClass: "fas fa-times" })]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.reservationCopy.name,
+                    expression: "reservationCopy.name"
+                  }
+                ],
+                staticClass:
+                  "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
+                class: _vm.reservationCopy.name
+                  ? "border-indigo-400 text-gray-800"
+                  : "",
+                attrs: {
+                  placeholder: "Name of the guest / group",
+                  type: "text"
+                },
+                domProps: { value: _vm.reservationCopy.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.reservationCopy, "name", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("select-button", {
+                attrs: {
+                  handle: function() {
+                    return (_vm.showAdditionalNotice = !_vm.showAdditionalNotice)
+                  },
+                  selected: function() {
+                    return _vm.showAdditionalNotice
+                  },
+                  icon: "fas fa-sticky-note",
+                  value: "notice"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.showAdditionalNotice
+            ? _c("div", { staticClass: "flex px-4 py-2" }, [
+                _vm.errorContainsKey("notice")
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "text-red-400 flex items-center p-2 px-4 leading-tight"
+                      },
+                      [_c("i", { staticClass: "fas fa-times" })]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.reservationCopy.notice,
+                      expression: "reservationCopy.notice"
+                    }
+                  ],
+                  staticClass:
+                    "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
+                  class: _vm.reservationCopy.notice
+                    ? "border-indigo-400 text-gray-800"
+                    : "",
+                  attrs: {
+                    placeholder: "Some additional information ...",
+                    type: "text"
+                  },
+                  domProps: { value: _vm.reservationCopy.notice },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.reservationCopy,
+                        "notice",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "flex p-4 pt-2" }, [
+            _vm.errorContainsKey("email")
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "text-red-400 flex items-center p-2 px-4 pl-0 leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.reservationCopy.email,
+                  expression: "reservationCopy.email"
+                }
+              ],
+              staticClass:
+                "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
+              class: _vm.reservationCopy.email
+                ? "border-indigo-400 text-gray-800"
+                : "",
+              attrs: { placeholder: "Email", type: "email" },
+              domProps: { value: _vm.reservationCopy.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.reservationCopy, "email", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errorContainsKey("phone_number")
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "text-red-400 flex items-center py-2 pr-4 leading-tight"
+                  },
+                  [_c("i", { staticClass: "fas fa-times" })]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.reservationCopy.phone_number,
+                  expression: "reservationCopy.phone_number"
+                }
+              ],
+              staticClass:
+                "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
+              class: _vm.reservationCopy.phone_number
+                ? "border-indigo-400 text-gray-800"
+                : "",
+              attrs: { placeholder: "Phone number", type: "phone" },
+              domProps: { value: _vm.reservationCopy.phone_number },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.reservationCopy,
+                    "phone_number",
+                    $event.target.value
+                  )
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("hr"),
           _vm._v(" "),
           _c("table-picker", {
             attrs: {
@@ -54949,7 +54942,7 @@ var render = function() {
                   "p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out",
                 on: { click: _vm.handleClose }
               },
-              [_vm._v("Cancel\n                ")]
+              [_vm._v("Cancel\n            ")]
             ),
             _vm._v(" "),
             _c(
@@ -54962,7 +54955,7 @@ var render = function() {
               [
                 _vm._v(
                   _vm._s(this.reservation ? "Update" : "Save") +
-                    "\n                "
+                    "\n            "
                 )
               ]
             )
@@ -55193,17 +55186,18 @@ var render = function() {
                 )
               : _vm._e(),
             _vm._v(" "),
-            _vm._l(_vm.preselectedTimes, function(t) {
+            _vm._l(_vm.preselectedDurations, function(d) {
               return _c("select-button", {
-                key: (t.h + t.m).toString(),
+                key: d.print(),
                 attrs: {
+                  key: d.print(),
                   selected: function() {
-                    return _vm.comparePicked(t)
+                    return _vm.thisDurationEquals(d)
                   },
                   handle: function() {
-                    return _vm.setDurationLocal(t)
+                    return _vm.setDuration(d)
                   },
-                  value: t.h + ":" + t.m + "h"
+                  value: d.print()
                 }
               })
             })
@@ -55243,23 +55237,23 @@ var render = function() {
                 _c(
                   "div",
                   { staticClass: "flex flex-col text-gray-800" },
-                  _vm._l(_vm.moreChoices, function(a) {
+                  _vm._l(_vm.moreChoices, function(m) {
                     return _c(
                       "span",
                       {
-                        key: (a.h + a.m).toString(),
+                        key: m.print(),
                         staticClass:
                           "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
-                        class: _vm.comparePicked(a)
+                        class: _vm.thisDurationEquals(m)
                           ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
                           : "",
                         on: {
                           click: function($event) {
-                            return _vm.setDurationLocal(a)
+                            return _vm.setDuration(m)
                           }
                         }
                       },
-                      [_vm._v(_vm._s(a.h) + " : " + _vm._s(a.m) + " h")]
+                      [_vm._v(_vm._s(m.print()))]
                     )
                   }),
                   0
@@ -55273,9 +55267,7 @@ var render = function() {
                 selected: function() {
                   return _vm.moreIsActive
                 },
-                value: _vm.moreIsActive
-                  ? _vm.durationpicker.h + ":" + _vm.durationpicker.m + "h"
-                  : "More",
+                value: _vm.moreIsActive ? _vm.duration.print() : "More",
                 icon: "fas fa-stopwatch"
               },
               slot: "reference"
@@ -55338,17 +55330,28 @@ var render = function() {
                 )
               : _vm._e(),
             _vm._v(" "),
-            _vm._l(_vm.preselected, function(employee) {
-              return _c("select-button", {
-                key: employee.id,
-                attrs: {
-                  selected: function() {
-                    return _vm.selectedEmployee.name === employee.name
-                  },
-                  value: employee.name,
-                  handle: _vm.setEmployeeLocal
-                }
-              })
+            _vm._l(_vm.preselected, function(p) {
+              return _c(
+                "button",
+                {
+                  key: p.id,
+                  staticClass:
+                    "h-10 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
+                  class: p.equals(_vm.selected)
+                    ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
+                    : "",
+                  on: {
+                    click: function($event) {
+                      return _vm.setEmployeeLocal(p)
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                " + _vm._s(p.name) + "\n            "
+                  )
+                ]
+              )
             })
           ],
           2
@@ -55387,24 +55390,23 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "flex flex-wrap w-32 text-gray-800" },
-                      _vm._l(_vm.rest, function(employee) {
+                      _vm._l(_vm.rest, function(r) {
                         return _c(
                           "span",
                           {
-                            key: employee.id,
+                            key: r.id,
                             staticClass:
                               "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
-                            class:
-                              _vm.selectedEmployee.name === employee.name
-                                ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
-                                : "",
+                            class: r.equals(_vm.selected)
+                              ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
+                              : "",
                             on: {
                               click: function($event) {
-                                return _vm.setEmployeeLocal(employee.name)
+                                return _vm.setEmployeeLocal(r)
                               }
                             }
                           },
-                          [_vm._v(_vm._s(employee.name))]
+                          [_vm._v(_vm._s(r.name))]
                         )
                       }),
                       0
@@ -55419,7 +55421,7 @@ var render = function() {
                       return _vm.isNotInPreselected
                     },
                     value: _vm.isNotInPreselected
-                      ? this.selectedEmployee.name
+                      ? this.selected.name
                       : "Other",
                     icon: "fas fa-address-book"
                   },
@@ -55491,7 +55493,7 @@ var render = function() {
                   value: a,
                   handle: _vm.setPerson,
                   selected: function() {
-                    return _vm.personpicker === a.toString()
+                    return _vm.persons === a
                   }
                 }
               })
@@ -55540,7 +55542,7 @@ var render = function() {
                         staticClass:
                           "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
                         class:
-                          _vm.personpicker === (a + 6).toString()
+                          _vm.persons === (a + 6).toString()
                             ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
                             : "",
                         on: {
@@ -55563,7 +55565,7 @@ var render = function() {
                 selected: function() {
                   return _vm.moreIsActive
                 },
-                value: _vm.moreIsActive ? _vm.personpicker : "More",
+                value: _vm.moreIsActive ? _vm.persons : "More",
                 icon: "fas fa-user-friends"
               },
               slot: "reference"
@@ -55623,7 +55625,7 @@ var render = function() {
                   staticClass:
                     "text-center text-xs text-gray-500 uppercase font-light leading-tight"
                 },
-                [_vm._v("Choosen time")]
+                [_vm._v("Chosen time")]
               )
             ]),
             _vm._v(" "),
@@ -55631,7 +55633,7 @@ var render = function() {
               _c(
                 "span",
                 { staticClass: "text-lg text-gray-800 font-semibold" },
-                [_vm._v(_vm._s(_vm.hour))]
+                [_vm._v(_vm._s(_vm.addZeros(_vm.hour)))]
               ),
               _vm._v(" "),
               _c(
@@ -55643,7 +55645,7 @@ var render = function() {
               _c(
                 "span",
                 { staticClass: "text-lg text-gray-800 font-semibold" },
-                [_vm._v(_vm._s(_vm.minutes))]
+                [_vm._v(_vm._s(_vm.addZeros(_vm.minute)))]
               )
             ]),
             _vm._v(" "),
@@ -55656,24 +55658,21 @@ var render = function() {
                   staticClass:
                     "flex flex-col overflow-y-scroll h-64 items-center text-gray-800 text-sm p-2"
                 },
-                _vm._l(24, function(a, b) {
+                _vm._l(24, function(_, b) {
                   return _c(
                     "span",
                     {
                       key: b,
                       staticClass:
                         "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
-                      class:
-                        _vm.hour === b.toString()
-                          ? "bg-blue-600 text-white"
-                          : "",
+                      class: _vm.hour === b ? "bg-blue-600 text-white" : "",
                       on: {
                         click: function($event) {
                           return _vm.setHour(b)
                         }
                       }
                     },
-                    [_vm._v(_vm._s(b))]
+                    [_vm._v(_vm._s(_vm.addZeros(b)))]
                   )
                 }),
                 0
@@ -55691,11 +55690,10 @@ var render = function() {
                     {
                       staticClass:
                         "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
-                      class:
-                        _vm.minutes === "00" ? "bg-blue-600 text-white" : "",
+                      class: _vm.minute === 0 ? "bg-blue-600 text-white" : "",
                       on: {
                         click: function($event) {
-                          return _vm.setMinutes("00")
+                          return _vm.setMinutes(0)
                         }
                       }
                     },
@@ -55707,11 +55705,10 @@ var render = function() {
                     {
                       staticClass:
                         "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
-                      class:
-                        _vm.minutes === "15" ? "bg-blue-600 text-white" : "",
+                      class: _vm.minute === 15 ? "bg-blue-600 text-white" : "",
                       on: {
                         click: function($event) {
-                          return _vm.setMinutes("15")
+                          return _vm.setMinutes(15)
                         }
                       }
                     },
@@ -55723,11 +55720,10 @@ var render = function() {
                     {
                       staticClass:
                         "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
-                      class:
-                        _vm.minutes === "30" ? "bg-blue-600 text-white" : "",
+                      class: _vm.minute === 30 ? "bg-blue-600 text-white" : "",
                       on: {
                         click: function($event) {
-                          return _vm.setMinutes("30")
+                          return _vm.setMinutes(30)
                         }
                       }
                     },
@@ -55739,11 +55735,10 @@ var render = function() {
                     {
                       staticClass:
                         "px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200",
-                      class:
-                        _vm.minutes === "45" ? "bg-blue-600 text-white" : "",
+                      class: _vm.minute === 45 ? "bg-blue-600 text-white" : "",
                       on: {
                         click: function($event) {
-                          return _vm.setMinutes("45")
+                          return _vm.setMinutes(45)
                         }
                       }
                     },
@@ -55762,7 +55757,9 @@ var render = function() {
           selected: function() {
             return _vm.active
           },
-          value: _vm.active ? _vm.hour + ":" + _vm.minutes : "Choose time",
+          value: _vm.active
+            ? _vm.addZeros(_vm.hour) + ":" + _vm.addZeros(_vm.minute)
+            : "Choose time",
           icon: "fas fa-clock"
         },
         slot: "reference"
@@ -55880,16 +55877,16 @@ var render = function() {
           staticClass:
             "h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
-            _vm.hourpicker === "17"
+            _vm.hour === 17
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
-              return _vm.setHour("17")
+              return _vm.setHour(17)
             }
           }
         },
-        [_vm._v("17")]
+        [_vm._v("17\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -55898,16 +55895,16 @@ var render = function() {
           staticClass:
             "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
-            _vm.hourpicker === "18"
+            _vm.hour === 18
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
-              return _vm.setHour("18")
+              return _vm.setHour(18)
             }
           }
         },
-        [_vm._v("18")]
+        [_vm._v("18\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -55916,16 +55913,16 @@ var render = function() {
           staticClass:
             "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
-            _vm.hourpicker === "19"
+            _vm.hour === 19
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
-              return _vm.setHour("19")
+              return _vm.setHour(19)
             }
           }
         },
-        [_vm._v("19")]
+        [_vm._v("19\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -55934,16 +55931,16 @@ var render = function() {
           staticClass:
             "h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4",
           class:
-            _vm.hourpicker === "20"
+            _vm.hour === 20
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
             click: function($event) {
-              return _vm.setHour("20")
+              return _vm.setHour(20)
             }
           }
         },
-        [_vm._v("20")]
+        [_vm._v("20\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -55957,17 +55954,14 @@ var render = function() {
         {
           staticClass:
             "h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
-          class:
-            _vm.minutepicker === "00"
-              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
-              : "",
+          class: _vm.getButtonClass(0),
           on: {
             click: function($event) {
-              return _vm.setMinute("00")
+              return _vm.setMinute(0)
             }
           }
         },
-        [_vm._v("00")]
+        [_vm._v("00\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -55975,17 +55969,14 @@ var render = function() {
         {
           staticClass:
             "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
-          class:
-            _vm.minutepicker === "15"
-              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
-              : "",
+          class: _vm.getButtonClass(15),
           on: {
             click: function($event) {
-              return _vm.setMinute("15")
+              return _vm.setMinute(15)
             }
           }
         },
-        [_vm._v("15")]
+        [_vm._v("15\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -55993,17 +55984,14 @@ var render = function() {
         {
           staticClass:
             "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
-          class:
-            _vm.minutepicker === "30"
-              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
-              : "",
+          class: _vm.getButtonClass(30),
           on: {
             click: function($event) {
-              return _vm.setMinute("30")
+              return _vm.setMinute(30)
             }
           }
         },
-        [_vm._v("30")]
+        [_vm._v("30\n        ")]
       ),
       _vm._v(" "),
       _c(
@@ -56011,17 +55999,14 @@ var render = function() {
         {
           staticClass:
             "h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4",
-          class:
-            _vm.minutepicker === "45"
-              ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
-              : "",
+          class: _vm.getButtonClass(45),
           on: {
             click: function($event) {
-              return _vm.setMinute("45")
+              return _vm.setMinute(45)
             }
           }
         },
-        [_vm._v("45")]
+        [_vm._v("45\n        ")]
       )
     ]),
     _vm._v(" "),
@@ -56031,9 +56016,8 @@ var render = function() {
         _c("single-time-picker", {
           attrs: {
             active: _vm.singleTimePickerActive,
-            hours: _vm.hourpicker,
-            minute: _vm.minutepicker,
-            "set-single-time": _vm.setSingleTime
+            time: _vm.time,
+            "set-single-time": _vm.setTime
           }
         })
       ],
@@ -74892,14 +74876,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************************!*\
   !*** ./resources/js/components/ReservationItems/DurationPicker.vue ***!
   \*********************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=template&id=470b1762& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=template&id=470b1762&");
-/* harmony import */ var _DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _DurationPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DurationPicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -74910,7 +74895,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__["render"],
   _DurationPicker_vue_vue_type_template_id_470b1762___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -74927,17 +74912,19 @@ component.options.__file = "resources/js/components/ReservationItems/DurationPic
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=ts&":
 /*!**********************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=ts& ***!
   \**********************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./DurationPicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./DurationPicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/DurationPicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_DurationPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -74979,14 +74966,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************************!*\
   !*** ./resources/js/components/ReservationItems/EmployeePicker.vue ***!
   \*********************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=template&id=d50ed008& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=template&id=d50ed008&");
-/* harmony import */ var _EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _EmployeePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EmployeePicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -74997,7 +74985,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__["render"],
   _EmployeePicker_vue_vue_type_template_id_d50ed008___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -75014,17 +75002,19 @@ component.options.__file = "resources/js/components/ReservationItems/EmployeePic
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=ts&":
 /*!**********************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=ts& ***!
   \**********************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeePicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/EmployeePicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_EmployeePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75066,14 +75056,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************************************!*\
   !*** ./resources/js/components/ReservationItems/PersonPicker.vue ***!
   \*******************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=template&id=42682c3a& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=template&id=42682c3a&");
-/* harmony import */ var _PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _PersonPicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PersonPicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -75084,7 +75075,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__["render"],
   _PersonPicker_vue_vue_type_template_id_42682c3a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -75101,17 +75092,19 @@ component.options.__file = "resources/js/components/ReservationItems/PersonPicke
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=ts&":
 /*!********************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=ts& ***!
   \********************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonPicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./PersonPicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/PersonPicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_PersonPicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75153,14 +75146,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************************!*\
   !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue ***!
   \***********************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=template&id=422b4c7a& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=template&id=422b4c7a&");
-/* harmony import */ var _SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _SingleTimePicker_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SingleTimePicker.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=style&index=0&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -75171,7 +75165,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["render"],
   _SingleTimePicker_vue_vue_type_template_id_422b4c7a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -75188,17 +75182,19 @@ component.options.__file = "resources/js/components/ReservationItems/SingleTimeP
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=ts&":
 /*!************************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=ts& ***!
   \************************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SingleTimePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./SingleTimePicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/SingleTimePicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_SingleTimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75312,14 +75308,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************!*\
   !*** ./resources/js/components/ReservationItems/TimePicker.vue ***!
   \*****************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TimePicker.vue?vue&type=template&id=24252d5b& */ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=template&id=24252d5b&");
-/* harmony import */ var _TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TimePicker.vue?vue&type=script&lang=js& */ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TimePicker.vue?vue&type=script&lang=ts& */ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=ts&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -75328,7 +75325,7 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_1__["default"],
   _TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__["render"],
   _TimePicker_vue_vue_type_template_id_24252d5b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -75345,17 +75342,19 @@ component.options.__file = "resources/js/components/ReservationItems/TimePicker.
 
 /***/ }),
 
-/***/ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=ts&":
 /*!******************************************************************************************!*\
-  !*** ./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=ts& ***!
   \******************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./TimePicker.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/ts-loader??ref--11!../../../../node_modules/vue-loader/lib??vue-loader-options!./TimePicker.vue?vue&type=script&lang=ts& */ "./node_modules/ts-loader/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReservationItems/TimePicker.vue?vue&type=script&lang=ts&");
+/* harmony import */ var _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_ts_loader_index_js_ref_11_node_modules_vue_loader_lib_index_js_vue_loader_options_TimePicker_vue_vue_type_script_lang_ts___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
@@ -75515,6 +75514,131 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/exceptions/Exceptions.ts":
+/*!***********************************************!*\
+  !*** ./resources/js/exceptions/Exceptions.ts ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InvalidIDError = exports.NotEmptyError = exports.EmployeeError = exports.ReservationError = void 0;
+var ReservationError = /** @class */ (function (_super) {
+    __extends(ReservationError, _super);
+    function ReservationError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = "ReservationError";
+        return _this;
+    }
+    ReservationError.of = function (message) {
+        return new ReservationError(message);
+    };
+    ReservationError.failedParsing = function (object) {
+        return new ReservationError("Not an instance of Reservation: " + object);
+    };
+    return ReservationError;
+}(Error));
+exports.ReservationError = ReservationError;
+var EmployeeError = /** @class */ (function (_super) {
+    __extends(EmployeeError, _super);
+    function EmployeeError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = "EmployeeError";
+        return _this;
+    }
+    EmployeeError.of = function (message) {
+        return new EmployeeError(message);
+    };
+    EmployeeError.failedParsing = function (object) {
+        return new EmployeeError("Not an instance of Employee: " + object);
+    };
+    return EmployeeError;
+}(Error));
+exports.EmployeeError = EmployeeError;
+var NotEmptyError = /** @class */ (function (_super) {
+    __extends(NotEmptyError, _super);
+    function NotEmptyError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = "NotEmptyError";
+        return _this;
+    }
+    NotEmptyError.of = function (message) {
+        return new NotEmptyError(message);
+    };
+    return NotEmptyError;
+}(Error));
+exports.NotEmptyError = NotEmptyError;
+var InvalidIDError = /** @class */ (function (_super) {
+    __extends(InvalidIDError, _super);
+    function InvalidIDError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = "InvalidIDError";
+        return _this;
+    }
+    InvalidIDError.of = function (id) {
+        var message = id instanceof String ? id : id.toString();
+        return new InvalidIDError(message);
+    };
+    return InvalidIDError;
+}(Error));
+exports.InvalidIDError = InvalidIDError;
+
+
+/***/ }),
+
+/***/ "./resources/js/helper/Helper.ts":
+/*!***************************************!*\
+  !*** ./resources/js/helper/Helper.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.checkId = exports.checkNotEmpty = exports.parseObject = void 0;
+var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var Exceptions_1 = __webpack_require__(/*! ../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+function parseObject(object) {
+    return object instanceof Object ? lodash_1.default.cloneDeep(object) : JSON.parse(object);
+}
+exports.parseObject = parseObject;
+function checkNotEmpty(value) {
+    if (value.length > 0)
+        return true;
+    else
+        throw Exceptions_1.NotEmptyError.of(value);
+}
+exports.checkNotEmpty = checkNotEmpty;
+function checkId(id) {
+    if (id < 0 || id === undefined || id === null)
+        throw Exceptions_1.InvalidIDError.of(id);
+    else
+        return true;
+}
+exports.checkId = checkId;
+
+
+/***/ }),
+
 /***/ "./resources/js/models/DateString.ts":
 /*!*******************************************!*\
   !*** ./resources/js/models/DateString.ts ***!
@@ -75559,20 +75683,36 @@ var DateString = /** @class */ (function () {
         return DateString.ofAny(new Date());
     };
     DateString.prototype.asDate = function () {
-        return moment_1.default(this.date).toDate();
+        return this.asMoment().toDate();
     };
     DateString.prototype.readableDate = function () {
-        return moment_1.default(this.date).format("DD.MM.YYYY");
+        return this.asMoment().format("DD.MM.YYYY");
     };
     DateString.prototype.addDays = function (days) {
-        this.date = moment_1.default(this.date).add(days, "days").toISOString();
+        this.date = this.asMoment().add(days, "days").toISOString();
     };
     DateString.prototype.isToday = function () {
-        return moment_1.default(moment_1.default().format("YYYY-MM-DD")).isSame(moment_1.default(this.date));
+        return moment_1.default(moment_1.default().format("YYYY-MM-DD")).isSame(this.asMoment());
     };
     DateString.prototype.diffDaysFromNow = function () {
         var now = moment_1.default(moment_1.default().format("YYYY-MM-DD"));
-        return moment_1.default(this.date).diff(now, 'day');
+        return this.asMoment().diff(now, 'day');
+    };
+    DateString.prototype.asMoment = function () {
+        return moment_1.default(this.date);
+    };
+    DateString.prototype.setDateOnly = function (newDate) {
+        this.date = this.asMoment()
+            .set('year', newDate.asMoment().get('year'))
+            .set('month', newDate.asMoment().get('month'))
+            .set('date', newDate.asMoment().get('date'))
+            .toISOString();
+    };
+    DateString.prototype.setTimeOnly = function (newDate) {
+        this.date = this.asMoment()
+            .set('hour', newDate.asMoment().get('hour'))
+            .set('minute', newDate.asMoment().get('minute'))
+            .toISOString();
     };
     return DateString;
 }());
@@ -75617,24 +75757,195 @@ var DurationClass = /** @class */ (function () {
         configurable: true
     });
     DurationClass.boilerPlate = function () {
-        return new DurationClass("2", "00");
+        return new DurationClass(2, 0);
     };
     DurationClass.ofJson = function (dur) {
-        if (DurationClass.instanceOfDuration(dur)) {
-            return new DurationClass(dur.h, dur.m);
+        var newDuration = JSON.parse(dur);
+        if (!DurationClass.instanceOfDuration(newDuration)) {
+            throw new Error("Not an instance of Duration: " + dur);
         }
-        else {
-            return DurationClass.boilerPlate();
-        }
+        var h = !isNaN(newDuration.h) ? parseInt(newDuration.h.toString()) : newDuration.h;
+        var m = !isNaN(newDuration.h) ? parseInt(newDuration.m.toString()) : newDuration.m;
+        return new DurationClass(h, m);
+    };
+    DurationClass.of = function (hour, minute) {
+        return new DurationClass(hour, minute);
     };
     DurationClass.instanceOfDuration = function (object) {
         if (!(object instanceof Object))
             object = Object.assign({}, object);
         return "h" in object && "m" in object;
     };
+    DurationClass.prototype.equals = function (duration) {
+        return this.h === duration.h && this.m === duration.m;
+    };
+    DurationClass.prototype.print = function () {
+        var minute;
+        if (this.m === 0) {
+            minute = "";
+        }
+        else if (this.m <= 9) {
+            minute = "0" + this.m.toString();
+        }
+        else {
+            minute = this.m.toString();
+        }
+        var separator = minute !== "" ? ":" : "";
+        return this.h.toString() + separator + minute + "h";
+    };
     return DurationClass;
 }());
 exports.default = DurationClass;
+
+
+/***/ }),
+
+/***/ "./resources/js/models/Employee.ts":
+/*!*****************************************!*\
+  !*** ./resources/js/models/Employee.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EmployeeBuilder = void 0;
+var Helper_1 = __webpack_require__(/*! ../helper/Helper */ "./resources/js/helper/Helper.ts");
+var Exceptions_1 = __webpack_require__(/*! ../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var Employee = /** @class */ (function () {
+    function Employee(id, access_level, email, name, type) {
+        this._id = id;
+        this._access_level = access_level;
+        this._email = email;
+        this._name = name;
+        this._type = type;
+    }
+    Object.defineProperty(Employee.prototype, "id", {
+        get: function () {
+            return this._id;
+        },
+        set: function (value) {
+            this._id = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Employee.prototype, "access_level", {
+        get: function () {
+            return this._access_level;
+        },
+        set: function (value) {
+            this._access_level = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Employee.prototype, "email", {
+        get: function () {
+            return this._email;
+        },
+        set: function (value) {
+            this._email = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Employee.prototype, "name", {
+        get: function () {
+            return this._name;
+        },
+        set: function (value) {
+            this._name = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Employee.prototype, "type", {
+        get: function () {
+            return this._type;
+        },
+        set: function (value) {
+            this._type = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Employee.prototype.equals = function (other) {
+        return lodash_1.default.isEqual(this, other);
+    };
+    Employee.isInstanceOfEmployee = function (object) {
+        var newEmployee = Helper_1.parseObject(object);
+        var isEmployee = "name" in newEmployee &&
+            "email" in newEmployee &&
+            "type" in newEmployee &&
+            "access_level" in newEmployee;
+        if (!isEmployee)
+            throw Exceptions_1.EmployeeError.failedParsing(object);
+        else
+            return isEmployee;
+    };
+    Employee.of = function (object) {
+        try {
+            Employee.isInstanceOfEmployee(object);
+        }
+        catch (e) {
+            console.error(e);
+        }
+        var newEmployee = Helper_1.parseObject(object);
+        return new EmployeeBuilder()
+            .withId(newEmployee.id)
+            .withName(newEmployee.name)
+            .withAccessLevel(newEmployee.access_level)
+            .withEmail(newEmployee.email)
+            .withType(newEmployee.email)
+            .build();
+    };
+    return Employee;
+}());
+exports.default = Employee;
+var EmployeeBuilder = /** @class */ (function () {
+    function EmployeeBuilder() {
+        this.id = -1;
+        this.access_level = "";
+        this.email = "";
+        this.name = "";
+        this.type = "";
+    }
+    EmployeeBuilder.prototype.withId = function (id) {
+        this.id = id;
+        return this;
+    };
+    EmployeeBuilder.prototype.withName = function (name) {
+        this.name = name;
+        return this;
+    };
+    EmployeeBuilder.prototype.withEmail = function (email) {
+        this.email = email;
+        return this;
+    };
+    EmployeeBuilder.prototype.withAccessLevel = function (accessLevel) {
+        this.access_level = accessLevel;
+        return this;
+    };
+    EmployeeBuilder.prototype.withType = function (type) {
+        this.type = type;
+        return this;
+    };
+    EmployeeBuilder.prototype.build = function () {
+        Helper_1.checkId(this.id);
+        Helper_1.checkNotEmpty(this.access_level);
+        Helper_1.checkNotEmpty(this.name);
+        Helper_1.checkNotEmpty(this.type);
+        return new Employee(this.id, this.access_level, this.email, this.name, this.type);
+    };
+    return EmployeeBuilder;
+}());
+exports.EmployeeBuilder = EmployeeBuilder;
 
 
 /***/ }),
@@ -75723,8 +76034,11 @@ var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules
 var Tables_1 = __importDefault(__webpack_require__(/*! ./Tables */ "./resources/js/models/Tables.ts"));
 var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
 var Duration_1 = __importDefault(__webpack_require__(/*! ./Duration */ "./resources/js/models/Duration.ts"));
-var ReservationClass = /** @class */ (function () {
-    function ReservationClass(color, duration, email, end, name, notice, persons, phone_number, start, tables) {
+var Employee_1 = __importDefault(__webpack_require__(/*! ./Employee */ "./resources/js/models/Employee.ts"));
+var Helper_1 = __webpack_require__(/*! ../helper/Helper */ "./resources/js/helper/Helper.ts");
+var Exceptions_1 = __webpack_require__(/*! ../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+var Reservation = /** @class */ (function () {
+    function Reservation(color, duration, email, end, name, notice, persons, phone_number, start, tables, user) {
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -75735,36 +76049,40 @@ var ReservationClass = /** @class */ (function () {
         this._phone_number = phone_number;
         this._start = start;
         this._tables = tables;
+        this.user = user;
     }
-    ReservationClass.instanceOfReservation = function (object) {
-        return 'color' in object &&
-            'name' in object &&
-            'duration' in object &&
-            'persons' in object &&
-            'start' in object &&
-            'end' in object &&
-            'notice' in object &&
-            'email' in object &&
-            'phone_number' in object &&
-            'tables' in object;
-    };
-    ReservationClass.of = function (object) {
-        if (ReservationClass.instanceOfReservation(object)) {
-            return new ReservationClass(object.color, Duration_1.default.ofJson(object.duration), object.email ? object.email : null, DateString_1.default.ofAny(object.end), object.name, object.notice ? object.notice : null, object.persons, object.phone_number ? object.phone_number : null, DateString_1.default.ofAny(object.start), Tables_1.default.of(object.tables));
-        }
-        return ReservationClass.empty();
-    };
-    ReservationClass.empty = function () {
-        return new ReservationClass("gray", Duration_1.default.boilerPlate(), null, DateString_1.default.addDuration(DateString_1.default.now(), Duration_1.default.boilerPlate()), "", "", 0, null, DateString_1.default.now(), Tables_1.default.empty());
-    };
-    ReservationClass.copyFromReservation = function (old) {
-        if (ReservationClass.instanceOfReservation(old)) {
-            return lodash_1.default.cloneDeep(old);
-        }
+    Reservation.instanceOfReservation = function (object) {
+        var newReservation = Helper_1.parseObject(object);
+        var isReservation = 'color' in newReservation &&
+            'name' in newReservation &&
+            'duration' in newReservation &&
+            'persons' in newReservation &&
+            'start' in newReservation &&
+            'end' in newReservation &&
+            'notice' in newReservation &&
+            'email' in newReservation &&
+            'phone_number' in newReservation &&
+            'tables' in newReservation &&
+            'user' in newReservation;
+        if (!isReservation)
+            throw Exceptions_1.ReservationError.failedParsing(object);
         else
-            return ReservationClass.empty();
+            return isReservation;
     };
-    Object.defineProperty(ReservationClass.prototype, "tables", {
+    Reservation.of = function (object) {
+        try {
+            Reservation.instanceOfReservation(object);
+        }
+        catch (err) {
+            console.error(err);
+        }
+        var newReservation = Helper_1.parseObject(object);
+        return new Reservation(newReservation.color, Duration_1.default.ofJson(newReservation.duration), newReservation.email ? newReservation.email : null, DateString_1.default.ofAny(newReservation.end), newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
+    };
+    Reservation.copyFromReservation = function (old) {
+        return lodash_1.default.cloneDeep(old);
+    };
+    Object.defineProperty(Reservation.prototype, "tables", {
         get: function () {
             return this._tables;
         },
@@ -75774,7 +76092,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "email", {
+    Object.defineProperty(Reservation.prototype, "email", {
         get: function () {
             return this._email;
         },
@@ -75784,7 +76102,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "notice", {
+    Object.defineProperty(Reservation.prototype, "notice", {
         get: function () {
             return this._notice;
         },
@@ -75794,7 +76112,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "phone_number", {
+    Object.defineProperty(Reservation.prototype, "phone_number", {
         get: function () {
             return this._phone_number;
         },
@@ -75804,7 +76122,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "color", {
+    Object.defineProperty(Reservation.prototype, "color", {
         get: function () {
             return this._color;
         },
@@ -75814,7 +76132,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "duration", {
+    Object.defineProperty(Reservation.prototype, "duration", {
         get: function () {
             return this._duration;
         },
@@ -75824,7 +76142,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "end", {
+    Object.defineProperty(Reservation.prototype, "end", {
         get: function () {
             return this._end;
         },
@@ -75834,7 +76152,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "name", {
+    Object.defineProperty(Reservation.prototype, "name", {
         get: function () {
             return this._name;
         },
@@ -75844,7 +76162,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "persons", {
+    Object.defineProperty(Reservation.prototype, "persons", {
         get: function () {
             return this._persons;
         },
@@ -75854,7 +76172,7 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(ReservationClass.prototype, "start", {
+    Object.defineProperty(Reservation.prototype, "start", {
         get: function () {
             return this._start;
         },
@@ -75864,9 +76182,9 @@ var ReservationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    return ReservationClass;
+    return Reservation;
 }());
-exports.default = ReservationClass;
+exports.default = Reservation;
 
 
 /***/ }),

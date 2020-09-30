@@ -10,7 +10,6 @@
       <reservation-item
         v-on:modal:close="handleClose"
         :reservation="reservation"
-        :employees="employees"
         :tables-endpoint="tablesEndpoint"
         :reservations-endpoint="reservationsEndpoint"
       ></reservation-item>
@@ -25,13 +24,13 @@
 
 <script>
 export default {
-  props: ["employees", "tablesEndpoint", "reservationsEndpoint", "reservation"],
+  props: ["tablesEndpoint", "reservationsEndpoint", "reservation"],
   data() {
     return {
       open: false
     };
   },
-  methods: {
+    methods: {
     handleOpen() {
       this.open = true;
     },

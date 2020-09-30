@@ -209,7 +209,7 @@ export default {
     if (from && to) {
       from = moment(from);
       to = moment(to);
-      console.log(from.diff(to, "weeks"), from, to);
+
       if (
         moment()
           .startOf("day")
