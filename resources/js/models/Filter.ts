@@ -1,14 +1,14 @@
 import Duration from "./Duration";
 import DateString from "./DateString";
-import Reservation from "./BasicReservation";
+import Reservation from "./Reservation";
 
-export interface Filter {
+export interface BasicFilter {
     date?: DateString;
     duration?: Duration;
     persons?: number;
 }
 
-export default class FilterClass implements Filter {
+export default class Filter implements BasicFilter {
     private _date: DateString;
     private _duration: Duration;
     private _persons: number;
@@ -46,7 +46,7 @@ export default class FilterClass implements Filter {
     public static of(reservation: Reservation): Filter {
         const date = DateString.ofAny(reservation.start);
 
-        return new FilterClass(
+        return new Filter(
             date,
             reservation.duration,
             reservation.persons
@@ -54,9 +54,3 @@ export default class FilterClass implements Filter {
 
     }
 }
-// processedEndDate() {
-//     return moment(this.processedDate)
-//         .add("hours", this.duration.h)
-//         .add("minutes", this.duration.m)
-//         .format("YYYY-MM-DD HH:mm[:00]");
-// },

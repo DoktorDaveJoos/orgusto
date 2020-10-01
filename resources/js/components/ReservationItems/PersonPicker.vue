@@ -25,9 +25,9 @@
             >Persons</span>
                     </div>
                     <hr/>
-                    <div class="flex flex-wrap w-32 text-gray-800">
+                    <div class="flex flex-wrap w-32 p-1 text-gray-800">
             <span
-                class="flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
+                class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
                 :class="persons === (a + 6).toString() ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
                 v-for="a in 15"
                 v-bind:key="a"
@@ -48,8 +48,10 @@
 </template>
 
 <script lang="ts">
-import Popper from "vue-popperjs";
 import Vue from "vue";
+
+// noinspection TypeScriptCheckImport
+import Popper from "vue-popperjs";
 
 export default Vue.extend({
     components: {
@@ -82,6 +84,7 @@ export default Vue.extend({
 });
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 .popper .popper__arrow {
     width: 0;

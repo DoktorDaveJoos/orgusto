@@ -40,6 +40,7 @@
                     <i class="fas fa-times"></i>
                 </div>
 
+                <!--suppress HtmlFormInputWithoutLabel -->
                 <input
                     class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
                     :class="reservationCopy.name ? 'border-indigo-400 text-gray-800' : ''"
@@ -62,6 +63,7 @@
                 >
                     <i class="fas fa-times"></i>
                 </div>
+                <!--suppress HtmlFormInputWithoutLabel -->
                 <input
                     class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
                     :class="reservationCopy.notice ? 'border-indigo-400 text-gray-800' : ''"
@@ -78,6 +80,7 @@
                 >
                     <i class="fas fa-times"></i>
                 </div>
+                <!--suppress HtmlFormInputWithoutLabel -->
                 <input
                     class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
                     :class="reservationCopy.email ? 'border-indigo-400 text-gray-800' : ''"
@@ -90,11 +93,11 @@
                     class="text-red-400 flex items-center py-2 pr-4 leading-tight"
                 ><i class="fas fa-times"></i>
                 </div>
+                <!--suppress HtmlFormInputWithoutLabel -->
                 <input
                     class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
                     :class="reservationCopy.phone_number ? 'border-indigo-400 text-gray-800' : ''"
                     placeholder="Phone number"
-                    type="phone"
                     v-model="reservationCopy.phone_number"
                 />
             </div>
@@ -131,10 +134,10 @@
 import Vue from "vue";
 import Reservation from "../models/Reservation";
 import Employee from "../models/Employee";
-import FilterClass, {Filter} from "../models/Filter";
+import Filter from "../models/Filter";
 import Tables from "../models/Tables";
 import DateString from "../models/DateString";
-import {Duration} from "../models/Duration";
+import Duration from "../models/Duration";
 
 export default Vue.extend({
     props: {
@@ -152,7 +155,7 @@ export default Vue.extend({
     },
     methods: {
         setTables(tables: Tables): void {
-
+            this.reservationCopy.tables = tables;
         },
         setColor(color: string): void {
             this.reservationCopy.color = color;
@@ -167,12 +170,14 @@ export default Vue.extend({
             this.reservationCopy.persons = persons;
         },
         setDuration(duration: Duration): void {
-
+            this.reservationCopy.duration = duration;
         },
         setEmployee(employee: Employee): void {
-
+            this.reservationCopy.user = employee;
         },
         handleSubmit(): void {
+
+
 
             // axios
             //     .put(this.reservationsEndpoint, {})
@@ -187,7 +192,7 @@ export default Vue.extend({
 
         },
         errorContainsKey(key): boolean {
-            return Object.keys(this.errors).find((elem) => elem === key) !== undefined;
+            return Object.keys(this.errors).includes(key);
         },
         handleClose(): void {
             this.$emit("modal:close");
@@ -203,7 +208,7 @@ export default Vue.extend({
             return "border-" + this.reservationCopy.color + "-400";
         },
         filterData(): Filter {
-            return FilterClass.of(this.reservation);
+            return Filter.of(this.reservation);
         },
     },
 });

@@ -1,4 +1,4 @@
-export interface Table {
+export interface BasicTable {
     id: number;
     table_number: number;
     seats: number;
@@ -7,7 +7,7 @@ export interface Table {
     description?: string
 }
 
-export default class TableClass implements Table {
+export default class Table implements BasicTable {
     description: string;
     restaurant_id: number;
     room: number;
@@ -27,7 +27,7 @@ export default class TableClass implements Table {
 
     public static of(object: any): Table {
         if ('pivot' in object) delete object.pivot;
-        return new TableClass(object.id, object.description, object.restaurant_id, object.room, object.seats, object.table_number);
+        return new Table(object.id, object.description, object.restaurant_id, object.room, object.seats, object.table_number);
     }
 
 }

@@ -1,11 +1,9 @@
-import Reservation from "./BasicReservation";
-
-export interface Duration {
+export interface BasicDuration {
     h: number,
     m: number
 }
 
-export default class DurationClass implements Duration {
+export default class Duration implements BasicDuration {
     private _h: number;
     private _m: number;
 
@@ -30,22 +28,22 @@ export default class DurationClass implements Duration {
         this._m = value;
     }
 
-    public static boilerPlate(): DurationClass {
-        return new DurationClass(2, 0);
+    public static boilerPlate(): Duration {
+        return new Duration(2, 0);
     }
 
-    public static ofJson(dur: any): DurationClass {
+    public static ofJson(dur: any): Duration {
         const newDuration: any = JSON.parse(dur);
-        if (!DurationClass.instanceOfDuration(newDuration)) {
+        if (!Duration.instanceOfDuration(newDuration)) {
             throw new Error(`Not an instance of Duration: ${dur}`);
         }
         const h: number = !isNaN(newDuration.h) ? parseInt(newDuration.h.toString()) : newDuration.h;
         const m: number = !isNaN(newDuration.h) ? parseInt(newDuration.m.toString()) : newDuration.m;
-        return new DurationClass(h, m);
+        return new Duration(h, m);
     }
 
-    public static of(hour: number, minute: number): DurationClass {
-        return new DurationClass(hour, minute);
+    public static of(hour: number, minute: number): Duration {
+        return new Duration(hour, minute);
     }
 
     public static instanceOfDuration(object: any): object is Duration {
@@ -53,7 +51,7 @@ export default class DurationClass implements Duration {
         return "h" in object && "m" in object;
     }
 
-    public equals(duration: DurationClass): boolean {
+    public equals(duration: Duration): boolean {
         return this.h === duration.h && this.m === duration.m;
     }
 

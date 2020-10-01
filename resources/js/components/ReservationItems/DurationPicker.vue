@@ -7,7 +7,6 @@
                 </div>
                 <select-button
                     v-for="d in preselectedDurations"
-                    v-bind:key="d.print()"
                     :key="d.print()"
                     :selected="() => thisDurationEquals(d)"
                     :handle="() => setDuration(d)"
@@ -23,12 +22,12 @@
             >Duration</span>
                     </div>
                     <hr/>
-                    <div class="flex flex-col text-gray-800">
+                    <div class="flex flex-col text-gray-800 p-1">
             <span
                 v-for="m in moreChoices"
                 v-bind:key="m.print()"
                 @click="setDuration(m)"
-                class="flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
+                class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
                 :class="thisDurationEquals(m) ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
             >{{ m.print() }}</span>
                     </div>
@@ -47,47 +46,48 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Duration from "../../models/Duration";
+// noinspection TypeScriptCheckImport
 import Popper from "vue-popperjs";
-import DurationClass from "../../models/Duration";
 
 export default Vue.extend({
     components: {
         popper: Popper,
     },
     props: {
-        init: DurationClass,
+        init: Duration,
         error: Boolean
     },
     data() {
         return {
             preselectedDurations: [
-                DurationClass.of(1, 0),
-                DurationClass.of(1, 30),
-                DurationClass.of(2, 0),
-                DurationClass.of(2, 30),
-                DurationClass.of(3, 0),
-                DurationClass.of(4, 0)
+                Duration.of(1, 0),
+                Duration.of(1, 30),
+                Duration.of(2, 0),
+                Duration.of(2, 30),
+                Duration.of(3, 0),
+                Duration.of(4, 0)
             ],
             moreChoices: [
-                DurationClass.of(3, 30),
-                DurationClass.of(4, 30),
-                DurationClass.of(8, 0),
-                DurationClass.of(12, 0)
+                Duration.of(3, 30),
+                Duration.of(4, 30),
+                Duration.of(8, 0),
+                Duration.of(12, 0)
             ],
             duration: this.init,
         };
     },
     methods: {
-        setDuration(duration: DurationClass): void {
+        setDuration(duration: Duration): void {
             this.duration = duration;
         },
-        thisDurationEquals(duration: DurationClass): boolean {
+        thisDurationEquals(duration: Duration): boolean {
             return this.duration.equals(duration);
         },
     },
     computed: {
         moreIsActive(): boolean {
-            return this.moreChoices.find((elem) => this.duration.equals(elem)) !== undefined;
+            return this.moreChoices.includes(this.duration);
         },
     },
     watch: {
@@ -98,6 +98,7 @@ export default Vue.extend({
 });
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 .popper .popper__arrow {
     width: 0;

@@ -3,10 +3,9 @@ import _ from "lodash";
 import Duration from "./Duration";
 import Tables from "./Tables";
 import DateString from "./DateString";
-import DurationClass from "./Duration";
 import Employee from "./Employee";
-import {parseObject} from "../helper/Helper";
-import {ReservationError} from "../exceptions/Exceptions";
+import parseObject from "../helper/ParseObject";
+import ReservationError from "../errors/ReservationError";
 
 export interface BasicReservation {
     name: string,
@@ -35,7 +34,7 @@ export default class Reservation implements BasicReservation {
     private _tables: Tables;
     user: Employee;
 
-    constructor(color: string, duration: DurationClass, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables, user: Employee) {
+    constructor(color: string, duration: Duration, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables, user: Employee) {
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -76,7 +75,7 @@ export default class Reservation implements BasicReservation {
 
         return new Reservation(
             newReservation.color,
-            DurationClass.ofJson(newReservation.duration),
+            Duration.ofJson(newReservation.duration),
             newReservation.email ? newReservation.email : null,
             DateString.ofAny(newReservation.end),
             newReservation.name,

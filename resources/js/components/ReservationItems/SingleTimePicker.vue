@@ -60,8 +60,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Popper from "vue-popperjs";
 import DateString from "../../models/DateString";
+// noinspection TypeScriptCheckImport
+import Popper from "vue-popperjs";
 
 export default Vue.extend({
     components: {
@@ -103,6 +104,7 @@ export default Vue.extend({
 });
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 .popper .popper__arrow {
     width: 0;

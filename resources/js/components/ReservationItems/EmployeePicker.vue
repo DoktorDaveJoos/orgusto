@@ -26,12 +26,12 @@
             >Employees</span>
                     </div>
                     <hr/>
-                    <div class="flex flex-wrap w-32 text-gray-800">
+                    <div class="flex flex-wrap w-40 text-gray-800 p-1">
             <span
                 v-for="r in rest"
                 v-bind:key="r.id"
                 @click="setEmployeeLocal(r)"
-                class="flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
+                class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
                 :class="r.equals(selected)? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
             >{{ r.name }}</span>
                     </div>
@@ -48,12 +48,12 @@
 </template>
 
 <script lang="ts">
-
 import Vue from 'vue';
 import axios from 'axios';
-import Popper from "vue-popperjs";
 import Employee from "../../models/Employee";
-import {EmployeeError} from "../../exceptions/Exceptions";
+import EmployeeError from "../../errors/EmployeeError";
+// noinspection TypeScriptCheckImport
+import Popper from "vue-popperjs";
 
 export default Vue.extend({
     components: {
@@ -80,21 +80,24 @@ export default Vue.extend({
         updateEmployees(): void {
             const endpoint: string = "/users";
             axios.get(endpoint).then((res: any) => {
-                let responseData = res.data;
-                if (!responseData instanceof Array) {
+                let responseData: any = res.data;
+                if (!(responseData instanceof Array)) {
                     responseData = Array.of(responseData);
                 }
                 this.employees = responseData.map(entry => Employee.of(entry));
             })
-            .catch((err: any) => throw EmployeeError.of(`Failed fetching Employees, see: ${err}`))
+                .catch((err: any) => {
+                        throw EmployeeError.of(`Failed fetching Employees, see: ${err}`)
+                    }
+                );
         }
     },
     computed: {
         hasRest(): boolean {
-            return this.rest !== undefined;
+            return this.rest.length > 0;
         },
-        preselected() {
-            //TODO: Parse cookie - check last one used
+        preselected(): Array<Employee> {
+            // TODO: Parse cookie - check last one used
             if (this.employees.length <= 3) {
                 return this.employees;
             }
@@ -102,16 +105,16 @@ export default Vue.extend({
         },
         isNotInPreselected(): boolean {
             // is in rest
-            if (this.rest !== undefined) return false;
-            else return this.rest.includes(this.selected);
+            return this.rest.includes(this.selected);
         },
-        rest(): Array<Employee> | undefined {
+        rest(): Array<Employee> {
             return this.employees.slice(3);
         },
     },
 });
 </script>
 
+<!--suppress CssUnusedSymbol -->
 <style>
 .popper .popper__arrow {
     width: 0;

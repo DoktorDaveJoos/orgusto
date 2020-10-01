@@ -1,13 +1,12 @@
 import Table from "./Table";
 import _ from 'lodash';
-import TableClass from "./Table";
 
 
 export default class Tables {
     private _tables: Array<Table>;
 
     constructor(tables: Array<Table>) {
-        tables.map(table => TableClass.of(table));
+        tables.map(table => Table.of(table));
         this._tables = tables ?? [];
     }
 
@@ -17,7 +16,7 @@ export default class Tables {
 
     set tables(value: Array<Table>) {
         if (value.length > 0) {
-            value.map(table => TableClass.of(table));
+            value.map(table => Table.of(table));
         }
         this._tables = value;
     }
@@ -32,7 +31,7 @@ export default class Tables {
     }
 
     merge(newTables: []): void {
-        newTables.map(table => TableClass.of(table));
+        newTables.map(table => Table.of(table));
         this.tables = _.unionBy(this.tables, newTables, 'id');
         this.tables = this.tables.sort(((a, b) => a.table_number - b.table_number));
     }

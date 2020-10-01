@@ -52973,6 +52973,7 @@ exports.default = vue_1.default.extend({
     },
     methods: {
         setTables: function (tables) {
+            this.reservationCopy.tables = tables;
         },
         setColor: function (color) {
             this.reservationCopy.color = color;
@@ -52987,8 +52988,10 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.persons = persons;
         },
         setDuration: function (duration) {
+            this.reservationCopy.duration = duration;
         },
         setEmployee: function (employee) {
+            this.reservationCopy.user = employee;
         },
         handleSubmit: function () {
             // axios
@@ -53003,7 +53006,7 @@ exports.default = vue_1.default.extend({
             //     });
         },
         errorContainsKey: function (key) {
-            return Object.keys(this.errors).find(function (elem) { return elem === key; }) !== undefined;
+            return Object.keys(this.errors).includes(key);
         },
         handleClose: function () {
             this.$emit("modal:close");
@@ -53117,8 +53120,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
-var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 var Duration_1 = __importDefault(__webpack_require__(/*! ../../models/Duration */ "./resources/js/models/Duration.ts"));
+// noinspection TypeScriptCheckImport
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 exports.default = vue_1.default.extend({
     components: {
         popper: vue_popperjs_1.default,
@@ -53156,8 +53160,7 @@ exports.default = vue_1.default.extend({
     },
     computed: {
         moreIsActive: function () {
-            var _this = this;
-            return this.moreChoices.find(function (elem) { return _this.duration.equals(elem); }) !== undefined;
+            return this.moreChoices.includes(this.duration);
         },
     },
     watch: {
@@ -53185,9 +53188,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
-var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 var Employee_1 = __importDefault(__webpack_require__(/*! ../../models/Employee */ "./resources/js/models/Employee.ts"));
-var Exceptions_1 = __webpack_require__(/*! ../../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+var EmployeeError_1 = __importDefault(__webpack_require__(/*! ../../errors/EmployeeError */ "./resources/js/errors/EmployeeError.ts"));
+// noinspection TypeScriptCheckImport
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 exports.default = vue_1.default.extend({
     components: {
         popper: vue_popperjs_1.default,
@@ -53215,20 +53219,22 @@ exports.default = vue_1.default.extend({
             var endpoint = "/users";
             axios_1.default.get(endpoint).then(function (res) {
                 var responseData = res.data;
-                if (!responseData instanceof Array) {
+                if (!(responseData instanceof Array)) {
                     responseData = Array.of(responseData);
                 }
                 _this.employees = responseData.map(function (entry) { return Employee_1.default.of(entry); });
             })
-                .catch(function (err) { throw Exceptions_1.EmployeeError.of("Failed fetching Employees, see: " + err); });
+                .catch(function (err) {
+                throw EmployeeError_1.default.of("Failed fetching Employees, see: " + err);
+            });
         }
     },
     computed: {
         hasRest: function () {
-            return this.rest !== undefined;
+            return this.rest.length > 0;
         },
         preselected: function () {
-            //TODO: Parse cookie - check last one used
+            // TODO: Parse cookie - check last one used
             if (this.employees.length <= 3) {
                 return this.employees;
             }
@@ -53236,10 +53242,7 @@ exports.default = vue_1.default.extend({
         },
         isNotInPreselected: function () {
             // is in rest
-            if (this.rest !== undefined)
-                return false;
-            else
-                return this.rest.includes(this.selected);
+            return this.rest.includes(this.selected);
         },
         rest: function () {
             return this.employees.slice(3);
@@ -53263,8 +53266,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+// noinspection TypeScriptCheckImport
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 exports.default = vue_1.default.extend({
     components: {
         popper: vue_popperjs_1.default
@@ -53312,8 +53316,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
-var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 var DateString_1 = __importDefault(__webpack_require__(/*! ../../models/DateString */ "./resources/js/models/DateString.ts"));
+// noinspection TypeScriptCheckImport
+var vue_popperjs_1 = __importDefault(__webpack_require__(/*! vue-popperjs */ "./node_modules/vue-popperjs/dist/vue-popper.min.js"));
 exports.default = vue_1.default.extend({
     components: {
         popper: vue_popperjs_1.default
@@ -54903,7 +54908,7 @@ var render = function() {
               class: _vm.reservationCopy.phone_number
                 ? "border-indigo-400 text-gray-800"
                 : "",
-              attrs: { placeholder: "Phone number", type: "phone" },
+              attrs: { placeholder: "Phone number" },
               domProps: { value: _vm.reservationCopy.phone_number },
               on: {
                 input: function($event) {
@@ -55190,7 +55195,6 @@ var render = function() {
               return _c("select-button", {
                 key: d.print(),
                 attrs: {
-                  key: d.print(),
                   selected: function() {
                     return _vm.thisDurationEquals(d)
                   },
@@ -55236,14 +55240,14 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "flex flex-col text-gray-800" },
+                  { staticClass: "flex flex-col text-gray-800 p-1" },
                   _vm._l(_vm.moreChoices, function(m) {
                     return _c(
                       "span",
                       {
                         key: m.print(),
                         staticClass:
-                          "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                          "flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
                         class: _vm.thisDurationEquals(m)
                           ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
                           : "",
@@ -55389,14 +55393,14 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "flex flex-wrap w-32 text-gray-800" },
+                      { staticClass: "flex flex-wrap w-40 text-gray-800 p-1" },
                       _vm._l(_vm.rest, function(r) {
                         return _c(
                           "span",
                           {
                             key: r.id,
                             staticClass:
-                              "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                              "flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
                             class: r.equals(_vm.selected)
                               ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
                               : "",
@@ -55533,14 +55537,14 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "flex flex-wrap w-32 text-gray-800" },
+                  { staticClass: "flex flex-wrap w-32 p-1 text-gray-800" },
                   _vm._l(15, function(a) {
                     return _c(
                       "span",
                       {
                         key: a,
                         staticClass:
-                          "flex-1 px-3 py-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
+                          "flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm",
                         class:
                           _vm.persons === (a + 6).toString()
                             ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800"
@@ -75514,10 +75518,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/exceptions/Exceptions.ts":
-/*!***********************************************!*\
-  !*** ./resources/js/exceptions/Exceptions.ts ***!
-  \***********************************************/
+/***/ "./resources/js/errors/EmployeeError.ts":
+/*!**********************************************!*\
+  !*** ./resources/js/errors/EmployeeError.ts ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75537,23 +75541,6 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InvalidIDError = exports.NotEmptyError = exports.EmployeeError = exports.ReservationError = void 0;
-var ReservationError = /** @class */ (function (_super) {
-    __extends(ReservationError, _super);
-    function ReservationError(message) {
-        var _this = _super.call(this, message) || this;
-        _this.name = "ReservationError";
-        return _this;
-    }
-    ReservationError.of = function (message) {
-        return new ReservationError(message);
-    };
-    ReservationError.failedParsing = function (object) {
-        return new ReservationError("Not an instance of Reservation: " + object);
-    };
-    return ReservationError;
-}(Error));
-exports.ReservationError = ReservationError;
 var EmployeeError = /** @class */ (function (_super) {
     __extends(EmployeeError, _super);
     function EmployeeError(message) {
@@ -75569,7 +75556,78 @@ var EmployeeError = /** @class */ (function (_super) {
     };
     return EmployeeError;
 }(Error));
-exports.EmployeeError = EmployeeError;
+exports.default = EmployeeError;
+
+
+/***/ }),
+
+/***/ "./resources/js/errors/ReservationError.ts":
+/*!*************************************************!*\
+  !*** ./resources/js/errors/ReservationError.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ReservationError = /** @class */ (function (_super) {
+    __extends(ReservationError, _super);
+    function ReservationError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = "ReservationError";
+        return _this;
+    }
+    ReservationError.of = function (message) {
+        return new ReservationError(message);
+    };
+    ReservationError.failedParsing = function (object) {
+        return new ReservationError("Not an instance of Reservation: " + object);
+    };
+    return ReservationError;
+}(Error));
+exports.default = ReservationError;
+
+
+/***/ }),
+
+/***/ "./resources/js/errors/ValidationErrors.ts":
+/*!*************************************************!*\
+  !*** ./resources/js/errors/ValidationErrors.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InvalidIDError = exports.NotEmptyError = void 0;
 var NotEmptyError = /** @class */ (function (_super) {
     __extends(NotEmptyError, _super);
     function NotEmptyError(message) {
@@ -75601,10 +75659,54 @@ exports.InvalidIDError = InvalidIDError;
 
 /***/ }),
 
-/***/ "./resources/js/helper/Helper.ts":
-/*!***************************************!*\
-  !*** ./resources/js/helper/Helper.ts ***!
-  \***************************************/
+/***/ "./resources/js/helper/CheckId.ts":
+/*!****************************************!*\
+  !*** ./resources/js/helper/CheckId.ts ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ValidationErrors_1 = __webpack_require__(/*! ../errors/ValidationErrors */ "./resources/js/errors/ValidationErrors.ts");
+function checkId(id) {
+    if (id < 0 || id === undefined || id === null)
+        throw ValidationErrors_1.InvalidIDError.of(id);
+    else
+        return true;
+}
+exports.default = checkId;
+
+
+/***/ }),
+
+/***/ "./resources/js/helper/CheckNotEmpty.ts":
+/*!**********************************************!*\
+  !*** ./resources/js/helper/CheckNotEmpty.ts ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ValidationErrors_1 = __webpack_require__(/*! ../errors/ValidationErrors */ "./resources/js/errors/ValidationErrors.ts");
+function checkNotEmpty(value) {
+    if (value.length > 0)
+        return true;
+    else
+        throw ValidationErrors_1.NotEmptyError.of(value);
+}
+exports.default = checkNotEmpty;
+
+
+/***/ }),
+
+/***/ "./resources/js/helper/ParseObject.ts":
+/*!********************************************!*\
+  !*** ./resources/js/helper/ParseObject.ts ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -75614,27 +75716,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkId = exports.checkNotEmpty = exports.parseObject = void 0;
 var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
-var Exceptions_1 = __webpack_require__(/*! ../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
 function parseObject(object) {
     return object instanceof Object ? lodash_1.default.cloneDeep(object) : JSON.parse(object);
 }
-exports.parseObject = parseObject;
-function checkNotEmpty(value) {
-    if (value.length > 0)
-        return true;
-    else
-        throw Exceptions_1.NotEmptyError.of(value);
-}
-exports.checkNotEmpty = checkNotEmpty;
-function checkId(id) {
-    if (id < 0 || id === undefined || id === null)
-        throw Exceptions_1.InvalidIDError.of(id);
-    else
-        return true;
-}
-exports.checkId = checkId;
+exports.default = parseObject;
 
 
 /***/ }),
@@ -75731,12 +75817,12 @@ exports.default = DateString;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DurationClass = /** @class */ (function () {
-    function DurationClass(h, m) {
+var Duration = /** @class */ (function () {
+    function Duration(h, m) {
         this._h = h;
         this._m = m;
     }
-    Object.defineProperty(DurationClass.prototype, "h", {
+    Object.defineProperty(Duration.prototype, "h", {
         get: function () {
             return this._h;
         },
@@ -75746,7 +75832,7 @@ var DurationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(DurationClass.prototype, "m", {
+    Object.defineProperty(Duration.prototype, "m", {
         get: function () {
             return this._m;
         },
@@ -75756,30 +75842,30 @@ var DurationClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    DurationClass.boilerPlate = function () {
-        return new DurationClass(2, 0);
+    Duration.boilerPlate = function () {
+        return new Duration(2, 0);
     };
-    DurationClass.ofJson = function (dur) {
+    Duration.ofJson = function (dur) {
         var newDuration = JSON.parse(dur);
-        if (!DurationClass.instanceOfDuration(newDuration)) {
+        if (!Duration.instanceOfDuration(newDuration)) {
             throw new Error("Not an instance of Duration: " + dur);
         }
         var h = !isNaN(newDuration.h) ? parseInt(newDuration.h.toString()) : newDuration.h;
         var m = !isNaN(newDuration.h) ? parseInt(newDuration.m.toString()) : newDuration.m;
-        return new DurationClass(h, m);
+        return new Duration(h, m);
     };
-    DurationClass.of = function (hour, minute) {
-        return new DurationClass(hour, minute);
+    Duration.of = function (hour, minute) {
+        return new Duration(hour, minute);
     };
-    DurationClass.instanceOfDuration = function (object) {
+    Duration.instanceOfDuration = function (object) {
         if (!(object instanceof Object))
             object = Object.assign({}, object);
         return "h" in object && "m" in object;
     };
-    DurationClass.prototype.equals = function (duration) {
+    Duration.prototype.equals = function (duration) {
         return this.h === duration.h && this.m === duration.m;
     };
-    DurationClass.prototype.print = function () {
+    Duration.prototype.print = function () {
         var minute;
         if (this.m === 0) {
             minute = "";
@@ -75793,9 +75879,9 @@ var DurationClass = /** @class */ (function () {
         var separator = minute !== "" ? ":" : "";
         return this.h.toString() + separator + minute + "h";
     };
-    return DurationClass;
+    return Duration;
 }());
-exports.default = DurationClass;
+exports.default = Duration;
 
 
 /***/ }),
@@ -75814,8 +75900,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmployeeBuilder = void 0;
-var Helper_1 = __webpack_require__(/*! ../helper/Helper */ "./resources/js/helper/Helper.ts");
-var Exceptions_1 = __webpack_require__(/*! ../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+var CheckNotEmpty_1 = __importDefault(__webpack_require__(/*! ../helper/CheckNotEmpty */ "./resources/js/helper/CheckNotEmpty.ts"));
+var CheckId_1 = __importDefault(__webpack_require__(/*! ../helper/CheckId */ "./resources/js/helper/CheckId.ts"));
+var ParseObject_1 = __importDefault(__webpack_require__(/*! ../helper/ParseObject */ "./resources/js/helper/ParseObject.ts"));
+var EmployeeError_1 = __importDefault(__webpack_require__(/*! ../errors/EmployeeError */ "./resources/js/errors/EmployeeError.ts"));
 var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
 var Employee = /** @class */ (function () {
     function Employee(id, access_level, email, name, type) {
@@ -75879,13 +75967,13 @@ var Employee = /** @class */ (function () {
         return lodash_1.default.isEqual(this, other);
     };
     Employee.isInstanceOfEmployee = function (object) {
-        var newEmployee = Helper_1.parseObject(object);
+        var newEmployee = ParseObject_1.default(object);
         var isEmployee = "name" in newEmployee &&
             "email" in newEmployee &&
             "type" in newEmployee &&
             "access_level" in newEmployee;
         if (!isEmployee)
-            throw Exceptions_1.EmployeeError.failedParsing(object);
+            throw EmployeeError_1.default.failedParsing(object);
         else
             return isEmployee;
     };
@@ -75896,7 +75984,7 @@ var Employee = /** @class */ (function () {
         catch (e) {
             console.error(e);
         }
-        var newEmployee = Helper_1.parseObject(object);
+        var newEmployee = ParseObject_1.default(object);
         return new EmployeeBuilder()
             .withId(newEmployee.id)
             .withName(newEmployee.name)
@@ -75937,10 +76025,10 @@ var EmployeeBuilder = /** @class */ (function () {
         return this;
     };
     EmployeeBuilder.prototype.build = function () {
-        Helper_1.checkId(this.id);
-        Helper_1.checkNotEmpty(this.access_level);
-        Helper_1.checkNotEmpty(this.name);
-        Helper_1.checkNotEmpty(this.type);
+        CheckId_1.default(this.id);
+        CheckNotEmpty_1.default(this.access_level);
+        CheckNotEmpty_1.default(this.name);
+        CheckNotEmpty_1.default(this.type);
         return new Employee(this.id, this.access_level, this.email, this.name, this.type);
     };
     return EmployeeBuilder;
@@ -75964,13 +76052,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
-var FilterClass = /** @class */ (function () {
-    function FilterClass(date, duration, persons) {
+var Filter = /** @class */ (function () {
+    function Filter(date, duration, persons) {
         this._date = date;
         this._duration = duration;
         this._persons = persons;
     }
-    Object.defineProperty(FilterClass.prototype, "date", {
+    Object.defineProperty(Filter.prototype, "date", {
         get: function () {
             return this._date;
         },
@@ -75980,7 +76068,7 @@ var FilterClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(FilterClass.prototype, "duration", {
+    Object.defineProperty(Filter.prototype, "duration", {
         get: function () {
             return this._duration;
         },
@@ -75990,7 +76078,7 @@ var FilterClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(FilterClass.prototype, "persons", {
+    Object.defineProperty(Filter.prototype, "persons", {
         get: function () {
             return this._persons;
         },
@@ -76000,19 +76088,13 @@ var FilterClass = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    FilterClass.of = function (reservation) {
+    Filter.of = function (reservation) {
         var date = DateString_1.default.ofAny(reservation.start);
-        return new FilterClass(date, reservation.duration, reservation.persons);
+        return new Filter(date, reservation.duration, reservation.persons);
     };
-    return FilterClass;
+    return Filter;
 }());
-exports.default = FilterClass;
-// processedEndDate() {
-//     return moment(this.processedDate)
-//         .add("hours", this.duration.h)
-//         .add("minutes", this.duration.m)
-//         .format("YYYY-MM-DD HH:mm[:00]");
-// },
+exports.default = Filter;
 
 
 /***/ }),
@@ -76031,12 +76113,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var Duration_1 = __importDefault(__webpack_require__(/*! ./Duration */ "./resources/js/models/Duration.ts"));
 var Tables_1 = __importDefault(__webpack_require__(/*! ./Tables */ "./resources/js/models/Tables.ts"));
 var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
-var Duration_1 = __importDefault(__webpack_require__(/*! ./Duration */ "./resources/js/models/Duration.ts"));
 var Employee_1 = __importDefault(__webpack_require__(/*! ./Employee */ "./resources/js/models/Employee.ts"));
-var Helper_1 = __webpack_require__(/*! ../helper/Helper */ "./resources/js/helper/Helper.ts");
-var Exceptions_1 = __webpack_require__(/*! ../exceptions/Exceptions */ "./resources/js/exceptions/Exceptions.ts");
+var ParseObject_1 = __importDefault(__webpack_require__(/*! ../helper/ParseObject */ "./resources/js/helper/ParseObject.ts"));
+var ReservationError_1 = __importDefault(__webpack_require__(/*! ../errors/ReservationError */ "./resources/js/errors/ReservationError.ts"));
 var Reservation = /** @class */ (function () {
     function Reservation(color, duration, email, end, name, notice, persons, phone_number, start, tables, user) {
         this._color = color;
@@ -76052,7 +76134,7 @@ var Reservation = /** @class */ (function () {
         this.user = user;
     }
     Reservation.instanceOfReservation = function (object) {
-        var newReservation = Helper_1.parseObject(object);
+        var newReservation = ParseObject_1.default(object);
         var isReservation = 'color' in newReservation &&
             'name' in newReservation &&
             'duration' in newReservation &&
@@ -76065,7 +76147,7 @@ var Reservation = /** @class */ (function () {
             'tables' in newReservation &&
             'user' in newReservation;
         if (!isReservation)
-            throw Exceptions_1.ReservationError.failedParsing(object);
+            throw ReservationError_1.default.failedParsing(object);
         else
             return isReservation;
     };
@@ -76076,7 +76158,7 @@ var Reservation = /** @class */ (function () {
         catch (err) {
             console.error(err);
         }
-        var newReservation = Helper_1.parseObject(object);
+        var newReservation = ParseObject_1.default(object);
         return new Reservation(newReservation.color, Duration_1.default.ofJson(newReservation.duration), newReservation.email ? newReservation.email : null, DateString_1.default.ofAny(newReservation.end), newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
     };
     Reservation.copyFromReservation = function (old) {
@@ -76199,8 +76281,8 @@ exports.default = Reservation;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var TableClass = /** @class */ (function () {
-    function TableClass(id, description, restaurant_id, room, seats, table_number) {
+var Table = /** @class */ (function () {
+    function Table(id, description, restaurant_id, room, seats, table_number) {
         this.id = id;
         this.description = description;
         this.restaurant_id = restaurant_id;
@@ -76208,14 +76290,14 @@ var TableClass = /** @class */ (function () {
         this.seats = seats;
         this.table_number = table_number;
     }
-    TableClass.of = function (object) {
+    Table.of = function (object) {
         if ('pivot' in object)
             delete object.pivot;
-        return new TableClass(object.id, object.description, object.restaurant_id, object.room, object.seats, object.table_number);
+        return new Table(object.id, object.description, object.restaurant_id, object.room, object.seats, object.table_number);
     };
-    return TableClass;
+    return Table;
 }());
-exports.default = TableClass;
+exports.default = Table;
 
 
 /***/ }),
@@ -76233,8 +76315,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
 var Table_1 = __importDefault(__webpack_require__(/*! ./Table */ "./resources/js/models/Table.ts"));
+var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
 var Tables = /** @class */ (function () {
     function Tables(tables) {
         tables.map(function (table) { return Table_1.default.of(table); });

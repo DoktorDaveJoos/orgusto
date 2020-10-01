@@ -1,5 +1,7 @@
-import {checkId, checkNotEmpty, parseObject} from "../helper/Helper";
-import {EmployeeError} from "../exceptions/Exceptions";
+import checkNotEmpty from "../helper/CheckNotEmpty";
+import checkId from "../helper/CheckId";
+import parseObject from "../helper/ParseObject";
+import EmployeeError from "../errors/EmployeeError";
 import _ from 'lodash';
 
 interface BasicEmployee {
