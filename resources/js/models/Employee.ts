@@ -71,7 +71,7 @@ export default class Employee implements BasicEmployee {
         return _.isEqual(this, other);
     }
 
-    public static isInstanceOfEmployee(object: any): object is Employee | Error {
+    public static check(object: any): object is Employee | Error {
         const newEmployee = parseObject(object);
         const isEmployee = "name" in newEmployee &&
             "email" in newEmployee &&
@@ -82,11 +82,9 @@ export default class Employee implements BasicEmployee {
     }
 
     public static of(object: any): Employee {
-        try {
-            Employee.isInstanceOfEmployee(object);
-        } catch (e: any) {
-            console.error(e);
-        }
+
+        Employee.check(object);
+
         const newEmployee = parseObject(object);
         return new EmployeeBuilder()
             .withId(newEmployee.id)

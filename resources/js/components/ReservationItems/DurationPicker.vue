@@ -87,7 +87,8 @@ export default Vue.extend({
     },
     computed: {
         moreIsActive(): boolean {
-            return this.moreChoices.includes(this.duration);
+            const found = this.moreChoices.filter((d: Duration) => d.h === this.duration.h && d.m === this.duration.m);
+            return found.length > 0;
         },
     },
     watch: {

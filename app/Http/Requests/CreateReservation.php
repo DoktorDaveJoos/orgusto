@@ -45,7 +45,7 @@ class CreateReservation extends FormRequest
             'tables' => 'array|required',
             'name' => 'required',
             'email' => 'nullable|email',
-            'color' => [Rule::in(['gray', 'indigo', 'blue', 'green', 'red', 'orange'])],
+            'color' => [Rule::in(['gray', 'indigo', 'blue', 'green', 'red', 'orange', 'w'])],
             'notice' => 'max:255',
             'phone_number' => 'max:15'
         ];

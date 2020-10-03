@@ -29,19 +29,30 @@
                     <div class="flex flex-wrap w-40 text-gray-800 p-1">
             <span
                 v-for="r in rest"
-                v-bind:key="r.id"
+                :key="r.id"
                 @click="setEmployeeLocal(r)"
                 class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
                 :class="r.equals(selected)? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
             >{{ r.name }}</span>
                     </div>
                 </div>
-                <select-button
+
+                <button
                     slot="reference"
-                    :selected="() => isNotInPreselected"
-                    :value="isNotInPreselected ? this.selected.name : 'Other'"
-                    icon="fas fa-address-book"
-                ></select-button>
+                    class="h-10 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
+                    :class="isNotInPreselected ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                >
+                    {{ isNotInPreselected ? this.selected.name : 'Other' }}
+                    <i class="fas fa-address-book ml-2"></i>
+                </button>
+
+
+<!--                <select-button-->
+<!--                    slot="reference"-->
+<!--                    :selected="someProperty"-->
+<!--                    :value="isNotInPreselected ? this.selected.name : 'Other'"-->
+<!--                    icon="fas fa-address-book"-->
+<!--                ></select-button>-->
             </popper>
         </div>
     </div>
@@ -65,8 +76,9 @@ export default Vue.extend({
     },
     data() {
         return {
-            selected: this.init,
-            employees: Array.of(this.init)
+            // remove observer tracking
+            selected: Employee.of(this.init),
+            employees: Array.of(this.init),
         };
     },
     mounted() {
@@ -90,7 +102,7 @@ export default Vue.extend({
                         throw EmployeeError.of(`Failed fetching Employees, see: ${err}`)
                     }
                 );
-        }
+        },
     },
     computed: {
         hasRest(): boolean {
@@ -105,10 +117,11 @@ export default Vue.extend({
         },
         isNotInPreselected(): boolean {
             // is in rest
-            return this.rest.includes(this.selected);
+            const found: Employee[] = this.rest.filter((e: Employee) => e.id === this.selected.id);
+            return found.length > 0;
         },
         rest(): Array<Employee> {
-            return this.employees.slice(3);
+            return this.employees.slice(3).map((e: Employee) => Employee.of(e));
         },
     },
 });

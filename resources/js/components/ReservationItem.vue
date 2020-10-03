@@ -132,12 +132,14 @@
 <script lang="ts">
 
 import Vue from "vue";
+import axios from 'axios';
 import Reservation from "../models/Reservation";
 import Employee from "../models/Employee";
 import Filter from "../models/Filter";
 import Tables from "../models/Tables";
 import DateString from "../models/DateString";
 import Duration from "../models/Duration";
+import CreateOrUpdateReservation from "../requests/CreateOrUpdateReservation";
 
 export default Vue.extend({
     props: {
@@ -147,11 +149,16 @@ export default Vue.extend({
     },
     data() {
         return {
-            reservationCopy: Reservation.of(this.reservation),
+            reservationCopy: Reservation.ofOrEmpty(this.reservation),
             errors: {},
             endpoint: "",
             showAdditionalNotice: false
         };
+    },
+    mounted() {
+        if (this.reservationCopy.notice) {
+            this.showAdditionalNotice = true;
+        }
     },
     methods: {
         setTables(tables: Tables): void {
@@ -177,18 +184,21 @@ export default Vue.extend({
         },
         handleSubmit(): void {
 
+            const request: CreateOrUpdateReservation = new CreateOrUpdateReservation(this.reservationCopy);
+            axios
+                .put(this.reservationsEndpoint, request.asJsonPayload())
+                .then((res: any) => {
+                    if (res.status === 200) {
+                        location.reload();
+                    }
+                    // TODO: else show information
+                })
+                .catch((err) => {
 
+                    console.log(err.response);
 
-            // axios
-            //     .put(this.reservationsEndpoint, {})
-            //     .then((res) => {
-            //         if (res.status === 200) {
-            //             location.reload();
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         this.errors = err.response.data.errors;
-            //     });
+                    this.errors = err.response.data.errors;
+                });
 
         },
         errorContainsKey(key): boolean {

@@ -64,7 +64,7 @@ class ReservationsController extends Controller
             if (sizeof($reservations) < 1) {
                 $empty_search = true;
                 $card_title = "... upcoming reservations";
-                $reservations = Reservation::where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
+                $reservations = Reservation::where('start', '>', date('Y-m-d'))->with(['tables', 'user'])->paginate(15);
             }
         }
 

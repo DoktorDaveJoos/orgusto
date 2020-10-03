@@ -52955,8 +52955,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 var Reservation_1 = __importDefault(__webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts"));
 var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./resources/js/models/Filter.ts"));
+var CreateOrUpdateReservation_1 = __importDefault(__webpack_require__(/*! ../requests/CreateOrUpdateReservation */ "./resources/js/requests/CreateOrUpdateReservation.ts"));
 exports.default = vue_1.default.extend({
     props: {
         reservation: Object,
@@ -52965,11 +52967,16 @@ exports.default = vue_1.default.extend({
     },
     data: function () {
         return {
-            reservationCopy: Reservation_1.default.of(this.reservation),
+            reservationCopy: Reservation_1.default.ofOrEmpty(this.reservation),
             errors: {},
             endpoint: "",
             showAdditionalNotice: false
         };
+    },
+    mounted: function () {
+        if (this.reservationCopy.notice) {
+            this.showAdditionalNotice = true;
+        }
     },
     methods: {
         setTables: function (tables) {
@@ -52994,16 +53001,20 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.user = employee;
         },
         handleSubmit: function () {
-            // axios
-            //     .put(this.reservationsEndpoint, {})
-            //     .then((res) => {
-            //         if (res.status === 200) {
-            //             location.reload();
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         this.errors = err.response.data.errors;
-            //     });
+            var _this = this;
+            var request = new CreateOrUpdateReservation_1.default(this.reservationCopy);
+            axios_1.default
+                .put(this.reservationsEndpoint, request.asJsonPayload())
+                .then(function (res) {
+                if (res.status === 200) {
+                    location.reload();
+                }
+                // TODO: else show information
+            })
+                .catch(function (err) {
+                console.log(err.response);
+                _this.errors = err.response.data.errors;
+            });
         },
         errorContainsKey: function (key) {
             return Object.keys(this.errors).includes(key);
@@ -53160,7 +53171,9 @@ exports.default = vue_1.default.extend({
     },
     computed: {
         moreIsActive: function () {
-            return this.moreChoices.includes(this.duration);
+            var _this = this;
+            var found = this.moreChoices.filter(function (d) { return d.h === _this.duration.h && d.m === _this.duration.m; });
+            return found.length > 0;
         },
     },
     watch: {
@@ -53202,8 +53215,9 @@ exports.default = vue_1.default.extend({
     },
     data: function () {
         return {
-            selected: this.init,
-            employees: Array.of(this.init)
+            // remove observer tracking
+            selected: Employee_1.default.of(this.init),
+            employees: Array.of(this.init),
         };
     },
     mounted: function () {
@@ -53227,7 +53241,7 @@ exports.default = vue_1.default.extend({
                 .catch(function (err) {
                 throw EmployeeError_1.default.of("Failed fetching Employees, see: " + err);
             });
-        }
+        },
     },
     computed: {
         hasRest: function () {
@@ -53241,11 +53255,13 @@ exports.default = vue_1.default.extend({
             return this.employees.slice(0, 3);
         },
         isNotInPreselected: function () {
+            var _this = this;
             // is in rest
-            return this.rest.includes(this.selected);
+            var found = this.rest.filter(function (e) { return e.id === _this.selected.id; });
+            return found.length > 0;
         },
         rest: function () {
-            return this.employees.slice(3);
+            return this.employees.slice(3).map(function (e) { return Employee_1.default.of(e); });
         },
     },
 });
@@ -53406,7 +53422,7 @@ exports.default = vue_1.default.extend({
                 .then(function (res) {
                 _this.tables.merge(res.data);
             })
-                .catch(function (err) { return console.log(err); });
+                .catch(function (err) { return console.error(err); });
         },
         handleTableClick: function (tableId) {
             var tables = this.tables.tables;
@@ -53452,9 +53468,12 @@ exports.default = vue_1.default.extend({
         return {
             hour: this.init.asMoment().get('hour'),
             minute: this.init.asMoment().get('minute'),
-            time: DateString_1.default.ofAny(this.init),
+            time: this.init,
             singleTimePickerActive: false
         };
+    },
+    mounted: function () {
+        this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
     },
     methods: {
         setHour: function (hour) {
@@ -53470,7 +53489,7 @@ exports.default = vue_1.default.extend({
         },
         setSingleTimeState: function () {
             this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
-            this.time.asMoment().set('hour', this.hour).set('minute', this.minute);
+            this.time = DateString_1.default.ofAny(this.time.asMoment().set('hour', this.hour).set('minute', this.minute));
             this.$emit("time:chosen", this.time);
         },
         getButtonClass: function (minute) {
@@ -55352,7 +55371,9 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    "\n                " + _vm._s(p.name) + "\n            "
+                    "\n                    " +
+                      _vm._s(p.name) +
+                      "\n                "
                   )
                 ]
               )
@@ -55418,21 +55439,29 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c("select-button", {
-                  attrs: {
-                    slot: "reference",
-                    selected: function() {
-                      return _vm.isNotInPreselected
-                    },
-                    value: _vm.isNotInPreselected
-                      ? this.selected.name
-                      : "Other",
-                    icon: "fas fa-address-book"
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "h-10 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
+                    class: _vm.isNotInPreselected
+                      ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
+                      : "",
+                    attrs: { slot: "reference" },
+                    slot: "reference"
                   },
-                  slot: "reference"
-                })
-              ],
-              1
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(
+                          _vm.isNotInPreselected ? this.selected.name : "Other"
+                        ) +
+                        "\n                    "
+                    ),
+                    _c("i", { staticClass: "fas fa-address-book ml-2" })
+                  ]
+                )
+              ]
             )
           : _vm._e()
       ],
@@ -75842,6 +75871,9 @@ var Duration = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Duration.prototype.asJson = function () {
+        return { "h": this.h, "m": this.m };
+    };
     Duration.boilerPlate = function () {
         return new Duration(2, 0);
     };
@@ -75966,7 +75998,7 @@ var Employee = /** @class */ (function () {
     Employee.prototype.equals = function (other) {
         return lodash_1.default.isEqual(this, other);
     };
-    Employee.isInstanceOfEmployee = function (object) {
+    Employee.check = function (object) {
         var newEmployee = ParseObject_1.default(object);
         var isEmployee = "name" in newEmployee &&
             "email" in newEmployee &&
@@ -75978,12 +76010,7 @@ var Employee = /** @class */ (function () {
             return isEmployee;
     };
     Employee.of = function (object) {
-        try {
-            Employee.isInstanceOfEmployee(object);
-        }
-        catch (e) {
-            console.error(e);
-        }
+        Employee.check(object);
         var newEmployee = ParseObject_1.default(object);
         return new EmployeeBuilder()
             .withId(newEmployee.id)
@@ -76108,6 +76135,25 @@ exports.default = Filter;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -76116,7 +76162,7 @@ var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules
 var Duration_1 = __importDefault(__webpack_require__(/*! ./Duration */ "./resources/js/models/Duration.ts"));
 var Tables_1 = __importDefault(__webpack_require__(/*! ./Tables */ "./resources/js/models/Tables.ts"));
 var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
-var Employee_1 = __importDefault(__webpack_require__(/*! ./Employee */ "./resources/js/models/Employee.ts"));
+var Employee_1 = __importStar(__webpack_require__(/*! ./Employee */ "./resources/js/models/Employee.ts"));
 var ParseObject_1 = __importDefault(__webpack_require__(/*! ../helper/ParseObject */ "./resources/js/helper/ParseObject.ts"));
 var ReservationError_1 = __importDefault(__webpack_require__(/*! ../errors/ReservationError */ "./resources/js/errors/ReservationError.ts"));
 var Reservation = /** @class */ (function () {
@@ -76131,9 +76177,9 @@ var Reservation = /** @class */ (function () {
         this._phone_number = phone_number;
         this._start = start;
         this._tables = tables;
-        this.user = user;
+        this._user = user;
     }
-    Reservation.instanceOfReservation = function (object) {
+    Reservation.check = function (object) {
         var newReservation = ParseObject_1.default(object);
         var isReservation = 'color' in newReservation &&
             'name' in newReservation &&
@@ -76151,15 +76197,21 @@ var Reservation = /** @class */ (function () {
         else
             return isReservation;
     };
+    Reservation.ofOrEmpty = function (object) {
+        if (object === undefined) {
+            return Reservation.empty();
+        }
+        else {
+            return Reservation.of(object);
+        }
+    };
     Reservation.of = function (object) {
-        try {
-            Reservation.instanceOfReservation(object);
-        }
-        catch (err) {
-            console.error(err);
-        }
+        Reservation.check(object);
         var newReservation = ParseObject_1.default(object);
         return new Reservation(newReservation.color, Duration_1.default.ofJson(newReservation.duration), newReservation.email ? newReservation.email : null, DateString_1.default.ofAny(newReservation.end), newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
+    };
+    Reservation.empty = function () {
+        return new Reservation("gray", Duration_1.default.of(2, 0), null, DateString_1.default.now(), "", null, 2, null, DateString_1.default.now(), Tables_1.default.empty(), new Employee_1.EmployeeBuilder().build());
     };
     Reservation.copyFromReservation = function (old) {
         return lodash_1.default.cloneDeep(old);
@@ -76264,6 +76316,16 @@ var Reservation = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Reservation.prototype, "user", {
+        get: function () {
+            return this._user;
+        },
+        set: function (value) {
+            this._user = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Reservation;
 }());
 exports.default = Reservation;
@@ -76364,6 +76426,84 @@ var Tables = /** @class */ (function () {
     return Tables;
 }());
 exports.default = Tables;
+
+
+/***/ }),
+
+/***/ "./resources/js/requests/AbstractRequest.ts":
+/*!**************************************************!*\
+  !*** ./resources/js/requests/AbstractRequest.ts ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Request = /** @class */ (function () {
+    function Request() {
+    }
+    return Request;
+}());
+exports.default = Request;
+
+
+/***/ }),
+
+/***/ "./resources/js/requests/CreateOrUpdateReservation.ts":
+/*!************************************************************!*\
+  !*** ./resources/js/requests/CreateOrUpdateReservation.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var AbstractRequest_1 = __importDefault(__webpack_require__(/*! ./AbstractRequest */ "./resources/js/requests/AbstractRequest.ts"));
+var CreateOrUpdateReservation = /** @class */ (function (_super) {
+    __extends(CreateOrUpdateReservation, _super);
+    function CreateOrUpdateReservation(reservation) {
+        var _this = _super.call(this) || this;
+        _this.reservation = reservation;
+        return _this;
+    }
+    CreateOrUpdateReservation.prototype.asJsonPayload = function () {
+        var request = Object.assign({});
+        request.start = this.reservation.start.date;
+        request.end = this.reservation.end.date;
+        request.persons = this.reservation.persons;
+        request.user_id = this.reservation.user.id;
+        request.duration = this.reservation.duration.asJson();
+        request.tables = lodash_1.default.cloneDeep(this.reservation.tables.tables)
+            .map(function (table) { return table.id; });
+        request.name = this.reservation.name;
+        request.email = this.reservation.email;
+        request.color = this.reservation.color;
+        request.notice = this.reservation.notice;
+        request.phone_number = this.reservation.phone_number;
+        return request;
+    };
+    return CreateOrUpdateReservation;
+}(AbstractRequest_1.default));
+exports.default = CreateOrUpdateReservation;
 
 
 /***/ }),

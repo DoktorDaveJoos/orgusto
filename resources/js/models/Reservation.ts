@@ -3,12 +3,12 @@ import _ from "lodash";
 import Duration from "./Duration";
 import Tables from "./Tables";
 import DateString from "./DateString";
-import Employee from "./Employee";
+import Employee, {EmployeeBuilder} from "./Employee";
 import parseObject from "../helper/ParseObject";
 import ReservationError from "../errors/ReservationError";
 
 export interface BasicReservation {
-    name: string,
+    name: string | null,
     duration: Duration,
     persons: number,
     start: DateString,
@@ -32,7 +32,7 @@ export default class Reservation implements BasicReservation {
     private _phone_number: string | null;
     private _start: DateString;
     private _tables: Tables;
-    user: Employee;
+    private _user: Employee;
 
     constructor(color: string, duration: Duration, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables, user: Employee) {
         this._color = color;
@@ -45,10 +45,10 @@ export default class Reservation implements BasicReservation {
         this._phone_number = phone_number;
         this._start = start;
         this._tables = tables;
-        this.user = user;
+        this._user = user;
     }
 
-    public static instanceOfReservation(object: any): object is BasicReservation {
+    public static check(object: any): object is BasicReservation {
         const newReservation: any = parseObject(object);
         const isReservation = 'color' in newReservation &&
             'name' in newReservation &&
@@ -65,12 +65,18 @@ export default class Reservation implements BasicReservation {
         else return isReservation;
     }
 
-    static of(object: any): BasicReservation {
-        try {
-            Reservation.instanceOfReservation(object)
-        } catch (err: any) {
-            console.error(err)
+    static ofOrEmpty(object: any): Reservation {
+        if (object === undefined) {
+            return Reservation.empty();
+        } else {
+            return Reservation.of(object);
         }
+    }
+
+    static of(object: any): Reservation {
+
+        Reservation.check(object)
+
         const newReservation: any = parseObject(object);
 
         return new Reservation(
@@ -85,6 +91,22 @@ export default class Reservation implements BasicReservation {
             DateString.ofAny(newReservation.start),
             Tables.of(newReservation.tables),
             Employee.of(newReservation.user)
+        )
+    }
+
+    static empty(): Reservation {
+        return new Reservation(
+            "gray",
+            Duration.of(2, 0),
+            null,
+            DateString.now(),
+            "",
+            null,
+            2,
+            null,
+            DateString.now(),
+            Tables.empty(),
+            new EmployeeBuilder().build()
         )
     }
 
@@ -170,5 +192,13 @@ export default class Reservation implements BasicReservation {
 
     set start(value: DateString) {
         this._start = value;
+    }
+
+    get user(): Employee {
+        return this._user;
+    }
+
+    set user(value: Employee) {
+        this._user = value;
     }
 }

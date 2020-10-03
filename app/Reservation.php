@@ -16,7 +16,18 @@ class Reservation extends Model
     public $asYouType = true;
 
     protected $fillable = [
-        'user_id', 'name', 'notice', 'persons', 'start', 'end', 'duration', 'accepted_from', 'color', 'email', 'phone_number', 'table_id'
+        'user_id',
+        'name',
+        'notice',
+        'persons',
+        'start',
+        'end',
+        'duration',
+        'accepted_from',
+        'color',
+        'email',
+        'phone_number',
+        'table_id'
     ];
 
     protected $casts = [

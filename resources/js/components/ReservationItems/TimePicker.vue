@@ -80,9 +80,12 @@ export default Vue.extend({
         return {
             hour: this.init.asMoment().get('hour'),
             minute: this.init.asMoment().get('minute'),
-            time: DateString.ofAny(this.init),
+            time: this.init,
             singleTimePickerActive: false
         };
+    },
+    mounted() {
+        this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
     },
     methods: {
         setHour(hour: number): void {
@@ -97,7 +100,7 @@ export default Vue.extend({
         },
         setSingleTimeState(): void {
             this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
-            this.time.asMoment().set('hour', this.hour).set('minute', this.minute);
+            this.time = DateString.ofAny(this.time.asMoment().set('hour', this.hour).set('minute', this.minute));
             this.$emit("time:chosen", this.time);
         },
         getButtonClass(minute: number): string {

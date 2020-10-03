@@ -55,7 +55,7 @@ export default Vue.extend({
                 .then((res: any) => {
                     this.tables.merge(res.data);
                 })
-                .catch((err: any) => console.log(err));
+                .catch((err: any) => console.error(err));
         },
         handleTableClick(tableId: string): void {
             const { tables } = this.tables;

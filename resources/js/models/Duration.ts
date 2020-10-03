@@ -28,6 +28,10 @@ export default class Duration implements BasicDuration {
         this._m = value;
     }
 
+    asJson(): any {
+        return { "h": this.h, "m": this.m };
+    }
+
     public static boilerPlate(): Duration {
         return new Duration(2, 0);
     }
