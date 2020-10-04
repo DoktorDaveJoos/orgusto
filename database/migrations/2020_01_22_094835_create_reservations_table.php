@@ -21,7 +21,6 @@ class CreateReservationsTable extends Migration
             $table->boolean('done')->default(false);
             $table->integer('persons');
             $table->dateTime('start');
-            $table->dateTime('end');
             $table->text('notice')->nullable();
             $table->string('color')->nullable();
             $table->string('email')->nullable();

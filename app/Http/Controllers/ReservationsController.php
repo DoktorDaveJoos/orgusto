@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReservation;
+use App\Table;
 use Illuminate\Http\Request;
 use App\Reservation;
+use Illuminate\Support\Facades\App;
 
 class ReservationsController extends Controller
 {
@@ -89,9 +91,29 @@ class ReservationsController extends Controller
 
     public function update(CreateReservation $request, Reservation $reservation)
     {
-        $reservation->update($request->validated());
-        $reservation->tables()->sync($request->tables);
-        $reservation->save();
+        $newOrUpdatedReservation = $request->validated();
+
+        // Check if there is no reservation for chosen tables
+        $restaurant = auth()->user()->restaurants()->first();
+        $tablesAvailable = $restaurant->tables()
+            ->availableBetween($newOrUpdatedReservation['start'], $newOrUpdatedReservation['end'])
+            ->get();
+
+
+        foreach($newOrUpdatedReservation['tables'] as $table) {
+            $found = $tablesAvailable->find($table);
+            if (!$found) {
+                return response('Hello World', 400);
+            } else return response('Hello du coole Socke', 200);
+        }
+
+//        $found = $tablesAvailable->diff(Table::whereIn('id', $newOrUpdatedReservation['tables'])->get());
+
+//        $restaurant->tables()->availableBetween($start_date, $end_date)->withEnoughSeats($persons)->get();
+
+//        $reservation->update($request->validated());
+//        $reservation->tables()->sync($request->tables);
+//        $reservation->save();
     }
 
     public function destroy(Reservation $reservation)

@@ -21,7 +21,6 @@ class Reservation extends Model
         'notice',
         'persons',
         'start',
-        'end',
         'duration',
         'accepted_from',
         'color',

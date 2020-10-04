@@ -52955,7 +52955,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 var Reservation_1 = __importDefault(__webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts"));
 var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./resources/js/models/Filter.ts"));
 var CreateOrUpdateReservation_1 = __importDefault(__webpack_require__(/*! ../requests/CreateOrUpdateReservation */ "./resources/js/requests/CreateOrUpdateReservation.ts"));
@@ -53001,20 +53000,22 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.user = employee;
         },
         handleSubmit: function () {
-            var _this = this;
             var request = new CreateOrUpdateReservation_1.default(this.reservationCopy);
-            axios_1.default
-                .put(this.reservationsEndpoint, request.asJsonPayload())
-                .then(function (res) {
-                if (res.status === 200) {
-                    location.reload();
-                }
-                // TODO: else show information
-            })
-                .catch(function (err) {
-                console.log(err.response);
-                _this.errors = err.response.data.errors;
-            });
+            request.asJsonPayload();
+            // axios
+            //     .put(this.reservationsEndpoint, request.asJsonPayload())
+            //     .then((res: any) => {
+            //         if (res.status === 200) {
+            //             location.reload();
+            //         }
+            //         // TODO: else show information
+            //     })
+            //     .catch((err) => {
+            //
+            //         console.log(err.response);
+            //
+            //         this.errors = err.response.data.errors;
+            //     });
         },
         errorContainsKey: function (key) {
             return Object.keys(this.errors).includes(key);
@@ -76166,11 +76167,10 @@ var Employee_1 = __importStar(__webpack_require__(/*! ./Employee */ "./resources
 var ParseObject_1 = __importDefault(__webpack_require__(/*! ../helper/ParseObject */ "./resources/js/helper/ParseObject.ts"));
 var ReservationError_1 = __importDefault(__webpack_require__(/*! ../errors/ReservationError */ "./resources/js/errors/ReservationError.ts"));
 var Reservation = /** @class */ (function () {
-    function Reservation(color, duration, email, end, name, notice, persons, phone_number, start, tables, user) {
+    function Reservation(color, duration, email, name, notice, persons, phone_number, start, tables, user) {
         this._color = color;
         this._duration = duration;
         this._email = email;
-        this._end = end;
         this._name = name;
         this._notice = notice;
         this._persons = persons;
@@ -76186,7 +76186,6 @@ var Reservation = /** @class */ (function () {
             'duration' in newReservation &&
             'persons' in newReservation &&
             'start' in newReservation &&
-            'end' in newReservation &&
             'notice' in newReservation &&
             'email' in newReservation &&
             'phone_number' in newReservation &&
@@ -76208,10 +76207,10 @@ var Reservation = /** @class */ (function () {
     Reservation.of = function (object) {
         Reservation.check(object);
         var newReservation = ParseObject_1.default(object);
-        return new Reservation(newReservation.color, Duration_1.default.ofJson(newReservation.duration), newReservation.email ? newReservation.email : null, DateString_1.default.ofAny(newReservation.end), newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
+        return new Reservation(newReservation.color, Duration_1.default.ofJson(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
     };
     Reservation.empty = function () {
-        return new Reservation("gray", Duration_1.default.of(2, 0), null, DateString_1.default.now(), "", null, 2, null, DateString_1.default.now(), Tables_1.default.empty(), new Employee_1.EmployeeBuilder().build());
+        return new Reservation("gray", Duration_1.default.of(2, 0), null, "", null, 2, null, DateString_1.default.now(), Tables_1.default.empty(), new Employee_1.EmployeeBuilder().build());
     };
     Reservation.copyFromReservation = function (old) {
         return lodash_1.default.cloneDeep(old);
@@ -76272,16 +76271,6 @@ var Reservation = /** @class */ (function () {
         },
         set: function (value) {
             this._duration = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Reservation.prototype, "end", {
-        get: function () {
-            return this._end;
-        },
-        set: function (value) {
-            this._end = value;
         },
         enumerable: false,
         configurable: true
@@ -76488,7 +76477,6 @@ var CreateOrUpdateReservation = /** @class */ (function (_super) {
     CreateOrUpdateReservation.prototype.asJsonPayload = function () {
         var request = Object.assign({});
         request.start = this.reservation.start.date;
-        request.end = this.reservation.end.date;
         request.persons = this.reservation.persons;
         request.user_id = this.reservation.user.id;
         request.duration = this.reservation.duration.asJson();

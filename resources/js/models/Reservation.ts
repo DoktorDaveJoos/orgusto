@@ -12,7 +12,6 @@ export interface BasicReservation {
     duration: Duration,
     persons: number,
     start: DateString,
-    end: DateString,
     notice?: string | null,
     color: string,
     email?: string | null,
@@ -25,8 +24,7 @@ export default class Reservation implements BasicReservation {
     private _color: string;
     private _duration: Duration;
     private _email: string | null;
-    private _end: DateString;
-    private _name: string;
+    private _name: string | null;
     private _notice: string | null;
     private _persons: number;
     private _phone_number: string | null;
@@ -34,11 +32,19 @@ export default class Reservation implements BasicReservation {
     private _tables: Tables;
     private _user: Employee;
 
-    constructor(color: string, duration: Duration, email: string | null, end: DateString, name: string, notice: string | null, persons: number, phone_number: string | null, start: DateString, tables: Tables, user: Employee) {
+    constructor(color: string,
+                duration: Duration,
+                email: string | null,
+                name: string | null,
+                notice: string | null,
+                persons: number,
+                phone_number: string | null,
+                start: DateString,
+                tables: Tables,
+                user: Employee) {
         this._color = color;
         this._duration = duration;
         this._email = email;
-        this._end = end;
         this._name = name;
         this._notice = notice;
         this._persons = persons;
@@ -55,7 +61,6 @@ export default class Reservation implements BasicReservation {
             'duration' in newReservation &&
             'persons' in newReservation &&
             'start' in newReservation &&
-            'end' in newReservation &&
             'notice' in newReservation &&
             'email' in newReservation &&
             'phone_number' in newReservation &&
@@ -83,7 +88,6 @@ export default class Reservation implements BasicReservation {
             newReservation.color,
             Duration.ofJson(newReservation.duration),
             newReservation.email ? newReservation.email : null,
-            DateString.ofAny(newReservation.end),
             newReservation.name,
             newReservation.notice ? newReservation.notice : null,
             newReservation.persons,
@@ -99,7 +103,6 @@ export default class Reservation implements BasicReservation {
             "gray",
             Duration.of(2, 0),
             null,
-            DateString.now(),
             "",
             null,
             2,
@@ -154,11 +157,7 @@ export default class Reservation implements BasicReservation {
         return this._duration;
     }
 
-    get end(): DateString {
-        return this._end;
-    }
-
-    get name(): string {
+    get name(): string | null {
         return this._name;
     }
 
@@ -178,11 +177,7 @@ export default class Reservation implements BasicReservation {
         this._duration = value;
     }
 
-    set end(value: DateString) {
-        this._end = value;
-    }
-
-    set name(value: string) {
+    set name(value: string | null) {
         this._name = value;
     }
 
