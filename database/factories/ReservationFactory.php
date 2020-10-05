@@ -16,10 +16,6 @@ $factory->define(Reservation::class, function (Faker $faker) {
             '2020-07-06 17:00:00',
             '2020-07-06 19:00:00'
         )),
-        'end' => $faker->randomElement($array = array(
-            '2020-07-06 20:00:00',
-            '2020-07-06 21:00:00'
-        )),
         'color' => $faker->randomElement($array = array(
             'green',
             'red',
