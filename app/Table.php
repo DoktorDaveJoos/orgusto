@@ -2,12 +2,14 @@
 
 namespace App;
 
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Table extends Model
 {
+
+    use HasFactory;
+
     protected $fillable = [
         'seats', 'table_number', 'description', 'room'
     ];
