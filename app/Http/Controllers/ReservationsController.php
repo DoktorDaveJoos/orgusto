@@ -91,21 +91,11 @@ class ReservationsController extends Controller
 
     public function update(CreateReservation $request, Reservation $reservation)
     {
-        $newOrUpdatedReservation = $request->validated();
-
-        // Check if there is no reservation for chosen tables
-        $restaurant = auth()->user()->restaurants()->first();
-        $tablesAvailable = $restaurant->tables()
-            ->availableBetween($newOrUpdatedReservation['start'], $newOrUpdatedReservation['end'])
-            ->get();
+//        $newOrUpdatedReservation = $request->validated();
 
 
-        foreach($newOrUpdatedReservation['tables'] as $table) {
-            $found = $tablesAvailable->find($table);
-            if (!$found) {
-                return response('Hello World', 400);
-            } else return response('Hello du coole Socke', 200);
-        }
+        $this->checkTablesAreAvailable($request->validated());
+
 
 //        $found = $tablesAvailable->diff(Table::whereIn('id', $newOrUpdatedReservation['tables'])->get());
 
@@ -115,6 +105,7 @@ class ReservationsController extends Controller
 //        $reservation->tables()->sync($request->tables);
 //        $reservation->save();
     }
+
 
     public function destroy(Reservation $reservation)
     {
@@ -176,5 +167,20 @@ class ReservationsController extends Controller
         }
 
         return view('reservations', ['reservations' => $results]);
+    }
+
+
+    private function checkTablesAreAvailable(Array $reservation): bool
+    {
+
+        $restaurant = $this->getRestaurant();
+
+        $tablesAvailable = $restaurant->tables()
+            ->availableBetween($reservation['start'], $reservation['end'])
+            ->get();
+
+        foreach ($reservation['tables'] as $table) {
+            dd($found = $tablesAvailable->find($table));
+        }
     }
 }

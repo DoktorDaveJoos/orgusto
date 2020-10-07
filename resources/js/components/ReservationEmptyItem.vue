@@ -203,7 +203,7 @@ export default {
       request.end = moment(request.start).add("hours", request.duration);
       request.end = request.end.format("YYYY-MM-DD HH:mm:ss");
 
-      request.duration = JSON.stringify({ h: "2", m: "00" });
+      request.duration = 120;
 
       axios
         .post("/reservations", request)

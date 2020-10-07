@@ -2,7 +2,9 @@
 
 namespace App;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Table extends Model
 {
@@ -30,10 +32,22 @@ class Table extends Model
         return $this->reservations()->whereBetween('start', [$from, $to]);
     }
 
+    /**
+     * Returns a {@code QueryBuilder} which contains only a collection of {@code Table} which do not
+     * have a {@code Reservation} somehow overlapping with the given timeframe (from -> to).
+     *
+     * @param $query - Auto injected.
+     * @param $from - A {@code Date} where timeframe begins.
+     * @param $to - A {@code Date} where timeframe ends.
+     * @return mixed - {@code QueryBuilder}
+     */
     public function scopeAvailableBetween($query, $from, $to)
     {
         return $query->whereDoesntHave('reservations', function ($q) use ($from, $to) {
-            $q->whereBetween('start', [$from, $to])->orWhereBetween('end', [$from, $to]);
+            $q->whereBetween('start', [$from, $to])
+                ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+        })->whereDoesntHave('reservations', function ($q) use ($from, $to) {
+            $q->where('start', '<=', $from)->where(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), '>=', $to);
         });
     }
 

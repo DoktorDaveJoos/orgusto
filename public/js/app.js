@@ -2377,7 +2377,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "orgastro-table",
+  name: "orgusto-table",
   props: {
     table: {
       type: Object,
@@ -2435,9 +2435,9 @@ __webpack_require__.r(__webpack_exports__);
       return moment(this.timelineStart).add(slot * 15, "m").format("HH:mm");
     },
     parseDuration: function parseDuration(durationJson) {
-      var tmp = JSON.parse(durationJson);
-      var dur = parseFloat(tmp.h) + parseFloat(tmp.m / 60);
-      return dur;
+      // const tmp = JSON.parse(durationJson);
+      // const dur = parseFloat(tmp.h) + parseFloat(tmp.m / 60);
+      return parseFloat(durationJson / 60);
     }
   },
   computed: {
@@ -2799,10 +2799,7 @@ __webpack_require__.r(__webpack_exports__);
       request.user_id = this.input.user.id;
       request.end = moment(request.start).add("hours", request.duration);
       request.end = request.end.format("YYYY-MM-DD HH:mm:ss");
-      request.duration = JSON.stringify({
-        h: "2",
-        m: "00"
-      });
+      request.duration = 120;
       axios.post("/reservations", request).then(function (res) {
         if (res.status === 200) {
           location.reload();
@@ -53034,7 +53031,7 @@ exports.default = vue_1.default.extend({
             return "border-" + this.reservationCopy.color + "-400";
         },
         filterData: function () {
-            return Filter_1.default.of(this.reservation);
+            return Filter_1.default.of(this.reservationCopy);
         },
     },
 });
@@ -75848,26 +75845,35 @@ exports.default = DateString;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Duration = /** @class */ (function () {
-    function Duration(h, m) {
-        this._h = h;
-        this._m = m;
+    function Duration(minutes) {
+        this._minutes = minutes;
     }
-    Object.defineProperty(Duration.prototype, "h", {
+    Object.defineProperty(Duration.prototype, "minutes", {
         get: function () {
-            return this._h;
+            return this._minutes;
         },
         set: function (value) {
-            this._h = value;
+            this._minutes = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Duration.prototype, "h", {
+        get: function () {
+            return Math.floor(this.minutes / 60);
+        },
+        set: function (value) {
+            this.minutes = this.m + value * 60;
         },
         enumerable: false,
         configurable: true
     });
     Object.defineProperty(Duration.prototype, "m", {
         get: function () {
-            return this._m;
+            return this.minutes % 60;
         },
         set: function (value) {
-            this._m = value;
+            this.minutes = this.h * 60 + value;
         },
         enumerable: false,
         configurable: true
@@ -75876,27 +75882,47 @@ var Duration = /** @class */ (function () {
         return { "h": this.h, "m": this.m };
     };
     Duration.boilerPlate = function () {
-        return new Duration(2, 0);
+        return new Duration(120);
     };
+    /**
+     * Returns a Duration Object from a JSON Object
+     * @param dur Json representation of Duration
+     *
+     * @deprecated
+     */
     Duration.ofJson = function (dur) {
         var newDuration = JSON.parse(dur);
-        if (!Duration.instanceOfDuration(newDuration)) {
-            throw new Error("Not an instance of Duration: " + dur);
+        if (!Duration.instanceOfOldDuration(newDuration)) {
+            throw new Error("Not an instance of OldDuration: " + dur);
         }
         var h = !isNaN(newDuration.h) ? parseInt(newDuration.h.toString()) : newDuration.h;
         var m = !isNaN(newDuration.h) ? parseInt(newDuration.m.toString()) : newDuration.m;
-        return new Duration(h, m);
+        return new Duration(h * 60 + m);
     };
+    /**
+     * Returns a Duration Object from a given hour and a minute
+     * @param hour
+     * @param minute
+     *
+     * @deprecated - use {@link #ofMinutes} instead.
+     */
     Duration.of = function (hour, minute) {
-        return new Duration(hour, minute);
+        return new Duration(hour * 60 + minute);
     };
-    Duration.instanceOfDuration = function (object) {
+    /**
+     * Returns a Duration Object from given minutes
+     * @param minutes
+     */
+    Duration.ofMinutes = function (minutes) {
+        return new Duration(minutes);
+    };
+    Duration.instanceOfOldDuration = function (object) {
         if (!(object instanceof Object))
             object = Object.assign({}, object);
         return "h" in object && "m" in object;
     };
     Duration.prototype.equals = function (duration) {
-        return this.h === duration.h && this.m === duration.m;
+        return this.minutes === duration.minutes;
     };
     Duration.prototype.print = function () {
         var minute;
@@ -76075,11 +76101,7 @@ exports.EmployeeBuilder = EmployeeBuilder;
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var DateString_1 = __importDefault(__webpack_require__(/*! ./DateString */ "./resources/js/models/DateString.ts"));
 var Filter = /** @class */ (function () {
     function Filter(date, duration, persons) {
         this._date = date;
@@ -76117,7 +76139,7 @@ var Filter = /** @class */ (function () {
         configurable: true
     });
     Filter.of = function (reservation) {
-        var date = DateString_1.default.ofAny(reservation.start);
+        var date = reservation.start;
         return new Filter(date, reservation.duration, reservation.persons);
     };
     return Filter;
@@ -76167,6 +76189,7 @@ var Employee_1 = __importStar(__webpack_require__(/*! ./Employee */ "./resources
 var ParseObject_1 = __importDefault(__webpack_require__(/*! ../helper/ParseObject */ "./resources/js/helper/ParseObject.ts"));
 var ReservationError_1 = __importDefault(__webpack_require__(/*! ../errors/ReservationError */ "./resources/js/errors/ReservationError.ts"));
 var Reservation = /** @class */ (function () {
+    // TODO refactor for optional? parameters with BuilderPattern
     function Reservation(color, duration, email, name, notice, persons, phone_number, start, tables, user) {
         this._color = color;
         this._duration = duration;
@@ -76207,10 +76230,10 @@ var Reservation = /** @class */ (function () {
     Reservation.of = function (object) {
         Reservation.check(object);
         var newReservation = ParseObject_1.default(object);
-        return new Reservation(newReservation.color, Duration_1.default.ofJson(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
+        return new Reservation(newReservation.color, Duration_1.default.ofMinutes(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, DateString_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
     };
     Reservation.empty = function () {
-        return new Reservation("gray", Duration_1.default.of(2, 0), null, "", null, 2, null, DateString_1.default.now(), Tables_1.default.empty(), new Employee_1.EmployeeBuilder().build());
+        return new Reservation("gray", Duration_1.default.ofMinutes(120), null, "", null, 2, null, DateString_1.default.now(), Tables_1.default.empty(), new Employee_1.EmployeeBuilder().build());
     };
     Reservation.copyFromReservation = function (old) {
         return lodash_1.default.cloneDeep(old);
@@ -76509,43 +76532,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var DateString_1 = __importDefault(__webpack_require__(/*! ../models/DateString */ "./resources/js/models/DateString.ts"));
 var jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
 var TablesRequest = /** @class */ (function () {
-    function TablesRequest(start, end) {
-        this._start = start;
-        this._end = end;
+    function TablesRequest(filter) {
+        this._filter = filter;
     }
-    Object.defineProperty(TablesRequest.prototype, "start", {
+    Object.defineProperty(TablesRequest.prototype, "filter", {
         get: function () {
-            return this._start;
+            return this._filter;
         },
         set: function (value) {
-            this._start = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(TablesRequest.prototype, "end", {
-        get: function () {
-            return this._end;
-        },
-        set: function (value) {
-            this._end = value;
+            this._filter = value;
         },
         enumerable: false,
         configurable: true
     });
     TablesRequest.of = function (filter) {
-        var start = DateString_1.default.ofAny(filter.date);
-        var end = DateString_1.default.addDuration(start, filter.duration);
-        return new TablesRequest(start, end);
+        return new TablesRequest(filter);
     };
     Object.defineProperty(TablesRequest.prototype, "queryParams", {
         get: function () {
             var simplified = {
-                start: this.start.date,
-                end: this.end.date
+                start: this.filter.date.date,
+                m: this.filter.duration.minutes,
+                persons: this.filter.persons
             };
             return jquery_1.default.param(simplified);
         },

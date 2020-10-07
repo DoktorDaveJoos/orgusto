@@ -219,7 +219,7 @@ export default Vue.extend({
             return "border-" + this.reservationCopy.color + "-400";
         },
         filterData(): Filter {
-            return Filter.of(this.reservation);
+            return Filter.of(this.reservationCopy);
         },
     },
 });

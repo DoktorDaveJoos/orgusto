@@ -32,6 +32,7 @@ export default class Reservation implements BasicReservation {
     private _tables: Tables;
     private _user: Employee;
 
+    // TODO refactor for optional? parameters with BuilderPattern
     constructor(color: string,
                 duration: Duration,
                 email: string | null,
@@ -86,7 +87,7 @@ export default class Reservation implements BasicReservation {
 
         return new Reservation(
             newReservation.color,
-            Duration.ofJson(newReservation.duration),
+            Duration.ofMinutes(newReservation.duration),
             newReservation.email ? newReservation.email : null,
             newReservation.name,
             newReservation.notice ? newReservation.notice : null,
@@ -101,7 +102,7 @@ export default class Reservation implements BasicReservation {
     static empty(): Reservation {
         return new Reservation(
             "gray",
-            Duration.of(2, 0),
+            Duration.ofMinutes(120),
             null,
             "",
             null,
@@ -113,7 +114,7 @@ export default class Reservation implements BasicReservation {
         )
     }
 
-    static copyFromReservation(old: BasicReservation): BasicReservation {
+    static copyFromReservation(old: Reservation): Reservation {
         return _.cloneDeep(old);
     }
 

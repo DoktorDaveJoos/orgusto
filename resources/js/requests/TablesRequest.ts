@@ -2,43 +2,33 @@ import DateString from "../models/DateString";
 import Filter from "../models/Filter";
 
 import $ from 'jquery';
+import Duration from "../models/Duration";
 
 export default class TablesRequest {
 
-    private _start: DateString;
-    private _end: DateString;
+    private _filter: Filter;
 
-    constructor(start: DateString, end: DateString) {
-        this._start = start;
-        this._end = end;
+    constructor(filter: Filter) {
+        this._filter = filter;
     }
 
-    get start(): DateString {
-        return this._start;
+    get filter(): Filter {
+        return this._filter;
     }
 
-    set start(value: DateString) {
-        this._start = value;
-    }
-
-    get end(): DateString {
-        return this._end;
-    }
-
-    set end(value: DateString) {
-        this._end = value;
+    set filter(value: Filter) {
+        this._filter = value;
     }
 
     public static of(filter: Filter): TablesRequest {
-        const start = DateString.ofAny(filter.date);
-        const end = DateString.addDuration(start, filter.duration);
-        return new TablesRequest(start, end);
+        return new TablesRequest(filter);
     }
 
     get queryParams(): string {
         const simplified: any = {
-            start: this.start.date,
-            end: this.end.date
+            start: this.filter.date.date,
+            m: this.filter.duration.minutes,
+            persons: this.filter.persons
         }
         return $.param(simplified);
     }

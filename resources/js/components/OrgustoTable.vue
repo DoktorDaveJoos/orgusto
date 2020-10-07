@@ -51,7 +51,7 @@
 
 <script>
 export default {
-  name: "orgastro-table",
+  name: "orgusto-table",
   props: {
     table: {
       type: Object,
@@ -131,9 +131,9 @@ export default {
         .format("HH:mm");
     },
     parseDuration(durationJson) {
-      const tmp = JSON.parse(durationJson);
-      const dur = parseFloat(tmp.h) + parseFloat(tmp.m / 60);
-      return dur;
+      // const tmp = JSON.parse(durationJson);
+      // const dur = parseFloat(tmp.h) + parseFloat(tmp.m / 60);
+      return parseFloat(durationJson / 60);
     },
   },
   computed: {

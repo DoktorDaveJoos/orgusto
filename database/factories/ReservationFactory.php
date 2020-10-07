@@ -22,6 +22,6 @@ $factory->define(Reservation::class, function (Faker $faker) {
             'gray',
             'blue'
         )),
-        'duration' => "{\"h\": \"2\", \"m\": \"00\"}",
+        'duration' => 120,
     ];
 });

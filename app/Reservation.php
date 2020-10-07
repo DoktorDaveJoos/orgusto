@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
@@ -51,6 +52,7 @@ class Reservation extends Model
     {
         return $this->only('name', 'notice', 'email', 'phone_number');
     }
+
 
     public function getHumanReadableDate()
     {
