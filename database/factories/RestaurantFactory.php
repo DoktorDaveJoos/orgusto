@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Table;
+use App\Restaurant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TableFactory extends Factory
+class RestaurantFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Table::class;
+    protected $model = Restaurant::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,9 @@ class TableFactory extends Factory
     public function definition()
     {
         return [
-            'description' => $this->faker->text,
-            'restaurant_id' => $this->faker->randomDigit,
-            'seats' => $this->faker->randomElement([2, 4, 8, 10]),
-            'table_number' => $this->faker->unique()->randomDigit
+            'name' => $this->faker->name,
+            'owner' => $this->faker->name,
+            'contact_email' => $this->faker->email,
         ];
     }
 }

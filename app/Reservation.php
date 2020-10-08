@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
@@ -11,6 +12,7 @@ use Psy\Util\Json;
 
 class Reservation extends Model
 {
+    use HasFactory;
     use Notifiable;
     use Searchable;
 

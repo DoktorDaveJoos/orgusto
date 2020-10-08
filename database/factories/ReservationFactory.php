@@ -1,27 +1,40 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Reservation;
-use Faker\Generator as Faker;
+use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Reservation::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'created_at' => now(),
-        'notice' => $faker->text,
-        'persons' => $faker->randomDigitNotNull,
-        'user_id' => 1,
-        'start' => $faker->randomElement($array = array(
-            '2020-07-06 17:00:00',
-            '2020-07-06 19:00:00'
-        )),
-        'color' => $faker->randomElement($array = array(
-            'green',
-            'red',
-            'gray',
-            'blue'
-        )),
-        'duration' => 120,
-    ];
-});
+class ReservationFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Reservation::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'duration' => 120,
+            'created_at' => now(),
+            'name' => $this->faker->name,
+            'notice' => $this->faker->text,
+            'color' => $this->faker->randomElement([
+                'green', 'red', 'gray', 'blue'
+            ]),
+            'start' => $this->faker->dateTimeBetween(
+                CarbonImmutable::now(),
+                CarbonImmutable::now()->addDays(7)
+            ),
+            'persons' => $this->faker->randomElement([2, 3, 4]),
+        ];
+    }
+}
