@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateRestaurant;
 use App\Http\Requests\DeleteRestaurant;
 use App\Restaurant;
-use App\User;
-use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
@@ -26,43 +24,31 @@ class RestaurantController extends Controller
         return view('restaurants', ['restaurants' => $restaurants]);
     }
 
-    public function update(Request $request, Restaurant $restaurant)
+    public function update(Restaurant $restaurant)
     {
         // See livewire/edit-restaurant
     }
 
     public function store(CreateRestaurant $request)
     {
+        $restaurant = Restaurant::create($request->validated());
 
-        $user = auth()->user();
+        // Make creator 'admin' automatically
+        auth()->user()->restaurants()->attach($restaurant->id, ['role' => 'admin']);
 
-        if ($user->can('create', Restaurant::class)) {
-            $new_restaurant = Restaurant::create($request->validated());
-            // Make creator 'admin' automatically
-            $user->restaurants()->attach($new_restaurant->id, ['role' => 'admin']);
-
-            if ($request->wantsJson()) {
-                return $new_restaurant;
-            }
-
-            return redirect()->route('restaurant.show', ['restaurant' => $new_restaurant->id]);
+        if ($request->wantsJson()) {
+            return $restaurant;
         }
-
-        return redirect()->route('restaurants.show')->withErrors(['Something went wrong. Please contact service team.']);
+        return redirect()->route('restaurant.show', ['restaurant' => $restaurant->id]);
     }
 
     public function destroy(DeleteRestaurant $request, Restaurant $restaurant)
     {
-
-        if (auth()->user()->can('delete', $restaurant)) {
-            if ($request->validated()['name'] == $restaurant->name) {
-                Restaurant::destroy($restaurant->id);
-            }
-
-            $request->session()->flash('message', 'Successfully deleted restaurant.');
-            return redirect()->route('restaurants.show');
+        if ($request->validated()['name'] == $restaurant->name) {
+            Restaurant::destroy($restaurant->id);
         }
+        $request->session()->flash('message', 'Successfully deleted restaurant.');
 
-        return redirect()->route('restaurants.show')->withErrors(['Something went wrong. Please contact service team.']);
+        return redirect()->route('restaurants.show');
     }
 }

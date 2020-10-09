@@ -8,7 +8,6 @@ use Illuminate\Notifications\Notifiable;
 
 class Restaurant extends Model
 {
-
     use HasFactory;
     use Notifiable;
 

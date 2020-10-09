@@ -42,14 +42,27 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('/restaurants')->group(function () {
-        Route::get('/', [RestaurantController::class, 'index'])->name('restaurants.show');
-        Route::post('/', [RestaurantController::class ,'store'])->name('restaurants.store');
+
+        Route::get('/', [RestaurantController::class, 'index'])
+            ->name('restaurants.show')
+            ->middleware('can:view,App\Models\Restaurant');
+
+        Route::post('/', [RestaurantController::class ,'store'])
+            ->name('restaurants.store')
+            ->middleware('can:create,App\Models\Restaurant');
+
 
         Route::prefix('/{restaurant}')->group(function () {
             Route::livewire('/', 'edit-restaurant')->name('restaurant.show');
 
-            Route::put('/', [RestaurantController::class, 'update'])->name('restaurant.update');
-            Route::post('/delete', [RestaurantController::class, 'destroy'])->name('restaurant.destroy');
+        Route::put('/', [RestaurantController::class, 'update'])
+            ->name('restaurant.update')
+            ->middleware('can:update,restaurant');
+
+        Route::delete('/', [RestaurantController::class, 'destroy'])
+            ->name('restaurant.destroy')
+            ->middleware('can:delete,restaurant');
+
 
             Route::livewire('/{table}', 'edit-table')->name('restaurant.table.show');
         });
