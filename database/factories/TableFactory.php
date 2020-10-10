@@ -22,10 +22,10 @@ class TableFactory extends Factory
     public function definition()
     {
         return [
-            'description' => $this->faker->text,
-            'restaurant_id' => $this->faker->randomDigit,
+            'table_number' => $this->faker->randomDigit,
+            'restaurant_id' => 1,
             'seats' => $this->faker->randomElement([2, 4, 8, 10]),
-            'table_number' => $this->faker->unique()->randomDigit
+            'description' => $this->faker->text,
         ];
     }
 }

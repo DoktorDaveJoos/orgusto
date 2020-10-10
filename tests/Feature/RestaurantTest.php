@@ -4,11 +4,6 @@ namespace Tests\Feature;
 
 class RestaurantTest extends AbstractTestSetup
 {
-    /**
-     * Test restaurant is created.
-     *
-     * @return void
-     */
     public function testRestaurantCreated()
     {
         $this->setupSingleRestaurant();

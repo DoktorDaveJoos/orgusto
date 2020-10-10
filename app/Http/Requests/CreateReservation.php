@@ -38,7 +38,6 @@ class CreateReservation extends FormRequest
     {
         return [
             'start' => 'required|date',
-            'end' => 'required|date',
             'persons' => 'required',
             'user_id' => 'integer|required',
             'duration' => 'required',

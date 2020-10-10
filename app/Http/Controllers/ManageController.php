@@ -20,14 +20,6 @@ class ManageController extends Controller
         $this->middleware('auth');
     }
 
-    public function someTesting(CreateReservation $r)
-    {
-
-
-
-
-    }
-
     public function index(Request $request)
     {
 

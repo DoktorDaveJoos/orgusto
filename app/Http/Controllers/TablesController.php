@@ -29,17 +29,6 @@ class TablesController extends Controller
 
         $restaurant = $this->getRestaurant();
 
-//        return $query->whereDoesntHave('reservations', function ($q) use ($from, $to) {
-//            $q->whereBetween('start', [$from, $to])->orWhereBetween('end', [$from, $to]);
-//        });
-
-//        $withReservations = $restaurant->tables()->whereHas('reservations', function($q) use($start_date, $end_date) {
-//            $q->whereBetween('start', [$start_date->toDate(), $end_date->toDate()]);
-//        })->with('reservations')->get();
-
-//        return $withReservations;
-
-
         return $restaurant->tables()
             ->availableBetween($start_date, $end_date)
             ->get();

@@ -17,6 +17,6 @@ class TablesTableSeeder extends Seeder
     {
         Table::factory()->count(10)->has(
             Reservation::factory()->count(10)
-        );
+        )->create();
     }
 }

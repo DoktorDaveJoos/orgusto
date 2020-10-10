@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReservation;
-use App\Table;
 use Illuminate\Http\Request;
 use App\Reservation;
-use Illuminate\Support\Facades\App;
 
 class ReservationsController extends Controller
 {
+
+    const STATUS_CREATED = 201;
+
 
     /**
      * Create a new controller instance.
@@ -84,26 +85,24 @@ class ReservationsController extends Controller
 
     public function store(CreateReservation $request)
     {
-        $reservation = Reservation::create($request->validated());
-        $reservation->tables()->attach($request->tables);
+        $newReservation = $this->validateTables($request->validated());
+
+        $reservation = Reservation::create($newReservation);
+        $reservation->tables()->attach($newReservation['tables']);
         $reservation->save();
+
+        return response(self::STATUS_CREATED);
     }
 
     public function update(CreateReservation $request, Reservation $reservation)
     {
-//        $newOrUpdatedReservation = $request->validated();
+        $newOrUpdatedReservation = $this->validateTables($request->validated());
 
+        $reservation->update($request->validated());
+        $reservation->tables()->sync($newOrUpdatedReservation['tables']);
+        $reservation->save();
 
-        $this->checkTablesAreAvailable($request->validated());
-
-
-//        $found = $tablesAvailable->diff(Table::whereIn('id', $newOrUpdatedReservation['tables'])->get());
-
-//        $restaurant->tables()->availableBetween($start_date, $end_date)->withEnoughSeats($persons)->get();
-
-//        $reservation->update($request->validated());
-//        $reservation->tables()->sync($request->tables);
-//        $reservation->save();
+        return response(204);
     }
 
 
@@ -169,18 +168,33 @@ class ReservationsController extends Controller
         return view('reservations', ['reservations' => $results]);
     }
 
-
-    private function checkTablesAreAvailable(Array $reservation): bool
+    private function validateTables(Array $validated)
     {
+
+//        $restaurant = $this->getRestaurant();
+//
+//        return $restaurant->tables()
+//            ->availableBetween($start_date, $end_date)
+//            ->get();
+
+        $start_date = $validated['start'];
+
+        $end_date = $start_date
+            ->addMinutes($validated['duration']);
 
         $restaurant = $this->getRestaurant();
 
-        $tablesAvailable = $restaurant->tables()
-            ->availableBetween($reservation['start'], $reservation['end'])
+        $availableTables = $restaurant->tables()
+            ->availableBetween($start_date, $end_date)
             ->get();
 
-        foreach ($reservation['tables'] as $table) {
-            dd($found = $tablesAvailable->find($table));
+        foreach ($availableTables as $foundTable) {
+            $test = $foundTable->name;
+            if (in_array($foundTable->id, $validated['tables'])) {
+                abort('Table with table number: ' . $test . ' already booked', 400);
+            }
         }
+
+        return $validated;
     }
 }

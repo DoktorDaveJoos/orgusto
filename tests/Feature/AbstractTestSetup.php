@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Reservation;
 use App\Restaurant;
 use App\Table;
 use App\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use phpDocumentor\Reflection\Types\Boolean;
 use Tests\TestCase;
@@ -83,6 +85,30 @@ abstract class AbstractTestSetup extends TestCase
     {
         $this->isAdmin = $isAdmin;
         return $this;
+    }
+
+    function createReservationRequestPayload($tableId): array
+    {
+        return [
+            'start' => CarbonImmutable::now(),
+            'persons' => 2,
+            'user_id' => 1,
+            'duration' => 120,
+            'tables' => [$tableId],
+            'name' => 'test_reservation',
+            'email' => 'test@test.de',
+            'color' => 'gray',
+            'notice' => 'some notice',
+            'phone_number' => '+49 172 2541810'
+        ];
+    }
+
+    function createReservationForTable(Table $table): Reservation
+    {
+        return $reservation = Reservation::factory()->create([
+            'user_id' => self::TEST_USER_ID
+        ]);
+
     }
 
 }

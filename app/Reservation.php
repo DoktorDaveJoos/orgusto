@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
-use Psy\Util\Json;
 
 class Reservation extends Model
 {
@@ -25,15 +24,12 @@ class Reservation extends Model
         'persons',
         'start',
         'duration',
-        'accepted_from',
         'color',
         'email',
         'phone_number',
-        'table_id'
     ];
 
     protected $casts = [
-        'duration' => Json::class,
         'start' => 'datetime',
         'created_at' => 'datetime',
     ];
@@ -52,7 +48,7 @@ class Reservation extends Model
      */
     public function toSearchableArray()
     {
-        return $this->only('name', 'notice', 'email', 'phone_number');
+        return $this->only('id', 'name', 'notice', 'email', 'phone_number');
     }
 
 

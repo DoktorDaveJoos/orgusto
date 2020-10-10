@@ -23,18 +23,20 @@ class ReservationFactory extends Factory
     public function definition()
     {
         return [
-            'duration' => 120,
-            'created_at' => now(),
             'name' => $this->faker->name,
-            'notice' => $this->faker->text,
-            'color' => $this->faker->randomElement([
-                'green', 'red', 'gray', 'blue'
-            ]),
+            'duration' => $this->faker->randomElement([90, 120, 180]),
+            'persons' => $this->faker->randomDigitNotNull,
             'start' => $this->faker->dateTimeBetween(
                 CarbonImmutable::now(),
                 CarbonImmutable::now()->addDays(7)
             ),
-            'persons' => $this->faker->randomElement([2, 3, 4]),
+            'notice' => $this->faker->text,
+            'color' => $this->faker->randomElement([
+                'green', 'red', 'gray', 'blue'
+            ]),
+            'email' => $this->faker->safeEmail,
+            'phone_number' => '01722541810',
+            'user_id' => $this->faker->randomDigitNotNull,
         ];
     }
 }

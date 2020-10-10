@@ -17,15 +17,17 @@ class CreateReservationsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('name');
-            $table->integer('duration');
-            $table->boolean('done')->default(false);
-            $table->integer('persons');
             $table->dateTime('start');
+            $table->integer('persons');
+            $table->integer('duration');
+            $table->unsignedBigInteger('user_id');
+
             $table->text('notice')->nullable();
             $table->string('color')->nullable();
             $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
-            $table->unsignedBigInteger('user_id');
+
+            $table->boolean('done')->default(false);
         });
     }
 

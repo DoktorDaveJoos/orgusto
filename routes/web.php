@@ -44,8 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/restaurants')->group(function () {
 
         Route::get('/', [RestaurantController::class, 'index'])
-            ->name('restaurants.show')
-            ->middleware('can:view,App\Models\Restaurant');
+            ->name('restaurants.show');
 
         Route::post('/', [RestaurantController::class ,'store'])
             ->name('restaurants.store')
@@ -69,13 +68,21 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('/reservations')->group(function () {
+
         Route::get('/', [ReservationsController::class, 'index'])->name('reservations.show');
-        Route::post('/', [ReservationsController::class, 'store'])->name('reservations.store');
+
+        Route::post('/', [ReservationsController::class, 'store'])
+            ->name('reservations.store')
+            ->middleware('can:create,App\Models\Reservation');
 
         Route::post('/search', [ReservationsController::class, 'search'])->name('reservations.search');
 
         Route::get('/{reservation}', [ReservationsController::class, 'show'])->name('reservation.show');
-        Route::put('/{reservation}', [ReservationsController::class, 'update'])->name('reservation.update');
+
+        Route::put('/{reservation}', [ReservationsController::class, 'update'])
+            ->name('reservation.update')
+            ->middleware('can:update,reservation');
+
         Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])->name('reservation.destroy');
     });
 
