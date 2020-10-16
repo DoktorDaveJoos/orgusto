@@ -72,7 +72,7 @@ class ReservationsController extends Controller
         }
 
         if (request()->wantsJson()) {
-            return $reservations;
+            return ReservationResource::collection($reservations);
         }
 
         return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title]);
@@ -97,6 +97,7 @@ class ReservationsController extends Controller
 
         $reservation = Reservation::create($newReservation);
         $reservation->tables()->attach($newReservation['tables']);
+        $reservation->save();
 
         return response(null, self::STATUS_CREATED);
     }
@@ -110,6 +111,7 @@ class ReservationsController extends Controller
 
         $reservation->update($updatedReservation);
         $reservation->tables()->sync($updatedReservation['tables']);
+        $reservation->save();
 
         return response(null, self::STATUS_NO_CONTENT);
     }

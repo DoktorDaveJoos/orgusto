@@ -99,7 +99,7 @@ abstract class AbstractTestSetup extends TestCase
         return [
             'start' => CarbonImmutable::now(),
             'persons' => 2,
-            'user_id' => 1,
+            'user_id' => self::TEST_USER_ID,
             'duration' => 120,
             'tables' => $tableIds,
             'name' => $name,

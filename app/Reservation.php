@@ -26,6 +26,7 @@ class Reservation extends Model
         'color',
         'email',
         'phone_number',
+        'user_id'
     ];
 
     protected $casts = [
