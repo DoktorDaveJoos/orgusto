@@ -25,13 +25,12 @@ class ReservationsController extends Controller
 
     public function index(Request $request)
     {
-
-        //TODO: Refactor hardcore !!!
-
         $from_date = $request->get('from') ?? date('Y-m-d');
         $to_date = $request->get('to') ?? date('Y-m-d');
+
         $from = date($from_date . " 00:00:00");
         $to = date($to_date . " 23:59:59");
+
         $searchQuery = $request->get('searchQuery');
 
         $empty_search = false;

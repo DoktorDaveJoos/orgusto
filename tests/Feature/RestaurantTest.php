@@ -26,7 +26,7 @@ class RestaurantTest extends AbstractTestSetup
             ->post('/restaurants', ['name' => self::TEST_RESTAURANT_NAME]);
 
         // expect 302 because if succeeded, you will be redirected to detail page with new restaurant
-        $response->assertStatus(302);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('restaurants', [
             'name' => self::TEST_RESTAURANT_NAME
@@ -45,7 +45,7 @@ class RestaurantTest extends AbstractTestSetup
         $response = $this->actingAs($premiumUser)
             ->put('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => 'updated']);
 
-        $response->assertStatus(200);
+        $response->assertOk();
 
         $this->assertDatabaseHas('restaurants', [
             'id' => self::TEST_RESTAURANT_ID,
@@ -65,7 +65,7 @@ class RestaurantTest extends AbstractTestSetup
         $response = $this->actingAs($premiumUser)
             ->delete('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
 
-        $response->assertStatus(302);
+        $response->assertRedirect();
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseMissing('restaurants', [
@@ -85,7 +85,7 @@ class RestaurantTest extends AbstractTestSetup
         $response = $this->actingAs($freeUser)
             ->post('/restaurants', ['name' => self::TEST_RESTAURANT_NAME]);
 
-        $response->assertStatus(403); // forbidden
+        $response->assertForbidden();
 
         $this->assertDatabaseMissing('restaurants', [
             'name' => self::TEST_RESTAURANT_NAME
@@ -107,7 +107,7 @@ class RestaurantTest extends AbstractTestSetup
         $response = $this->actingAs($freeUser)
             ->put('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => 'updated']);
 
-        $response->assertStatus(403); // forbidden
+        $response->assertForbidden();
 
         $this->assertDatabaseHas('restaurants', [
             'id' => self::TEST_RESTAURANT_ID,
@@ -130,12 +130,17 @@ class RestaurantTest extends AbstractTestSetup
         $response = $this->actingAs($freeUser)
             ->delete('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
 
-        $response->assertStatus(403); // forbidden
+        $response->assertForbidden();
 
         $this->assertDatabaseHas('restaurants', [
             'id' => self::TEST_RESTAURANT_ID,
             'name' => self::TEST_RESTAURANT_NAME
         ]);
+    }
+
+    public function testRestaurantResourceShow()
+    {
+
     }
 
 }
