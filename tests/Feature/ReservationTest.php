@@ -11,7 +11,6 @@ class ReservationTest extends AbstractTestSetup
     {
         $user = $this->buildTestSetup();
 
-
         $this->assertDatabaseHas('users', [
             'id' => self::TEST_USER_ID
         ]);
