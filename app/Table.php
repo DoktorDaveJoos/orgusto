@@ -46,12 +46,24 @@ class Table extends Model
      */
     public function scopeAvailableBetween($query, $from, $to)
     {
-        return $query->whereDoesntHave('reservations', function ($q) use ($from, $to) {
-            $q->whereBetween('start', [$from, $to])
-                ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
-        })->whereDoesntHave('reservations', function ($q) use ($from, $to) {
-            $q->where('start', '<=', $from)->where(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), '>=', $to);
-        });
+        return $query
+            ->whereDoesntHave('reservations', function ($q) use ($from, $to) {
+                $q->whereBetween('start', [$from, $to])
+                    ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+            })->whereDoesntHave('reservations', function ($q) use ($from, $to) {
+                $q->where('start', '<=', $from)->where(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), '>=', $to);
+            });
+    }
+
+    public function scopeWithReservationsBetween($query, $from, $to)
+    {
+        return $query
+            ->whereHas('reservations', function ($q) use ($from, $to) {
+                $q->whereBetween('start', [$from, $to])
+                    ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+            })->orWhereHas('reservations', function ($q) use ($from, $to) {
+                $q->where('start', '<=', $from)->where(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), '>=', $to);
+            });
     }
 
     public function scopeWithEnoughSeats($query, $persons)

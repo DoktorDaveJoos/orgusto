@@ -2014,6 +2014,9 @@ __webpack_require__.r(__webpack_exports__);
       open: false
     };
   },
+  mounted: function mounted() {
+    console.log(this.reservation);
+  },
   methods: {
     handleOpen: function handleOpen() {
       this.open = true;
@@ -53643,7 +53646,7 @@ var render = function() {
             "text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1",
           on: { click: _vm.handleOpen }
         },
-        [_c("i", { staticClass: "far fa-edit mr-1" }), _vm._v("Edit\n  ")]
+        [_c("i", { staticClass: "far fa-edit mr-1" }), _vm._v("Edit\n    ")]
       ),
       _vm._v(" "),
       _c(
@@ -53678,7 +53681,10 @@ var staticRenderFns = [
         staticClass:
           "ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"
       },
-      [_c("i", { staticClass: "far fa-trash-alt mr-1" }), _vm._v("Delete\n  ")]
+      [
+        _c("i", { staticClass: "far fa-trash-alt mr-1" }),
+        _vm._v("Delete\n    ")
+      ]
     )
   }
 ]

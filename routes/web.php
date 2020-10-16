@@ -77,13 +77,17 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/search', [ReservationsController::class, 'search'])->name('reservations.search');
 
-        Route::get('/{reservation}', [ReservationsController::class, 'show'])->name('reservation.show');
+        Route::get('/{reservation}', [ReservationsController::class, 'show'])
+            ->name('reservation.show')
+            ->middleware('can:view,reservation');
 
         Route::put('/{reservation}', [ReservationsController::class, 'update'])
             ->name('reservation.update')
             ->middleware('can:update,reservation');
 
-        Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])->name('reservation.destroy');
+        Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])
+            ->name('reservation.destroy')
+            ->middleware('can:delete,reservation');
     });
 
     Route::prefix('/tables')->group(function () {

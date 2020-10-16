@@ -35,6 +35,13 @@ abstract class AbstractTestSetup extends TestCase
         ]);
     }
 
+    public function setupRandomUser(): User
+    {
+        return User::factory()->create([
+            'id' => self::TEST_USER_ID - 1,
+        ]);
+    }
+
     /**
      * Creates a Restaurant with {@link #TEST_RESTAURANT_ID} as ID.
      *
@@ -87,15 +94,15 @@ abstract class AbstractTestSetup extends TestCase
         return $this;
     }
 
-    function createReservationRequestPayload($tableId): array
+    function createReservationRequestPayload($tableIds, String $name = 'test_reservation'): array
     {
         return [
             'start' => CarbonImmutable::now(),
             'persons' => 2,
             'user_id' => 1,
             'duration' => 120,
-            'tables' => [$tableId],
-            'name' => 'test_reservation',
+            'tables' => $tableIds,
+            'name' => $name,
             'email' => 'test@test.de',
             'color' => 'gray',
             'notice' => 'some notice',

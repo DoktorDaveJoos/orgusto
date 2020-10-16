@@ -3,13 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReservation;
+use App\Table;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use App\Reservation;
+use App\Http\Resources\ReservationResource;
+use Illuminate\Support\Carbon;
 
 class ReservationsController extends Controller
 {
 
+    // TODO: add to AbstractController
+    CONST STATUS_OK = 200;
     const STATUS_CREATED = 201;
+    const STATUS_NO_CONTENT = 204;
+    const STATUS_BAD_REQUEST = 400;
+    const STATUS_INTERNAL_SERVER_ERROR = 500;
 
 
     /**
@@ -25,8 +34,7 @@ class ReservationsController extends Controller
     public function index(Request $request)
     {
 
-        //TODO: Refactor hardcore.
-
+        //TODO: Refactor hardcore !!!
 
         $from_date = $request->get('from') ?? date('Y-m-d');
         $to_date = $request->get('to') ?? date('Y-m-d');
@@ -67,7 +75,7 @@ class ReservationsController extends Controller
             if (sizeof($reservations) < 1) {
                 $empty_search = true;
                 $card_title = "... upcoming reservations";
-                $reservations = Reservation::where('start', '>', date('Y-m-d'))->with(['tables', 'user'])->paginate(15);
+                $reservations = Reservation::where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
             }
         }
 
@@ -80,35 +88,48 @@ class ReservationsController extends Controller
 
     public function show(Reservation $reservation)
     {
-        return view('reservations', ['reservations' => [$reservation]]);
+        if (request()->wantsJson()){
+            return new ReservationResource($reservation);
+        }
+
+        $reservations = Reservation::where('id', $reservation->id)->with('user')->paginate(15);
+
+        return view('reservations', ['reservations' => $reservations, 'empty_search' => false, 'card_title' => 'Found:']);
     }
 
     public function store(CreateReservation $request)
     {
-        $newReservation = $this->validateTables($request->validated());
+        $newReservation = $request->validated();
+        $this->validateTables($newReservation['start'],
+            $newReservation['duration'], $newReservation['tables']);
 
         $reservation = Reservation::create($newReservation);
         $reservation->tables()->attach($newReservation['tables']);
-        $reservation->save();
 
-        return response(self::STATUS_CREATED);
+        return response(null, self::STATUS_CREATED);
     }
 
     public function update(CreateReservation $request, Reservation $reservation)
     {
-        $newOrUpdatedReservation = $this->validateTables($request->validated());
+        $updatedReservation = $request->validated();
+        $this->validateTables($updatedReservation['start'],
+            $updatedReservation['duration'], $updatedReservation['tables'],
+            $reservation);
 
-        $reservation->update($request->validated());
-        $reservation->tables()->sync($newOrUpdatedReservation['tables']);
-        $reservation->save();
+        $reservation->update($updatedReservation);
+        $reservation->tables()->sync($updatedReservation['tables']);
 
-        return response(204);
+        return response(null, self::STATUS_NO_CONTENT);
     }
-
 
     public function destroy(Reservation $reservation)
     {
-        $reservation->delete();
+        try {
+            $reservation->delete();
+            return response(null, self::STATUS_NO_CONTENT);
+        } catch (\Exception $e) {
+            return response('Resource with id: <'. $reservation->id .'> could not be deleted.', self::STATUS_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function search(Request $request)
@@ -127,9 +148,9 @@ class ReservationsController extends Controller
             ['start', '<=', $to]
         ];
 
-        $found_by_name = Reservation::where($constraints)->withPivot('tables')->get();
+        $found_by_name = Reservation::where($constraints)->get();
 
-        $results = Reservation::search($st)->withPivot('tables')->get();
+        $results = Reservation::search($st)->get();
 
         $results = $results
             ->filter(function ($reservation, $key) use ($from, $to) {
@@ -168,33 +189,44 @@ class ReservationsController extends Controller
         return view('reservations', ['reservations' => $results]);
     }
 
-    private function validateTables(Array $validated)
+    /**
+     * Checks if given tables are available in period (start_date -> start_date + duration).
+     * Aborts the request if tables are not available.
+     *
+     * @param mixed $start_date - The start date.
+     * @param int $duration - Duration in minutes.
+     * @param array $tables - Array of tables to check.
+     * @param Reservation|null $reservation - The (optional) Reservation to check against.
+     */
+    private function validateTables($start_date, int $duration,
+                                    array $tables, Reservation $reservation = null): void
     {
 
-//        $restaurant = $this->getRestaurant();
-//
-//        return $restaurant->tables()
-//            ->availableBetween($start_date, $end_date)
-//            ->get();
-
-        $start_date = $validated['start'];
-
-        $end_date = $start_date
-            ->addMinutes($validated['duration']);
-
-        $restaurant = $this->getRestaurant();
-
-        $availableTables = $restaurant->tables()
-            ->availableBetween($start_date, $end_date)
-            ->get();
-
-        foreach ($availableTables as $foundTable) {
-            $test = $foundTable->name;
-            if (in_array($foundTable->id, $validated['tables'])) {
-                abort('Table with table number: ' . $test . ' already booked', 400);
-            }
+        if (!($start_date instanceof Carbon) || !($start_date instanceof CarbonImmutable)) {
+            $start_date = CarbonImmutable::parse($start_date);
         }
 
-        return $validated;
+        $end_date = $start_date
+            ->addMinutes($duration);
+
+        $tablesAlreadyBooked = Table::where('id', $tables)
+            ->withReservationsBetween($start_date, $end_date)
+            ->with('reservations')->get();
+
+        $tablesAlreadyBooked->whenNotEmpty(function ($tables) use ($reservation) {
+            if ($reservation === null) {
+                abort(self::STATUS_BAD_REQUEST,
+                    'Table with table number: ' . $tables->first()->table_number . ' already booked');
+            } else {
+                foreach ($tables as $table) {
+                    foreach ($table->reservations as $bookedReservation) {
+                        if ($bookedReservation->id !== $reservation->id) {
+                            abort(self::STATUS_BAD_REQUEST,
+                                'Table with table number: ' . $tables->first()->table_number . ' already booked');
+                        } // else -> it's not another reservation, updating is fine.
+                    }
+                }
+            }
+        });
     }
 }
