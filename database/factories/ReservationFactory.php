@@ -36,7 +36,6 @@ class ReservationFactory extends Factory
             ]),
             'email' => $this->faker->safeEmail,
             'phone_number' => '01722541810',
-            'user_id' => $this->faker->randomDigitNotNull,
         ];
     }
 }

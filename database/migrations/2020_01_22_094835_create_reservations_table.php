@@ -20,8 +20,6 @@ class CreateReservationsTable extends Migration
             $table->dateTime('start');
             $table->integer('persons');
             $table->integer('duration');
-            $table->unsignedBigInteger('user_id');
-
             $table->text('notice')->nullable();
             $table->string('color')->nullable();
             $table->string('email')->nullable();
