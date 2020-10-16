@@ -205,7 +205,9 @@ class ReservationTest extends AbstractTestSetup
         $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
         $reservation->tables()->attach($table->id);
 
-        $response = $this->actingAs($user)
+        $theUser = $reservation->user()->get();
+
+        $response = $this->actingAs($theUser)
             ->getJson('/reservations/' . $reservation->id);
 
         $userArray = $user->toArray();
