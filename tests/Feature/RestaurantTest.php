@@ -43,7 +43,7 @@ class RestaurantTest extends AbstractTestSetup
         ]);
 
         $response = $this->actingAs($premiumUser)
-            ->put('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => 'updated']);
+            ->put('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => 'updated']);
 
         $response->assertOk();
 
@@ -63,7 +63,7 @@ class RestaurantTest extends AbstractTestSetup
         ]);
 
         $response = $this->actingAs($premiumUser)
-            ->delete('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
+            ->delete('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
 
         $response->assertRedirect();
         $response->assertSessionHasNoErrors();
@@ -105,7 +105,7 @@ class RestaurantTest extends AbstractTestSetup
         ]);
 
         $response = $this->actingAs($freeUser)
-            ->put('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => 'updated']);
+            ->put('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => 'updated']);
 
         $response->assertForbidden();
 
@@ -128,7 +128,7 @@ class RestaurantTest extends AbstractTestSetup
         ]);
 
         $response = $this->actingAs($freeUser)
-            ->delete('/restaurants/'.self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
+            ->delete('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
 
         $response->assertForbidden();
 
@@ -140,7 +140,27 @@ class RestaurantTest extends AbstractTestSetup
 
     public function testRestaurantResourceShow()
     {
+        $user = $this->buildTestSetup();
 
+        $restaurant = $user->firstRestaurant();
+
+        $response = $this->actingAs($user)
+            ->getJson('/restaurants/' . $restaurant->id);
+
+        $response->assertExactJson([
+            'data' => [
+                'name' => $restaurant->name,
+                'table_count' => $restaurant->table_count,
+                'contact_email' => $restaurant->contact_email,
+                'owner' => $restaurant->owner,
+                'street' => $restaurant->street,
+                'zip_code' => $restaurant->zip_code,
+                'street_number' => $restaurant->street_number,
+                'city' => $restaurant->city,
+                'default_table_seats' => $restaurant->default_table_seats,
+                'seat_reservation_bound' => $restaurant->seat_reservation_bound
+            ]
+        ]);
     }
 
 }

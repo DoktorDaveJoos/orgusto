@@ -32,13 +32,16 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/manage', [ManageController::class,'index'])->name('manage.show');
-
+    Route::get('/manage', [ManageController::class,'index'])
+        ->name('manage.show');
 
     Route::prefix('/users')->group(function() {
-        Route::livewire('/{user}', 'edit-user')->name('user.show');
+        Route::livewire('/{user}', 'edit-user')
+            ->name('user.show')
+            ->middleware('can:view,user');
 
-        Route::get('/', [UserController::class, 'users'])->name('users.show');
+        Route::get('/', [UserController::class, 'users'])
+            ->name('users.show');
     });
 
     Route::prefix('/restaurants')->group(function () {
@@ -50,9 +53,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('restaurants.store')
             ->middleware('can:create,App\Models\Restaurant');
 
-
         Route::prefix('/{restaurant}')->group(function () {
-            Route::livewire('/', 'edit-restaurant')->name('restaurant.show');
+            Route::livewire('/', 'edit-restaurant')
+                ->name('restaurant.show')
+                ->middleware('can:view,restaurant');
 
         Route::put('/', [RestaurantController::class, 'update'])
             ->name('restaurant.update')
@@ -62,20 +66,22 @@ Route::middleware(['auth'])->group(function () {
             ->name('restaurant.destroy')
             ->middleware('can:delete,restaurant');
 
-
-            Route::livewire('/{table}', 'edit-table')->name('restaurant.table.show');
+            Route::livewire('/{table}', 'edit-table')
+                ->name('restaurant.table.show');
         });
     });
 
     Route::prefix('/reservations')->group(function () {
 
-        Route::get('/', [ReservationsController::class, 'index'])->name('reservations.show');
+        Route::get('/', [ReservationsController::class, 'index'])
+            ->name('reservations.show');
 
         Route::post('/', [ReservationsController::class, 'store'])
             ->name('reservations.store')
             ->middleware('can:create,App\Models\Reservation');
 
-        Route::post('/search', [ReservationsController::class, 'search'])->name('reservations.search');
+        Route::post('/search', [ReservationsController::class, 'search'])
+            ->name('reservations.search');
 
         Route::get('/{reservation}', [ReservationsController::class, 'show'])
             ->name('reservation.show')
@@ -91,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('/tables')->group(function () {
-        Route::get('/', [TablesController::class, 'index'])->name('tables.index');
+        Route::get('/', [TablesController::class, 'index'])
+            ->name('tables.index');
     });
 });
