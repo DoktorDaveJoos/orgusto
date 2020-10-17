@@ -140,7 +140,9 @@ class RestaurantTest extends AbstractTestSetup
 
     public function testRestaurantResourceShow()
     {
-        $user = $this->buildTestSetup();
+        $user = $this
+            ->withAdmin(true)
+            ->withPremium(true)->buildTestSetup();
 
         $restaurant = $user->firstRestaurant();
 
