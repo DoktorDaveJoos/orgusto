@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('manage.show');
 
     Route::prefix('/users')->group(function () {
-        Route::livewire('/{user}', 'edit-user')
+        Route::get('/{user}', [UserController::class, 'show'])
             ->name('user.show')
             ->middleware('can:view,user');
 
@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('can:create,App\Models\Restaurant');
 
         Route::prefix('/{restaurant}')->group(function () {
-            Route::livewire('/', 'edit-restaurant')
+            Route::get('/', [RestaurantController::class, 'show'])
                 ->name('restaurant.show')
                 ->middleware('can:view,restaurant');
 
@@ -66,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
                 ->name('restaurant.destroy')
                 ->middleware('can:delete,restaurant');
 
-            Route::livewire('/{table}', 'edit-table')
+            Route::get('/{table}', [RestaurantController::class, 'showTable'])
                 ->name('restaurant.table.show');
         });
     });
@@ -94,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])
             ->name('reservation.destroy')
             ->middleware('can:delete,reservation');
+        
     });
 
     Route::prefix('/tables')->group(function () {

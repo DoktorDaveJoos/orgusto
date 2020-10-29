@@ -2004,18 +2004,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["tablesEndpoint", "reservationsEndpoint", "reservation"],
   data: function data() {
     return {
       open: false
     };
-  },
-  mounted: function mounted() {
-    console.log(this.reservation);
   },
   methods: {
     handleOpen: function handleOpen() {
@@ -52955,6 +52949,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 var Reservation_1 = __importDefault(__webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts"));
 var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./resources/js/models/Filter.ts"));
 var CreateOrUpdateReservation_1 = __importDefault(__webpack_require__(/*! ../requests/CreateOrUpdateReservation */ "./resources/js/requests/CreateOrUpdateReservation.ts"));
@@ -53000,22 +52995,21 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.user = employee;
         },
         handleSubmit: function () {
+            var _this = this;
             var request = new CreateOrUpdateReservation_1.default(this.reservationCopy);
             request.asJsonPayload();
-            // axios
-            //     .put(this.reservationsEndpoint, request.asJsonPayload())
-            //     .then((res: any) => {
-            //         if (res.status === 200) {
-            //             location.reload();
-            //         }
-            //         // TODO: else show information
-            //     })
-            //     .catch((err) => {
-            //
-            //         console.log(err.response);
-            //
-            //         this.errors = err.response.data.errors;
-            //     });
+            console.log('pressed');
+            axios_1.default
+                .put(this.reservationsEndpoint, request.asJsonPayload())
+                .then(function (res) {
+                if (res.status === 201 || res.status === 204) {
+                    location.reload();
+                }
+                // TODO: else show information
+            })
+                .catch(function (err) {
+                _this.errors = err.response.data.errors;
+            });
         },
         errorContainsKey: function (key) {
             return Object.keys(this.errors).includes(key);
@@ -53637,13 +53631,13 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "flex" },
+    { staticClass: "flex flex-row items-center" },
     [
       _c(
         "button",
         {
           staticClass:
-            "text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1",
+            "text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
           on: { click: _vm.handleOpen }
         },
         [_c("i", { staticClass: "far fa-edit mr-1" }), _vm._v("Edit\n    ")]
@@ -53679,7 +53673,7 @@ var staticRenderFns = [
       "button",
       {
         staticClass:
-          "ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 py-1"
+          "ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8"
       },
       [
         _c("i", { staticClass: "far fa-trash-alt mr-1" }),
@@ -76508,7 +76502,7 @@ var CreateOrUpdateReservation = /** @class */ (function (_super) {
         request.start = this.reservation.start.date;
         request.persons = this.reservation.persons;
         request.user_id = this.reservation.user.id;
-        request.duration = this.reservation.duration.asJson();
+        request.duration = this.reservation.duration.minutes;
         request.tables = lodash_1.default.cloneDeep(this.reservation.tables.tables)
             .map(function (table) { return table.id; });
         request.name = this.reservation.name;

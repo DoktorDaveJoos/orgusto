@@ -54,18 +54,21 @@ class Reservation extends Model
 
     public function getHumanReadableDate()
     {
-        $today = Carbon::now();
-        $today->setTime(0, 0, 0); // reset time part, to prevent partial comparison
-        $diff = $this->start->diff($today)->days;
-        if ($diff == 0) {
-            return "today";
-        } else if ($diff == 1) {
-            return "tomorrow";
-        } else if ($diff == -1) {
-            return "yesterday";
-        } else {
-            return $this->start->format("D d.m, H:i") . " Uhr";
+
+        if ($this->start->isToday()) {
+            return "Today";
         }
+
+        if ($this->start->isTomorrow()) {
+            return "Tomorrow";
+        }
+
+        if ($this->start->isYesterday()) {
+            return "Yesterday";
+        }
+
+        return $this->start->format("d.m");
+
     }
 
     public function getHumanReadableTime()

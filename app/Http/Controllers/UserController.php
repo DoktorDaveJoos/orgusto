@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Restaurant;
-use Illuminate\Http\Request;
-use function MongoDB\BSON\toJSON;
+
+
+use App\User;
 
 class UserController extends Controller
 {
 
-
+    public function show(User $user) {
+        return view('edit-user', ['user' => $user]);
+    }
 
     public function users()
     {

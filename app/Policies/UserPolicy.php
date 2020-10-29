@@ -78,7 +78,7 @@ class UserPolicy
      */
     private function allowIfUserIsResponsibleForModel(User $user, User $model)
     {
-        if ($user !== 'registered') return Response::deny();
+        if ($user->type !== 'registered') return Response::deny();
 
         if ($model->type === 'anonymous') {
             return $user->firstRestaurant()->id === $model->firstRestaurant()->id

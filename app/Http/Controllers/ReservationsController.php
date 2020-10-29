@@ -25,61 +25,57 @@ class ReservationsController extends Controller
 
     public function index(Request $request)
     {
-        $from_date = $request->get('from') ?? date('Y-m-d');
-        $to_date = $request->get('to') ?? date('Y-m-d');
-
-        $from = date($from_date . " 00:00:00");
-        $to = date($to_date . " 23:59:59");
+        $restaurant = $this->getRestaurant();
+        if (!$restaurant) {
+            return redirect()->route('restaurants.show');
+        }
 
         $searchQuery = $request->get('searchQuery');
 
+        $from = $this->getStartFromRequest($request);
+        $to = $this->getEndFromRequest($request);
+
         $empty_search = false;
-        $card_title = "Reservations";
 
-        $reservations = [];
+        if (!$searchQuery) {
+            $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
+            })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
+        } else {
+            $name_term = $name_term = '%' . $searchQuery . '%';
+            $constraints = [
+                ['name', 'like', $name_term],
+                ['start', '>=', $from],
+                ['start', '<=', $to]
+            ];
 
-        $restaurant = auth()->user()->restaurants()->first();
-
-        if ($restaurant) {
-            if (!$searchQuery) {
-                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id);
-                })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
-            } else {
-                $name_term = $name_term = '%' . $searchQuery . '%';
-                $constraints = [
-                    ['name', 'like', $name_term],
-                    ['start', '>=', $from],
-                    ['start', '<=', $to]
-                ];
-
-                $found_by_name = Reservation::where($constraints)->get();
-                $results = Reservation::search($searchQuery)->get();
-                $reservations = $results
-                    ->filter(function ($reservation, $key) use ($from, $to) {
-                        return $reservation->start >= $from && $reservation->start <= $to;
-                    })
-                    ->merge($found_by_name)
-                    ->unique();
-            }
-
-            if (sizeof($reservations) < 1) {
-                $empty_search = true;
-                $card_title = "... upcoming reservations";
-                $reservations = Reservation::where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
-            }
+            $found_by_name = Reservation::where($constraints)->get();
+            $results = Reservation::search($searchQuery)->get();
+            $reservations = $results
+                ->filter(function ($reservation, $key) use ($from, $to) {
+                    return $reservation->start >= $from && $reservation->start <= $to;
+                })
+                ->merge($found_by_name)
+                ->unique();
         }
+
+        if (sizeof($reservations) < 1) {
+            $empty_search = true;
+
+            $reservations = Reservation::where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
+        }
+
 
         if (request()->wantsJson()) {
             return ReservationResource::collection($reservations);
         }
 
-        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'card_title' => $card_title]);
+        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'query' => $searchQuery]);
     }
 
     public function show(Reservation $reservation)
     {
-        if (request()->wantsJson()){
+        if (request()->wantsJson()) {
             return new ReservationResource($reservation);
         }
 
@@ -121,7 +117,7 @@ class ReservationsController extends Controller
             $reservation->delete();
             return response(null, self::STATUS_NO_CONTENT);
         } catch (\Exception $e) {
-            return response('Resource with id: <'. $reservation->id .'> could not be deleted.', self::STATUS_INTERNAL_SERVER_ERROR);
+            return response('Resource with id: <' . $reservation->id . '> could not be deleted.', self::STATUS_INTERNAL_SERVER_ERROR);
         }
     }
 

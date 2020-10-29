@@ -18,7 +18,7 @@ export default class CreateOrUpdateReservation extends AbstractRequest{
         request.start = this.reservation.start.date;
         request.persons = this.reservation.persons;
         request.user_id = this.reservation.user.id;
-        request.duration = this.reservation.duration.asJson();
+        request.duration = this.reservation.duration.minutes;
 
         request.tables = _.cloneDeep(this.reservation.tables.tables)
             .map((table: Table) => table.id);

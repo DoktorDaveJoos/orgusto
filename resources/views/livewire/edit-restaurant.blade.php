@@ -147,7 +147,7 @@
     @endtable
     @endinfocard
 
-    @livewire('add-account', ['restaurant' => $restaurant])
+{{--    @livewire('add-account', ['restaurant' => $restaurant])--}}
 
     @if (session()->has('message'))
     @notification

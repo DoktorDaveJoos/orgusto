@@ -151,6 +151,7 @@ class RestaurantTest extends AbstractTestSetup
 
         $response->assertExactJson([
             'data' => [
+                'id' => $restaurant->id,
                 'name' => $restaurant->name,
                 'table_count' => $restaurant->table_count,
                 'contact_email' => $restaurant->contact_email,

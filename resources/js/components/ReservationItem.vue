@@ -186,20 +186,18 @@ export default Vue.extend({
 
             const request: CreateOrUpdateReservation = new CreateOrUpdateReservation(this.reservationCopy);
             request.asJsonPayload();
-            // axios
-            //     .put(this.reservationsEndpoint, request.asJsonPayload())
-            //     .then((res: any) => {
-            //         if (res.status === 200) {
-            //             location.reload();
-            //         }
-            //         // TODO: else show information
-            //     })
-            //     .catch((err) => {
-            //
-            //         console.log(err.response);
-            //
-            //         this.errors = err.response.data.errors;
-            //     });
+            console.log('pressed');
+            axios
+                .put(this.reservationsEndpoint, request.asJsonPayload())
+                .then((res: any) => {
+                    if (res.status === 201 || res.status === 204) {
+                        location.reload();
+                    }
+                    // TODO: else show information
+                })
+                .catch((err) => {
+                    this.errors = err.response.data.errors;
+                });
 
         },
         errorContainsKey(key): boolean {

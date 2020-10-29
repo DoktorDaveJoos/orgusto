@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateRestaurant;
 use App\Http\Requests\DeleteRestaurant;
+use App\Http\Resources\RestaurantResource;
+use App\Http\Resources\TableResource;
 use App\Restaurant;
+use App\Table;
+use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
@@ -24,9 +28,18 @@ class RestaurantController extends Controller
         return view('restaurants', ['restaurants' => $restaurants]);
     }
 
+    public function show(Request $request, Restaurant $restaurant)
+    {
+        if ($request->wantsJson()) {
+            return new RestaurantResource($restaurant);
+        }
+
+        return view('edit-restaurant', ['restaurant' => $restaurant]);
+    }
+
     public function update(Restaurant $restaurant)
     {
-        // See livewire/edit-restaurant
+        // NOOP so far
     }
 
     public function store(CreateRestaurant $request)
@@ -50,5 +63,14 @@ class RestaurantController extends Controller
         $request->session()->flash('message', 'Successfully deleted restaurant.');
 
         return redirect()->route('restaurants.show');
+    }
+
+    public function showTable(Request $request, Restaurant $restaurant, Table $table) {
+
+        if ($request->wantsJson()) {
+            return new TableResource($table);
+        }
+
+        return view('edit-table', ['restaurant' => $restaurant, 'table' => $table]);
     }
 }
