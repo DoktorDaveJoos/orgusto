@@ -112,7 +112,12 @@ export default Vue.extend({
     },
     watch: {
         hour: 'setSingleTimeState',
-        minute: 'setSingleTimeState'
+        minute: 'setSingleTimeState',
+        init(n: DateString, o: DateString) {
+            this.hour = n.asMoment().get('hour');
+            this.minute = n.asMoment().get('minute');
+            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+        }
     }
 });
 </script>

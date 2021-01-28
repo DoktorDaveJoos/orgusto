@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Carbon\Carbon;
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -51,10 +49,8 @@ class Reservation extends Model
         return $this->only('id', 'name', 'notice', 'email', 'phone_number');
     }
 
-
     public function getHumanReadableDate()
     {
-
         if ($this->start->isToday()) {
             return "Today";
         }
@@ -68,7 +64,6 @@ class Reservation extends Model
         }
 
         return $this->start->format("d.m");
-
     }
 
     public function getHumanReadableTime()

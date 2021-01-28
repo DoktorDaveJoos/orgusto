@@ -3,7 +3,7 @@ import _ from "lodash";
 import Duration from "./Duration";
 import Tables from "./Tables";
 import DateString from "./DateString";
-import Employee, {EmployeeBuilder} from "./Employee";
+import Employee from "./Employee";
 import parseObject from "../helper/ParseObject";
 import ReservationError from "../errors/ReservationError";
 
@@ -17,7 +17,7 @@ export interface BasicReservation {
     email?: string | null,
     phone_number?: string | null,
     tables: Tables,
-    user: Employee
+    user: Employee | null;
 }
 
 export default class Reservation implements BasicReservation {
@@ -30,7 +30,7 @@ export default class Reservation implements BasicReservation {
     private _phone_number: string | null;
     private _start: DateString;
     private _tables: Tables;
-    private _user: Employee;
+    private _user: Employee | null;
 
     // TODO refactor for optional? parameters with BuilderPattern
     constructor(color: string,
@@ -42,7 +42,7 @@ export default class Reservation implements BasicReservation {
                 phone_number: string | null,
                 start: DateString,
                 tables: Tables,
-                user: Employee) {
+                user: Employee | null) {
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -72,7 +72,7 @@ export default class Reservation implements BasicReservation {
     }
 
     static ofOrEmpty(object: any): Reservation {
-        if (object === undefined) {
+        if (object === undefined || object === null) {
             return Reservation.empty();
         } else {
             return Reservation.of(object);
@@ -110,7 +110,7 @@ export default class Reservation implements BasicReservation {
             null,
             DateString.now(),
             Tables.empty(),
-            new EmployeeBuilder().build()
+            null
         )
     }
 
@@ -190,11 +190,11 @@ export default class Reservation implements BasicReservation {
         this._start = value;
     }
 
-    get user(): Employee {
+    get user(): Employee | null {
         return this._user;
     }
 
-    set user(value: Employee) {
+    set user(value: Employee | null) {
         this._user = value;
     }
 }

@@ -9,6 +9,10 @@
                 <color-switcher :set-color="setColor"></color-switcher>
             </div>
 
+            <div v-if="customError" class="bg-red-100 text-red-600 text-xs text-italic p-4 my-2 mx-4 rounded-lg">
+                {{ customError }}
+            </div>
+
             <employee-picker
                 :error="errorContainsKey('user_id')"
                 :init="reservationCopy.user"
@@ -107,7 +111,7 @@
                 :error="errorContainsKey('tables')"
                 :tables-endpoint="tablesEndpoint"
                 :filter-data="filterData"
-                :init="reservationCopy.tables"
+                :init="reservationCopy.tables.length > 0 ? reservationCopy.tables : this.table"
                 v-on:tables:chosen="setTables"
             ></table-picker>
 
@@ -132,7 +136,7 @@
 <script lang="ts">
 
 import Vue from "vue";
-import axios from 'axios';
+import axios, {AxiosStatic} from 'axios';
 import Reservation from "../models/Reservation";
 import Employee from "../models/Employee";
 import Filter from "../models/Filter";
@@ -145,12 +149,18 @@ export default Vue.extend({
     props: {
         reservation: Object,
         tablesEndpoint: String,
-        reservationsEndpoint: String
+        reservationsEndpoint: String,
+        time: {
+            type: DateString,
+            required: false // automatically but for better readability
+        },
+        table: Object
     },
     data() {
         return {
             reservationCopy: Reservation.ofOrEmpty(this.reservation),
             errors: {},
+            customError: null,
             endpoint: "",
             showAdditionalNotice: false
         };
@@ -158,6 +168,9 @@ export default Vue.extend({
     mounted() {
         if (this.reservationCopy.notice) {
             this.showAdditionalNotice = true;
+        }
+        if (this.time) {
+            this.reservationCopy.start = this.time;
         }
     },
     methods: {
@@ -182,30 +195,33 @@ export default Vue.extend({
         setEmployee(employee: Employee): void {
             this.reservationCopy.user = employee;
         },
-        handleSubmit(): void {
-
+        handleSubmit() {
             const request: CreateOrUpdateReservation = new CreateOrUpdateReservation(this.reservationCopy);
-            request.asJsonPayload();
-            console.log('pressed');
-            axios
-                .put(this.reservationsEndpoint, request.asJsonPayload())
-                .then((res: any) => {
-                    if (res.status === 201 || res.status === 204) {
-                        location.reload();
-                    }
-                    // TODO: else show information
-                })
-                .catch((err) => {
-                    this.errors = err.response.data.errors;
-                });
 
+            const _axios = this.reservation ? axios.put : axios.post;
+
+            _axios(this.reservationsEndpoint, request.asJsonPayload())
+                .then(() => location.reload())
+                .catch(err => {
+                    if (err.response.status !== 422) {
+                        this.customError = err.response.data.message;
+                    } else {
+                        this.errors = err.response.data.errors;
+                    }
+                });
         },
         errorContainsKey(key): boolean {
             return Object.keys(this.errors).includes(key);
         },
         handleClose(): void {
+            this.clearReservationItem();
             this.$emit("modal:close");
         },
+        clearReservationItem(): void {
+            this.customError = null;
+            this.errors = {};
+            this.reservationCopy = Reservation.empty();
+        }
     },
     computed: {
         title(): string {
@@ -220,5 +236,10 @@ export default Vue.extend({
             return Filter.of(this.reservationCopy);
         },
     },
+    watch: {
+        time(n: DateString, o: DateString) {
+            this.reservationCopy.start = n;
+        },
+    }
 });
 </script>

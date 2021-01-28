@@ -45,14 +45,6 @@
                     {{ isNotInPreselected ? this.selected.name : 'Other' }}
                     <i class="fas fa-address-book ml-2"></i>
                 </button>
-
-
-<!--                <select-button-->
-<!--                    slot="reference"-->
-<!--                    :selected="someProperty"-->
-<!--                    :value="isNotInPreselected ? this.selected.name : 'Other'"-->
-<!--                    icon="fas fa-address-book"-->
-<!--                ></select-button>-->
             </popper>
         </div>
     </div>
@@ -72,13 +64,12 @@ export default Vue.extend({
     },
     props: {
         error: Boolean,
-        init: Employee
+        init: Employee,
     },
     data() {
         return {
-            // remove observer tracking
             selected: Employee.of(this.init),
-            employees: Array.of(this.init),
+            employees: this.init ? Array.of(this.init) : new Array<Employee>(),
         };
     },
     mounted() {
@@ -91,13 +82,14 @@ export default Vue.extend({
         },
         updateEmployees(): void {
             const endpoint: string = "/users";
-            axios.get(endpoint).then((res: any) => {
-                let responseData: any = res.data;
-                if (!(responseData instanceof Array)) {
-                    responseData = Array.of(responseData);
-                }
-                this.employees = responseData.map(entry => Employee.of(entry));
-            })
+            axios.get(endpoint)
+                .then((res: any) => {
+                    let responseData: any = res.data;
+                    if (!(responseData instanceof Array)) {
+                        responseData = Array.of(responseData);
+                    }
+                    this.employees = responseData.map(entry => Employee.of(entry));
+                })
                 .catch((err: any) => {
                         throw EmployeeError.of(`Failed fetching Employees, see: ${err}`)
                     }

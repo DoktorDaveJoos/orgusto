@@ -83,6 +83,12 @@ export default class Employee implements BasicEmployee {
 
     public static of(object: any): Employee {
 
+        // Empty user for empty reservation.
+        if (object === null) {
+            return new EmployeeBuilder()
+                .buildEmpty();
+        }
+
         Employee.check(object);
 
         const newEmployee = parseObject(object);
@@ -143,6 +149,13 @@ export class EmployeeBuilder implements BasicEmployee {
         checkNotEmpty(this.name);
         checkNotEmpty(this.type);
 
+        return new Employee(this.id, this.access_level, this.email, this.name, this.type);
+    }
+
+    /**
+     * Builds empty employee.
+     */
+    public buildEmpty(): Employee {
         return new Employee(this.id, this.access_level, this.email, this.name, this.type);
     }
 }

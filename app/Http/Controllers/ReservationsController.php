@@ -100,6 +100,7 @@ class ReservationsController extends Controller
     public function update(CreateReservation $request, Reservation $reservation)
     {
         $updatedReservation = $request->validated();
+
         $this->validateTables($updatedReservation['start'],
             $updatedReservation['duration'], $updatedReservation['tables'],
             $reservation);
@@ -204,13 +205,13 @@ class ReservationsController extends Controller
         $tablesAlreadyBooked->whenNotEmpty(function ($tables) use ($reservation) {
             if ($reservation === null) {
                 abort(self::STATUS_BAD_REQUEST,
-                    'Table with table number: ' . $tables->first()->table_number . ' already booked');
+                    'Table with table number: ' . $tables->first()->table_number . ' cannot be booked for this period because the reservation overlaps with an existing one.');
             } else {
                 foreach ($tables as $table) {
                     foreach ($table->reservations as $bookedReservation) {
                         if ($bookedReservation->id !== $reservation->id) {
                             abort(self::STATUS_BAD_REQUEST,
-                                'Table with table number: ' . $tables->first()->table_number . ' already booked');
+                                'Table with table number: ' . $tables->first()->table_number . ' cannot be booked for this period because the reservation overlaps with an existing one.');
                         } // else -> it's not another reservation, updating is fine.
                     }
                 }

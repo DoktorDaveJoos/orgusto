@@ -15,6 +15,7 @@
                 ></select-button>
             </div>
         </div>
+        <div v-if="error" class="text-red-600 text-xs text-italic">{{ error.message }}</div>
     </div>
 </template>
 
@@ -41,8 +42,8 @@ export default Vue.extend({
     },
     data() {
         return {
-            tables: Tables.of(this.init),
-            chosenTables: Tables.of(this.init),
+            tables: Tables.empty(),
+            chosenTables: Tables.empty(),
         };
     },
     mounted() {
@@ -51,6 +52,7 @@ export default Vue.extend({
     methods: {
         updateTables(filter: Filter): void {
             const request: TablesRequest = TablesRequest.of(filter);
+
             axios.get(this.tablesEndpoint + '?' + request.queryParams)
                 .then((res: any) => {
                     this.tables.merge(res.data);
@@ -58,19 +60,24 @@ export default Vue.extend({
                 .catch((err: any) => console.error(err));
         },
         handleTableClick(tableId: string): void {
-            const { tables } = this.tables;
-            const table: Table = tables.find(table => table.id === tableId);
+            const {tables} = this.tables;
+            const table: Table | undefined = tables.find(table => table.id === parseInt(tableId));
             if (table) {
                 this.chosenTables.mergeTableOrElseRemove(table);
             }
             this.$emit('tables:chosen', this.chosenTables);
         },
         isActive(tableId: string): boolean {
-            return this.chosenTables.tables.find(table => table.id === tableId) !== undefined;
+            return this.chosenTables.tables.find(table => table.id === parseInt(tableId)) !== undefined;
         }
     },
     watch: {
         filterData: 'updateTables',
+        init(n: PropType<Tables>, o: PropType<Tables> | undefined) {
+            this.tables = Tables.of(n);
+            this.chosenTables = Tables.of(n);
+            this.$emit('tables:chosen', this.chosenTables);
+        }
     },
 });
 

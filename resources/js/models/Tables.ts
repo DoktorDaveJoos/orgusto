@@ -27,11 +27,12 @@ export default class Tables {
 
     public static of(tablesObj: any) {
         if (tablesObj instanceof Tables) return _.cloneDeep(tablesObj);
+        if (!(tablesObj instanceof Array)) tablesObj = Array.of(tablesObj);
         return new Tables(_.cloneDeep(tablesObj));
     }
 
     merge(newTables: []): void {
-        newTables.map(table => Table.of(table));
+    newTables.map(table => Table.of(table));
         this.tables = _.unionBy(this.tables, newTables, 'id');
         this.tables = this.tables.sort(((a, b) => a.table_number - b.table_number));
     }

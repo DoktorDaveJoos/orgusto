@@ -212,7 +212,7 @@ export default {
             location.reload();
           }
           if (res.status === 422) {
-            console.log(res);
+            // TODO handle error
           }
         })
         .catch((err) => (this.displayError = err.response.data));

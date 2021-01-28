@@ -122,7 +122,8 @@ export default {
 
     addNewReservationAt(slot) {
       const slotTime = moment(this.timelineStart).add(slot * 15, "m");
-      this.slotClicked(this.table, slotTime);
+      const reservation = this.getReservation(slot);
+      this.slotClicked(this.table, slotTime, reservation);
     },
 
     getTime(slot) {

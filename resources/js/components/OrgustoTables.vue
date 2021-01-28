@@ -1,60 +1,66 @@
 <template>
-  <div>
-    <orgusto-table
-      v-for="table in tables"
-      :key="table.id"
-      :table="table"
-      :tables="tables"
-      :slot-clicked="handleSlotClick"
-      :timeline-start="timelineStart"
-    ></orgusto-table>
+    <div>
+        <orgusto-table
+            v-for="table in tables"
+            :key="table.id"
+            :table="table"
+            :tables="tables"
+            :slot-clicked="handleSlotClick"
+            :timeline-start="timelineStart"
+        ></orgusto-table>
 
-    <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="closeModal">
-      <reservation-empty-item :table="table" :tables="tables" :date="date" :employees="employees">
-        <template v-slot:optional-close>
-          <button
-            class="orgusto-button text-gray-600 hover:text-white hover:bg-gray-600 transition-color duration-200 ease-in-out"
-            @click="closeModal"
-          >cancel</button>
-        </template>
-      </reservation-empty-item>
-    </orgusto-modal-wrapper>
-  </div>
+        <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="closeModal">
+            <reservation-item
+                v-on:modal:close="closeModal"
+                :reservation="reservation"
+                :time="this.date"
+                :table="this.table"
+                :tables-endpoint="tablesEndpoint"
+                :reservations-endpoint="reservationsEndpoint"
+            ></reservation-item>
+        </orgusto-modal-wrapper>
+    </div>
 </template>
 
 <script>
+import DateString from "../models/DateString";
+
 export default {
-  name: "orgusto-tables",
-  props: {
-    tables: {
-      type: Array,
-      required: true
+    name: "orgusto-tables",
+    props: {
+        tables: {
+            type: Array,
+            required: true
+        },
+        employees: {
+            type: Array,
+            required: true
+        },
+        tablesEndpoint: String,
+        reservationsEndpoint: String,
+        timelineStart: String
     },
-    employees: {
-      type: Object,
-      required: true
+    data() {
+        return {
+            date: null,
+            table: null,
+            reservation: null,
+            modalIsOpen: false
+        };
     },
-    timelineStart: String
-  },
-  data() {
-    return {
-      date: null,
-      table: null,
-      modalIsOpen: false
-    };
-  },
-  methods: {
-    handleSlotClick(table, date) {
-      this.table = table;
-      this.date = date;
-      this.openModal();
-    },
-    closeModal() {
-      this.modalIsOpen = false;
-    },
-    openModal() {
-      this.modalIsOpen = true;
+    methods: {
+        handleSlotClick(table, date, reservation) {
+            this.reservation = reservation;
+            this.table = table;
+            this.date = DateString.ofAny(date);
+            this.openModal();
+        },
+        closeModal() {
+            this.modalIsOpen = false;
+        },
+        openModal() {
+            this.modalIsOpen = true;
+        }
     }
-  }
 };
 </script>

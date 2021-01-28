@@ -16,7 +16,9 @@
         </div>
     @endif
 
-    @infocard(['title' => $empty_search ? '... upcoming reservations' : 'Reservations'])
+    @if($reservations->isNotEmpty())
+
+    @infocard(['title' => $empty_search ? 'Upcoming reservations' : 'Reservations'])
     @table
     @slot('table_head')
     @endslot
@@ -86,7 +88,8 @@
     <div class="p-2 px-2 text-gray-600 text-xs font-light border-t border-gray-200 bg-gray-200">
         {{ $reservations->withQueryString()->links() }}
     </div>
-
     @endinfocard
+
+    @endif
 
 @endsection
