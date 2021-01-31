@@ -15,7 +15,7 @@ export default class CreateOrUpdateReservation extends AbstractRequest{
     asJsonPayload(): any {
         let request = Object.assign({});
 
-        request.start = this.reservation.start.date;
+        request.start = this.reservation.start.asISO;
         request.persons = this.reservation.persons;
         request.user_id = this.reservation.user?.id;
         request.duration = this.reservation.duration.minutes;

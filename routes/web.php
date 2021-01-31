@@ -66,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
                 ->name('restaurant.destroy')
                 ->middleware('can:delete,restaurant');
 
+            Route::post('/delete', [RestaurantController::class, 'formDestroy'])
+                ->name('restaurant.formDestroy')
+                ->middleware('can:delete,restaurant');
+
             Route::get('/{table}', [RestaurantController::class, 'showTable'])
                 ->name('restaurant.table.show');
         });
@@ -94,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])
             ->name('reservation.destroy')
             ->middleware('can:delete,reservation');
-        
+
     });
 
     Route::prefix('/tables')->group(function () {

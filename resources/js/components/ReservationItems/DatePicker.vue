@@ -23,30 +23,30 @@
 <script lang="ts">
 
 import Vue from 'vue';
-import DateString from "../../models/DateString";
+import OrgustoDate from "../../models/OrgustoDate";
 
 export default Vue.extend({
     props: {
-        init: DateString,
+        init: OrgustoDate,
         error: String
     },
     data() {
         return {
             datepicker: "",
             chosenDate: "",
-            singleDate: this.init.asDate(),
+            singleDate: this.init.asDate,
         };
     },
     mounted() {
         if (this.init) {
-            if (this.init.isToday()) {
+            if (this.init.isToday) {
                 this.datepicker = "today";
-            } else if (this.init.diffDaysFromNow() === 1) {
+            } else if (this.init.diffDaysFromNow === 1) {
                 this.datepicker = "tomorrow";
-            } else if (this.init.diffDaysFromNow() === 2) {
+            } else if (this.init.diffDaysFromNow === 2) {
                 this.datepicker = "day after tomorrow";
             } else {
-                this.chosenDate = this.init.readableDate();
+                this.chosenDate = this.init.readableDate;
             }
         } else {
             this.datepicker = "today";
@@ -57,14 +57,14 @@ export default Vue.extend({
             this.chosenDate = "";
             this.datepicker = indicator;
 
-            const date = DateString.now();
+            let date = OrgustoDate.now();
             if (indicator !== "today") {
-                date.addDays(indicator === "tomorrow" ? 1 : 2);
+                date = date.addDays(indicator === "tomorrow" ? 1 : 2);
             }
 
             this.setDate(date);
         },
-        setDate(date: DateString): void {
+        setDate(date: OrgustoDate): void {
             this.$emit("date:chosen", date);
         },
         isSelected(indicator): boolean {
@@ -73,9 +73,9 @@ export default Vue.extend({
     },
     watch: {
         singleDate(newVal, _): void {
-            const date: DateString = DateString.ofAny(newVal);
+            const date = OrgustoDate.ofAny(newVal);
             this.datepicker = "";
-            this.chosenDate = date.readableDate();
+            this.chosenDate = date.readableDate;
             this.setDate(date);
         },
     },

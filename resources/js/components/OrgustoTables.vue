@@ -6,7 +6,7 @@
             :table="table"
             :tables="tables"
             :slot-clicked="handleSlotClick"
-            :timeline-start="timelineStart"
+            :timeline-start="formattedTimelineStart"
         ></orgusto-table>
 
         <orgusto-modal-wrapper :is-open="modalIsOpen" :handle-close="closeModal">
@@ -23,7 +23,8 @@
 </template>
 
 <script>
-import DateString from "../models/DateString";
+
+import OrgustoDate from "../models/OrgustoDate";
 
 export default {
     name: "orgusto-tables",
@@ -52,7 +53,7 @@ export default {
         handleSlotClick(table, date, reservation) {
             this.reservation = reservation;
             this.table = table;
-            this.date = DateString.ofAny(date);
+            this.date = date;
             this.openModal();
         },
         closeModal() {
@@ -60,6 +61,11 @@ export default {
         },
         openModal() {
             this.modalIsOpen = true;
+        }
+    },
+    computed: {
+        formattedTimelineStart() {
+            return OrgustoDate.ofAny(this.timelineStart);
         }
     }
 };

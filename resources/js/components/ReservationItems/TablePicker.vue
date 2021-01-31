@@ -73,7 +73,7 @@ export default Vue.extend({
     },
     watch: {
         filterData: 'updateTables',
-        init(n: PropType<Tables>, o: PropType<Tables> | undefined) {
+        init(n: PropType<Tables>, o: PropType<Tables>) {
             this.tables = Tables.of(n);
             this.chosenTables = Tables.of(n);
             this.$emit('tables:chosen', this.chosenTables);

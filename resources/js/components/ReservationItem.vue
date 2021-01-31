@@ -136,25 +136,25 @@
 <script lang="ts">
 
 import Vue from "vue";
-import axios, {AxiosStatic} from 'axios';
+import axios from 'axios';
 import Reservation from "../models/Reservation";
 import Employee from "../models/Employee";
 import Filter from "../models/Filter";
 import Tables from "../models/Tables";
-import DateString from "../models/DateString";
+import OrgustoDate from "../models/OrgustoDate";
 import Duration from "../models/Duration";
 import CreateOrUpdateReservation from "../requests/CreateOrUpdateReservation";
 
 export default Vue.extend({
     props: {
+        table: Object,
         reservation: Object,
         tablesEndpoint: String,
         reservationsEndpoint: String,
         time: {
-            type: DateString,
+            type: OrgustoDate,
             required: false // automatically but for better readability
         },
-        table: Object
     },
     data() {
         return {
@@ -180,10 +180,10 @@ export default Vue.extend({
         setColor(color: string): void {
             this.reservationCopy.color = color;
         },
-        setDate(date: DateString): void {
+        setDate(date: OrgustoDate): void {
             this.reservationCopy.start.setDateOnly(date);
         },
-        setTime(date: DateString): void {
+        setTime(date: OrgustoDate): void {
             this.reservationCopy.start.setTimeOnly(date);
         },
         setPersons(persons: number): void {
@@ -214,7 +214,9 @@ export default Vue.extend({
             return Object.keys(this.errors).includes(key);
         },
         handleClose(): void {
-            this.clearReservationItem();
+            if (!this.reservation) {
+                this.clearReservationItem();
+            }
             this.$emit("modal:close");
         },
         clearReservationItem(): void {
@@ -237,7 +239,7 @@ export default Vue.extend({
         },
     },
     watch: {
-        time(n: DateString, o: DateString) {
+        time(n: OrgustoDate, o: OrgustoDate) {
             this.reservationCopy.start = n;
         },
     }

@@ -1,8 +1,7 @@
-import DateString from "../models/DateString";
+import OrgustoDate from "../models/OrgustoDate";
 import Filter from "../models/Filter";
 
 import $ from 'jquery';
-import Duration from "../models/Duration";
 
 export default class TablesRequest {
 
@@ -26,7 +25,7 @@ export default class TablesRequest {
 
     get queryParams(): string {
         const simplified: any = {
-            start: this.filter.date.date,
+            start: this.filter.date.asISO,
             m: this.filter.duration.minutes,
             persons: this.filter.persons
         }

@@ -9,6 +9,6 @@ export default class ReservationError extends Error {
     }
 
     public static failedParsing(object: any): ReservationError {
-        return new ReservationError(`Not an instance of Reservation: ${object}`);
+        return new ReservationError(`Not an instance of Reservation: ${JSON.stringify(object)}`);
     }
 }

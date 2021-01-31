@@ -2,7 +2,7 @@ import _ from "lodash";
 
 import Duration from "./Duration";
 import Tables from "./Tables";
-import DateString from "./DateString";
+import OrgustoDate from "./OrgustoDate";
 import Employee from "./Employee";
 import parseObject from "../helper/ParseObject";
 import ReservationError from "../errors/ReservationError";
@@ -11,7 +11,7 @@ export interface BasicReservation {
     name: string | null,
     duration: Duration,
     persons: number,
-    start: DateString,
+    start: OrgustoDate,
     notice?: string | null,
     color: string,
     email?: string | null,
@@ -28,7 +28,7 @@ export default class Reservation implements BasicReservation {
     private _notice: string | null;
     private _persons: number;
     private _phone_number: string | null;
-    private _start: DateString;
+    private _start: OrgustoDate;
     private _tables: Tables;
     private _user: Employee | null;
 
@@ -40,7 +40,7 @@ export default class Reservation implements BasicReservation {
                 notice: string | null,
                 persons: number,
                 phone_number: string | null,
-                start: DateString,
+                start: OrgustoDate,
                 tables: Tables,
                 user: Employee | null) {
         this._color = color;
@@ -93,7 +93,7 @@ export default class Reservation implements BasicReservation {
             newReservation.notice ? newReservation.notice : null,
             newReservation.persons,
             newReservation.phone_number ? newReservation.phone_number : null,
-            DateString.ofAny(newReservation.start),
+            OrgustoDate.ofAny(newReservation.start),
             Tables.of(newReservation.tables),
             Employee.of(newReservation.user)
         )
@@ -108,7 +108,7 @@ export default class Reservation implements BasicReservation {
             null,
             2,
             null,
-            DateString.now(),
+            OrgustoDate.now(),
             Tables.empty(),
             null
         )
@@ -166,7 +166,7 @@ export default class Reservation implements BasicReservation {
         return this._persons;
     }
 
-    get start(): DateString {
+    get start(): OrgustoDate {
         return this._start;
     }
 
@@ -186,7 +186,7 @@ export default class Reservation implements BasicReservation {
         this._persons = value;
     }
 
-    set start(value: DateString) {
+    set start(value: OrgustoDate) {
         this._start = value;
     }
 

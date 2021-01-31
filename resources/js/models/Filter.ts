@@ -1,29 +1,29 @@
 import Duration from "./Duration";
-import DateString from "./DateString";
+import OrgustoDate from "./OrgustoDate";
 import Reservation from "./Reservation";
 
 export interface BasicFilter {
-    date?: DateString;
+    date?: OrgustoDate;
     duration?: Duration;
     persons?: number;
 }
 
 export default class Filter implements BasicFilter {
-    private _date: DateString;
+    private _date: OrgustoDate;
     private _duration: Duration;
     private _persons: number;
 
-    constructor(date: DateString, duration: Duration, persons: number) {
+    constructor(date: OrgustoDate, duration: Duration, persons: number) {
         this._date = date;
         this._duration = duration;
         this._persons = persons;
     }
 
-    get date(): DateString {
+    get date(): OrgustoDate {
         return this._date;
     }
 
-    set date(value: DateString) {
+    set date(value: OrgustoDate) {
         this._date = value;
     }
 

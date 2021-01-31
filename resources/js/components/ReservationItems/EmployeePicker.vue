@@ -69,7 +69,7 @@ export default Vue.extend({
     data() {
         return {
             selected: Employee.of(this.init),
-            employees: this.init ? Array.of(this.init) : new Array<Employee>(),
+            employees: new Array<Employee>(),
         };
     },
     mounted() {
@@ -116,6 +116,11 @@ export default Vue.extend({
             return this.employees.slice(3).map((e: Employee) => Employee.of(e));
         },
     },
+    watch: {
+        init(n: Employee, o: Employee | undefined) {
+            this.selected = Employee.of(n);
+        }
+    }
 });
 </script>
 

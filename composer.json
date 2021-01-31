@@ -16,7 +16,8 @@
         "laravel/telescope": "^4.1",
         "laravel/tinker": "^2.4.2",
         "laravel/ui": "^3.0",
-        "livewire/livewire": "^2.3"
+        "livewire/livewire": "^2.3",
+        "teamtnt/laravel-scout-tntsearch-driver": "^11.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

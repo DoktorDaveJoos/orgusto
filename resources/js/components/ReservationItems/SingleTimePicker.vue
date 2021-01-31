@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DateString from "../../models/DateString";
+import OrgustoDate from "../../models/OrgustoDate";
 // noinspection TypeScriptCheckImport
 import Popper from "vue-popperjs";
 
@@ -71,12 +71,12 @@ export default Vue.extend({
     props: {
         active: Boolean,
         setSingleTime: Function,
-        time: DateString
+        time: OrgustoDate
     },
     data() {
         return {
-            hour: this.time.asMoment().get('hour'),
-            minute: this.time.asMoment().get('minute'),
+            hour: this.time.hour,
+            minute: this.time.minute,
         };
     },
     methods: {
@@ -87,10 +87,9 @@ export default Vue.extend({
             this.minute = minute;
         },
         emitTime(): void {
-            this.setSingleTime(DateString.ofAny(this.time
-                .asMoment()
-                .set('hour', this.hour)
-                .set('minute', this.minute)));
+            this.setSingleTime(OrgustoDate.ofAny(this.time.asDate)
+                .setHours(this.hour)
+                .setMinutes(this.minute));
         },
         addZeros(val: number): string {
             const tmp: string = val.toString();

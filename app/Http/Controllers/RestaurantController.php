@@ -44,6 +44,12 @@ class RestaurantController extends Controller
 
     public function store(CreateRestaurant $request)
     {
+
+        if (auth()->user()->restaurants()->get()->count() > 0) {
+            $request->session()->flash('message', 'Right now it\'s not allowed to create more than one restaurant.');
+            return redirect()->route('restaurants.show');
+        }
+
         $restaurant = Restaurant::create($request->validated());
 
         // Make creator 'admin' automatically
@@ -57,6 +63,15 @@ class RestaurantController extends Controller
 
     public function destroy(DeleteRestaurant $request, Restaurant $restaurant)
     {
+        if ($request->validated()['name'] == $restaurant->name) {
+            Restaurant::destroy($restaurant->id);
+        }
+        $request->session()->flash('message', 'Successfully deleted restaurant.');
+
+        return redirect()->route('restaurants.show');
+    }
+
+    public function formDestroy(DeleteRestaurant $request,Restaurant $restaurant) {
         if ($request->validated()['name'] == $restaurant->name) {
             Restaurant::destroy($restaurant->id);
         }

@@ -69,17 +69,17 @@
 <script lang="ts">
 
 import Vue from 'vue';
-import DateString from "../../models/DateString";
+import OrgustoDate from "../../models/OrgustoDate";
 
 export default Vue.extend({
     props: {
-        init: DateString,
+        init: OrgustoDate,
         error: String
     },
     data() {
         return {
-            hour: this.init.asMoment().get('hour'),
-            minute: this.init.asMoment().get('minute'),
+            hour: this.init.hour,
+            minute: this.init.minute,
             time: this.init,
             singleTimePickerActive: false
         };
@@ -94,13 +94,13 @@ export default Vue.extend({
         setMinute(minute: number): void {
             if (!this.singleTimePickerActive) this.minute = minute;
         },
-        setTime(time: DateString): void {
-            this.hour = time.asMoment().get('hour');
-            this.minute = time.asMoment().get('minute');
+        setTime(time: OrgustoDate): void {
+            this.hour = time.hour;
+            this.minute = time.minute;
         },
         setSingleTimeState(): void {
             this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
-            this.time = DateString.ofAny(this.time.asMoment().set('hour', this.hour).set('minute', this.minute));
+            this.time = OrgustoDate.ofAny(this.time.asDate).setHours(this.hour).setMinutes(this.minute);
             this.$emit("time:chosen", this.time);
         },
         getButtonClass(minute: number): string {
@@ -113,9 +113,9 @@ export default Vue.extend({
     watch: {
         hour: 'setSingleTimeState',
         minute: 'setSingleTimeState',
-        init(n: DateString, o: DateString) {
-            this.hour = n.asMoment().get('hour');
-            this.minute = n.asMoment().get('minute');
+        init(n: OrgustoDate, o: OrgustoDate) {
+            this.hour = n.hour;
+            this.minute = n.minute;
             this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
         }
     }
