@@ -20,7 +20,7 @@ class Controller extends BaseController
     const STATUS_BAD_REQUEST = 400;
     const STATUS_INTERNAL_SERVER_ERROR = 500;
 
-    public function getRestaurant(): Restaurant {
+    public function getRestaurant() {
         return auth()->user()->firstRestaurant();
     }
 

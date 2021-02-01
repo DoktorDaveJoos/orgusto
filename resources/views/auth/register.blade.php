@@ -1,71 +1,71 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="flex justify-center">
-        <div class="w-8/12">
-            <div class="shadow-lg rounded-lg">
-                <div class="bg-gray-200 w-full rounded-t-lg p-4 px-8 text-gray-700 text-xl">{{ __('Register') }}</div>
 
-                <div class="text-gray-600 p-2 font-normal">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+    @infocard(['title' => __('Register')])
 
-                        <div class="flex flex-col">
-                            <div class="flex justify-center m-2">
-                                <input id="name" placeholder="{{ __('Name') }}" type="text" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-                            </div>
-                            @error('name')
-                            <div class="flex justify-center m-2">
-                                <span class="bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2" role="alert">
-                                    {{ $message }}
-                                </span>
-                            </div>
-                            @enderror
-                        </div>
+    <div class="p-4 flex justify-center">
 
-                        <div class="flex flex-col">
-                            <div class="flex justify-center m-2">
-                                <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-                            </div>
-                            @error('email')
-                            <div class="flex justify-center m-2">
-                                <span class="bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2" role="alert">
-                                    {{ $message }}
-                                </span>
-                            </div>
-                            @enderror
+        <div class="w-full max-w-lg">
 
-                        </div>
 
-                        <div class="flex flex-col">
-                            <div class="flex justify-center m-2">
-                                <input id="password" placeholder="{{ __('Password') }}" type="password" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-                            </div>
-                            @error('password')
-                            <div class="flex justify-center m-2">
-                                <span class="bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2" role="alert">
-                                    {{ $message }}
-                                </span>
-                            </div>
-                            @enderror
-                        </div>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
 
-                        <div class="flex justify-center m-2">
-                            <input id="password-confirm" placeholder="{{ __('Confirm Password') }}" type="password" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none" name="password_confirmation" required autocomplete="new-password">
-                        </div>
-
-                        <div class="flex justify-center m-2">
-                            <div class="w-8/12 p-2">
-                                <button type="submit" class="bg-blue-400 hover:bg-blue-500 rounded-full px-4 py-1 text-white mr-4">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                @forminput(['label' => 'name'])
+                <input id="name" placeholder="{{ __('Name') }}" type="text"
+                       class="orgusto-input @error('name') is-invalid @enderror"
+                       name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                @endforminput
+                @error('name')
+                <div class="flex text-red-600 text-italic text-sm mx-2">
+                    {{ $message  }}
                 </div>
-            </div>
+                @enderror
+
+                @forminput(['label' => 'email'])
+                <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email"
+                       class="orgusto-input @error('email') is-invalid @enderror"
+                       name="email" value="{{ old('email') }}" required autocomplete="email">
+                @endforminput
+                @error('email')
+                <div class="flex text-red-600 text-italic text-sm mx-2">
+                    {{ $message  }}
+                </div>
+                @enderror
+
+                @forminput(['label' => 'password'])
+                <input id="password" placeholder="{{ __('Password') }}" type="password"
+                       class="orgusto-input @error('password') is-invalid @enderror"
+                       name="password" required autocomplete="new-password">
+                @endforminput
+                @error('password')
+                <div class="flex text-red-600 text-italic text-sm mx-2">
+                    {{ $message  }}
+                </div>
+                @enderror
+
+                @forminput(['label' => 'confirm password'])
+                <input id="password-confirm" placeholder="{{ __('Confirm Password') }}" type="password"
+                       class="orgusto-input"
+                       name="password_confirmation" required autocomplete="new-password">
+                @endforminput
+
+                <div class="w-full flex justify-between items-center mt-2 p-2">
+
+                    <button type="submit"
+                            class="orgusto-button text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-150 ease-in-out">
+                        <i class="fas fa-user-check mr-2"></i> {{ __('Register') }}
+                    </button>
+
+                    <a class="text-sm text-gray-600 hover:text-blue-400" href="{{ route('login') }}">
+                        {{ __('Already registered?') }}
+                    </a>
+                </div>
+            </form>
+
         </div>
     </div>
-</div>
+
+    @endinfocard
 @endsection

@@ -1,58 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="flex justify-center">
-        <div class="w-8/12">
-            <div class="shadow-lg rounded-lg">
-                <div class="bg-gray-200 w-full rounded-t-lg p-4 px-8 text-gray-700 text-xl">{{ __('Reset Password') }}</div>
 
-                <div class="text-gray-600 p-2 font-normal">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
+    @infocard(['title' => __('Reset Password')])
 
-                        <input type="hidden" name="token" value="{{ $token }}">
+    <div class="p-4 flex justify-center">
 
-                        <div class="flex flex-col">
-                            <div class="flex justify-center m-2">
-                                <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
-                            </div>
-                            @error('email')
-                            <div class="flex justify-center m-2">
-                                <span class="bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2" role="alert">
-                                    {{ $message }}
-                                </span>
-                            </div>
-                            @enderror
-                        </div>
+        <div class="w-full max-w-lg">
 
-                        <div class="flex flex-col">
-                            <div class="flex justify-center m-2">
-                                <input id="password" placeholder="{{ __('Password') }}" type="password" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-                            </div>
-                            @error('password')
-                            <div class="flex justify-center m-2">
-                                <span class="bg-red-400 text-white w-8/12 rounded-lg p-2 mt-2 mb-2" role="alert">
-                                    {{ $message }}
-                                </span>
-                            </div>
-                            @enderror
-                        </div>
+            <form method="POST" action="{{ route('password.update') }}">
+                @csrf
 
-                        <div class="flex justify-center m-2">
-                            <input id="password-confirm" placeholder="{{ __('Confirm Password') }}" type="password" class="bg-gray-200 p-2 px-4 rounded-full w-8/12 focus:outline-none" name="password_confirmation" required autocomplete="new-password">
-                        </div>
+                <input type="hidden" name="token" value="{{ $token }}">
 
-                        <div class="flex justify-center m-2">
-                            <div class="w-8/12 p-2"></div>
-                            <button type="submit" class="bg-blue-400 hover:bg-blue-500 rounded-full px-4 py-1 text-white mr-4">
-                                {{ __('Reset Password') }}
-                            </button>
-                        </div>
-                    </form>
+                @forminput(['label' => 'email'])
+                <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email"
+                       class="orgusto-input @error('email') is-invalid @enderror"
+                       name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
+                @endforminput
+                @error('email')
+                <div class="flex text-red-600 text-italic text-sm mx-2">
+                    {{ $message  }}
                 </div>
-            </div>
+                @enderror
+
+                @forminput(['label' => 'password'])
+                <input id="password" placeholder="{{ __('Password') }}" type="password"
+                       class="orgusto-input @error('password') is-invalid @enderror"
+                       name="password" required autocomplete="new-password">
+                @endforminput
+                @error('password')
+                <div class="flex text-red-600 text-italic text-sm mx-2">
+                    {{ $message  }}
+                </div>
+                @enderror
+
+                @forminput(['label' => 'Confirm password'])
+                <input id="password-confirm" placeholder="{{ __('Confirm Password') }}" type="password"
+                       class="orgusto-input" name="password_confirmation"
+                       required autocomplete="new-password">
+                @endforminput
+
+                <div class="w-full flex justify-between items-center mt-2 p-2">
+                    <button type="submit"
+                            class="orgusto-button text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-150 ease-in-out">
+                        {{ __('Reset Password') }}
+                    </button>
+                </div>
+            </form>
         </div>
+
     </div>
-</div>
+
+    @endinfocard
 @endsection
