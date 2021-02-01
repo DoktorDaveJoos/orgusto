@@ -35,7 +35,7 @@
                     {{ __('Remember me') }}
                 </label>
                 <input class="self-center mr-2" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-            </di
+            </div>
 
             <div class="w-full flex justify-between items-center mt-2 p-2">
                 <button type="submit" class="orgusto-button text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-150 ease-in-out">
