@@ -3,7 +3,7 @@
     <div class="w-full bg-gray-200 rounded-t-lg p-3 flex justify-between">
       <div class="font-bold text-sm text-gray-700 self-center">
         <i class="fas fa-clock self-center"></i>
-        {{ this.reservation.starting_at | moment("dddd, MMMM Do YYYY") }}
+        {{ this.reservation.start | moment("dddd, MMMM Do YYYY") }}
       </div>
       <div>
         <button
@@ -34,7 +34,7 @@
           class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700"
         >
           <i class="fas fa-user-friends"></i>
-          {{ this.reservation.person_count }} Persons
+          {{ this.reservation.persons }} Persons
         </span>
       </div>
     </div>

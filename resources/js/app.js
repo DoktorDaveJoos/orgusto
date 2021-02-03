@@ -5,17 +5,14 @@
  */
 
 require('./bootstrap');
-require('./fontawesome');
+
+window._ = _ = require('lodash');
 
 window.Vue = require('vue');
 import VCalendar from 'v-calendar';
 
 // Use v-calendar & v-date-picker components
-Vue.use(VCalendar, {
-    componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
-});
-
-
+Vue.use(VCalendar);
 Vue.use(require('vue-moment'));
 
 /**

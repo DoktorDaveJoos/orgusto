@@ -35,5 +35,17 @@ class AppServiceProvider extends ServiceProvider
 
             return array_filter($array, $filterByTable, $tableNumber);
         });
+
+        Blade::aliasComponent('components.info-card', 'infocard');
+
+        Blade::aliasComponent('components.table', 'table');
+        Blade::aliasComponent('components.table-head', 'tablehead');
+        Blade::aliasComponent('components.table-cell', 'tablecell');
+
+        Blade::aliasComponent('components.notification', 'notification');
+
+        Blade::aliasComponent('components.form-input', 'forminput');
+
+        Blade::aliasComponent('components.modal', 'modal');
     }
 }

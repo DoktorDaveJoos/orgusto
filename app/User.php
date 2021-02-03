@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use HasFactory;
     use Notifiable;
 
     /**
@@ -16,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'type', 'access_level'
     ];
 
     /**
@@ -25,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     /**
@@ -40,5 +42,25 @@ class User extends Authenticatable
     public function restaurants()
     {
         return $this->belongsToMany(Restaurant::class)->withPivot(['role']);
+    }
+
+    public function firstRestaurant()
+    {
+        return $this->restaurants()->first();
+    }
+
+    public function reservations()
+    {
+        return $this->belongsToMany(Reservation::class);
+    }
+
+    public function validated()
+    {
+        return $this->email_verified_at < date("Y-m-d H:i:s");
+    }
+
+    public function isPremium()
+    {
+        return $this->access_level === 'premium';
     }
 }

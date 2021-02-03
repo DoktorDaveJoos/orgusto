@@ -1,6 +1,6 @@
 <template>
   <button
-    class="text-gray-600 bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none"
+    class="text-gray-600 shadow-lg bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none"
     v-on:click="handleClick()"
   >
     <i :class="iconClass"></i>
@@ -18,11 +18,11 @@ export default {
   },
   methods: {
     handleClick: function() {
-        this.$bus.$emit("scopeEvent", {
-            msg: "scope event",
-            type: "scopeHour",
-            value: this.direction
-        })
+      this.$bus.$emit("scopeEvent", {
+        msg: "scope event",
+        type: "scopeHour",
+        value: this.direction
+      });
     }
   },
   computed: {

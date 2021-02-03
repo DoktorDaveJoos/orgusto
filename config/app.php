@@ -4,6 +4,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Version
+    |--------------------------------------------------------------------------
+    |
+    | This value is the version of your application. This value is used when
+    | the framework needs to place the application's version in a notification
+    | or any other location as required by the application or its packages.
+    */
+
+    'version' => '0.1.0-beta',
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Name
     |--------------------------------------------------------------------------
     |
@@ -13,7 +25,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Orgastro'),
+    'name' => env('APP_NAME', 'Orgusto'),
 
     /*
     |--------------------------------------------------------------------------
@@ -173,9 +185,11 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\NovaServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        // Search
+        Laravel\Scout\ScoutServiceProvider::class
 
     ],
 

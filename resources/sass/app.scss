@@ -1,5 +1,6 @@
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Nunito");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 
 // Variables
 @import "variables";
@@ -7,6 +8,24 @@
 // Tailwind
 @import "tailwindcss/base";
 @import "tailwindcss/components";
+
+body {
+    @apply bg-gray-100;
+}
+
+.orgusto-honey {
+    @apply bg-gray-200;
+    // background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23cbd5e0' fill-opacity='0.4'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+b {
+    @apply bg-yellow-400;
+    @apply font-normal;
+}
+
+.orgusto-headline {
+    font-family: "Pacifico", cursive;
+}
 
 // Custom
 .orgusto-button {
@@ -17,18 +36,130 @@
     @apply justify-center;
     @apply font-semibold;
     @apply rounded-full;
+    @apply my-auto;
     @apply text-sm;
     @apply px-3;
     @apply py-2;
-    @apply m-2;
+
+    &:disabled {
+        @apply text-gray-400;
+        @apply cursor-default;
+        @apply bg-transparent;
+        ‹ &:hover {
+            @apply bg-transparent;
+            @apply text-gray-400;
+        }
+    }
+
+    &:focus {
+        @apply outline-none;
+    }
 }
 
-.orgusto-button > svg {
-    @apply mr-2;
+.orgusto-input {
+    @apply leading-tight;
+    @apply text-gray-800;
+    @apply bg-gray-200;
+    @apply text-sm;
+    @apply rounded;
+    @apply p-2;
+
+    &:hover {
+        @apply font-semibold;
+    }
+
+    &:focus {
+        @apply border;
+        @apply border-gray-600;
+        @apply bg-white;
+        @apply font-semibold;
+        @apply outline-none;
+    }
 }
 
 .orgusto-timepicker {
     min-width: 6rem !important;
+}
+
+.switchChild:hover {
+    @apply justify-center;
+    @apply flex-col;
+}
+
+.switchChild:hover > div {
+    @apply text-sm;
+}
+
+.switchChild:hover > span {
+    @apply block;
+}
+
+.notification {
+    @apply fixed;
+    @apply bottom-0;
+    @apply right-0;
+    @apply m-8;
+    @apply flex;
+    @apply flex-row;
+    @apply items-center;
+    @apply justify-between;
+    @apply bg-purple-600;
+    @apply p-4;
+    @apply rounded-md;
+    @apply font-semibold;
+    @apply text-sm;
+    @apply leading-tight;
+    @apply text-white;
+    @apply shadow-lg;
+}
+
+.unchecked {
+    @apply absolute;
+    @apply block;
+    @apply mt-1;
+    @apply ml-1;
+    @apply bg-white;
+    @apply rounded-full;
+    @apply shadow;
+    @apply inset-y-0;
+    @apply left-0;
+    @apply bg-gray-400;
+    @apply transition-transform;
+    @apply duration-300;
+    @apply ease-in-out;
+}
+
+.checked {
+    @apply absolute;
+    @apply block;
+    @apply mt-1;
+    @apply ml-1;
+    @apply rounded-full;
+    @apply shadow;
+    @apply inset-y-0;
+    @apply left-0;
+    @apply transition-transform;
+    @apply duration-300;
+    @apply ease-in-out;
+    @apply transform;
+    @apply bg-gray-600;
+    @apply translate-x-full;
+}
+
+.loader {
+    border: 3px solid #f3f3f3; /* Light grey */
+    border-top: 3px solid #3498db; /* Blue */
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @import "tailwindcss/utilities";

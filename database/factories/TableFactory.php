@@ -1,15 +1,31 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Model;
-use Faker\Generator as Faker;
+use App\Table;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(App\Table::class, function (Faker $faker) {
-    return [
-        'table_number' => $faker->randomDigitNotNull(),
-        'seats' => $faker->randomDigitNot(0),
-        'description' => $faker->text,
-        'restaurant_id' => 1
-    ];
-});
+class TableFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Table::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'table_number' => $this->faker->randomDigit,
+            'restaurant_id' => 1,
+            'seats' => $this->faker->randomElement([2, 4, 8, 10]),
+            'description' => $this->faker->text,
+        ];
+    }
+}

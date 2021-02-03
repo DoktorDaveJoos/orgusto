@@ -2,7 +2,7 @@
   <div class="w-full md:w-1/3 m-2">
     <label
       v-if="title"
-      class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+      class="uppercase tracking-wide text-gray-700 font-semibold text-xs mb-2"
     >{{ title }}</label>
     <div class="relative" :class="containerClass">
       <select
