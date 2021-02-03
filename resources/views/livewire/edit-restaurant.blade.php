@@ -9,7 +9,7 @@
     @endslot
 
     <div class="w-full px-6 py-4 bg-gray-200">
-        <p class="bg-gray-50 text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+        <p class="text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
             Last updated {{ $this->getRestaurantUpdatedAtForHumans() }}
         </p>
     </div>
@@ -147,7 +147,7 @@
     @endtable
     @endinfocard
 
-{{--    @livewire('add-account', ['restaurant' => $restaurant])--}}
+    @livewire('add-account', ['restaurant' => $restaurant])
 
     @if (session()->has('message'))
     @notification

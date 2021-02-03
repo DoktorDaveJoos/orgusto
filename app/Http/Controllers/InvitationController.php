@@ -32,29 +32,36 @@ class InvitationController extends Controller
 
     public function show(User $user)
     {
-        $this->authorize('view', $user);
-
-        return view('invitation', ['user' => $user]);
+        if ($user->type === 'invited') {
+            return view('invitation', ['user' => $user]);
+        } else {
+            abort(403);
+        }
     }
 
     /**
      * Updates a user instance from invited to a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\User
      */
     public function update(UpdateInvitedUser $request, User $user)
     {
-        $this->authorize('update', $user);
 
-        $validated = $request->validated();
+        if ($user->type === 'invited') {
+            $validated = $request->validated();
 
-        $user->update([
-            'name' => $validated['name'],
-            'password' => Hash::make($validated['password']),
-            'type' => 'registered'
-        ]);
+            $user->update([
+                'name' => $validated['name'],
+                'password' => Hash::make($validated['password']),
+                'access_level' => 'premium',
+                'type' => 'registered'
+            ]);
 
-        return redirect('/login');
+            return redirect('/login')->with('message', 'Successfully fullfilled invitation. You can login now!');
+        } else {
+            abort(403);
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 <div x-data="{ openModal: false, tab: 'anon' }" x-show="openModal" @open-modal.window="openModal = true" @close-add-account.window="openModal = false" class="fixed bottom-0 inset-x-0 px-4 pb-4 sm:inset-0 sm:flex sm:items-center sm:justify-center">
     <!--
             Background overlay, show/hide based on modal state.
-            
+
             Entering: "ease-out duration-300"
             From: "opacity-0"
             To: "opacity-100"
@@ -15,7 +15,7 @@
 
     <!--
             Modal panel, show/hide based on modal state.
-            
+
             Entering: "ease-out duration-300"
             From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             To: "opacity-100 translate-y-0 sm:scale-100"
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <span class="flex w-full sm:ml-3 sm:w-auto">
                 <button x-show="tab === 'email'" @if($is_disabled) disabled @endif wire:click="addAccount" wire:loading.attr="disabled" type="button" class="orgusto-button bg-indigo-200 text-indigo-600 hover:text-white hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
                     {{ $action_button_text }}
