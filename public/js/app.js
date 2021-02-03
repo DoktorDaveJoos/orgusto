@@ -3056,37 +3056,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-reservations-bar",
   props: ["searchEndpoint", "reservationEndpoint"],
@@ -73494,7 +73463,7 @@ var render = function() {
               }
             ],
             staticClass:
-              "bg-white pl-2 form-input block w-full sm:text-sm sm:leading-5 focus:outline-none",
+              "bg-white pl-2 form-input block w-full rounded-full sm:text-sm sm:leading-5 focus:outline-none",
             attrs: {
               id: "reservations.search",
               placeholder: "Search name, email, phone number..."
@@ -73607,34 +73576,6 @@ var render = function() {
                     : _c("div", { staticClass: "p-4" }, [_vm._m(2)])
                 ]
               )
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass:
-                "focus:outline-none leading-tight h-full w-12 rounded-r-full transition-colors duration-150 ease-in-out",
-              class: _vm.isShowingFilter
-                ? "bg-indigo-600 text-white"
-                : "bg-gray-200 text-gray-600",
-              on: {
-                click: function($event) {
-                  _vm.isShowingFilter = !_vm.isShowingFilter
-                }
-              }
-            },
-            [_vm._m(3)]
-          ),
-          _vm._v(" "),
-          _vm.isShowingFilter && !_vm.isShowingRecommendations
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "origin-top-right absolute right-0 mt-12 w-full border border-gray-400 bg-white rounded-lg shadow-lg"
-                },
-                [_vm._m(4)]
-              )
             : _vm._e()
         ]
       ),
@@ -73643,54 +73584,52 @@ var render = function() {
         "div",
         {
           staticClass:
-            "group mt-1 relative rounded-full border-2 border-gray-400 focus-within:border-blue-400 shadow-lg bg-white pl-10 flex flex-row w-1/3"
+            "group mt-1 relative rounded-full border-2 border-gray-400 focus-within:border-blue-400 shadow-lg bg-white flex flex-row w-1/3"
         },
         [
-          _c(
-            "div",
-            {
-              staticClass:
-                "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            },
-            [
-              _c(
-                "span",
-                { staticClass: "text-gray-600 sm:text-sm sm:leading-5 mx-2" },
-                [
-                  _vm.quickFilterIncludes
-                    ? _c("i", { staticClass: "fas fa-fast-forward" })
-                    : _c("i", { staticClass: "fas fa-calendar-day" })
-                ]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "w-full flex flex-row justify-center" }, [
-            _c("div", { staticClass: "relative inline-block text-left" }, [
-              _c("div", { staticClass: "h-full" }, [
-                _c("span", { staticClass: "h-full" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "justify-center h-full w-full px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-600 hover:text-indigo-500 focus:outline-none focus:outline-none transition ease-in-out duration-150",
-                      attrs: {
-                        id: "options-menu",
-                        type: "button",
-                        "aria-haspopup": "true",
-                        "aria-expanded": "true"
-                      },
-                      on: {
-                        click: function($event) {
-                          _vm.isShowingDateFilter = !_vm.isShowingDateFilter
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.dateFilter))]
-                  )
-                ])
-              ])
-            ])
+          _c("div", { staticClass: "w-full flex justify-center" }, [
+            _c(
+              "button",
+              {
+                staticClass:
+                  "flex w-full h-full items-center rounded-full px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-600 hover:text-indigo-500 focus:outline-none focus:outline-none transition ease-in-out duration-150",
+                attrs: {
+                  id: "options-menu",
+                  type: "button",
+                  "aria-haspopup": "true",
+                  "aria-expanded": "true"
+                },
+                on: {
+                  click: function($event) {
+                    _vm.isShowingDateFilter = !_vm.isShowingDateFilter
+                  }
+                }
+              },
+              [
+                _vm.quickFilterIncludes
+                  ? _c("i", {
+                      staticClass: "fas fa-fast-forward pointer-events-none"
+                    })
+                  : _c("i", {
+                      staticClass: "fas fa-calendar-day pointer-events-none"
+                    }),
+                _vm._v(" "),
+                _c(
+                  "span",
+                  {
+                    staticClass:
+                      "flex w-full justify-center pointer-events-none"
+                  },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.dateFilter) +
+                        "\n\n                "
+                    )
+                  ]
+                )
+              ]
+            )
           ]),
           _vm._v(" "),
           _vm.isShowingDateFilter
@@ -73698,7 +73637,7 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "origin-bottom-left border border-gray-400 -ml-10 absolute mt-12 w-full right-auto rounded-md shadow-lg",
+                    "origin-bottom-left border border-gray-400 absolute mt-12 w-full right-auto rounded-md shadow-lg",
                   attrs: { id: "dateFilterDetail" }
                 },
                 [
@@ -73855,7 +73794,7 @@ var render = function() {
             "ml-4 focus:outline-none px-4 text-sm leading-tight mt-1 relative rounded-full font-semibold border-2 border-indigo-300 bg-indigo-100 text-indigo-500 hover:border-indigo-700 hover:bg-indigo-600 hover:text-white shadow-lg text-center transition-colors duration-150 ease-in-out",
           on: { click: _vm.handleSubmit }
         },
-        [_vm._m(5)]
+        [_vm._m(3)]
       )
     ]
   )
@@ -73910,32 +73849,6 @@ var staticRenderFns = [
           _vm._v("Please check your search term.")
         ])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "sm:text-sm sm:leading-5 mx-2 self-center" },
-      [_c("i", { staticClass: "fas fa-filter" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "bg-white rounded-lg" }, [
-      _c("div", { staticClass: "py-2" }, [
-        _c("span", { staticClass: "p-4 text-sm text-gray-700" }, [
-          _vm._v("Available filters:")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("hr"),
-      _vm._v(" "),
-      _c("div")
     ])
   },
   function() {
