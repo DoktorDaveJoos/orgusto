@@ -44,9 +44,8 @@ export default class Filter implements BasicFilter {
     }
 
     public static of(reservation: Reservation): Filter {
-        const date = reservation.start;
         return new Filter(
-            date,
+            reservation.start,
             reservation.duration,
             reservation.persons
         );

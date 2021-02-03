@@ -68,12 +68,12 @@
 
 <script lang="ts">
 
-import Vue from 'vue';
+import Vue, {PropType} from 'vue';
 import OrgustoDate from "../../models/OrgustoDate";
 
 export default Vue.extend({
     props: {
-        init: OrgustoDate,
+        init: Object as PropType<OrgustoDate>,
         error: String
     },
     data() {

@@ -54,6 +54,17 @@
 
     <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">Settings</div>
 
+    <div class="pt-4 px-6 text-gray-600 text-sm">
+        <p>
+            The <strong>default seat count</strong> determines with how many seats a new table will be created. You can subsequently adjust the number of seats per table for each table.
+        </p>
+
+        <p class="mt-2">
+            <strong>Bind seat count</strong> specifies that a table cannot be overbooked. This means that you can book a maximum of four people on a table with four seats.
+        </p>
+
+    </div>
+
     <div class="flex flex-col sm:flex-row w-2/3 flex-wrap p-6 ">
         @forminput(['label' => 'Default seat count'])
         <input id="default seat count" wire:model.debounce.500ms="default_table_seats" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Number of seats by default" />

@@ -77,7 +77,7 @@ class EditRestaurant extends Component
             'owner' => 'string|max:255',
             'name' => 'string|max:255',
             'city' => 'string|max:255',
-            'zip_code' => 'integer',
+            'zip_code' => 'string',
         ]);
 
         if ($isValidated) {

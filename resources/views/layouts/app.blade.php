@@ -21,6 +21,7 @@
 
     <script src="https://kit.fontawesome.com/8f990beb0d.js" crossorigin="anonymous"></script>
 
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>

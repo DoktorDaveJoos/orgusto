@@ -14,8 +14,11 @@
                     :handle="() => handleTableClick(table.id)"
                 ></select-button>
             </div>
+            <div v-if="tables.tables.length === 0" class="my-2 mr-2 text-gray-600 text-xs italic">
+                No tables available for this reservation.
+            </div>
         </div>
-        <div v-if="error" class="text-red-600 text-xs text-italic">{{ error.message }}</div>
+
     </div>
 </template>
 
@@ -49,7 +52,12 @@ export default Vue.extend({
     },
     methods: {
         updateTables(filter: Filter): void {
+
             const request: TablesRequest = TablesRequest.of(filter);
+
+            // reset tables before requesting
+            this.tables = this.init ? Tables.of(this.init) : Tables.empty();
+            this.chosenTables = this.init ? Tables.of(this.init) : Tables.empty();
 
             axios.get(this.tablesEndpoint + '?' + request.queryParams)
                 .then((res: any) => {

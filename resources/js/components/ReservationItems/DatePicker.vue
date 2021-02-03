@@ -57,7 +57,7 @@ export default Vue.extend({
             this.chosenDate = "";
             this.datepicker = indicator;
 
-            let date = OrgustoDate.now();
+            let date = OrgustoDate.default();
             if (indicator !== "today") {
                 date = date.addDays(indicator === "tomorrow" ? 1 : 2);
             }

@@ -23,7 +23,8 @@ import {
     setHours,
     getHours,
     setMinutes,
-    getMinutes
+    getMinutes,
+    startOfToday
 } from 'date-fns';
 
 export default class OrgustoDate {
@@ -103,8 +104,17 @@ export default class OrgustoDate {
         return new OrgustoDate(new Date(date));
     }
 
+    /**
+     * Returns an instance of OrgustoDate with new Date().
+     * @return {@link OrgustoDate}
+     * @deprecated - use {@link #default} instead
+     */
     public static now(): OrgustoDate {
         return OrgustoDate.ofAny(new Date());
+    }
+
+    public static default(): OrgustoDate {
+        return OrgustoDate.ofDate(startOfToday()).setHours(18).setMinutes(0);
     }
 
     public addDays(days: number): OrgustoDate {
@@ -124,13 +134,11 @@ export default class OrgustoDate {
     }
 
     public setDateOnly(newDate: Date): OrgustoDate {
-
         let tmpDate = this.asDate;
-        setYear(tmpDate, getYear(newDate));
-        setMonth(tmpDate, getMonth(newDate));
-        setDay(tmpDate, getDay(newDate));
-        return OrgustoDate.ofAny(tmpDate);
-
+        tmpDate = setYear(tmpDate, getYear(newDate));
+        tmpDate = setMonth(tmpDate, getMonth(newDate));
+        tmpDate = setDay(tmpDate, getDay(newDate));
+        return OrgustoDate.ofDate(tmpDate);
     }
 
     public setTimeOnly(newDate: Date): OrgustoDate {

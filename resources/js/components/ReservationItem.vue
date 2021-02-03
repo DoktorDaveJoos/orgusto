@@ -161,7 +161,8 @@ export default Vue.extend({
             errors: {},
             customError: null,
             endpoint: "",
-            showAdditionalNotice: false
+            showAdditionalNotice: false,
+            filterData: Filter.of(Reservation.ofOrEmpty(this.reservation))
         }
     },
     mounted() {
@@ -185,16 +186,20 @@ export default Vue.extend({
             this.reservationCopy.color = color;
         },
         setDate(date: OrgustoDate): void {
-            this.reservationCopy.start.setDateOnly(date.asDate);
+            this.reservationCopy.start = this.reservationCopy.start.setDateOnly(date.asDate);
+            this.filterData = Filter.of(this.reservationCopy);
         },
         setTime(date: OrgustoDate): void {
-            this.reservationCopy.start.setTimeOnly(date.asDate);
+            this.reservationCopy.start = this.reservationCopy.start.setTimeOnly(date.asDate);
+            this.filterData = Filter.of(this.reservationCopy);
         },
         setPersons(persons: number): void {
             this.reservationCopy.persons = persons;
+            this.filterData = Filter.of(this.reservationCopy);
         },
         setDuration(duration: Duration): void {
             this.reservationCopy.duration = duration;
+            this.filterData = Filter.of(this.reservationCopy);
         },
         setEmployee(employee: Employee): void {
             this.reservationCopy.user = employee;
@@ -238,9 +243,6 @@ export default Vue.extend({
         borderColor(): string {
             return "border-" + this.reservationCopy.color + "-400";
         },
-        filterData(): Filter {
-            return Filter.of(this.reservationCopy);
-        },
     },
     watch: {
         time(n: OrgustoDate, o: OrgustoDate): void {
@@ -255,7 +257,7 @@ export default Vue.extend({
             if(n) {
                 this.tables = Tables.of(n);
             }
-        }
+        },
     }
 });
 </script>

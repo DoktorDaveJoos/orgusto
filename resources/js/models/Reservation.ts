@@ -108,7 +108,7 @@ export default class Reservation implements BasicReservation {
             null,
             2,
             null,
-            OrgustoDate.now(),
+            OrgustoDate.default(),
             Tables.empty(),
             null
         )

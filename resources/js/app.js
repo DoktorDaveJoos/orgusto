@@ -55,3 +55,7 @@ const app = new Vue({
         bus: bus
     }
 });
+
+const navApp = new Vue({
+    el: '#navApp'
+})
