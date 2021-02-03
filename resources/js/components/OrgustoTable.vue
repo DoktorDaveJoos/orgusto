@@ -52,8 +52,7 @@
 
 <script lang="ts">
 import OrgustoDate from "../models/OrgustoDate";
-import Reservation from "../models/Reservation";
-import Vue from "vue";
+import Vue, {PropType} from "vue";
 
 const SLOT_CONSTANTS = {
     FIRST: 0,
@@ -78,7 +77,7 @@ export default Vue.extend({
             required: true,
         },
         slotClicked: Function,
-        timelineStart: OrgustoDate,
+        timelineStart: Object as PropType<OrgustoDate>,
     },
     methods: {
         slotHasReservation(slot: number): boolean {

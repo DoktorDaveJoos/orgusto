@@ -23,6 +23,7 @@ class ReservationsController extends Controller
         $this->middleware('auth');
     }
 
+    // TODO: Refactor -> easy to read
     public function index(Request $request)
     {
         $restaurant = $this->getRestaurant();
@@ -37,11 +38,13 @@ class ReservationsController extends Controller
 
         $empty_search = false;
 
+        // No search query given
         if (!$searchQuery) {
             $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
                 $q->where('restaurant_id', $restaurant->id);
             })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
         } else {
+            // Search query given
             $name_term = $name_term = '%' . $searchQuery . '%';
             $constraints = [
                 ['name', 'like', $name_term],
@@ -49,7 +52,9 @@ class ReservationsController extends Controller
                 ['start', '<=', $to]
             ];
 
-            $found_by_name = Reservation::where($constraints)->get();
+            $found_by_name = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
+            })->where($constraints)->get();
             $results = Reservation::search($searchQuery)->get();
             $reservations = $results
                 ->filter(function ($reservation, $key) use ($from, $to) {
@@ -62,7 +67,10 @@ class ReservationsController extends Controller
         if (sizeof($reservations) < 1) {
             $empty_search = true;
 
-            $reservations = Reservation::where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
+            // Upcoming reservations
+            $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
+            })->where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
         }
 
 

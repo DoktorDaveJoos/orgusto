@@ -2302,8 +2302,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleEvent: function handleEvent(event) {
-      console.log(event.value);
-
       if (event.type === "date") {
         location.href = window.location.origin + "/manage?date=" + event.value + "&hour=" + this.scope;
       }
@@ -70050,7 +70048,7 @@ exports.default = vue_1.default.extend({
             required: true,
         },
         slotClicked: Function,
-        timelineStart: OrgustoDate_1.default,
+        timelineStart: Object,
     },
     methods: {
         slotHasReservation: function (slot) {
@@ -70136,7 +70134,7 @@ var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/d
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 var Reservation_1 = __importDefault(__webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts"));
 var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./resources/js/models/Filter.ts"));
-var OrgustoDate_1 = __importDefault(__webpack_require__(/*! ../models/OrgustoDate */ "./resources/js/models/OrgustoDate.ts"));
+var Tables_1 = __importDefault(__webpack_require__(/*! ../models/Tables */ "./resources/js/models/Tables.ts"));
 var CreateOrUpdateReservation_1 = __importDefault(__webpack_require__(/*! ../requests/CreateOrUpdateReservation */ "./resources/js/requests/CreateOrUpdateReservation.ts"));
 exports.default = vue_1.default.extend({
     props: {
@@ -70144,14 +70142,12 @@ exports.default = vue_1.default.extend({
         reservation: Object,
         tablesEndpoint: String,
         reservationsEndpoint: String,
-        time: {
-            type: OrgustoDate_1.default,
-            required: false // automatically but for better readability
-        },
+        time: Object
     },
     data: function () {
         return {
             reservationCopy: Reservation_1.default.ofOrEmpty(this.reservation),
+            tables: Tables_1.default.empty(),
             errors: {},
             customError: null,
             endpoint: "",
@@ -70159,11 +70155,18 @@ exports.default = vue_1.default.extend({
         };
     },
     mounted: function () {
+        var _a;
         if (this.reservationCopy.notice) {
             this.showAdditionalNotice = true;
         }
         if (this.time) {
             this.reservationCopy.start = this.time;
+        }
+        if ((_a = this.reservation) === null || _a === void 0 ? void 0 : _a.tables) {
+            this.tables = Tables_1.default.of(this.reservation.tables);
+        }
+        else if (this.table) {
+            this.tables = Tables_1.default.of(this.table);
         }
     },
     methods: {
@@ -70174,10 +70177,10 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.color = color;
         },
         setDate: function (date) {
-            this.reservationCopy.start.setDateOnly(date);
+            this.reservationCopy.start.setDateOnly(date.asDate);
         },
         setTime: function (date) {
-            this.reservationCopy.start.setTimeOnly(date);
+            this.reservationCopy.start.setTimeOnly(date.asDate);
         },
         setPersons: function (persons) {
             this.reservationCopy.persons = persons;
@@ -70216,7 +70219,7 @@ exports.default = vue_1.default.extend({
             this.customError = null;
             this.errors = {};
             this.reservationCopy = Reservation_1.default.empty();
-        }
+        },
     },
     computed: {
         title: function () {
@@ -70235,6 +70238,16 @@ exports.default = vue_1.default.extend({
         time: function (n, o) {
             this.reservationCopy.start = n;
         },
+        reservation: function (n, o) {
+            if (n === null || n === void 0 ? void 0 : n.tables) {
+                this.tables = Tables_1.default.of(n.tables);
+            }
+        },
+        table: function (n, o) {
+            if (n) {
+                this.tables = Tables_1.default.of(n);
+            }
+        }
     }
 });
 
@@ -70605,14 +70618,12 @@ exports.default = vue_1.default.extend({
         },
         tablesEndpoint: String,
         error: Boolean,
-        init: {
-            type: Object
-        }
+        init: Object
     },
     data: function () {
         return {
-            tables: Tables_1.default.empty(),
-            chosenTables: Tables_1.default.empty(),
+            tables: this.init ? Tables_1.default.of(this.init) : Tables_1.default.empty(),
+            chosenTables: this.init ? Tables_1.default.of(this.init) : Tables_1.default.empty(),
         };
     },
     mounted: function () {
@@ -72166,10 +72177,7 @@ var render = function() {
               error: _vm.errorContainsKey("tables"),
               "tables-endpoint": _vm.tablesEndpoint,
               "filter-data": _vm.filterData,
-              init:
-                _vm.reservationCopy.tables.length > 0
-                  ? _vm.reservationCopy.tables
-                  : this.table
+              init: _vm.tables
             },
             on: { "tables:chosen": _vm.setTables }
           }),

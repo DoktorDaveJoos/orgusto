@@ -111,7 +111,7 @@
                 :error="errorContainsKey('tables')"
                 :tables-endpoint="tablesEndpoint"
                 :filter-data="filterData"
-                :init="reservationCopy.tables.length > 0 ? reservationCopy.tables : this.table"
+                :init="tables"
                 v-on:tables:chosen="setTables"
             ></table-picker>
 
@@ -135,7 +135,7 @@
 
 <script lang="ts">
 
-import Vue from "vue";
+import Vue, {PropType} from "vue";
 import axios from 'axios';
 import Reservation from "../models/Reservation";
 import Employee from "../models/Employee";
@@ -144,6 +144,7 @@ import Tables from "../models/Tables";
 import OrgustoDate from "../models/OrgustoDate";
 import Duration from "../models/Duration";
 import CreateOrUpdateReservation from "../requests/CreateOrUpdateReservation";
+import Table from "../models/Table";
 
 export default Vue.extend({
     props: {
@@ -151,19 +152,17 @@ export default Vue.extend({
         reservation: Object,
         tablesEndpoint: String,
         reservationsEndpoint: String,
-        time: {
-            type: OrgustoDate,
-            required: false // automatically but for better readability
-        },
+        time: Object as PropType<OrgustoDate>
     },
     data() {
         return {
             reservationCopy: Reservation.ofOrEmpty(this.reservation),
+            tables: Tables.empty(),
             errors: {},
             customError: null,
             endpoint: "",
             showAdditionalNotice: false
-        };
+        }
     },
     mounted() {
         if (this.reservationCopy.notice) {
@@ -171,6 +170,11 @@ export default Vue.extend({
         }
         if (this.time) {
             this.reservationCopy.start = this.time;
+        }
+        if (this.reservation?.tables) {
+            this.tables = Tables.of(this.reservation.tables);
+        } else if (this.table) {
+            this.tables = Tables.of(this.table);
         }
     },
     methods: {
@@ -181,10 +185,10 @@ export default Vue.extend({
             this.reservationCopy.color = color;
         },
         setDate(date: OrgustoDate): void {
-            this.reservationCopy.start.setDateOnly(date);
+            this.reservationCopy.start.setDateOnly(date.asDate);
         },
         setTime(date: OrgustoDate): void {
-            this.reservationCopy.start.setTimeOnly(date);
+            this.reservationCopy.start.setTimeOnly(date.asDate);
         },
         setPersons(persons: number): void {
             this.reservationCopy.persons = persons;
@@ -223,7 +227,7 @@ export default Vue.extend({
             this.customError = null;
             this.errors = {};
             this.reservationCopy = Reservation.empty();
-        }
+        },
     },
     computed: {
         title(): string {
@@ -239,9 +243,19 @@ export default Vue.extend({
         },
     },
     watch: {
-        time(n: OrgustoDate, o: OrgustoDate) {
+        time(n: OrgustoDate, o: OrgustoDate): void {
             this.reservationCopy.start = n;
         },
+        reservation(n: Reservation, o: Reservation) {
+            if (n?.tables) {
+                this.tables = Tables.of(n.tables);
+            }
+        },
+        table(n: Table, o: Table) {
+            if(n) {
+                this.tables = Tables.of(n);
+            }
+        }
     }
 });
 </script>

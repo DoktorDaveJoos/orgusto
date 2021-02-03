@@ -36,14 +36,12 @@ export default Vue.extend({
         },
         tablesEndpoint: String,
         error: Boolean,
-        init: {
-            type: Object as PropType<Tables>
-        }
+        init: Object as PropType<Tables>
     },
     data() {
         return {
-            tables: Tables.empty(),
-            chosenTables: Tables.empty(),
+            tables: this.init ? Tables.of(this.init) : Tables.empty(),
+            chosenTables: this.init ? Tables.of(this.init) : Tables.empty(),
         };
     },
     mounted() {
@@ -73,7 +71,7 @@ export default Vue.extend({
     },
     watch: {
         filterData: 'updateTables',
-        init(n: PropType<Tables>, o: PropType<Tables>) {
+        init(n: Tables | Table, o: Tables | Table) {
             this.tables = Tables.of(n);
             this.chosenTables = Tables.of(n);
             this.$emit('tables:chosen', this.chosenTables);

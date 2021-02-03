@@ -32,7 +32,8 @@ export default class Tables {
     }
 
     merge(newTables: []): void {
-    newTables.map(table => Table.of(table));
+
+        newTables.map(table => Table.of(table));
         this.tables = _.unionBy(this.tables, newTables, 'id');
         this.tables = this.tables.sort(((a, b) => a.table_number - b.table_number));
     }

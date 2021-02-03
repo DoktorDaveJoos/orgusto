@@ -20,8 +20,6 @@ export default {
   methods: {
     handleEvent: function(event) {
 
-        console.log(event.value);
-
       if (event.type === "date") {
         location.href =
           window.location.origin + "/manage?date=" + event.value + "&hour=" + this.scope;
