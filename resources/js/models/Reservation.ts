@@ -87,7 +87,7 @@ export default class Reservation implements BasicReservation {
 
         return new Reservation(
             newReservation.color,
-            Duration.ofMinutes(newReservation.duration),
+            newReservation.duration instanceof Duration ? newReservation.duration : Duration.ofMinutes(newReservation.duration),
             newReservation.email ? newReservation.email : null,
             newReservation.name,
             newReservation.notice ? newReservation.notice : null,

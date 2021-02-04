@@ -120,6 +120,17 @@ class ReservationsController extends Controller
         return response(null, self::STATUS_NO_CONTENT);
     }
 
+    public function done(Reservation $reservation)
+    {
+        try {
+            $reservation->done = true;
+            $reservation->save();
+            return response(null, self::STATUS_NO_CONTENT);
+        } catch (\Exception $e) {
+            return response('Reservation could not be updated', self::STATUS_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function destroy(Reservation $reservation)
     {
         try {
@@ -135,8 +146,8 @@ class ReservationsController extends Controller
 
         $results = [];
         $st = $request->searchQuery;
-        $from = date($request->from . " 00:00:00");
-        $to = date($request->to . " 23:59:59");
+        $from = $this->getStartFromRequest($request)->toDate();
+        $to = $this->getEndFromRequest($request)->toDate();
 
         $name_term = '%' . $st . '%';
 

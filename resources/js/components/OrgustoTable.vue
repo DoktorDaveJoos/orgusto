@@ -16,7 +16,9 @@
 
         <!-- Body -->
         <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row">
-            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full">
+            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full cursor-pointer"
+                 @click="editReservationAt(i)"
+            >
                 <div v-if="isEdgeSlot(i) !== 0" class="m-0 flex flex-row w-full">
                     <div
                         v-if="isEdgeSlot(i) === 2"
@@ -145,7 +147,12 @@ export default Vue.extend({
 
             this.slotClicked(this.table, slotTime, reservation);
         },
+        editReservationAt(slot: number): void {
+            const slotTime = this.timelineStart.addMinutes(slot * 15);
+            const reservation = this.getReservation(slot);
 
+            this.slotClicked(this.table, slotTime, reservation);
+        },
         getTime(slot: number): string {
             return this.timelineStart.addMinutes(slot * 15).readableTime;
         },

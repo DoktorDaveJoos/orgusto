@@ -99,6 +99,10 @@ Route::middleware(['auth'])->group(function () {
             ->name('reservation.destroy')
             ->middleware('can:delete,reservation');
 
+        Route::put('/{reservation}/fulfilled', [ReservationsController::class, 'done'])
+            ->name('reservation.done')
+            ->middleware('can:update,reservation');
+
     });
 
     Route::prefix('/tables')->group(function () {

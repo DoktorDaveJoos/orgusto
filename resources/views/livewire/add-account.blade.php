@@ -36,8 +36,8 @@
                         <div wire:loading wire:target="addAccount" class="loader h-6 w-6 ml-4"></div>
                     </h3>
                     <div class="flex border-b border-gray-400 my-4 w-full">
-                        <button class="text-sm p-2 leading-tight text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-500 text-gray-800': tab === 'anon'}" @click="tab = 'anon'">Name</button>
-                        <button class="mr-4 text-sm p-2 leading-tight text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-500 text-gray-800': tab === 'email'}" @click="tab = 'email'">Account</button>
+                        <button class="text-sm p-2 leading-tight text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-500 text-gray-800': tab === 'anon'}" x-on:click="tab = 'anon'">Name</button>
+                        <button class="mr-4 text-sm p-2 leading-tight text-gray-600 focus:outline-none" :class="{'border-b-4 border-gray-500 text-gray-800': tab === 'email'}" x-on:click="tab = 'email'">Account</button>
                     </div>
 
                     <div x-show="tab === 'email'" class="mt-3 text-center sm:mt-0 sm:text-left">

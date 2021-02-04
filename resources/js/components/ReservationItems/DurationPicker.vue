@@ -80,6 +80,10 @@ export default Vue.extend({
     methods: {
         setDuration(duration: Duration): void {
             this.duration = duration;
+            this.$emit("duration:chosen", this.duration);
+        },
+        setDurationWithoutEmitting(duration: Duration): void {
+            this.duration = duration;
         },
         thisDurationEquals(duration: Duration): boolean {
             return this.duration.equals(duration);
@@ -92,9 +96,9 @@ export default Vue.extend({
         },
     },
     watch: {
-        duration: function () {
-            this.$emit("duration:chosen", this.duration);
-        }
+        init(n: Duration, o: Duration) {
+            this.setDurationWithoutEmitting(n);
+        },
     }
 });
 </script>

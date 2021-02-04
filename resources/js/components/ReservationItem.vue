@@ -20,7 +20,7 @@
             ></employee-picker>
 
             <hr/>
-            <date-picker :init="reservationCopy.start" v-on:date:chosen="setDate"></date-picker>
+            <date-picker :init="getInitTime()" v-on:date:chosen="setDate"></date-picker>
             <time-picker :init="reservationCopy.start" v-on:time:chosen="setTime"></time-picker>
             <hr/>
             <person-picker
@@ -186,11 +186,11 @@ export default Vue.extend({
             this.reservationCopy.color = color;
         },
         setDate(date: OrgustoDate): void {
-            this.reservationCopy.start = this.reservationCopy.start.setDateOnly(date.asDate);
+            this.reservationCopy.start = date;
             this.filterData = Filter.of(this.reservationCopy);
         },
         setTime(date: OrgustoDate): void {
-            this.reservationCopy.start = this.reservationCopy.start.setTimeOnly(date.asDate);
+            this.reservationCopy.start = date;
             this.filterData = Filter.of(this.reservationCopy);
         },
         setPersons(persons: number): void {
@@ -204,9 +204,11 @@ export default Vue.extend({
         setEmployee(employee: Employee): void {
             this.reservationCopy.user = employee;
         },
+        getInitTime() {
+          return this.reservationCopy.start ? this.reservationCopy.start : OrgustoDate.default();
+        },
         handleSubmit() {
             const request: CreateOrUpdateReservation = new CreateOrUpdateReservation(this.reservationCopy);
-
             const _axios = this.reservation ? axios.put : axios.post;
 
             _axios(this.reservationsEndpoint, request.asJsonPayload())
@@ -223,9 +225,7 @@ export default Vue.extend({
             return Object.keys(this.errors).includes(key);
         },
         handleClose(): void {
-            if (!this.reservation) {
-                this.clearReservationItem();
-            }
+            this.clearReservationItem();
             this.$emit("modal:close");
         },
         clearReservationItem(): void {
@@ -249,6 +249,10 @@ export default Vue.extend({
             this.reservationCopy.start = n;
         },
         reservation(n: Reservation, o: Reservation) {
+            this.filterData = Filter.of(Reservation.ofOrEmpty(n));
+            if (n) {
+                this.reservationCopy = n;
+            }
             if (n?.tables) {
                 this.tables = Tables.of(n.tables);
             }

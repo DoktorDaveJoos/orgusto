@@ -25,6 +25,7 @@
 <script>
 
 import OrgustoDate from "../models/OrgustoDate";
+import Reservation from "../models/Reservation";
 
 export default {
     name: "orgusto-tables",
@@ -51,7 +52,7 @@ export default {
     },
     methods: {
         handleSlotClick(table, date, reservation) {
-            this.reservation = reservation;
+            this.reservation = reservation ? Reservation.of(reservation) : reservation;
             this.table = table;
             this.date = date;
             this.openModal();

@@ -13,8 +13,8 @@
 
     @else
 
-        <orgusto-scope-manager date="{{ $date ?? date('Y-m-d') }}"
-                               scope="{{ $scopedHour ?? '17' }}"></orgusto-scope-manager>
+        <orgusto-scope-manager date="{{ $date }}"
+                               scope="{{ $scopedHour }}"></orgusto-scope-manager>
 
         <div class="w-full pl-4">
             <div class="mx-8">
@@ -29,9 +29,9 @@
                 </div>
             </div>
 
-            <orgusto-timeline ihour="{{ $scopedHour ?? '17' }}"></orgusto-timeline>
+            <orgusto-timeline init="{{ $date }}"></orgusto-timeline>
 
-            <orgusto-tables timeline-start="{{ $date.' '.$scopedHour.':00:00' }}"
+            <orgusto-tables timeline-start="{{ $date }}"
                             :tables="{{ $tables }}"
                             :employees="{{ $employees }}"
                             tables-endpoint="{{ route('tables.index') }}"

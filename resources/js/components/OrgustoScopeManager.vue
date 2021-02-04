@@ -1,18 +1,11 @@
 <template></template>
 
 <script>
+import OrgustoDate from "../models/OrgustoDate";
+
 export default {
   name: "orgusto-scope-manager",
-  props: {
-    date: {
-      type: String,
-      required: true
-    },
-    scope: {
-      type: String,
-      required: true
-    }
-  },
+  props: ["date"],
   mounted() {
     // Register event listener
     this.$bus.$on("scopeEvent", event => this.handleEvent(event));
@@ -20,16 +13,28 @@ export default {
   methods: {
     handleEvent: function(event) {
 
-      if (event.type === "date") {
-        location.href =
-          window.location.origin + "/manage?date=" + event.value + "&hour=" + this.scope;
-      }
+        const scopedHour = OrgustoDate.ofString(this.date).hour;
 
-      if (event.type === "scopeHour") {
-        const newScope = event.value === "left" ? parseInt(this.scope) - 1 : parseInt(this.scope) + 1;
+        let date;
+
+        if (event.type === 'date') {
+            // always set scope hour
+            date = OrgustoDate.ofString(event.value).setHours(scopedHour);
+        } else {
+            // scope hour is part of date
+            date = OrgustoDate.ofString(this.date);
+        }
+
+        // just add or subtract an hour from date
+        if (event.type === "scopeHour") {
+            date = event.value > 0 ? date.addHours(1) : date.subtractHours(1);
+        }
+
+        const encodedDate = encodeURIComponent(date.asISO);
+
         location.href =
-            window.location.origin + "/manage?date=" + this.date + "&hour=" + newScope;
-      }
+            window.location.origin + "/manage?date=" + encodedDate;
+
     }
   }
 };

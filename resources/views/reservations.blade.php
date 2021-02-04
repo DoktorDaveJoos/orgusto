@@ -76,8 +76,11 @@
 
                     <edit-reservation :reservation="{{ $reservation }}"
                                       tables-endpoint="{{ route('tables.index') }}"
-                                      reservations-endpoint="{{ route('reservation.update', $reservation->id) }}">
+                                      reservations-endpoint="{{ route('reservation.update', $reservation->id) }}"
+                                      delete-reservations-endpoint="{{ route('reservation.destroy', $reservation->id) }}"
+                    >
                     </edit-reservation>
+
                 </td>
 
             </tr>

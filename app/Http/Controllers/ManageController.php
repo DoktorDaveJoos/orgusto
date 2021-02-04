@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateReservation;
 use App\Http\Resources\TableResource;
 use App\Reservation;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 
 
@@ -23,30 +24,30 @@ class ManageController extends Controller
 
     public function index(Request $request)
     {
-
         $restaurant = $this->getRestaurant();
+
         if (!$restaurant) {
             return redirect()->route('restaurants.show');
         }
 
         $employees = $restaurant->users ?? array();
 
-        $scopedHour = $request->get('hour') ?? 17;
+        $date = $request->has('date') ? CarbonImmutable::parse($request->get('date')) : CarbonImmutable::now()->setTime(16, 0);
 
-        $date = $request->get('date') ?? date('Y-m-d');
-
-        $from = $this->getStartFromRequest($request);
-        $to = $this->getEndFromRequest($request);
+        $from = $this->getStartFromRequest($request)->toDate();
+        $to = $this->getEndFromRequest($request)->toDate();
 
         $tables = $restaurant->tables()->with(['reservations' =>
             function ($query) use ($from, $to) {
-                $query->whereBetween('start', [$from, $to]);
+                $query->whereBetween('start', [$from, $to])->with(['user', 'tables']);
             }])->sortByTableNumber()->get();
 
         if ($request->wantsJson()) {
             return TableResource::collection($tables);
         }
 
-        return view('manage', ['tables' => $tables, 'date' => $date, 'scopedHour' => $scopedHour, 'employees' => $employees]);
+        $scope = $date->get('hour');
+
+        return view('manage', ['tables' => $tables, 'date' => $date->toISOString(), 'scopedHour' => $scope, 'employees' => $employees]);
     }
 }

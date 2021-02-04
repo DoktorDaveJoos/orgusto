@@ -10,9 +10,11 @@ import {
     format,
     addDays,
     addHours,
+    subHours,
     addMinutes,
     isToday,
     isEqual,
+    isSameDay,
     differenceInDays,
     setYear,
     setMonth,
@@ -79,6 +81,10 @@ export default class OrgustoDate {
      */
     public static ofAny(date: any): OrgustoDate {
 
+        if (date instanceof OrgustoDate) {
+            return date;
+        }
+
         if (date instanceof Date) {
             return new OrgustoDate(date);
         }
@@ -125,12 +131,20 @@ export default class OrgustoDate {
         return new OrgustoDate(addHours(this.asDate, hours));
     }
 
+    public subtractHours(hours: number): OrgustoDate {
+        return new OrgustoDate(subHours(this.asDate, hours));
+    }
+
     public addMinutes(minutes: number): OrgustoDate {
         return new OrgustoDate(addMinutes(this.asDate, minutes));
     }
 
     public isSame(toCompare: OrgustoDate): boolean {
         return isEqual(this.asDate, toCompare.asDate);
+    }
+
+    public isSameDay(toCompare: Date): boolean {
+        return isSameDay(new Date(this.asISO), new Date(toCompare));
     }
 
     public setDateOnly(newDate: Date): OrgustoDate {

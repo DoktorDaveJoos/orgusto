@@ -1983,6 +1983,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2004,8 +2006,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["tablesEndpoint", "reservationsEndpoint", "reservation"],
+  props: ["tablesEndpoint", "reservationsEndpoint", "reservation", "deleteReservationsEndpoint"],
   data: function data() {
     return {
       open: false
@@ -2017,7 +2027,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     handleClose: function handleClose() {
       this.open = false;
-    }
+    },
+    handleDelete: function handleDelete() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](this.deleteReservationsEndpoint).then(function () {
+        return location.reload();
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    handleDone: function handleDone() {}
   }
 });
 
@@ -2032,7 +2050,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -2235,10 +2252,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-timepicker",
   props: {
-    date: {
-      type: String,
-      required: true
-    }
+    date: String
   },
   data: function data() {
     return {
@@ -2253,19 +2267,18 @@ __webpack_require__.r(__webpack_exports__);
         return new Date(this.date);
       },
       set: function set(val) {
-        if (!moment(this.date).isSame(moment(val), "date")) {
-          this.date = val;
+        // const date = OrgustoDate.ofString(val).addMinutes(new Date().getTimezoneOffset() * (-1));
+        var date = _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(val); // Normalize Timezone due to missing timezone support in v-date-picker:
+        // const timeZoneNormalizedDate = parsedVal.asDate.getTimezoneOffset() < 0 ? parsedVal.addDays(1) : parsedVal;
+
+        if (!date.isSameDay(_models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(this.date).asDate)) {
+          this.$bus.$emit("scopeEvent", {
+            msg: "scope event",
+            type: "date",
+            value: date.asISO
+          });
         }
       }
-    }
-  },
-  watch: {
-    date: function date(newDate, oldDate) {
-      this.$bus.$emit("scopeEvent", {
-        msg: "scope event",
-        type: "date",
-        value: _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(newDate).format("yyyy-MM-dd")
-      });
     }
   }
 });
@@ -2303,7 +2316,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$bus.$emit("scopeEvent", {
         msg: "scope event",
         type: "scopeHour",
-        value: this.direction
+        value: this.direction === "left" ? -1 : 1
       });
     }
   },
@@ -2325,20 +2338,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/OrgustoDate */ "./resources/js/models/OrgustoDate.ts");
+/* harmony import */ var _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgusto-scope-manager",
-  props: {
-    date: {
-      type: String,
-      required: true
-    },
-    scope: {
-      type: String,
-      required: true
-    }
-  },
+  props: ["date"],
   mounted: function mounted() {
     var _this = this;
 
@@ -2349,14 +2356,24 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleEvent: function handleEvent(event) {
-      if (event.type === "date") {
-        location.href = window.location.origin + "/manage?date=" + event.value + "&hour=" + this.scope;
-      }
+      var scopedHour = _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(this.date).hour;
+      var date;
+
+      if (event.type === 'date') {
+        // always set scope hour
+        date = _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(event.value).setHours(scopedHour);
+      } else {
+        // scope hour is part of date
+        date = _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(this.date);
+      } // just add or subtract an hour from date
+
 
       if (event.type === "scopeHour") {
-        var newScope = event.value === "left" ? parseInt(this.scope) - 1 : parseInt(this.scope) + 1;
-        location.href = window.location.origin + "/manage?date=" + this.date + "&hour=" + newScope;
+        date = event.value > 0 ? date.addHours(1) : date.subtractHours(1);
       }
+
+      var encodedDate = encodeURIComponent(date.asISO);
+      location.href = window.location.origin + "/manage?date=" + encodedDate;
     }
   }
 });
@@ -2367,6 +2384,91 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoTables.vue?vue&type=script&lang=js& ***!
   \************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/OrgustoDate */ "./resources/js/models/OrgustoDate.ts");
+/* harmony import */ var _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _models_Reservation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts");
+/* harmony import */ var _models_Reservation__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_models_Reservation__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "orgusto-tables",
+  props: {
+    tables: {
+      type: Array,
+      required: true
+    },
+    employees: {
+      type: Array,
+      required: true
+    },
+    tablesEndpoint: String,
+    reservationsEndpoint: String,
+    timelineStart: String
+  },
+  data: function data() {
+    return {
+      date: null,
+      table: null,
+      reservation: null,
+      modalIsOpen: false
+    };
+  },
+  methods: {
+    handleSlotClick: function handleSlotClick(table, date, reservation) {
+      this.reservation = reservation ? _models_Reservation__WEBPACK_IMPORTED_MODULE_1___default.a.of(reservation) : reservation;
+      this.table = table;
+      this.date = date;
+      this.openModal();
+    },
+    closeModal: function closeModal() {
+      this.modalIsOpen = false;
+    },
+    openModal: function openModal() {
+      this.modalIsOpen = true;
+    }
+  },
+  computed: {
+    formattedTimelineStart: function formattedTimelineStart() {
+      return _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofAny(this.timelineStart);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoTimeline.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoTimeline.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2398,97 +2500,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "orgusto-tables",
-  props: {
-    tables: {
-      type: Array,
-      required: true
-    },
-    employees: {
-      type: Array,
-      required: true
-    },
-    tablesEndpoint: String,
-    reservationsEndpoint: String,
-    timelineStart: String
-  },
-  data: function data() {
-    return {
-      date: null,
-      table: null,
-      reservation: null,
-      modalIsOpen: false
-    };
-  },
-  methods: {
-    handleSlotClick: function handleSlotClick(table, date, reservation) {
-      this.reservation = reservation;
-      this.table = table;
-      this.date = date;
-      this.openModal();
-    },
-    closeModal: function closeModal() {
-      this.modalIsOpen = false;
-    },
-    openModal: function openModal() {
-      this.modalIsOpen = true;
-    }
-  },
-  computed: {
-    formattedTimelineStart: function formattedTimelineStart() {
-      return _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofAny(this.timelineStart);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/OrgustoTimeline.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/OrgustoTimeline.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "orgastro-timeline",
   props: {
-    ihour: {
+    init: {
       type: String,
       required: true
     }
@@ -2500,6 +2523,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     mapToHour: function mapToHour(val) {
       return parseInt(val) + parseInt(this.ihour);
+    }
+  },
+  computed: {
+    ihour: function ihour() {
+      return _models_OrgustoDate__WEBPACK_IMPORTED_MODULE_0___default.a.ofString(this.init).hour;
     }
   }
 });
@@ -70146,6 +70174,11 @@ exports.default = vue_1.default.extend({
             var reservation = this.getReservation(slot);
             this.slotClicked(this.table, slotTime, reservation);
         },
+        editReservationAt: function (slot) {
+            var slotTime = this.timelineStart.addMinutes(slot * 15);
+            var reservation = this.getReservation(slot);
+            this.slotClicked(this.table, slotTime, reservation);
+        },
         getTime: function (slot) {
             return this.timelineStart.addMinutes(slot * 15).readableTime;
         },
@@ -70182,6 +70215,7 @@ var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/a
 var Reservation_1 = __importDefault(__webpack_require__(/*! ../models/Reservation */ "./resources/js/models/Reservation.ts"));
 var Filter_1 = __importDefault(__webpack_require__(/*! ../models/Filter */ "./resources/js/models/Filter.ts"));
 var Tables_1 = __importDefault(__webpack_require__(/*! ../models/Tables */ "./resources/js/models/Tables.ts"));
+var OrgustoDate_1 = __importDefault(__webpack_require__(/*! ../models/OrgustoDate */ "./resources/js/models/OrgustoDate.ts"));
 var CreateOrUpdateReservation_1 = __importDefault(__webpack_require__(/*! ../requests/CreateOrUpdateReservation */ "./resources/js/requests/CreateOrUpdateReservation.ts"));
 exports.default = vue_1.default.extend({
     props: {
@@ -70225,11 +70259,11 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.color = color;
         },
         setDate: function (date) {
-            this.reservationCopy.start = this.reservationCopy.start.setDateOnly(date.asDate);
+            this.reservationCopy.start = date;
             this.filterData = Filter_1.default.of(this.reservationCopy);
         },
         setTime: function (date) {
-            this.reservationCopy.start = this.reservationCopy.start.setTimeOnly(date.asDate);
+            this.reservationCopy.start = date;
             this.filterData = Filter_1.default.of(this.reservationCopy);
         },
         setPersons: function (persons) {
@@ -70242,6 +70276,9 @@ exports.default = vue_1.default.extend({
         },
         setEmployee: function (employee) {
             this.reservationCopy.user = employee;
+        },
+        getInitTime: function () {
+            return this.reservationCopy.start ? this.reservationCopy.start : OrgustoDate_1.default.default();
         },
         handleSubmit: function () {
             var _this = this;
@@ -70262,9 +70299,7 @@ exports.default = vue_1.default.extend({
             return Object.keys(this.errors).includes(key);
         },
         handleClose: function () {
-            if (!this.reservation) {
-                this.clearReservationItem();
-            }
+            this.clearReservationItem();
             this.$emit("modal:close");
         },
         clearReservationItem: function () {
@@ -70288,6 +70323,10 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.start = n;
         },
         reservation: function (n, o) {
+            this.filterData = Filter_1.default.of(Reservation_1.default.ofOrEmpty(n));
+            if (n) {
+                this.reservationCopy = n;
+            }
             if (n === null || n === void 0 ? void 0 : n.tables) {
                 this.tables = Tables_1.default.of(n.tables);
             }
@@ -70426,6 +70465,10 @@ exports.default = vue_1.default.extend({
     methods: {
         setDuration: function (duration) {
             this.duration = duration;
+            this.$emit("duration:chosen", this.duration);
+        },
+        setDurationWithoutEmitting: function (duration) {
+            this.duration = duration;
         },
         thisDurationEquals: function (duration) {
             return this.duration.equals(duration);
@@ -70439,9 +70482,9 @@ exports.default = vue_1.default.extend({
         },
     },
     watch: {
-        duration: function () {
-            this.$emit("duration:chosen", this.duration);
-        }
+        init: function (n, o) {
+            this.setDurationWithoutEmitting(n);
+        },
     }
 });
 
@@ -70730,7 +70773,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var vue_1 = __importDefault(__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js"));
-var OrgustoDate_1 = __importDefault(__webpack_require__(/*! ../../models/OrgustoDate */ "./resources/js/models/OrgustoDate.ts"));
 exports.default = vue_1.default.extend({
     props: {
         init: Object,
@@ -70738,46 +70780,34 @@ exports.default = vue_1.default.extend({
     },
     data: function () {
         return {
-            hour: this.init.hour,
-            minute: this.init.minute,
-            time: this.init,
             singleTimePickerActive: false
         };
     },
     mounted: function () {
-        this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+        this.singleTimePickerActive = this.init.hour < 17 || this.init.hour > 20;
     },
     methods: {
         setHour: function (hour) {
-            this.hour = hour;
+            this.$emit("time:chosen", this.init.setHours(hour));
         },
         setMinute: function (minute) {
-            if (!this.singleTimePickerActive)
-                this.minute = minute;
+            this.$emit("time:chosen", this.init.setMinutes(minute));
         },
         setTime: function (time) {
-            this.hour = time.hour;
-            this.minute = time.minute;
-        },
-        setSingleTimeState: function () {
-            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
-            this.time = OrgustoDate_1.default.ofAny(this.time.asDate).setHours(this.hour).setMinutes(this.minute);
-            this.$emit("time:chosen", this.time);
+            this.$emit("time:chosen", time);
         },
         getButtonClass: function (minute) {
             if (this.singleTimePickerActive) {
                 return "opacity-50 cursor-not-allowed hover:shadow-none";
             }
-            return this.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
+            return this.init.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
         }
     },
     watch: {
         hour: 'setSingleTimeState',
         minute: 'setSingleTimeState',
         init: function (n, o) {
-            this.hour = n.hour;
-            this.minute = n.minute;
-            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+            this.singleTimePickerActive = n.hour < 17 || n.hour > 20;
         }
     }
 });
@@ -70941,29 +70971,36 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "button",
+        {
+          staticClass:
+            "ml-4 text-red-600 hover:bg-green-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
+          on: { click: _vm.handleDone }
+        },
+        [
+          _c("i", { staticClass: "far fa-trash-alt mr-1" }),
+          _vm._v("Mark fulfilled\n    ")
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass:
+            "ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
+          on: { click: _vm.handleDelete }
+        },
+        [
+          _c("i", { staticClass: "far fa-trash-alt mr-1" }),
+          _vm._v("Delete\n    ")
+        ]
+      )
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass:
-          "ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8"
-      },
-      [
-        _c("i", { staticClass: "far fa-trash-alt mr-1" }),
-        _vm._v("Delete\n    ")
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -71411,50 +71448,61 @@ var render = function() {
           },
           [
             _vm.slotHasReservation(i)
-              ? _c("div", { staticClass: "m-0 flex flex-row w-full" }, [
-                  _vm.isEdgeSlot(i) !== 0
-                    ? _c("div", { staticClass: "m-0 flex flex-row w-full" }, [
-                        _vm.isEdgeSlot(i) === 2
-                          ? _c(
-                              "div",
-                              {
-                                staticClass: "m-0 flex flex-row w-full",
-                                class: _vm.slotColorAndBorder(i)
-                              },
-                              [
-                                _c(
-                                  "span",
-                                  {
-                                    staticClass:
-                                      "absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
-                                  },
-                                  [_vm._v(_vm._s(_vm.getReservation(i).name))]
-                                )
-                              ]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.isEdgeSlot(i) === 1
-                          ? _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "m-0 flex flex-row w-full rounded-r-full",
-                                class: _vm.slotColor(i)
-                              },
-                              [_vm._v(" \n                ")]
-                            )
-                          : _vm._e()
-                      ])
-                    : _c(
-                        "div",
-                        {
-                          staticClass: "m-0 flex flex-row w-full",
-                          class: _vm.slotColor(i)
-                        },
-                        [_vm._v(" ")]
-                      )
-                ])
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "m-0 flex flex-row w-full cursor-pointer",
+                    on: {
+                      click: function($event) {
+                        return _vm.editReservationAt(i)
+                      }
+                    }
+                  },
+                  [
+                    _vm.isEdgeSlot(i) !== 0
+                      ? _c("div", { staticClass: "m-0 flex flex-row w-full" }, [
+                          _vm.isEdgeSlot(i) === 2
+                            ? _c(
+                                "div",
+                                {
+                                  staticClass: "m-0 flex flex-row w-full",
+                                  class: _vm.slotColorAndBorder(i)
+                                },
+                                [
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass:
+                                        "absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
+                                    },
+                                    [_vm._v(_vm._s(_vm.getReservation(i).name))]
+                                  )
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.isEdgeSlot(i) === 1
+                            ? _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "m-0 flex flex-row w-full rounded-r-full",
+                                  class: _vm.slotColor(i)
+                                },
+                                [_vm._v(" \n                ")]
+                              )
+                            : _vm._e()
+                        ])
+                      : _c(
+                          "div",
+                          {
+                            staticClass: "m-0 flex flex-row w-full",
+                            class: _vm.slotColor(i)
+                          },
+                          [_vm._v(" ")]
+                        )
+                  ]
+                )
               : _c(
                   "div",
                   {
@@ -72076,7 +72124,7 @@ var render = function() {
           _c("hr"),
           _vm._v(" "),
           _c("date-picker", {
-            attrs: { init: _vm.reservationCopy.start },
+            attrs: { init: _vm.getInitTime() },
             on: { "date:chosen": _vm.setDate }
           }),
           _vm._v(" "),
@@ -73269,7 +73317,7 @@ var render = function() {
           staticClass:
             "h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
-            _vm.hour === 17
+            _vm.init.hour === 17
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
@@ -73287,7 +73335,7 @@ var render = function() {
           staticClass:
             "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
-            _vm.hour === 18
+            _vm.init.hour === 18
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
@@ -73305,7 +73353,7 @@ var render = function() {
           staticClass:
             "h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
           class:
-            _vm.hour === 19
+            _vm.init.hour === 19
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
@@ -73323,7 +73371,7 @@ var render = function() {
           staticClass:
             "h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4",
           class:
-            _vm.hour === 20
+            _vm.init.hour === 20
               ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
               : "",
           on: {
@@ -73408,7 +73456,7 @@ var render = function() {
         _c("single-time-picker", {
           attrs: {
             active: _vm.singleTimePickerActive,
-            time: _vm.time,
+            time: _vm.init,
             "set-single-time": _vm.setTime
           }
         })
@@ -93546,6 +93594,9 @@ var OrgustoDate = /** @class */ (function () {
      * @deprecated - use {@link #ofDate} or {@link #ofString} instead
      */
     OrgustoDate.ofAny = function (date) {
+        if (date instanceof OrgustoDate) {
+            return date;
+        }
         if (date instanceof Date) {
             return new OrgustoDate(date);
         }
@@ -93584,11 +93635,17 @@ var OrgustoDate = /** @class */ (function () {
     OrgustoDate.prototype.addHours = function (hours) {
         return new OrgustoDate(date_fns_1.addHours(this.asDate, hours));
     };
+    OrgustoDate.prototype.subtractHours = function (hours) {
+        return new OrgustoDate(date_fns_1.subHours(this.asDate, hours));
+    };
     OrgustoDate.prototype.addMinutes = function (minutes) {
         return new OrgustoDate(date_fns_1.addMinutes(this.asDate, minutes));
     };
     OrgustoDate.prototype.isSame = function (toCompare) {
         return date_fns_1.isEqual(this.asDate, toCompare.asDate);
+    };
+    OrgustoDate.prototype.isSameDay = function (toCompare) {
+        return date_fns_1.isSameDay(new Date(this.asISO), new Date(toCompare));
     };
     OrgustoDate.prototype.setDateOnly = function (newDate) {
         var tmpDate = this.asDate;
@@ -93678,7 +93735,7 @@ var Reservation = /** @class */ (function () {
     Reservation.of = function (object) {
         Reservation.check(object);
         var newReservation = ParseObject_1.default(object);
-        return new Reservation(newReservation.color, Duration_1.default.ofMinutes(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, OrgustoDate_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
+        return new Reservation(newReservation.color, newReservation.duration instanceof Duration_1.default ? newReservation.duration : Duration_1.default.ofMinutes(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, OrgustoDate_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
     };
     Reservation.empty = function () {
         return new Reservation("gray", Duration_1.default.ofMinutes(120), null, "", null, 2, null, OrgustoDate_1.default.default(), Tables_1.default.empty(), null);

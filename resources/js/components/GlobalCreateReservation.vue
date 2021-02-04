@@ -13,7 +13,6 @@
                 :reservations-endpoint="reservationsEndpoint"
             ></reservation-item>
         </orgusto-modal-wrapper>
-
     </div>
 </template>
 

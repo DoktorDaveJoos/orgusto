@@ -6,25 +6,25 @@
             </div>
             <button
                 class="h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                :class="hour === 17 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="init.hour === 17 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(17)"
             >17
             </button>
             <button
                 class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                :class="hour === 18 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="init.hour === 18 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(18)"
             >18
             </button>
             <button
                 class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                :class="hour === 19 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="init.hour === 19 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(19)"
             >19
             </button>
             <button
                 class="h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4"
-                :class="hour === 20 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="init.hour === 20 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(20)"
             >20
             </button>
@@ -59,7 +59,7 @@
         <div>
             <single-time-picker
                 :active="singleTimePickerActive"
-                :time="time"
+                :time="init"
                 :set-single-time="setTime"
             ></single-time-picker>
         </div>
@@ -78,45 +78,34 @@ export default Vue.extend({
     },
     data() {
         return {
-            hour: this.init.hour,
-            minute: this.init.minute,
-            time: this.init,
             singleTimePickerActive: false
         };
     },
     mounted() {
-        this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+        this.singleTimePickerActive = this.init.hour < 17 || this.init.hour > 20;
     },
     methods: {
         setHour(hour: number): void {
-            this.hour = hour;
+            this.$emit("time:chosen", this.init.setHours(hour));
         },
         setMinute(minute: number): void {
-            if (!this.singleTimePickerActive) this.minute = minute;
+            this.$emit("time:chosen", this.init.setMinutes(minute));
         },
         setTime(time: OrgustoDate): void {
-            this.hour = time.hour;
-            this.minute = time.minute;
-        },
-        setSingleTimeState(): void {
-            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
-            this.time = OrgustoDate.ofAny(this.time.asDate).setHours(this.hour).setMinutes(this.minute);
-            this.$emit("time:chosen", this.time);
+            this.$emit("time:chosen", time);
         },
         getButtonClass(minute: number): string {
             if (this.singleTimePickerActive) {
                 return "opacity-50 cursor-not-allowed hover:shadow-none";
             }
-            return this.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
+            return this.init.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
         }
     },
     watch: {
         hour: 'setSingleTimeState',
         minute: 'setSingleTimeState',
         init(n: OrgustoDate, o: OrgustoDate) {
-            this.hour = n.hour;
-            this.minute = n.minute;
-            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+            this.singleTimePickerActive = n.hour < 17 || n.hour > 20;
         }
     }
 });

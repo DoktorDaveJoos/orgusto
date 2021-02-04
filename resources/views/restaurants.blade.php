@@ -16,7 +16,7 @@
                         an existing one.
                     </span>
                 </div>
-                <button @click="open = false">
+                <button x-on:click="open = false">
                     <i class="fas fa-times text-white"></i>
                 </button>
             </div>
@@ -32,7 +32,7 @@
                 </div>
                 {{ $errors->first() }}
             </div>
-            <button @click="open = false">
+            <button x-on:click="open = false">
                 <i class="fas fa-times text-white"></i>
             </button>
         </div>
@@ -40,7 +40,7 @@
 
     @infocard(['title' => 'Restaurants'])
     @slot('optional_button')
-        <button x-data @click="$dispatch('open-add')"
+        <button x-data x-on:click="$dispatch('open-add')"
                 class="orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-colors duration-150 ease-in-out">
             <i class="fas fa-plus mr-2"></i>
             add restaurant

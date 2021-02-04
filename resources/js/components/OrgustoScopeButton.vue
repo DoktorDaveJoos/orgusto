@@ -21,7 +21,7 @@ export default {
       this.$bus.$emit("scopeEvent", {
         msg: "scope event",
         type: "scopeHour",
-        value: this.direction
+        value: this.direction === "left" ? -1 : 1
       });
     }
   },
