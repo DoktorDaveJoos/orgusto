@@ -186,8 +186,6 @@ export default Vue.extend({
     },
     mounted() {
 
-        console.log(this.reservation);
-
         if (this.reservationCopy.notice) {
             this.showAdditionalNotice = true;
         }
