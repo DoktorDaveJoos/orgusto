@@ -8,6 +8,7 @@ import parseObject from "../helper/ParseObject";
 import ReservationError from "../errors/ReservationError";
 
 export interface BasicReservation {
+    id: number | null,
     name: string | null,
     duration: Duration,
     persons: number,
@@ -18,9 +19,11 @@ export interface BasicReservation {
     phone_number?: string | null,
     tables: Tables,
     user: Employee | null;
+    done: Boolean | null;
 }
 
 export default class Reservation implements BasicReservation {
+    private _id: number | null
     private _color: string;
     private _duration: Duration;
     private _email: string | null;
@@ -31,18 +34,24 @@ export default class Reservation implements BasicReservation {
     private _start: OrgustoDate;
     private _tables: Tables;
     private _user: Employee | null;
+    private _done: Boolean | null;
 
     // TODO refactor for optional? parameters with BuilderPattern
-    constructor(color: string,
-                duration: Duration,
-                email: string | null,
-                name: string | null,
-                notice: string | null,
-                persons: number,
-                phone_number: string | null,
-                start: OrgustoDate,
-                tables: Tables,
-                user: Employee | null) {
+    constructor(
+        id: number | null,
+        color: string,
+        duration: Duration,
+        email: string | null,
+        name: string | null,
+        notice: string | null,
+        persons: number,
+        phone_number: string | null,
+        start: OrgustoDate,
+        tables: Tables,
+        user: Employee | null,
+        done: Boolean | null
+    ) {
+        this._id = id;
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -53,6 +62,7 @@ export default class Reservation implements BasicReservation {
         this._start = start;
         this._tables = tables;
         this._user = user;
+        this._done = done;
     }
 
     public static check(object: any): object is BasicReservation {
@@ -86,6 +96,7 @@ export default class Reservation implements BasicReservation {
         const newReservation: any = parseObject(object);
 
         return new Reservation(
+            newReservation.id,
             newReservation.color,
             newReservation.duration instanceof Duration ? newReservation.duration : Duration.ofMinutes(newReservation.duration),
             newReservation.email ? newReservation.email : null,
@@ -95,12 +106,14 @@ export default class Reservation implements BasicReservation {
             newReservation.phone_number ? newReservation.phone_number : null,
             OrgustoDate.ofAny(newReservation.start),
             Tables.of(newReservation.tables),
-            Employee.of(newReservation.user)
+            Employee.of(newReservation.user),
+            newReservation.done
         )
     }
 
     static empty(): Reservation {
         return new Reservation(
+            null,
             "gray",
             Duration.ofMinutes(120),
             null,
@@ -110,12 +123,17 @@ export default class Reservation implements BasicReservation {
             null,
             OrgustoDate.default(),
             Tables.empty(),
-            null
+            null,
+            false
         )
     }
 
     static copyFromReservation(old: Reservation): Reservation {
         return _.cloneDeep(old);
+    }
+
+    get id(): number | null {
+        return this._id;
     }
 
     get tables(): Tables {
@@ -196,5 +214,13 @@ export default class Reservation implements BasicReservation {
 
     set user(value: Employee | null) {
         this._user = value;
+    }
+
+    get done(): Boolean | null {
+        return this._done;
+    }
+
+    set done(isDone: Boolean | null) {
+        this._done = isDone;
     }
 }

@@ -11,6 +11,7 @@
                 v-on:modal:close="handleClose"
                 :tables-endpoint="tablesEndpoint"
                 :reservations-endpoint="reservationsEndpoint"
+                :reset="true"
             ></reservation-item>
         </orgusto-modal-wrapper>
     </div>

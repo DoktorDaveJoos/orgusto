@@ -123,6 +123,21 @@
                     class="p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out"
                 >Cancel
                 </button>
+                <button v-if="reservation && reservation.done === 0"
+                        @click="handleFulfilled"
+                        class="p-2 px-4 mr-4 rounded-lg bg-green-600 text-gray-100 leading-tight text-sm hover:text-green-600 hover:bg-white transition-colors duration-150 ease-in-out"
+                >Mark fulfilled
+                </button>
+                <button v-if="reservation && reservation.done === 1"
+                        @click="handleFulfilled"
+                        class="p-2 px-4 mr-4 rounded-lg bg-blue-400 text-gray-100 leading-tight text-sm hover:text-blue-600 hover:bg-white transition-colors duration-150 ease-in-out"
+                >Reactivate
+                </button>
+                <button v-if="reservation"
+                    @click="handleDelete"
+                    class="p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out"
+                >Delete
+                </button>
                 <button
                     @click="handleSubmit"
                     class="p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out"
@@ -152,7 +167,11 @@ export default Vue.extend({
         reservation: Object,
         tablesEndpoint: String,
         reservationsEndpoint: String,
-        time: Object as PropType<OrgustoDate>
+        time: Object as PropType<OrgustoDate>,
+        reset: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
@@ -166,6 +185,9 @@ export default Vue.extend({
         }
     },
     mounted() {
+
+        console.log(this.reservation);
+
         if (this.reservationCopy.notice) {
             this.showAdditionalNotice = true;
         }
@@ -221,11 +243,22 @@ export default Vue.extend({
                     }
                 });
         },
+        handleDelete() {
+            axios.delete(this.reservationsEndpoint + '/' + this.reservation.id)
+            .then(() => location.reload());
+        },
+        handleFulfilled() {
+            const url = this.reservationsEndpoint + '/' + this.reservation.id + '/fulfilled';
+            axios.put(url).then(() => location.reload());
+        },
         errorContainsKey(key): boolean {
             return Object.keys(this.errors).includes(key);
         },
         handleClose(): void {
-            this.clearReservationItem();
+            const location = window.location.href;
+            if (location.includes('manage') || this.reset) {
+                this.clearReservationItem();
+            }
             this.$emit("modal:close");
         },
         clearReservationItem(): void {

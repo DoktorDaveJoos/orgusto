@@ -71,6 +71,39 @@
                 </div>
             </div>
 
+            <!-- Filter -->
+            <button
+                @click="isShowingFilter = !isShowingFilter"
+                class="focus:outline-none leading-tight h-full w-12 rounded-r-full transition-colors duration-150 ease-in-out"
+                :class="isShowingFilter ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'"
+            >
+                <span class="sm:text-sm sm:leading-5 mx-2 self-center">
+                  <i class="fas fa-filter"></i>
+                </span>
+            </button>
+
+            <div
+                v-if="isShowingFilter && !isShowingRecommendations"
+                class="origin-top-right absolute right-0 mt-12 w-full border border-gray-400 bg-white rounded-lg shadow-lg"
+            >
+                <div class="bg-white rounded-lg">
+                    <div class="py-2">
+                        <span class="p-4 text-sm text-gray-700">Available filters:</span>
+                    </div>
+                    <hr/>
+                    <div>
+
+<!--                        show fulfilled-->
+                        <label class="flex items-center p-4">
+                            <input type="checkbox" class="form-checkbox" v-model="fulfilled">
+                            <span class="ml-2 text-sm text-gray-600">Show fulfilled</span>
+                        </label>
+
+
+
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Date filter -->
@@ -213,7 +246,8 @@ export default {
                 end: new Date()
             },
             singleDate: new Date(),
-            quickFilter: ["Today", "Tomorrow", "Next week", "Next month"]
+            quickFilter: ["Today", "Tomorrow", "Next week", "Next month"],
+            fulfilled: new URLSearchParams(window.location.search).has('fulfilled')
         };
     },
     methods: {
@@ -245,8 +279,8 @@ export default {
             this.isCalculating = true;
             setTimeout(() => {
                 this.searchOnType();
-            }, 500);
-        }, 500),
+            }, 50);
+        }, 50),
         handleSubmit: function () {
             var queryParams = {};
 
@@ -289,6 +323,22 @@ export default {
         },
         results: function () {
             this.isShowingRecommendations = this.searchQuery.length > 0;
+        },
+        fulfilled() {
+            if (this.fulfilled === true) {
+                const queryParams = new URLSearchParams(window.location.search);
+                const filler = queryParams.has('from') ? '&' : '?';
+                location.href =
+                    location.href + filler + "fulfilled=true";
+            } else {
+                const queryParams = new URLSearchParams(window.location.search);
+                if (queryParams.has('fulfilled')) {
+                    queryParams.delete('fulfilled');
+                    let newUrl = location.href;
+                    newUrl = newUrl.replace(location.search, '');
+                    location.href = newUrl + '?' + queryParams.toString();
+                }
+            }
         }
     },
     computed: {

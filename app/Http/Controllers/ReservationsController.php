@@ -31,6 +31,9 @@ class ReservationsController extends Controller
             return redirect()->route('restaurants.show');
         }
 
+        // marked as fulfilled
+        $showIsFulfilled = $request->get('fulfilled') ?? false;
+
         $searchQuery = $request->get('searchQuery');
 
         $from = $this->getStartFromRequest($request);
@@ -40,9 +43,15 @@ class ReservationsController extends Controller
 
         // No search query given
         if (!$searchQuery) {
-            $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                $q->where('restaurant_id', $restaurant->id);
-            })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
+            if ($showIsFulfilled) {
+                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id);
+                })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
+            } else {
+                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id)->where('done', false);
+                })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
+            }
         } else {
             // Search query given
             $name_term = $name_term = '%' . $searchQuery . '%';
@@ -52,10 +61,18 @@ class ReservationsController extends Controller
                 ['start', '<=', $to]
             ];
 
-            $found_by_name = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                $q->where('restaurant_id', $restaurant->id);
-            })->where($constraints)->get();
-            $results = Reservation::search($searchQuery)->get();
+            if ($showIsFulfilled) {
+                $found_by_name = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id);
+                })->where($constraints)->get();
+                $results = Reservation::search($searchQuery)->get();
+            } else {
+                $found_by_name = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id)->where('done', false);
+                })->where($constraints)->get();
+                $results = Reservation::search($searchQuery)->where('done', false)->get();
+            }
+
             $reservations = $results
                 ->filter(function ($reservation, $key) use ($from, $to) {
                     return $reservation->start >= $from && $reservation->start <= $to;
@@ -68,11 +85,16 @@ class ReservationsController extends Controller
             $empty_search = true;
 
             // Upcoming reservations
-            $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                $q->where('restaurant_id', $restaurant->id);
-            })->where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
+            if ($showIsFulfilled) {
+                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id);
+                })->where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
+            } else {
+                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                    $q->where('restaurant_id', $restaurant->id)->where('done', false);
+                })->where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
+            }
         }
-
 
         if (request()->wantsJson()) {
             return ReservationResource::collection($reservations);
@@ -123,7 +145,7 @@ class ReservationsController extends Controller
     public function done(Reservation $reservation)
     {
         try {
-            $reservation->done = true;
+            $reservation->done = !$reservation->done;
             $reservation->save();
             return response(null, self::STATUS_NO_CONTENT);
         } catch (\Exception $e) {

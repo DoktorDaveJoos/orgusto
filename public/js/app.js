@@ -2013,6 +2013,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["tablesEndpoint", "reservationsEndpoint", "reservation", "deleteReservationsEndpoint"],
@@ -2035,7 +2044,11 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(err);
       });
     },
-    handleDone: function handleDone() {}
+    handleDone: function handleDone() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put(this.reservationsEndpoint + '/fulfilled').then(function () {
+        return location.reload();
+      });
+    }
   }
 });
 
@@ -2050,6 +2063,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -3129,6 +3143,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "search-reservations-bar",
   props: ["searchEndpoint", "reservationEndpoint"],
@@ -3181,7 +3228,8 @@ __webpack_require__.r(__webpack_exports__);
         end: new Date()
       },
       singleDate: new Date(),
-      quickFilter: ["Today", "Tomorrow", "Next week", "Next month"]
+      quickFilter: ["Today", "Tomorrow", "Next week", "Next month"],
+      fulfilled: new URLSearchParams(window.location.search).has('fulfilled')
     };
   },
   methods: {
@@ -3214,8 +3262,8 @@ __webpack_require__.r(__webpack_exports__);
       this.isCalculating = true;
       setTimeout(function () {
         _this3.searchOnType();
-      }, 500);
-    }, 500),
+      }, 50);
+    }, 50),
     handleSubmit: function handleSubmit() {
       var queryParams = {};
       if (this.searchQuery.length > 0) queryParams.searchQuery = this.searchQuery;
@@ -3257,6 +3305,23 @@ __webpack_require__.r(__webpack_exports__);
     },
     results: function results() {
       this.isShowingRecommendations = this.searchQuery.length > 0;
+    },
+    fulfilled: function fulfilled() {
+      if (this.fulfilled === true) {
+        var queryParams = new URLSearchParams(window.location.search);
+        var filler = queryParams.has('from') ? '&' : '?';
+        location.href = location.href + filler + "fulfilled=true";
+      } else {
+        var _queryParams = new URLSearchParams(window.location.search);
+
+        if (_queryParams.has('fulfilled')) {
+          _queryParams["delete"]('fulfilled');
+
+          var newUrl = location.href;
+          newUrl = newUrl.replace(location.search, '');
+          location.href = newUrl + '?' + _queryParams.toString();
+        }
+      }
     }
   },
   computed: {
@@ -70223,7 +70288,11 @@ exports.default = vue_1.default.extend({
         reservation: Object,
         tablesEndpoint: String,
         reservationsEndpoint: String,
-        time: Object
+        time: Object,
+        reset: {
+            type: Boolean,
+            default: false
+        }
     },
     data: function () {
         return {
@@ -70238,6 +70307,7 @@ exports.default = vue_1.default.extend({
     },
     mounted: function () {
         var _a;
+        console.log(this.reservation);
         if (this.reservationCopy.notice) {
             this.showAdditionalNotice = true;
         }
@@ -70295,11 +70365,22 @@ exports.default = vue_1.default.extend({
                 }
             });
         },
+        handleDelete: function () {
+            axios_1.default.delete(this.reservationsEndpoint + '/' + this.reservation.id)
+                .then(function () { return location.reload(); });
+        },
+        handleFulfilled: function () {
+            var url = this.reservationsEndpoint + '/' + this.reservation.id + '/fulfilled';
+            axios_1.default.put(url).then(function () { return location.reload(); });
+        },
         errorContainsKey: function (key) {
             return Object.keys(this.errors).includes(key);
         },
         handleClose: function () {
-            this.clearReservationItem();
+            var location = window.location.href;
+            if (location.includes('manage') || this.reset) {
+                this.clearReservationItem();
+            }
             this.$emit("modal:close");
         },
         clearReservationItem: function () {
@@ -70971,18 +71052,35 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "ml-4 text-red-600 hover:bg-green-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
-          on: { click: _vm.handleDone }
-        },
-        [
-          _c("i", { staticClass: "far fa-trash-alt mr-1" }),
-          _vm._v("Mark fulfilled\n    ")
-        ]
-      ),
+      _vm.reservation.done === 0
+        ? _c(
+            "button",
+            {
+              staticClass:
+                "ml-4 text-green-600 hover:bg-green-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
+              on: { click: _vm.handleDone }
+            },
+            [
+              _c("i", { staticClass: "fas fa-check mr-1" }),
+              _vm._v("Mark fulfilled\n    ")
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.reservation.done === 1
+        ? _c(
+            "button",
+            {
+              staticClass:
+                "ml-4 text-blue-400 hover:bg-blue-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
+              on: { click: _vm.handleDone }
+            },
+            [
+              _c("i", { staticClass: "fas fa-redo mr-1" }),
+              _vm._v("Reactivate\n    ")
+            ]
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "button",
@@ -71043,7 +71141,8 @@ var render = function() {
           _c("reservation-item", {
             attrs: {
               "tables-endpoint": _vm.tablesEndpoint,
-              "reservations-endpoint": _vm.reservationsEndpoint
+              "reservations-endpoint": _vm.reservationsEndpoint,
+              reset: true
             },
             on: { "modal:close": _vm.handleClose }
           })
@@ -72365,6 +72464,42 @@ var render = function() {
               },
               [_vm._v("Cancel\n            ")]
             ),
+            _vm._v(" "),
+            _vm.reservation && _vm.reservation.done === 0
+              ? _c(
+                  "button",
+                  {
+                    staticClass:
+                      "p-2 px-4 mr-4 rounded-lg bg-green-600 text-gray-100 leading-tight text-sm hover:text-green-600 hover:bg-white transition-colors duration-150 ease-in-out",
+                    on: { click: _vm.handleFulfilled }
+                  },
+                  [_vm._v("Mark fulfilled\n            ")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.reservation && _vm.reservation.done === 1
+              ? _c(
+                  "button",
+                  {
+                    staticClass:
+                      "p-2 px-4 mr-4 rounded-lg bg-blue-400 text-gray-100 leading-tight text-sm hover:text-blue-600 hover:bg-white transition-colors duration-150 ease-in-out",
+                    on: { click: _vm.handleFulfilled }
+                  },
+                  [_vm._v("Reactivate\n            ")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.reservation
+              ? _c(
+                  "button",
+                  {
+                    staticClass:
+                      "p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out",
+                    on: { click: _vm.handleDelete }
+                  },
+                  [_vm._v("Delete\n            ")]
+                )
+              : _vm._e(),
             _vm._v(" "),
             _c(
               "button",
@@ -73761,6 +73896,89 @@ var render = function() {
                     : _c("div", { staticClass: "p-4" }, [_vm._m(2)])
                 ]
               )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass:
+                "focus:outline-none leading-tight h-full w-12 rounded-r-full transition-colors duration-150 ease-in-out",
+              class: _vm.isShowingFilter
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-600",
+              on: {
+                click: function($event) {
+                  _vm.isShowingFilter = !_vm.isShowingFilter
+                }
+              }
+            },
+            [_vm._m(3)]
+          ),
+          _vm._v(" "),
+          _vm.isShowingFilter && !_vm.isShowingRecommendations
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "origin-top-right absolute right-0 mt-12 w-full border border-gray-400 bg-white rounded-lg shadow-lg"
+                },
+                [
+                  _c("div", { staticClass: "bg-white rounded-lg" }, [
+                    _vm._m(4),
+                    _vm._v(" "),
+                    _c("hr"),
+                    _vm._v(" "),
+                    _c("div", [
+                      _c("label", { staticClass: "flex items-center p-4" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.fulfilled,
+                              expression: "fulfilled"
+                            }
+                          ],
+                          staticClass: "form-checkbox",
+                          attrs: { type: "checkbox" },
+                          domProps: {
+                            checked: Array.isArray(_vm.fulfilled)
+                              ? _vm._i(_vm.fulfilled, null) > -1
+                              : _vm.fulfilled
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.fulfilled,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.fulfilled = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.fulfilled = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.fulfilled = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "span",
+                          { staticClass: "ml-2 text-sm text-gray-600" },
+                          [_vm._v("Show fulfilled")]
+                        )
+                      ])
+                    ])
+                  ])
+                ]
+              )
             : _vm._e()
         ]
       ),
@@ -73807,9 +74025,9 @@ var render = function() {
                   },
                   [
                     _vm._v(
-                      "\n                    " +
+                      "\n                        " +
                         _vm._s(_vm.dateFilter) +
-                        "\n\n                "
+                        "\n\n                    "
                     )
                   ]
                 )
@@ -73979,7 +74197,7 @@ var render = function() {
             "ml-4 focus:outline-none px-4 text-sm leading-tight mt-1 relative rounded-full font-semibold border-2 border-indigo-300 bg-indigo-100 text-indigo-500 hover:border-indigo-700 hover:bg-indigo-600 hover:text-white shadow-lg text-center transition-colors duration-150 ease-in-out",
           on: { click: _vm.handleSubmit }
         },
-        [_vm._m(3)]
+        [_vm._m(5)]
       )
     ]
   )
@@ -74033,6 +74251,26 @@ var staticRenderFns = [
         _c("p", { staticClass: "text-sm text-gray-500" }, [
           _vm._v("Please check your search term.")
         ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "span",
+      { staticClass: "sm:text-sm sm:leading-5 mx-2 self-center" },
+      [_c("i", { staticClass: "fas fa-filter" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "py-2" }, [
+      _c("span", { staticClass: "p-4 text-sm text-gray-700" }, [
+        _vm._v("Available filters:")
       ])
     ])
   },
@@ -93695,7 +93933,8 @@ var ParseObject_1 = __importDefault(__webpack_require__(/*! ../helper/ParseObjec
 var ReservationError_1 = __importDefault(__webpack_require__(/*! ../errors/ReservationError */ "./resources/js/errors/ReservationError.ts"));
 var Reservation = /** @class */ (function () {
     // TODO refactor for optional? parameters with BuilderPattern
-    function Reservation(color, duration, email, name, notice, persons, phone_number, start, tables, user) {
+    function Reservation(id, color, duration, email, name, notice, persons, phone_number, start, tables, user, done) {
+        this._id = id;
         this._color = color;
         this._duration = duration;
         this._email = email;
@@ -93706,6 +93945,7 @@ var Reservation = /** @class */ (function () {
         this._start = start;
         this._tables = tables;
         this._user = user;
+        this._done = done;
     }
     Reservation.check = function (object) {
         var newReservation = ParseObject_1.default(object);
@@ -93735,14 +93975,21 @@ var Reservation = /** @class */ (function () {
     Reservation.of = function (object) {
         Reservation.check(object);
         var newReservation = ParseObject_1.default(object);
-        return new Reservation(newReservation.color, newReservation.duration instanceof Duration_1.default ? newReservation.duration : Duration_1.default.ofMinutes(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, OrgustoDate_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user));
+        return new Reservation(newReservation.id, newReservation.color, newReservation.duration instanceof Duration_1.default ? newReservation.duration : Duration_1.default.ofMinutes(newReservation.duration), newReservation.email ? newReservation.email : null, newReservation.name, newReservation.notice ? newReservation.notice : null, newReservation.persons, newReservation.phone_number ? newReservation.phone_number : null, OrgustoDate_1.default.ofAny(newReservation.start), Tables_1.default.of(newReservation.tables), Employee_1.default.of(newReservation.user), newReservation.done);
     };
     Reservation.empty = function () {
-        return new Reservation("gray", Duration_1.default.ofMinutes(120), null, "", null, 2, null, OrgustoDate_1.default.default(), Tables_1.default.empty(), null);
+        return new Reservation(null, "gray", Duration_1.default.ofMinutes(120), null, "", null, 2, null, OrgustoDate_1.default.default(), Tables_1.default.empty(), null, false);
     };
     Reservation.copyFromReservation = function (old) {
         return lodash_1.default.cloneDeep(old);
     };
+    Object.defineProperty(Reservation.prototype, "id", {
+        get: function () {
+            return this._id;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Reservation.prototype, "tables", {
         get: function () {
             return this._tables;
@@ -93839,6 +94086,16 @@ var Reservation = /** @class */ (function () {
         },
         set: function (value) {
             this._user = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Reservation.prototype, "done", {
+        get: function () {
+            return this._done;
+        },
+        set: function (isDone) {
+            this._done = isDone;
         },
         enumerable: false,
         configurable: true
