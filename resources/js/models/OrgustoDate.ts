@@ -156,10 +156,9 @@ export default class OrgustoDate {
     }
 
     public setTimeOnly(newDate: Date): OrgustoDate {
-
         let tmpDate = this.asDate;
-        setHours(tmpDate, getHours(newDate));
-        setMinutes(tmpDate, getMinutes(newDate));
+        tmpDate = setHours(tmpDate, getHours(newDate));
+        tmpDate = setMinutes(tmpDate, getMinutes(newDate));
         return OrgustoDate.ofAny(tmpDate);
 
     }

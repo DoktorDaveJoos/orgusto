@@ -186,7 +186,7 @@ export default Vue.extend({
             this.reservationCopy.color = color;
         },
         setDate(date: OrgustoDate): void {
-            this.reservationCopy.start = date;
+            this.reservationCopy.start = date.setTimeOnly(this.reservationCopy.start.asDate);
             this.filterData = Filter.of(this.reservationCopy);
         },
         setTime(date: OrgustoDate): void {

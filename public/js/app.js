@@ -70259,7 +70259,7 @@ exports.default = vue_1.default.extend({
             this.reservationCopy.color = color;
         },
         setDate: function (date) {
-            this.reservationCopy.start = date;
+            this.reservationCopy.start = date.setTimeOnly(this.reservationCopy.start.asDate);
             this.filterData = Filter_1.default.of(this.reservationCopy);
         },
         setTime: function (date) {
@@ -93656,8 +93656,8 @@ var OrgustoDate = /** @class */ (function () {
     };
     OrgustoDate.prototype.setTimeOnly = function (newDate) {
         var tmpDate = this.asDate;
-        date_fns_1.setHours(tmpDate, date_fns_1.getHours(newDate));
-        date_fns_1.setMinutes(tmpDate, date_fns_1.getMinutes(newDate));
+        tmpDate = date_fns_1.setHours(tmpDate, date_fns_1.getHours(newDate));
+        tmpDate = date_fns_1.setMinutes(tmpDate, date_fns_1.getMinutes(newDate));
         return OrgustoDate.ofAny(tmpDate);
     };
     OrgustoDate.prototype.setHours = function (hours) {
