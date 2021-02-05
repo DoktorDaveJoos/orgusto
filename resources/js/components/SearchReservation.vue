@@ -336,7 +336,8 @@ export default {
                     queryParams.delete('fulfilled');
                     let newUrl = location.href;
                     newUrl = newUrl.replace(location.search, '');
-                    location.href = newUrl + '?' + queryParams.toString();
+                    const filler = queryParams.toString().length > 0 ? '?' : '';
+                    location.href = newUrl + filler + queryParams.toString();
                 }
             }
         }

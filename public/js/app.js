@@ -3319,7 +3319,10 @@ __webpack_require__.r(__webpack_exports__);
 
           var newUrl = location.href;
           newUrl = newUrl.replace(location.search, '');
-          location.href = newUrl + '?' + _queryParams.toString();
+
+          var _filler = _queryParams.toString().length > 0 ? '?' : '';
+
+          location.href = newUrl + _filler + _queryParams.toString();
         }
       }
     }
@@ -70307,7 +70310,6 @@ exports.default = vue_1.default.extend({
     },
     mounted: function () {
         var _a;
-        console.log(this.reservation);
         if (this.reservationCopy.notice) {
             this.showAdditionalNotice = true;
         }
