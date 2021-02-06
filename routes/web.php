@@ -23,6 +23,14 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('/imprint', function() {
+    return view('imprint');
+})->name('imprint');
+
+Route::get('/privacy', function() {
+    return view('dataprotection');
+})->name('privacy');
+
 Route::prefix('/invitation')->group(function () {
     Route::get('/{user}', [InvitationController::class, 'show'])->name('invitation.show');
     Route::post('/{user}', [InvitationController::class, 'update'])->name('invitation.update');

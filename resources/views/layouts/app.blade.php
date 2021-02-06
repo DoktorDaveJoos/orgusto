@@ -31,7 +31,7 @@
 <div id="app" class="mb-24 flex-grow">
     @yield('content')
 </div>
-@include('layouts.footer');
+@include('layouts.footer')
 </body>
 
 </html>
