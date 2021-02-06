@@ -1,10 +1,10 @@
-
-
-<nav class="flex justify-center shadow-lg bg-gray-200 sticky top-0 z-50">
+<nav class="flex justify-center bg-gray-200 sticky top-0 z-50">
     <div class="max-w-6xl w-full flex flex-row justify-between p-2 content-center">
         <div class="flex flex-col items-center">
-            <img class="w-32" src="{{ asset('orgusto-logo-svg.svg') }}"/>
-            <span class="text-xs text-gray-600 text-italic">{{ config('app.version') }} - free premium</span>
+            <a href="{{  route('home') }}">
+                <img class="w-32" src="{{ asset('orgusto-logo-svg.svg') }}"/>
+                <span class="text-xs text-gray-600 text-italic">{{ config('app.version') }} - free premium</span>
+            </a>
         </div>
         <div class="flex-1 flex flex-row items-center">
 
