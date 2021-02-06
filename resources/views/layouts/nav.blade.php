@@ -1,4 +1,4 @@
-<nav class="flex justify-center shadow-md bg-gray-200 sticky top-0 z-50">
+<nav class="flex justify-center @guest  @else bg-gray-200 shadow-md @endif sticky top-0 z-50">
     <div class="max-w-6xl w-full flex flex-row justify-between p-2 content-center">
         <div class="flex flex-col items-center">
             <a href="{{  route('home') }}">
@@ -10,10 +10,10 @@
 
             @guest
                 <div class="flex flex-1 justify-end">
-                    <a class="text-sm text-gray-600 hover:text-gray-700 mr-6"
+                    <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 mr-6"
                        href="{{ route('login') }}">{{ __('Login') }}</a>
                     @if (Route::has('register'))
-                        <a class="text-sm text-gray-600 hover:text-gray-700"
+                        <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700"
                            href="{{ route('register') }}">{{ __('Register') }}</a>
                 </div>
             @endif
