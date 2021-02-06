@@ -1,4 +1,4 @@
-<nav class="flex justify-center bg-gray-200 sticky top-0 z-50">
+<nav class="flex justify-center shadow-md bg-gray-200 sticky top-0 z-50">
     <div class="max-w-6xl w-full flex flex-row justify-between p-2 content-center">
         <div class="flex flex-col items-center">
             <a href="{{  route('home') }}">
@@ -48,8 +48,13 @@
 
                     </div>
                     <div>
+                        <span class="text-gray-600 text-center hover:border-gray-600 pr-2 mr-6">
+                            Hi, {{ Auth::user()->name }}!
+                        </span>
+
+
                         <span
-                            class="text-gray-600 text-center hover:border-gray-600 pr-2">Hi, {{ Auth::user()->name }}</span>
+                            class="text-gray-600 text-center hover:border-gray-600 pr-2">Logout</span>
                         <a class="fas fa-sign-out-alt text-gray-600" href="{{ route('logout') }}" onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
                         </a>
