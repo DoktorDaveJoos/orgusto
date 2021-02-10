@@ -11,6 +11,7 @@ class EditTable extends Component
     public $table;
     public $restaurant;
 
+    public $id;
     public $seats;
     public $description;
     public $table_number;

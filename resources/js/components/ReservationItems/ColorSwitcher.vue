@@ -1,36 +1,41 @@
 <template>
-  <div class="flex flex-row items-center space-x-2">
-    <button
-      @click="setColor('red')"
-      class="rounded-full h-8 w-8 bg-red-400 shadow-lg focus:outline-none"
-    ></button>
-    <button
-      @click="setColor('green')"
-      class="rounded-full h-8 w-8 bg-green-400 shadow-lg focus:outline-none"
-    ></button>
-    <button
-      @click="setColor('blue')"
-      class="rounded-full h-8 w-8 bg-blue-400 shadow-lg focus:outline-none"
-    ></button>
-    <button
-      @click="setColor('indigo')"
-      class="rounded-full h-8 w-8 bg-indigo-400 shadow-lg focus:outline-none"
-    ></button>
-    <button
-      @click="setColor('purple')"
-      class="rounded-full h-8 w-8 bg-purple-400 shadow-lg focus:outline-none"
-    ></button>
-    <button
-      @click="setColor('gray')"
-      class="rounded-full h-8 w-8 bg-gray-400 shadow-lg focus:outline-none"
-    ></button>
-  </div>
+    <div class="flex flex-row items-center space-x-2">
+        <button
+            @click="handle({color: 'red'})"
+            class="rounded-full h-8 w-8 bg-red-400 shadow-lg focus:outline-none"
+        ></button>
+        <button
+            @click="handle({color: 'green'})"
+            class="rounded-full h-8 w-8 bg-green-400 shadow-lg focus:outline-none"
+        ></button>
+        <button
+            @click="handle({color: 'blue'})"
+            class="rounded-full h-8 w-8 bg-blue-400 shadow-lg focus:outline-none"
+        ></button>
+        <button
+            @click="handle({color: 'indigo'})"
+            class="rounded-full h-8 w-8 bg-indigo-400 shadow-lg focus:outline-none"
+        ></button>
+        <button
+            @click="handle({color: 'purple'})"
+            class="rounded-full h-8 w-8 bg-purple-400 shadow-lg focus:outline-none"
+        ></button>
+        <button
+            @click="handle({color: 'gray'})"
+            class="rounded-full h-8 w-8 bg-gray-400 shadow-lg focus:outline-none"
+        ></button>
+    </div>
 </template>
 
 <script>
 export default {
-  props: ["setColor"]
-};
+    name: "ColorSwitcher",
+    methods: {
+        handle(data) {
+            this.$emit("value:changed", data);
+        }
+    }
+}
 </script>
 
 <style>

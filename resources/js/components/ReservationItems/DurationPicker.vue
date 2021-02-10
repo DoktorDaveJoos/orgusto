@@ -7,10 +7,10 @@
                 </div>
                 <select-button
                     v-for="d in preselectedDurations"
-                    :key="d.print()"
+                    :key="d"
                     :selected="() => thisDurationEquals(d)"
                     :handle="() => setDuration(d)"
-                    :value="d.print()"
+                    :value="d"
                 ></select-button>
             </div>
 
@@ -25,18 +25,18 @@
                     <div class="flex flex-col text-gray-800 p-1">
             <span
                 v-for="m in moreChoices"
-                v-bind:key="m.print()"
+                v-bind:key="m"
                 @click="setDuration(m)"
                 class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
                 :class="thisDurationEquals(m) ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
-            >{{ m.print() }}</span>
+            >{{ m }}</span>
                     </div>
                 </div>
 
                 <select-button
                     slot="reference"
                     :selected="() => moreIsActive"
-                    :value="moreIsActive ? duration.print() : 'More'"
+                    :value="moreIsActive ? duration : 'More'"
                     icon="fas fa-stopwatch"
                 ></select-button>
             </popper>
@@ -44,20 +44,15 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
+<script>
 import Duration from "../../models/Duration";
-// noinspection TypeScriptCheckImport
 import Popper from "vue-popperjs";
 
-export default Vue.extend({
+export default {
     components: {
         popper: Popper,
     },
-    props: {
-        init: Duration,
-        error: Boolean
-    },
+    props: ["duration", "error"],
     data() {
         return {
             preselectedDurations: [
@@ -74,33 +69,23 @@ export default Vue.extend({
                 Duration.of(8, 0),
                 Duration.of(12, 0)
             ],
-            duration: this.init,
         };
     },
     methods: {
-        setDuration(duration: Duration): void {
-            this.duration = duration;
-            this.$emit("duration:chosen", this.duration);
+        setDuration(duration) {
+            this.$emit("change", {duration: duration});
         },
-        setDurationWithoutEmitting(duration: Duration): void {
-            this.duration = duration;
-        },
-        thisDurationEquals(duration: Duration): boolean {
-            return this.duration.equals(duration);
+        thisDurationEquals(duration) {
+            return this.duration === duration;
         },
     },
     computed: {
-        moreIsActive(): boolean {
-            const found = this.moreChoices.filter((d: Duration) => d.h === this.duration.h && d.m === this.duration.m);
+        moreIsActive() {
+            const found = this.moreChoices.filter((d) => d.h === this.duration.h && d.m === this.duration.m);
             return found.length > 0;
         },
-    },
-    watch: {
-        init(n: Duration, o: Duration) {
-            this.setDurationWithoutEmitting(n);
-        },
     }
-});
+}
 </script>
 
 <!--suppress CssUnusedSymbol -->

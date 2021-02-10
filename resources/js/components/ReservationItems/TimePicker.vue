@@ -6,25 +6,25 @@
             </div>
             <button
                 class="h-10 text-sm rounded-l-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                :class="init.hour === 17 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="hour === 17 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(17)"
             >17
             </button>
             <button
                 class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                :class="init.hour === 18 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="hour === 18 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(18)"
             >18
             </button>
             <button
                 class="h-10 text-sm bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                :class="init.hour === 19 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="hour === 19 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(19)"
             >19
             </button>
             <button
                 class="h-10 text-sm rounded-r-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg mr-4"
-                :class="init.hour === 20 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                :class="hour === 20 ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
                 @click="setHour(20)"
             >20
             </button>
@@ -59,56 +59,56 @@
         <div>
             <single-time-picker
                 :active="singleTimePickerActive"
-                :time="init"
+                :date="date"
                 :set-single-time="setTime"
             ></single-time-picker>
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script >
 
-import Vue, {PropType} from 'vue';
-import OrgustoDate from "../../models/OrgustoDate";
+import {getHours, getMinutes, setHours, setMinutes, parseISO} from 'date-fns';
 
-export default Vue.extend({
-    props: {
-        init: Object as PropType<OrgustoDate>,
-        error: String
-    },
+export default {
+    name: "TimePicker",
+    props: ["date"],
     data() {
         return {
-            singleTimePickerActive: false
-        };
-    },
-    mounted() {
-        this.singleTimePickerActive = this.init.hour < 17 || this.init.hour > 20;
+            copiedDate: parseISO(this.date),
+            error: false,
+            singleTimePickerActive: getHours(parseISO(this.date)) < 17 || getHours(parseISO(this.date)) > 20,
+        }
     },
     methods: {
-        setHour(hour: number): void {
-            this.$emit("time:chosen", this.init.setHours(hour));
+        setHour(hour) {
+            const newDate = setHours(parseISO(this.date), hour);
+            console.log(newDate);
+            this.$emit("value:changed", {start: newDate.toISOString()});
         },
-        setMinute(minute: number): void {
-            this.$emit("time:chosen", this.init.setMinutes(minute));
+        setMinute(minute){
+            const newDate = setMinutes(parseISO(this.date), minute);
+            this.$emit("value:changed", {start: newDate.toISOString()});
         },
-        setTime(time: OrgustoDate): void {
-            this.$emit("time:chosen", time);
+        setTime(date) {
+            this.$emit("value:changed", {start: date.toISOString()});
         },
-        getButtonClass(minute: number): string {
+        getButtonClass(minute){
             if (this.singleTimePickerActive) {
                 return "opacity-50 cursor-not-allowed hover:shadow-none";
             }
-            return this.init.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
+            return this.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
         }
     },
-    watch: {
-        hour: 'setSingleTimeState',
-        minute: 'setSingleTimeState',
-        init(n: OrgustoDate, o: OrgustoDate) {
-            this.singleTimePickerActive = n.hour < 17 || n.hour > 20;
+    computed: {
+        hour: function() {
+            return getHours(parseISO(this.date));
+        },
+        minute: function() {
+            return getMinutes(parseISO(this.date));
         }
     }
-});
+}
 </script>
 
 <style>

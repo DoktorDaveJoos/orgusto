@@ -49,11 +49,14 @@ var bus = new Vue({});
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+const store = require('./store');
+
 const app = new Vue({
     el: '#app',
     data: {
         bus: bus
-    }
+    },
+    store
 });
 
 const navApp = new Vue({

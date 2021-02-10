@@ -58,49 +58,42 @@
     </popper>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import OrgustoDate from "../../models/OrgustoDate";
-// noinspection TypeScriptCheckImport
+<script>
+
+import {getHours, getMinutes, setHours, setMinutes, parseISO} from 'date-fns';
 import Popper from "vue-popperjs";
 
-export default Vue.extend({
+export default {
     components: {
         popper: Popper
     },
-    props: {
-        active: Boolean,
-        setSingleTime: Function,
-        time: OrgustoDate
-    },
+    props: ["active", "setSingleTime", "date"],
     data() {
-        return {
-            hour: this.time.hour,
-            minute: this.time.minute,
-        };
+        return {}
     },
     methods: {
-        setHour(hour: number) {
-            this.hour = hour;
+        setHour(hour) {
+            const newDate = setHours(parseISO(this.date), hour);
+            this.setSingleTime(newDate);
         },
-        setMinutes(minute: number) {
-            this.minute = minute;
+        setMinutes(minute) {
+            const newDate = setMinutes(parseISO(this.date), minute);
+            this.setSingleTime(newDate);
         },
-        emitTime(): void {
-            this.setSingleTime(OrgustoDate.ofAny(this.time.asDate)
-                .setHours(this.hour)
-                .setMinutes(this.minute));
-        },
-        addZeros(val: number): string {
-            const tmp: string = val.toString();
+        addZeros(val) {
+            const tmp = val.toString();
             return tmp.length < 2 ? '0' + tmp : tmp;
         }
     },
-    watch: {
-        hour: 'emitTime',
-        minute: 'emitTime'
+    computed: {
+        hour: function() {
+            return getHours(parseISO(this.date));
+        },
+        minute: function() {
+            return getMinutes(parseISO(this.date));
+        }
     }
-});
+}
 </script>
 
 <!--suppress CssUnusedSymbol -->

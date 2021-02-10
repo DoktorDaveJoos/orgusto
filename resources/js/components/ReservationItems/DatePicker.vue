@@ -4,15 +4,15 @@
             <div v-if="error" class="text-red-400 flex items-center leading-tight">
                 <i class="fas fa-times"></i>
             </div>
-            <select-button value="today" :handle="setDatePicker" :selected="isSelected"></select-button>
-            <select-button value="tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
-            <select-button value="day after tomorrow" :handle="setDatePicker" :selected="isSelected"></select-button>
+            <select-button value="today" :handle="setDate" :selected="isSelected"></select-button>
+            <select-button value="tomorrow" :handle="setDate" :selected="isSelected"></select-button>
+            <select-button value="day after tomorrow" :handle="setDate" :selected="isSelected"></select-button>
         </div>
         <div>
-            <v-date-picker v-model="singleDate" :popover="{ visibility: 'click' }">
+            <v-date-picker v-model="duplicatedDate" :popover="{ visibility: 'click' }">
                 <select-button
-                    :value="chosenDate !== '' ? chosenDate : 'Choose date'"
-                    :selected="() => chosenDate !== ''"
+                    :value="getReadableDate()"
+                    :selected="moreIsSelected"
                     icon="fas fa-calendar-alt"
                 ></select-button>
             </v-date-picker>
@@ -20,64 +20,78 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 
-import Vue from 'vue';
-import OrgustoDate from "../../models/OrgustoDate";
+import {
+    parseISO,
+    startOfToday,
+    startOfTomorrow,
+    addDays,
+    setHours,
+    setMinutes,
+    getHours,
+    getMinutes,
+    isSameDay,
+    differenceInDays
+} from 'date-fns';
 
-export default Vue.extend({
-    props: {
-        init: OrgustoDate,
-        error: String
-    },
+export default {
+    name: "DatePicker",
+    props: ["date"],
     data() {
         return {
-            datepicker: "",
-            chosenDate: "",
-            singleDate: this.init.asDate,
-        };
-    },
-    mounted() {
-        if (this.init) {
-            if (this.init.isToday) {
-                this.datepicker = "today";
-            } else if (this.init.diffDaysFromNow === 1) {
-                this.datepicker = "tomorrow";
-            } else if (this.init.diffDaysFromNow === 2) {
-                this.datepicker = "day after tomorrow";
-            } else {
-                this.chosenDate = this.init.readableDate;
+            duplicatedDate: parseISO(this.date),
+            error: {},
+            mappings: {
+                "today": () => startOfToday(),
+                "tomorrow": () => startOfTomorrow(),
+                "day after tomorrow": () => addDays(startOfTomorrow(), 1)
             }
-        } else {
-            this.datepicker = "today";
         }
     },
     methods: {
-        setDatePicker(indicator): void {
-            this.chosenDate = "";
-            this.datepicker = indicator;
+        setDate(value) {
 
-            let date = OrgustoDate.default();
-            if (indicator !== "today") {
-                date = date.addDays(indicator === "tomorrow" ? 1 : 2);
+            const date = this.mappings[value]();
+
+            this.emitNewDate(date);
+        },
+        emitNewDate(value) {
+
+            // always set time to new date
+            const dateAsISO = parseISO(this.date);
+            let updatedDate = setHours(value, getHours(dateAsISO));
+            updatedDate = setMinutes(updatedDate, getMinutes(dateAsISO));
+
+            const data = {
+                start: updatedDate.toISOString()
             }
 
-            this.setDate(date);
+            this.$emit("value:changed", data);
         },
-        setDate(date: OrgustoDate): void {
-            this.$emit("date:chosen", date);
+        isSelected(day) {
+            return isSameDay(this.mappings[day](), parseISO(this.date));
         },
-        isSelected(indicator): boolean {
-            return this.datepicker === indicator;
+        moreIsSelected() {
+            if (parseISO(this.date) < this.mappings["today"]()) {
+                return true;
+            } else {
+                return differenceInDays(parseISO(this.date), this.mappings["today"]()) > 2;
+            }
         },
+        getReadableDate() {
+            if (this.moreIsSelected()) {
+                console.log(parseISO(this.date).toLocaleDateString());
+                return parseISO(this.date).toLocaleDateString();
+            } else {
+                return 'Choose Date';
+            }
+        }
     },
     watch: {
-        singleDate(newVal, _): void {
-            const date = OrgustoDate.ofAny(newVal);
-            this.datepicker = "";
-            this.chosenDate = date.readableDate;
-            this.setDate(date);
-        },
-    },
-});
+        duplicatedDate(date, _) {
+            this.emitNewDate(date);
+        }
+    }
+}
 </script>
