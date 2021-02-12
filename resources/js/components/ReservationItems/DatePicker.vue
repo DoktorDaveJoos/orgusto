@@ -37,11 +37,10 @@ import {
 
 export default {
     name: "DatePicker",
-    props: ["date"],
+    props: ["date", "error"],
     data() {
         return {
             duplicatedDate: parseISO(this.date),
-            error: {},
             mappings: {
                 "today": () => startOfToday(),
                 "tomorrow": () => startOfTomorrow(),
@@ -81,7 +80,6 @@ export default {
         },
         getReadableDate() {
             if (this.moreIsSelected()) {
-                console.log(parseISO(this.date).toLocaleDateString());
                 return parseISO(this.date).toLocaleDateString();
             } else {
                 return 'Choose Date';

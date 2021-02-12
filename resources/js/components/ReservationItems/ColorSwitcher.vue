@@ -17,10 +17,6 @@
             class="rounded-full h-8 w-8 bg-indigo-400 shadow-lg focus:outline-none"
         ></button>
         <button
-            @click="handle({color: 'purple'})"
-            class="rounded-full h-8 w-8 bg-purple-400 shadow-lg focus:outline-none"
-        ></button>
-        <button
             @click="handle({color: 'gray'})"
             class="rounded-full h-8 w-8 bg-gray-400 shadow-lg focus:outline-none"
         ></button>

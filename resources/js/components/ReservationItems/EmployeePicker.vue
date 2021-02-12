@@ -3,18 +3,27 @@
         <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-2">Who are you?</span>
         <div class="flex justify-between">
             <div class="flex space-x-4">
-                <div v-if="errors" class="text-red-400 flex items-center leading-tight">
+                <div v-if="error" class="text-red-400 flex items-center leading-tight">
                     <i class="fas fa-times"></i>
                 </div>
 
                 <button
-                    v-for="_user in maxFiveUsers"
-                    :key="_user.id"
+                    v-for="u in maxFiveUsers"
+                    :key="u.id"
                     class="h-10 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg"
-                    :class="user && _user.id === user.id  ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
-                    @click="handle( {user: _user})">
-                    {{ _user.name }}
+                    :class="user && u.id === user.id  ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : ''"
+                    @click="handle( {user: u})">
+                    {{ u.name }}
                 </button>
+
+                <div class="self-center" v-if="users.length === 1">
+                    <a :href="`/restaurants/${settings.id}`">
+                        <span class="text-blue-600 text-xs">
+                            <i class="fas fa-user-plus mr-1"></i>
+                            Add employees
+                        </span>
+                    </a>
+                </div>
 
             </div>
             <popper v-if="users.length > 5" trigger="clickToOpen" :options="{placement: 'bottom-start'}">
@@ -58,7 +67,7 @@ export default {
         popper: Popper,
     },
     store,
-    props: ["user"],
+    props: ["user", "error"],
     data() {
         return {}
     },
@@ -73,7 +82,7 @@ export default {
         },
         ...mapState({
             users: state => state.restaurant.users,
-            errors: state => state.reservations.errors
+            settings: state => state.restaurant.settings
         }),
     }
 }

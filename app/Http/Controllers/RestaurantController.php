@@ -22,9 +22,14 @@ class RestaurantController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $restaurants = auth()->user()->restaurants()->get();
+
+        if($request->wantsJson()) {
+            return $restaurants->toJSON();
+        }
+
         return view('restaurants', ['restaurants' => $restaurants]);
     }
 

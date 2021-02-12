@@ -47,41 +47,30 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script >
 
-// noinspection TypeScriptCheckImport
 import Popper from "vue-popperjs";
 
-export default Vue.extend({
+export default {
+    name: "PersonPicker",
     components: {
         popper: Popper
     },
-    props: {
-        init: Number,
-        error: Boolean
-    },
+    props: ["persons", "error"],
     data() {
-        return {
-            persons: this.init,
-        };
+        return {}
     },
     methods: {
-        setPerson(persons: number): void {
-            this.persons = persons;
+        setPerson(persons) {
+            this.$emit("value:changed", {persons: persons})
         },
     },
     computed: {
-        moreIsActive(): boolean {
+        moreIsActive() {
             return this.persons > 6;
         }
-    },
-    watch: {
-        persons: function () {
-            this.$emit('person:chosen', this.persons)
-        }
     }
-});
+}
 </script>
 
 <!--suppress CssUnusedSymbol -->

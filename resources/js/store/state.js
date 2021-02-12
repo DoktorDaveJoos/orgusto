@@ -5,12 +5,34 @@ export default {
         meta: {},
         errors: []
     },
+    filter: {
+        showFulfilled: false,
+        dateRange: {
+            start: new Date(),
+            end: new Date()
+        },
+        dateFilter: {
+            active: false,
+            mode: "none"
+        }
+    },
     user: {},
     restaurant: {
-        users: []
+        users: [],
+        tables: [],
+        settings: {}
     },
     modal: {
         isOpen: false,
-        activeReservationId: null
+        activeReservationId: null,
+        newReservation: {},
+    },
+    loadingStates: {
+        reservations: false,
+        employees: false,
+        tables: false,
+    },
+    search: {
+        query: ""
     }
 }

@@ -1,3 +1,5 @@
+import {createEmptyReservation} from '../helper/helper';
+
 export default {
 
     loadReservations(state, items) {
@@ -13,7 +15,13 @@ export default {
     },
 
     updateReservation(state, data) {
-        let res = state.reservations.items.find(reservation => reservation.id === data.id);
+
+        let res;
+        if (state.modal.activeReservationId) {
+            res = state.reservations.items.find(reservation => reservation.id === data.id);
+        } else {
+            res = state.modal.newReservation;
+        }
         Object.keys(data.data).forEach(key => {
             res[key] = data.data[key];
         });
@@ -23,16 +31,59 @@ export default {
         state.restaurant.users = data;
     },
 
+    setAvailableTables(state, data) {
+      state.restaurant.tables = data;
+    },
+
     setActiveReservation(state, id) {
         state.modal.activeReservationId = id;
     },
 
     closeModal(state) {
+        state.restaurant.tables = [];
         state.modal.activeReservationId = null;
         state.modal.isOpen = false;
     },
 
     openModal(state) {
         state.modal.isOpen = true;
+    },
+
+    setLoadingState(state, data) {
+        state.loadingStates[data.indicator] = data.value;
+    },
+
+    setErrors(state, data) {
+        state.reservations.errors = data;
+    },
+
+    setNewReservation(state) {
+        state.modal.newReservation = createEmptyReservation();
+    },
+
+    clearErrors(state) {
+        state.reservations.errors = {};
+    },
+
+    setRestaurant(state, data) {
+        state.restaurant.settings = data.data;
+    },
+    updateSearchQuery(state, value) {
+        state.search.query = value;
+    },
+
+    showAllFullFilled(state, value) {
+        state.filter.showFulfilled = value;
+    },
+
+    setDateRange(state, value) {
+        state.filter.dateRange = value;
+    },
+
+    setDateFilterActive(state, payload) {
+
+        console.log('mutation: ', payload.active, payload.mode);
+        state.filter.dateFilter.mode = payload.mode;
+        state.filter.dateFilter.active = payload.active;
     }
 }

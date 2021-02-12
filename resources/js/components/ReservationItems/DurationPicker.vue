@@ -10,7 +10,7 @@
                     :key="d"
                     :selected="() => thisDurationEquals(d)"
                     :handle="() => setDuration(d)"
-                    :value="d"
+                    :value="getReadableDuration(d)"
                 ></select-button>
             </div>
 
@@ -23,20 +23,20 @@
                     </div>
                     <hr/>
                     <div class="flex flex-col text-gray-800 p-1">
-            <span
-                v-for="m in moreChoices"
-                v-bind:key="m"
-                @click="setDuration(m)"
-                class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
-                :class="thisDurationEquals(m) ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
-            >{{ m }}</span>
+                        <span
+                            v-for="m in moreChoices"
+                            v-bind:key="m"
+                            @click="setDuration(m)"
+                            class="flex-1 px-3 py-1 mt-1 rounded-full cursor-pointer hover:bg-gray-200 text-center text-sm"
+                            :class="thisDurationEquals(m) ? 'bg-blue-600 text-white hover:bg-blue-400 hover:text-gray-800' : ''"
+                        >{{ getReadableDuration(m) }}</span>
                     </div>
                 </div>
 
                 <select-button
                     slot="reference"
                     :selected="() => moreIsActive"
-                    :value="moreIsActive ? duration : 'More'"
+                    :value="moreIsActive ? getReadableDuration(this.duration) : 'More'"
                     icon="fas fa-stopwatch"
                 ></select-button>
             </popper>
@@ -45,35 +45,45 @@
 </template>
 
 <script>
-import Duration from "../../models/Duration";
 import Popper from "vue-popperjs";
 
 export default {
+    name: "DurationPicker",
     components: {
         popper: Popper,
     },
     props: ["duration", "error"],
     data() {
+        // TODO: make it adjustable
         return {
             preselectedDurations: [
-                Duration.of(1, 0),
-                Duration.of(1, 30),
-                Duration.of(2, 0),
-                Duration.of(2, 30),
-                Duration.of(3, 0),
-                Duration.of(4, 0)
+                60,
+                90,
+                120,
+                150,
+                180,
+                240
             ],
             moreChoices: [
-                Duration.of(3, 30),
-                Duration.of(4, 30),
-                Duration.of(8, 0),
-                Duration.of(12, 0)
+                210,
+                270,
+                480,
+                720
             ],
         };
     },
     methods: {
+        getReadableDuration(minutes) {
+
+            const hours = Math.floor(minutes / 60);
+            let minute = minutes % 60;
+            minute = minute < 15 ? `0${minute}` : minute;
+
+            return `${hours}:${minute}h`;
+
+        },
         setDuration(duration) {
-            this.$emit("change", {duration: duration});
+            this.$emit("value:changed", {duration: duration});
         },
         thisDurationEquals(duration) {
             return this.duration === duration;
@@ -81,8 +91,7 @@ export default {
     },
     computed: {
         moreIsActive() {
-            const found = this.moreChoices.filter((d) => d.h === this.duration.h && d.m === this.duration.m);
-            return found.length > 0;
+            return this.moreChoices.find(duration => this.duration === duration) !== undefined;
         },
     }
 }

@@ -16,17 +16,17 @@
             ></employee-picker>
 
             <hr/>
-            <date-picker :date="reservation.start" v-on:value:changed="setValue"></date-picker>
-            <time-picker :date="reservation.start" v-on:value:changed="setValue"></time-picker>
+            <date-picker :error="errorContainsKey('start')" :date="reservation.start" v-on:value:changed="setValue"></date-picker>
+            <time-picker :error="errorContainsKey('start')" :date="reservation.start" v-on:value:changed="setValue"></time-picker>
             <hr/>
             <person-picker
                 :persons="reservation.persons"
-                :change="setValue"
+                v-on:value:changed="setValue"
                 :error="errorContainsKey('persons')"
             ></person-picker>
             <duration-picker
                 :duration="reservation.duration"
-                :change="setValue"
+                v-on:value:changed="setValue"
                 :error="errorContainsKey('duration')"
             ></duration-picker>
 
@@ -94,8 +94,8 @@
 
             <table-picker
                 :error="errorContainsKey('tables')"
-                :tables="reservation.tables"
-                :change="setValue"
+                :selected-tables="reservation.tables"
+                v-on:value:changed="setValue"
             ></table-picker>
 
             <hr/>
@@ -123,7 +123,6 @@
 <script>
 import store from '../store';
 import {mapState} from 'vuex';
-import {createEmptyReservation} from '../helper/helper';
 
 export default {
     name: "ReservationItem",
@@ -133,14 +132,13 @@ export default {
     },
     methods: {
         handleSubmit() {
-
+            this.$store.dispatch('saveReservation', this.reservation);
         },
         errorContainsKey(key) {
-            return false;
-            // return Object.keys(this.errors).includes(key);
+            return Object.keys(this.errors).includes(key);
         },
         handleClose() {
-            this.$store.commit('closeModal');
+            this.$store.dispatch('closeModal');
         },
         handleDelete() {
 
@@ -163,9 +161,10 @@ export default {
                 if (reservation) {
                     return reservation;
                 } else {
-                    return createEmptyReservation();
+                    return state.modal.newReservation;
                 }
-            }
+            },
+            errors: state => state.reservations.errors
         })
     },
 }

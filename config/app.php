@@ -189,8 +189,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // Search
-        Laravel\Scout\ScoutServiceProvider::class
-
+        Laravel\Scout\ScoutServiceProvider::class,
+        TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
     ],
 
     /*

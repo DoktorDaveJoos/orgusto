@@ -1,5 +1,6 @@
 <template>
-    <tr @click="handleItemClicked" class="border border-b border-gray-200 cursor-pointer" :class="hoverColor">
+    <tr @click="handleItemClicked" class="border border-b border-gray-200 cursor-pointer"
+        :class="hoverColor">
         <td class="px-4 py-2 border-l-8" :class="borderColor">
             <div class="flex flex-col">
                 <span class="text-gray-900 text-sm">{{ reservation.name }}</span>
@@ -9,7 +10,7 @@
         <td class="px-4">
             <div class="flex flex-row">
                 <div
-                    class="flex flex-row items-center shadow-md text-white leading-tight text-xs rounded-full py-1 px-3"
+                    class="flex flex-row whitespace-nowrap items-center shadow-md text-white leading-tight text-xs rounded-full py-1 px-3"
                     :class="pillColor">
                     <i class="fas fa-calendar-day pr-1"></i>
                     {{ new Date(reservation.start).toLocaleString() }}
@@ -19,20 +20,22 @@
         <td class="px-4">
             <div class="flex flex-row">
                 <div
-                    class="flex flex-row items-center shadow-md text-white leading-tight text-xs r rounded-full py-1 px-3"
+                    class="flex flex-row items-baseline shadow-md text-white leading-tight text-xs r rounded-full py-1 px-3"
                     :class="pillColor">
                     <i class="fas fa-clock pr-1"></i>
                     {{ reservation.duration / 60 }}h
                 </div>
             </div>
         </td>
-        <td class="px-4">
-            <div class="flex flex-row">
+        <td class="pl-4 pr-2">
+            <div class="flex flex-row items-center flex-wrap">
+                <div></div>
                 <div v-for="table in reservation.tables"
-                     class="flex flex-row items-center shadow-md text-white leading-tight text-xs rounded-full py-1 px-4 mr-1"
+                     class="flex flex-row items-center shadow-md text-white leading-tight text-xs rounded-full py-1 px-3 m-0.5"
                      :class="pillColor"
                 >{{ table.table_number }}
                 </div>
+
             </div>
         </td>
         <td class="px-4">
@@ -46,35 +49,25 @@
             </div>
         </td>
         <td class="px-4">
-            <div v-if="reservation.email" class="flex flex-row">
-                <div
-                    class="flex flex-row items-center shadow-md text-white leading-tight text-xs r rounded-full py-1 px-3"
-                    :class="pillColor">
-                    <i class="fas fa-envelope pr-1"></i>
-                    {{ reservation.email }}
-                </div>
+            <div v-if="reservation.email" class="flex flex-row items-baseline leading-tight text-xs text-gray-600">
+                <i class="fas fa-envelope pr-1"></i>
+                {{ reservation.email }}
             </div>
         </td>
         <td class="px-4">
-            <div v-if="reservation.phone_number" class="flex flex-row">
-                <div
-                    class="flex flex-row items-center shadow-md text-white leading-tight text-xs r rounded-full py-1 px-3"
-                    :class="pillColor">
-                    <i class="fas fa-phone-alt pr-1"></i>
-                    {{ reservation.phone_number }}
-                </div>
+            <div v-if="reservation.phone_number"
+                 class="flex flex-row items-baseline leading-tight text-xs text-gray-600">
+                <i class="fas fa-phone-alt pr-1"></i>
+                {{ reservation.phone_number }}
             </div>
+
         </td>
         <th>
-            <input id="isDone" :value="reservation.done" name="fulfilled" type="checkbox"
-                   readonly class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+            <input id="isDone" v-model="reservation.done" name="fulfilled" type="checkbox"
+                   @click="handleMarkFulfilled"
+                   @click.stop="stopEvent"
+                   class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
         </th>
-        <td>
-
-        </td>
-        <td>
-
-        </td>
 
 
     </tr>
@@ -97,9 +90,15 @@ export default {
     },
     methods: {
         handleItemClicked() {
-            this.$store.commit('setActiveReservation', this.reservation.id);
+            this.$store.dispatch('setActiveReservation', this.reservation.id);
             this.$store.commit('openModal');
         },
+        stopEvent(event) {
+            event.stopPropagation();
+        },
+        handleMarkFulfilled() {
+            this.$store.dispatch('markFulfilled', {id: this.reservation.id, value: !this.reservation.done})
+        }
     },
     computed: {
         borderColor() {

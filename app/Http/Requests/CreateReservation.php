@@ -25,7 +25,7 @@ class CreateReservation extends FormRequest
             'user_id.required' => 'Employee is required',
             'duration.required' => 'Duration of the reservation is required',
             'name.required' => 'Title or name of the reservation is required',
-            'phone_number' => 'Phone number should be phone number.'
+            'phone_number' => 'Phone number should be phone number.',
         ];
     }
 
@@ -46,7 +46,8 @@ class CreateReservation extends FormRequest
             'email' => 'nullable|email',
             'color' => [Rule::in(['gray', 'indigo', 'blue', 'green', 'red', 'orange', 'w'])],
             'notice' => 'max:255',
-            'phone_number' => 'max:15'
+            'phone_number' => 'max:15',
+            'done' => 'boolean'
         ];
     }
 }

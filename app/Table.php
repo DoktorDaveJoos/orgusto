@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,8 @@ class Table extends Model
      */
     public function scopeAvailableBetween($query, $from, $to)
     {
+        $from = Carbon::parse($from)->addMinute();
+        $to = Carbon::parse($to)->subMinute();
         return $query
             ->whereDoesntHave('reservations', function ($q) use ($from, $to) {
                 $q->whereBetween('start', [$from, $to])
@@ -61,9 +64,14 @@ class Table extends Model
             ->whereHas('reservations', function ($q) use ($from, $to) {
                 $q->whereBetween('start', [$from, $to])
                     ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+
             })->orWhereHas('reservations', function ($q) use ($from, $to) {
                 $q->where('start', '<=', $from)->where(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), '>=', $to);
-            });
+
+            })->with(["reservations" => function($query) use ($from, $to) {
+                $query->whereBetween('start', [$from, $to])
+                    ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+            }]);
     }
 
     public function scopeWithEnoughSeats($query, $persons)

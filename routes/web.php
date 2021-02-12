@@ -92,7 +92,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('reservations.store')
             ->middleware('can:create,App\Models\Reservation');
 
-        Route::post('/search', [ReservationsController::class, 'search'])
+        Route::get('/search', [ReservationsController::class, 'search'])
             ->name('reservations.search');
 
         Route::get('/{reservation}', [ReservationsController::class, 'show'])

@@ -58,7 +58,7 @@
         </div>
         <div>
             <single-time-picker
-                :active="singleTimePickerActive"
+                :active="moreIsActive()"
                 :date="date"
                 :set-single-time="setTime"
             ></single-time-picker>
@@ -72,18 +72,16 @@ import {getHours, getMinutes, setHours, setMinutes, parseISO} from 'date-fns';
 
 export default {
     name: "TimePicker",
-    props: ["date"],
+    props: ["date", "error"],
     data() {
         return {
             copiedDate: parseISO(this.date),
-            error: false,
-            singleTimePickerActive: getHours(parseISO(this.date)) < 17 || getHours(parseISO(this.date)) > 20,
+            singleTimePickerActive: this.moreIsActive(),
         }
     },
     methods: {
         setHour(hour) {
             const newDate = setHours(parseISO(this.date), hour);
-            console.log(newDate);
             this.$emit("value:changed", {start: newDate.toISOString()});
         },
         setMinute(minute){
@@ -91,13 +89,19 @@ export default {
             this.$emit("value:changed", {start: newDate.toISOString()});
         },
         setTime(date) {
-            this.$emit("value:changed", {start: date.toISOString()});
+            let newDate = setMinutes(parseISO(this.date), getMinutes(date));
+            newDate = setHours(newDate, getHours(date));
+            this.$emit("value:changed", {start: newDate.toISOString()});
         },
         getButtonClass(minute){
-            if (this.singleTimePickerActive) {
+            if (this.moreIsActive()) {
                 return "opacity-50 cursor-not-allowed hover:shadow-none";
+            } else {
+                return getMinutes(parseISO(this.date)) === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
             }
-            return this.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
+        },
+        moreIsActive() {
+            return getHours(parseISO(this.date)) < 17 || getHours(parseISO(this.date)) > 20;
         }
     },
     computed: {
