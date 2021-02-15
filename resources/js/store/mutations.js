@@ -85,6 +85,7 @@ export default {
     },
 
     setDateFilterActive(state, payload) {
+        state.filter.past = false;
         state.filter.dateFilter.mode = payload.mode;
         state.filter.dateFilter.active = payload.active;
     }

@@ -42,7 +42,7 @@ export default {
               });
           } else {
               this.$store.dispatch('activateRangeFilter', {
-                  mode: "nonce",
+                  mode: "none",
                   active: false,
                   dateRange: this.dateRange
               });
@@ -75,12 +75,11 @@ export default {
             }
         },
         singleDateIsActive() {
-            const {active, mode} = this.$store.state.filter.dateFilter
-            console.log(active, mode);
+            const {active, mode} = this.$store.state.filter.dateFilter;
             return active && mode === "single";
         },
         dateRangeIsActive() {
-            const {active, mode} = this.$store.state.filter.dateFilter
+            const {active, mode} = this.$store.state.filter.dateFilter;
             return active && mode === "range";
         },
     }

@@ -15,7 +15,8 @@ export default {
         dateFilter: {
             active: false,
             mode: "none"
-        }
+        },
+        past: false
     },
     user: {},
     restaurant: {

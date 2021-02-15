@@ -4011,6 +4011,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4049,11 +4063,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   }),
   watch: {
-    'filter.date': function filterDate(date, _) {
-      console.log(date);
-    },
-    'filter.dateRange': function filterDateRange(date, _) {
-      console.log(date);
+    'filter.past': function filterPast() {
+      this.$store.dispatch('loadPaginatedReservations');
     }
   }
 });
@@ -4111,7 +4122,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         this.$store.dispatch('activateRangeFilter', {
-          mode: "nonce",
+          mode: "none",
           active: false,
           dateRange: this.dateRange
         });
@@ -4147,7 +4158,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this$$store$state$fi = this.$store.state.filter.dateFilter,
           active = _this$$store$state$fi.active,
           mode = _this$$store$state$fi.mode;
-      console.log(active, mode);
       return active && mode === "single";
     },
     dateRangeIsActive: function dateRangeIsActive() {
@@ -4421,6 +4431,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SearchBar",
@@ -4439,14 +4450,10 @@ __webpack_require__.r(__webpack_exports__);
     query: function query() {
       var _this = this;
 
-      if (this.query.length > 0) {
-        clearTimeout(this.debounce);
-        this.debounce = setTimeout(function () {
-          _this.$store.dispatch('doSearch');
-        }, 200);
-      } else {
-        this.$store.dispatch('loadPaginatedReservations');
-      }
+      clearTimeout(this.debounce);
+      this.debounce = setTimeout(function () {
+        _this.$store.dispatch('loadPaginatedReservations');
+      }, 200);
     }
   }
 });
@@ -74659,7 +74666,69 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c("search-bar")
+                    _c("search-bar"),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "ml-2 flex items-center" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.filter.past,
+                            expression: "filter.past"
+                          }
+                        ],
+                        staticClass:
+                          "focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mr-1",
+                        attrs: {
+                          id: "past",
+                          name: "candidates",
+                          type: "checkbox"
+                        },
+                        domProps: {
+                          checked: Array.isArray(_vm.filter.past)
+                            ? _vm._i(_vm.filter.past, null) > -1
+                            : _vm.filter.past
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.filter.past,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    _vm.filter,
+                                    "past",
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.filter,
+                                    "past",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(_vm.filter, "past", $$c)
+                            }
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "text-gray-700 uppercase text-xs",
+                          attrs: { for: "past" }
+                        },
+                        [_vm._v("Include past")]
+                      )
+                    ])
                   ],
                   1
                 ),
@@ -74803,7 +74872,18 @@ var render = function() {
                   key: reservation.id,
                   attrs: { reservation: reservation }
                 })
-              })
+              }),
+              _vm._v(" "),
+              _vm.reservations.items.length === 0
+                ? _c(
+                    "tr",
+                    {
+                      staticClass:
+                        "border border-b border-gray-200 cursor-pointer"
+                    },
+                    [_vm._m(1)]
+                  )
+                : _vm._e()
             ],
             2
           ),
@@ -74835,6 +74915,22 @@ var staticRenderFns = [
         },
         [_vm._v("\n                    Reservations\n                ")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "px-4 py-2 border-l-8 border-yellow-400" }, [
+      _c("div", { staticClass: "flex flex-col" }, [
+        _c("span", { staticClass: "text-gray-900 text-sm" }, [
+          _vm._v("No reservations so far.")
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "text-gray-600 text-xs italic" }, [
+          _vm._v("Create one :-)")
+        ])
+      ])
     ])
   }
 ]
@@ -97536,7 +97632,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var Routes = {
   reservations: '/reservations',
-  searchReservations: '/reservations/search',
   users: '/users',
   tables: '/tables',
   restaurants: '/restaurants'
@@ -97546,46 +97641,60 @@ var DoneMapping = {
   'false': 0
 };
 
-var getBaseURL = function getBaseURL(state) {
-  if (state.reservations.meta.links) {
-    return state.reservations.meta.links.find(function (link) {
-      return link.active;
-    }).url;
-  } else return Routes.reservations;
-};
+var buildQueryParams = function buildQueryParams(state) {
+  var newPageLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  // fixed query params
+  var params = {
+    done: DoneMapping[state.filter.showFulfilled],
+    search: state.search.query,
+    past: DoneMapping[state.filter.past]
+  }; // optional filter
 
-var getDoneQuery = function getDoneQuery(state) {
-  var isConnected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var connector = state.reservations.meta.links || isConnected ? '&' : '?';
-  return "".concat(connector, "done=").concat(DoneMapping[state.filter.showFulfilled]);
-};
-
-var getDateFilterQuery = function getDateFilterQuery(state) {
-  var _state$filter$dateFil = state.filter.dateFilter,
-      active = _state$filter$dateFil.active,
-      mode = _state$filter$dateFil.mode;
-
-  if (!active) {
-    return '';
-  } else {
-    if (mode === 'range') {
+  if (state.filter.dateFilter.active) {
+    if (state.filter.dateFilter.mode === 'range') {
       var _state$filter$dateRan = state.filter.dateRange,
           start = _state$filter$dateRan.start,
           end = _state$filter$dateRan.end;
-      return "&from=".concat(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["toDate"])(start).toISOString(), "&to=").concat(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["toDate"])(end).toISOString());
-    } else {
+      params.from = start.toISOString();
+      params.to = end.toISOString();
+    }
+
+    if (state.filter.dateFilter.mode === 'single') {
       var singleDate = state.filter.singleDate;
-      return "&from=".concat(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["toDate"])(singleDate).toISOString());
+      params.from = singleDate.toISOString();
+    }
+  } // if no search query -> apply pagination
+
+
+  if (state.search.query.length === 0) {
+    var _state$reservations$m;
+
+    if (newPageLink) {
+      params.page = buildPaginationParams(newPageLink).get('page');
+    } else if ((_state$reservations$m = state.reservations.meta.links) === null || _state$reservations$m === void 0 ? void 0 : _state$reservations$m.find(function (link) {
+      return link.active;
+    })) {
+      var activePage = state.reservations.meta.links.find(function (link) {
+        return link.active;
+      });
+      params.page = buildPaginationParams(activePage.url).get('page');
     }
   }
+
+  return new URLSearchParams(params);
+};
+
+var buildPaginationParams = function buildPaginationParams(url) {
+  var parsed = new URL(url);
+  return new URLSearchParams(parsed.search);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   loadPaginatedReservations: function loadPaginatedReservations(_ref) {
     var commit = _ref.commit,
         state = _ref.state;
-    // Check if already paginated data is loaded:
-    var url = getBaseURL(state) + getDoneQuery(state) + getDateFilterQuery(state);
+    var paginationLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var url = "".concat(Routes.reservations, "?").concat(buildQueryParams(state, paginationLink).toString());
     axios.get(url).then(function (response) {
       var data = response.data.data;
       var links = response.data.links;
@@ -97595,44 +97704,29 @@ var getDateFilterQuery = function getDateFilterQuery(state) {
       commit('loadMetaData', meta);
     });
   },
-  doSearch: function doSearch(_ref2) {
-    var commit = _ref2.commit,
-        state = _ref2.state;
-    var query = state.search.query;
-    var url = Routes.searchReservations + "?search=".concat(query) + getDoneQuery(state, true);
-    axios.get(url).then(function (response) {
-      console.log(response.data);
-      var data = response.data.data;
-      var links = response.data.links;
-      var meta = response.data.meta;
-      commit('loadReservations', data);
-      commit('loadPaginationLinks', links);
-      commit('loadMetaData', meta);
-    });
-  },
-  loadEmployees: function loadEmployees(_ref3) {
-    var commit = _ref3.commit;
+  loadEmployees: function loadEmployees(_ref2) {
+    var commit = _ref2.commit;
     axios.get(Routes.users).then(function (response) {
       var data = response.data;
       commit('setEmployees', data);
     });
   },
-  createNewReservation: function createNewReservation(_ref4) {
-    var commit = _ref4.commit,
-        dispatch = _ref4.dispatch;
+  createNewReservation: function createNewReservation(_ref3) {
+    var commit = _ref3.commit,
+        dispatch = _ref3.dispatch;
     commit('setNewReservation');
     dispatch('loadAvailableTables');
     commit('openModal');
   },
-  setActiveReservation: function setActiveReservation(_ref5, id) {
-    var dispatch = _ref5.dispatch,
-        commit = _ref5.commit;
+  setActiveReservation: function setActiveReservation(_ref4, id) {
+    var dispatch = _ref4.dispatch,
+        commit = _ref4.commit;
     commit('setActiveReservation', id);
     dispatch('loadAvailableTables');
   },
-  loadAvailableTables: function loadAvailableTables(_ref6) {
-    var commit = _ref6.commit,
-        state = _ref6.state;
+  loadAvailableTables: function loadAvailableTables(_ref5) {
+    var commit = _ref5.commit,
+        state = _ref5.state;
     // remove all tables
     commit('setAvailableTables', []);
     commit('setLoadingState', {
@@ -97654,9 +97748,9 @@ var getDateFilterQuery = function getDateFilterQuery(state) {
       });
     });
   },
-  updateReservation: function updateReservation(_ref7, data) {
-    var commit = _ref7.commit,
-        dispatch = _ref7.dispatch;
+  updateReservation: function updateReservation(_ref6, data) {
+    var commit = _ref6.commit,
+        dispatch = _ref6.dispatch;
     // mutate state
     commit('updateReservation', data); // getting tables if filter data is changed
 
@@ -97667,12 +97761,12 @@ var getDateFilterQuery = function getDateFilterQuery(state) {
       dispatch('loadAvailableTables');
     }
   },
-  saveReservation: function saveReservation(_ref8, reservation) {
+  saveReservation: function saveReservation(_ref7, reservation) {
     var _reservation$user;
 
-    var commit = _ref8.commit,
-        dispatch = _ref8.dispatch,
-        state = _ref8.state;
+    var commit = _ref7.commit,
+        dispatch = _ref7.dispatch,
+        state = _ref7.state;
     commit('clearErrors');
 
     var payload = _objectSpread({}, reservation); // remove user object
@@ -97718,15 +97812,15 @@ var getDateFilterQuery = function getDateFilterQuery(state) {
       });
     }
   },
-  closeModal: function closeModal(_ref9) {
-    var commit = _ref9.commit,
-        dispatch = _ref9.dispatch;
+  closeModal: function closeModal(_ref8) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
     dispatch('loadPaginatedReservations');
     commit('closeModal');
     commit('clearErrors');
   },
-  loadRestaurant: function loadRestaurant(_ref10) {
-    var commit = _ref10.commit;
+  loadRestaurant: function loadRestaurant(_ref9) {
+    var commit = _ref9.commit;
     axios.get(Routes.restaurants).then(function (response) {
       var data = response.data;
       axios.get(Routes.restaurants + "/".concat(data[0].id)).then(function (response) {
@@ -97734,10 +97828,10 @@ var getDateFilterQuery = function getDateFilterQuery(state) {
       });
     });
   },
-  markFulfilled: function markFulfilled(_ref11, data) {
-    var commit = _ref11.commit,
-        state = _ref11.state,
-        dispatch = _ref11.dispatch;
+  markFulfilled: function markFulfilled(_ref10, data) {
+    var commit = _ref10.commit,
+        state = _ref10.state,
+        dispatch = _ref10.dispatch;
     var consolidatedData = {
       id: data.id,
       data: {
@@ -97752,25 +97846,25 @@ var getDateFilterQuery = function getDateFilterQuery(state) {
     dispatch('saveReservation', res);
     commit('setActiveReservation', null);
   },
-  showAllFullFilled: function showAllFullFilled(_ref12, val) {
-    var commit = _ref12.commit,
-        dispatch = _ref12.dispatch,
-        state = _ref12.state;
+  showAllFullFilled: function showAllFullFilled(_ref11, val) {
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch,
+        state = _ref11.state;
     commit('showAllFullFilled', val);
     dispatch('loadPaginatedReservations');
   },
-  activateRangeFilter: function activateRangeFilter(_ref13, payload) {
-    var commit = _ref13.commit,
-        dispatch = _ref13.dispatch,
-        state = _ref13.state;
+  activateRangeFilter: function activateRangeFilter(_ref12, payload) {
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch,
+        state = _ref12.state;
     commit('setDateFilterActive', payload);
     commit('setDateRange', payload.dateRange);
     dispatch('loadPaginatedReservations');
   },
-  activateSingleDateFilter: function activateSingleDateFilter(_ref14, payload) {
-    var commit = _ref14.commit,
-        dispatch = _ref14.dispatch,
-        state = _ref14.state;
+  activateSingleDateFilter: function activateSingleDateFilter(_ref13, payload) {
+    var commit = _ref13.commit,
+        dispatch = _ref13.dispatch,
+        state = _ref13.state;
     commit('setDateFilterActive', payload);
     commit('setSingleDate', payload.singleDate);
     dispatch('loadPaginatedReservations');
@@ -97904,6 +97998,7 @@ __webpack_require__.r(__webpack_exports__);
     state.filter.singleDate = value;
   },
   setDateFilterActive: function setDateFilterActive(state, payload) {
+    state.filter.past = false;
     state.filter.dateFilter.mode = payload.mode;
     state.filter.dateFilter.active = payload.active;
   }
@@ -97937,7 +98032,8 @@ __webpack_require__.r(__webpack_exports__);
     dateFilter: {
       active: false,
       mode: "none"
-    }
+    },
+    past: false
   },
   user: {},
   restaurant: {

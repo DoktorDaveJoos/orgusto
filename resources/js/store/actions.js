@@ -2,7 +2,6 @@ import {toDate} from 'date-fns';
 
 const Routes = {
     reservations: '/reservations',
-    searchReservations: '/reservations/search',
     users: '/users',
     tables: '/tables',
     restaurants: '/restaurants'
@@ -13,39 +12,52 @@ const DoneMapping = {
     'false': 0
 }
 
-const getBaseURL = state => {
-    if (state.reservations.meta.links) {
-        return state.reservations.meta.links.find(link => link.active).url;
-    } else return Routes.reservations;
-}
+const buildQueryParams = (state, newPageLink = null) => {
 
-const getDoneQuery = (state, isConnected = null) => {
-    const connector = state.reservations.meta.links || isConnected ? '&' : '?';
-    return `${connector}done=${DoneMapping[state.filter.showFulfilled]}`;
-}
+    // fixed query params
+    const params = {
+        done: DoneMapping[state.filter.showFulfilled],
+        search: state.search.query,
+        past: DoneMapping[state.filter.past]
+    }
 
-const getDateFilterQuery = state => {
-
-    const {active, mode} = state.filter.dateFilter;
-    if (!active) {
-        return '';
-    } else {
-        if (mode === 'range') {
+    // optional filter
+    if (state.filter.dateFilter.active) {
+        if (state.filter.dateFilter.mode === 'range') {
             const {start, end} = state.filter.dateRange;
-            return `&from=${toDate(start).toISOString()}&to=${toDate(end).toISOString()}`;
-        } else {
+            params.from = start.toISOString();
+            params.to = end.toISOString();
+        }
+        if (state.filter.dateFilter.mode === 'single') {
             const {singleDate} = state.filter;
-            return `&from=${toDate(singleDate).toISOString()}`;
+            params.from = singleDate.toISOString();
         }
     }
+
+    // if no search query -> apply pagination
+    if (state.search.query.length === 0) {
+        if (newPageLink) {
+            params.page = buildPaginationParams(newPageLink).get('page');
+        } else if (state.reservations.meta.links?.find(link => link.active)) {
+            const activePage = state.reservations.meta.links.find(link => link.active);
+            params.page = buildPaginationParams(activePage.url).get('page');
+        }
+    }
+
+    return new URLSearchParams(params);
+
+}
+
+const buildPaginationParams = url => {
+    const parsed = new URL(url);
+    return new URLSearchParams(parsed.search);
 }
 
 export default {
 
-    loadPaginatedReservations({commit, state}) {
+    loadPaginatedReservations({commit, state}, paginationLink = null) {
 
-        // Check if already paginated data is loaded:
-        const url = getBaseURL(state) + getDoneQuery(state) + getDateFilterQuery(state);
+        const url = `${Routes.reservations}?${buildQueryParams(state, paginationLink).toString()}`
 
         axios.get(url)
             .then(response => {
@@ -59,27 +71,6 @@ export default {
                 commit('loadMetaData', meta);
 
             })
-    },
-
-    doSearch({commit, state}) {
-
-        const {query} = state.search;
-        const url = Routes.searchReservations + `?search=${query}` + getDoneQuery(state, true);
-
-        axios.get(url).then(response => {
-
-            console.log(response.data);
-
-            const {data} = response.data;
-            const {links} = response.data;
-            const {meta} = response.data;
-
-            commit('loadReservations', data);
-            commit('loadPaginationLinks', links);
-            commit('loadMetaData', meta);
-
-        })
-
     },
 
     loadEmployees({commit}) {
@@ -250,20 +241,14 @@ export default {
     },
 
     showAllFullFilled({commit, dispatch, state}, val) {
-
         commit('showAllFullFilled', val);
-
         dispatch('loadPaginatedReservations');
-
-
     },
 
     activateRangeFilter({commit, dispatch, state}, payload) {
 
         commit('setDateFilterActive', payload);
         commit('setDateRange', payload.dateRange);
-
-
         dispatch('loadPaginatedReservations');
 
     },
@@ -271,7 +256,6 @@ export default {
     activateSingleDateFilter({commit, dispatch, state}, payload) {
         commit('setDateFilterActive', payload);
         commit('setSingleDate', payload.singleDate);
-
         dispatch('loadPaginatedReservations');
     }
 

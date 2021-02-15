@@ -23,6 +23,7 @@ class Reservation extends Model
     public function toSearchableArray()
     {
         return $this->only(
+            'id',
             'name',
             'notice',
             'persons',
@@ -33,7 +34,6 @@ class Reservation extends Model
             'user_id'
         );
     }
-
 
     protected $fillable = [
         'name',

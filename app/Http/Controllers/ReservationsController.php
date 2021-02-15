@@ -30,13 +30,22 @@ class ReservationsController extends Controller
             return redirect()->route('restaurants.show');
         }
 
-        $query = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-            $q->where('restaurant_id', $restaurant->id);
-        });
+        if ($request->get('search')) {
+            $user_ids = $restaurant->users()->get()->pluck('id');
 
+            $query = Reservation::search($request->get('search'));
+            $user_ids->each(function ($item) use ($query) {
+                $query->where('user_id', $item);
+            });
+
+        } else {
+            $query = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
+            });
+        }
         $this->buildQueryFromRequest($request, $query);
 
-        $reservations = $query->closest()->paginate();
+        $reservations = $query->paginate();
 
         if (request()->wantsJson()) {
             return ReservationResource::collection($reservations);
@@ -44,36 +53,25 @@ class ReservationsController extends Controller
         return view('reservations');
     }
 
-    public function search(Request $request)
+    private function buildQueryFromRequest($request, $query)
     {
-        $user_ids = $this->getRestaurant()->users()->get()->pluck('id');
-
-        $query = Reservation::search($request->get('search'));
-        $user_ids->each(function ($item) use ($query) {
-            $query->where('user_id', $item);
-        });
-
-        $this->buildQueryFromRequest($request, $query);
-
-        $results = $query->paginate();
-
-        return ReservationResource::collection($results);
-
-    }
-
-    private function buildQueryFromRequest($request, $query) {
-        if(!$request->get('done')){
+        if (!$request->get('done')) {
             $query->where('done', 0);
         }
 
-        if($request->get('from')) {
-            $query->where('start', '>=', $request->get('from'));
+        if (!$request->get('past')) {
+            if ($request->get('from')) {
+                $query->where('start', '>=', $request->get('from'));
+            } else {
+                $query->where('start', '>=', Carbon::today());
+            }
+
+            if ($request->get('to')) {
+                $to = Carbon::parse($request->get('to'))->endOfDay();
+                $query->where('start', '<=', $to);
+            }
         }
 
-        if($request->get('to')) {
-            $to = Carbon::parse($request->get('to'))->endOfDay();
-            $query->where('start', '<=', $to);
-        }
     }
 
 

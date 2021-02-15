@@ -92,9 +92,6 @@ Route::middleware(['auth'])->group(function () {
             ->name('reservations.store')
             ->middleware('can:create,App\Models\Reservation');
 
-        Route::get('/search', [ReservationsController::class, 'search'])
-            ->name('reservations.search');
-
         Route::get('/{reservation}', [ReservationsController::class, 'show'])
             ->name('reservation.show')
             ->middleware('can:view,reservation');

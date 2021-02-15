@@ -24,6 +24,11 @@
                         </button>
 
                         <search-bar></search-bar>
+                        <div class="ml-2 flex items-center">
+                            <input id="past" name="candidates" type="checkbox" v-model="filter.past"
+                                   class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mr-1">
+                            <label for="past" class="text-gray-700 uppercase text-xs">Include past</label>
+                        </div>
                     </div>
 
                     <div class="flex flex-row h-full">
@@ -57,6 +62,15 @@
                     :key="reservation.id"
                     :reservation="reservation"
                 ></reservation-list-item>
+
+                <tr v-if="reservations.items.length === 0" class="border border-b border-gray-200 cursor-pointer">
+                    <td class="px-4 py-2 border-l-8 border-yellow-400">
+                        <div class="flex flex-col">
+                            <span class="text-gray-900 text-sm">No reservations so far.</span>
+                            <span class="text-gray-600 text-xs italic">Create one :-)</span>
+                        </div>
+                    </td>
+                </tr>
 
             </table>
 
@@ -110,11 +124,8 @@ export default {
         filter: state => state.filter
     }),
     watch: {
-        'filter.date': function(date, _) {
-            console.log(date);
-        },
-        'filter.dateRange': function(date, _) {
-            console.log(date);
+        'filter.past': function() {
+            this.$store.dispatch('loadPaginatedReservations')
         }
     }
 }
