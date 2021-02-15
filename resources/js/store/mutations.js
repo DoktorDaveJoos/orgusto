@@ -80,9 +80,11 @@ export default {
         state.filter.dateRange = value;
     },
 
-    setDateFilterActive(state, payload) {
+    setSingleDate(state, value) {
+        state.filter.singleDate = value;
+    },
 
-        console.log('mutation: ', payload.active, payload.mode);
+    setDateFilterActive(state, payload) {
         state.filter.dateFilter.mode = payload.mode;
         state.filter.dateFilter.active = payload.active;
     }

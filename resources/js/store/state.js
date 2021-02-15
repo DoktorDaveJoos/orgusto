@@ -11,6 +11,7 @@ export default {
             start: new Date(),
             end: new Date()
         },
+        singleDate: new Date(),
         dateFilter: {
             active: false,
             mode: "none"
