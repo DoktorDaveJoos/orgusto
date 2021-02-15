@@ -59,6 +59,3 @@ const app = new Vue({
     store
 });
 
-const navApp = new Vue({
-    el: '#navApp'
-})

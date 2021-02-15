@@ -88,6 +88,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [ReservationsController::class, 'index'])
             ->name('reservations.show');
 
+        Route::get('/scoped', [ReservationsController::class, 'scoped'])
+            ->name('reservations.scoped');
+
         Route::post('/', [ReservationsController::class, 'store'])
             ->name('reservations.store')
             ->middleware('can:create,App\Models\Reservation');
@@ -113,5 +116,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('/tables')->group(function () {
         Route::get('/', [TablesController::class, 'index'])
             ->name('tables.index');
+
+        Route::get('/all', [TablesController::class, 'allTables'])
+            ->name('tables.all');
     });
 });

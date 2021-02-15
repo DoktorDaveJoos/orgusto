@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetAvailableTables;
+use App\Http\Resources\TableResource;
 use App\Reservation;
 use Carbon\CarbonImmutable;
 
@@ -42,6 +43,12 @@ class TablesController extends Controller
         return $restaurant->tables()
             ->availableBetween($start_date, $end_date)
             ->get();
+    }
+
+    public function allTables() {
+
+        return TableResource::collection($this->getRestaurant()->tables);
+
     }
 
 }

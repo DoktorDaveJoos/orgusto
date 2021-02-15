@@ -30,29 +30,30 @@
 </template>
 
 <script>
-import OrgustoDate from "../models/OrgustoDate";
+
+import store from '../store';
+import {mapState} from 'vuex';
+import {getHours} from 'date-fns';
 
 export default {
-    name: "orgastro-timeline",
-    props: {
-        init: {
-            type: String,
-            required: true
-        }
-    },
+    name: "orgusto-timeline",
+    store,
     methods: {
         mapToQuarter: val => {
-            let min = val === 1 ? "00" : val === 2 ? "15" : val === 3 ? "30" : "45";
-            return min;
+            return val === 1 ? "00" : val === 2 ? "15" : val === 3 ? "30" : "45";
         },
         mapToHour: function (val) {
-            return parseInt(val) + parseInt(this.ihour);
+            let hour = parseInt(val) + this.start;
+            if (hour >= 24) {
+                hour = hour - 24;
+            }
+            return hour;
         },
     },
     computed: {
-        ihour() {
-            return OrgustoDate.ofString(this.init).hour;
-        }
+        ...mapState({
+           start: state => getHours(state.filter.timelineStart)
+        }),
     }
 };
 </script>

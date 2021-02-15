@@ -5,7 +5,7 @@ import OrgustoDate from "../models/OrgustoDate";
 
 export default {
   name: "orgusto-scope-manager",
-  props: ["date"],
+
   mounted() {
     // Register event listener
     this.$bus.$on("scopeEvent", event => this.handleEvent(event));

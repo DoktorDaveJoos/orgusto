@@ -30,24 +30,18 @@ class ManageController extends Controller
             return redirect()->route('restaurants.show');
         }
 
-        $employees = $restaurant->users ?? array();
+//        $from = $this->getStartFromRequest($request)->toDate();
+//        $to = $this->getEndFromRequest($request)->toDate();
 
-        $date = $request->has('date') ? CarbonImmutable::parse($request->get('date')) : CarbonImmutable::now()->setTime(16, 0);
-
-        $from = $this->getStartFromRequest($request)->toDate();
-        $to = $this->getEndFromRequest($request)->toDate();
-
-        $tables = $restaurant->tables()->with(['reservations' =>
-            function ($query) use ($from, $to) {
-                $query->whereBetween('start', [$from, $to])->with(['user', 'tables']);
-            }])->sortByTableNumber()->get();
+//        $tables = $restaurant->tables()->with(['reservations' =>
+//            function ($query) use ($from, $to) {
+//                $query->whereBetween('start', [$from, $to])->with(['user', 'reservations']);
+//            }])->sortByTableNumber()->get();
 
         if ($request->wantsJson()) {
-            return TableResource::collection($tables);
+            return TableResource::collection($restaurant->tables);
         }
 
-        $scope = $date->get('hour');
-
-        return view('manage', ['tables' => $tables, 'date' => $date->toISOString(), 'scopedHour' => $scope, 'employees' => $employees]);
+        return view('manage');
     }
 }

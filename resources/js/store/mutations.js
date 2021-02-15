@@ -23,6 +23,7 @@ export default {
             res = state.modal.newReservation;
         }
         Object.keys(data.data).forEach(key => {
+            console.log(key, data.data[key]);
             res[key] = data.data[key];
         });
     },
@@ -88,5 +89,13 @@ export default {
         state.filter.past = false;
         state.filter.dateFilter.mode = payload.mode;
         state.filter.dateFilter.active = payload.active;
+    },
+
+    setTables(state, payload) {
+        state.restaurant.allTables = payload;
+    },
+
+    updateScope(state, payload) {
+        state.filter.timelineStart = payload;
     }
 }

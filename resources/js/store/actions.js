@@ -1,10 +1,11 @@
-import {toDate} from 'date-fns';
+import {toDate, startOfDay, endOfDay} from 'date-fns';
 
 const Routes = {
     reservations: '/reservations',
     users: '/users',
     tables: '/tables',
-    restaurants: '/restaurants'
+    restaurants: '/restaurants',
+    manage: '/manage'
 }
 
 const DoneMapping = {
@@ -73,6 +74,21 @@ export default {
             })
     },
 
+    loadScopedReservations({commit, state}) {
+
+        const query = {
+            date: state.filter.timelineStart.toISOString()
+        };
+
+        const url = Routes.reservations + '/scoped?' + new URLSearchParams(query).toString();
+
+        axios.get(url)
+            .then(response => {
+                commit('loadReservations', response.data.data)
+            })
+
+    },
+
     loadEmployees({commit}) {
         axios.get(Routes.users)
             .then(response => {
@@ -81,16 +97,29 @@ export default {
             })
     },
 
-    createNewReservation({commit, dispatch}) {
+    loadTables({commit}) {
+
+        axios.get(Routes.tables + '/all')
+            .then(response => {
+                commit('setTables', response.data.data);
+            })
+
+    },
+
+    createNewReservation({commit, dispatch}, preSelected) {
 
         commit('setNewReservation');
+        if (preSelected) {
+            commit('updateReservation', {
+                data: preSelected
+            })
+        }
         dispatch('loadAvailableTables');
         commit('openModal');
 
     },
 
     setActiveReservation({dispatch, commit}, id) {
-
         commit('setActiveReservation', id);
         dispatch('loadAvailableTables');
 

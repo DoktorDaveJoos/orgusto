@@ -23,12 +23,6 @@
 
                     <div class="flex-1 flex justify-center text-gray-600">
 
-                        <div id="navApp">
-                            <global-create-reservation tables-endpoint="{{ route('tables.index') }}"
-                                                       reservations-endpoint="{{ route('reservations.store') }}">
-                            </global-create-reservation>
-                        </div>
-
                         <a href="{{ route('reservations.show') }}"
                            class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('reservations*') ? 'font-semibold text-gray-800' : '' }}">
                             <i class="text-lg text-center far fa-calendar"></i>

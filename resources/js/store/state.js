@@ -1,3 +1,10 @@
+import { setHours, setMinutes, startOfDay, parseISO } from 'date-fns';
+
+const makeDefaultTimelineStart = () => {
+    const date = new Date().toISOString();
+    return setHours(startOfDay(parseISO(date)), 17);
+}
+
 export default {
     reservations: {
         items: [],
@@ -16,12 +23,14 @@ export default {
             active: false,
             mode: "none"
         },
-        past: false
+        past: false,
+        timelineStart: makeDefaultTimelineStart()
     },
     user: {},
     restaurant: {
         users: [],
         tables: [],
+        allTables: [],
         settings: {}
     },
     modal: {

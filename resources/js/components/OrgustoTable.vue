@@ -15,19 +15,16 @@
         </div>
 
         <!-- Body -->
-        <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row">
-            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full cursor-pointer"
-                 @click="editReservationAt(i)"
-            >
+        <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row" @click="handleSlotClick(i)">
+            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full cursor-pointer" @click="">
                 <div v-if="isEdgeSlot(i) !== 0" class="m-0 flex flex-row w-full">
                     <div
                         v-if="isEdgeSlot(i) === 2"
                         :class="slotColorAndBorder(i)"
-                        class="m-0 flex flex-row w-full"
-                    >
-            <span
-                class="absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
-            >{{ getReservation(i).name }}</span>
+                        class="m-0 flex flex-row w-full">
+                            <span
+                                class="absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
+                            >{{ getReservation(i).name }}</span>
                     </div>
                     <div
                         v-if="isEdgeSlot(i) === 1"
@@ -38,11 +35,12 @@
                 </div>
                 <div v-else :class="slotColor(i)" class="m-0 flex flex-row w-full">&nbsp;</div>
             </div>
+
+
             <div
                 v-else
                 class="p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer"
-                @click="addNewReservationAt(i)"
-            >
+                @click="">
                 <div class="self-center w-full text-center">
                     <i class="fas fa-plus text-xs"></i>
                 </div>
@@ -52,9 +50,12 @@
     </div>
 </template>
 
-<script lang="ts">
-import OrgustoDate from "../models/OrgustoDate";
-import Vue, {PropType} from "vue";
+<script>
+
+import store from '../store';
+import {mapState} from 'vuex';
+
+import {addMinutes, parseISO, format, isSameMinute} from 'date-fns';
 
 const SLOT_CONSTANTS = {
     FIRST: 0,
@@ -67,22 +68,12 @@ const SLOT_IDENT = {
     BETWEEN: 0
 }
 
-export default Vue.extend({
+export default {
     name: "orgusto-table",
-    props: {
-        table: {
-            type: Object,
-            required: true,
-        },
-        tables: {
-            type: Array,
-            required: true,
-        },
-        slotClicked: Function,
-        timelineStart: Object as PropType<OrgustoDate>,
-    },
+    store,
+    props: ['tableId'],
     methods: {
-        slotHasReservation(slot: number): boolean {
+        slotHasReservation(slot) {
             if (this.reservations.length === 0) {
                 return false;
             }
@@ -90,20 +81,21 @@ export default Vue.extend({
             return this.getReservation(slot) !== undefined;
         },
 
-        isEdgeSlot(slot: number): number {
-            const reservation: any = this.getReservation(slot);
+        isEdgeSlot(slot) {
 
-            const reservationStart = OrgustoDate.ofString(reservation.start);
-            const reservationEnd = reservationStart.addMinutes(reservation.duration);
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
+            const reservation = this.getReservation(slot);
+
+            const reservationStart = parseISO(reservation.start);
+            const reservationEnd = addMinutes(reservationStart, reservation.duration);
+            const slotTime = addMinutes(this.timelineStart, (slot * 15));
 
             // check if is start of reservation
-            if (slotTime.isSame(reservationStart)) {
+            if (isSameMinute(slotTime, reservationStart)) {
                 return SLOT_IDENT.EDGE_START;
             }
 
             // check if is end of reservation
-            if (slotTime.addMinutes(15).isSame(reservationEnd)) {
+            if (isSameMinute(addMinutes(slotTime, 15), reservationEnd)) {
                 return SLOT_IDENT.EDGE_END;
             }
 
@@ -111,21 +103,18 @@ export default Vue.extend({
             return SLOT_IDENT.BETWEEN;
         },
 
-        getReservation(slot: number): any | undefined {
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
+        getReservation(slot) {
+            const slotTime = addMinutes(this.timelineStart, (slot * 15));
 
-            return this.reservationsArray.find(
-                (reservation: any) => {
+            return this.reservations.find(reservation => {
+                const start = parseISO(reservation.start);
+                const end = addMinutes(start, reservation.duration);
+                return slotTime >= start && slotTime < end;
+            })
 
-                    const reservationStart = OrgustoDate.ofString(reservation.start);
-                    const reservationEnd = reservationStart.addMinutes(reservation.duration);
-
-                    return slotTime.asDate >= reservationStart.asDate &&
-                        slotTime.asDate < reservationEnd.asDate;
-                });
         },
 
-        slotColorAndBorder(slot: number): Array<string> {
+        slotColorAndBorder(slot) {
             const reservation = this.getReservation(slot);
 
             return [
@@ -134,38 +123,45 @@ export default Vue.extend({
             ];
         },
 
-        slotColor(slot): string {
-            const reservation: any | undefined = this.getReservation(slot);
+        slotColor(slot) {
+            const reservation = this.getReservation(slot);
 
             const rounded_right = slot === SLOT_CONSTANTS.LAST ? " rounded-r-full" : "";
             return reservation ? "bg-" + reservation.color + "-200" : "" + rounded_right;
         },
+        getTime(slot) {
+            const slotTime = addMinutes(this.timelineStart, (slot * 15));
+            return format(slotTime, "HH:mm");
+        },
 
-        addNewReservationAt(slot: number): void {
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
+        handleSlotClick(slot) {
+
             const reservation = this.getReservation(slot);
 
-            this.slotClicked(this.table, slotTime, reservation);
-        },
-        editReservationAt(slot: number): void {
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
-            const reservation = this.getReservation(slot);
+            if (!reservation) {
+                const slotTime = addMinutes(this.timelineStart, (slot * 15));
+                const preSelected = {
+                    tables: Array.of(this.table),
+                    start: slotTime.toISOString()
+                }
+                this.$store.dispatch('createNewReservation', preSelected);
+            } else {
+                this.$store.dispatch('setActiveReservation', reservation.id);
+                this.$store.commit('openModal');
+            }
 
-            this.slotClicked(this.table, slotTime, reservation);
-        },
-        getTime(slot: number): string {
-            return this.timelineStart.addMinutes(slot * 15).readableTime;
-        },
+        }
     },
     computed: {
-        reservations(): Array<any> {
-            return this.table.reservations;
-        },
-        reservationsArray(): Array<any> {
-            return Object.keys(this.reservations).map(
-                (key) => this.reservations[key]
-            );
-        },
+        ...mapState({
+            table: function (state) {
+                return state.restaurant.allTables.find(table => table.id === this.tableId);
+            },
+            timelineStart: state => state.filter.timelineStart,
+            reservations: function (state) {
+                return state.reservations.items.filter(reservation => reservation.tables.find(table => table.id === this.tableId));
+            }
+        }),
     },
-});
+};
 </script>

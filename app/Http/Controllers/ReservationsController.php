@@ -53,6 +53,21 @@ class ReservationsController extends Controller
         return view('reservations');
     }
 
+    public function scoped(Request $request) {
+
+        $restaurant = $this->getRestaurant();
+
+        $from = $this->getStartFromRequest($request);
+        $to = $this->getEndFromRequest($request);
+
+        $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+            $q->where('restaurant_id', $restaurant->id);
+        })->whereBetween('start', [$from, $to])->get();
+
+        return ReservationResource::collection($reservations);
+    }
+
+
     private function buildQueryFromRequest($request, $query)
     {
         if (!$request->get('done')) {
