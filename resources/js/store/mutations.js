@@ -23,7 +23,6 @@ export default {
             res = state.modal.newReservation;
         }
         Object.keys(data.data).forEach(key => {
-            console.log(key, data.data[key]);
             res[key] = data.data[key];
         });
     },
@@ -54,8 +53,16 @@ export default {
         state.loadingStates[data.indicator] = data.value;
     },
 
-    setErrors(state, data) {
-        state.reservations.errors = data;
+    setErrors(state, error) {
+        if (error.response.status === 422) {
+             state.reservations.errors = error.response.data.errors;
+        } else if (error.response.status === 400) {
+            state.reservations.errors = {
+                tables: error.response.data.message
+            };
+        } else if (error.response.status === 401) {
+            location.reload();
+        }
     },
 
     setNewReservation(state) {
@@ -69,6 +76,7 @@ export default {
     setRestaurant(state, data) {
         state.restaurant.settings = data.data;
     },
+
     updateSearchQuery(state, value) {
         state.search.query = value;
     },

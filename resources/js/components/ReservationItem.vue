@@ -1,9 +1,8 @@
 <template>
     <div class="relative shadow-lg bg-white mx-auto rounded-lg w-full max-w-5xl">
         <div class="bg-white w-full shadow-lg max-w-5xl self-center mt-6 overflow-hidden rounded-lg">
-            <div
-                class="orgusto-honey flex flex-row items-center justify-between p-4 py-5 sm:px-6 border-b-4"
-                :class="borderColor"
+            <div class="bg-gray-200 flex flex-row items-center justify-between p-4 py-5 sm:px-6 border-b-4"
+                 :class="borderColor"
             >
                 <h3 class="text-lg self-center leading-6 font-medium text-gray-800">{{ reservation.name }}</h3>
                 <color-switcher :color="reservation.color" v-on:value:changed="setValue"></color-switcher>
@@ -16,14 +15,19 @@
             ></employee-picker>
 
             <hr/>
-            <date-picker :error="errorContainsKey('start')" :date="reservation.start" v-on:value:changed="setValue"></date-picker>
-            <time-picker :error="errorContainsKey('start')" :date="reservation.start" v-on:value:changed="setValue"></time-picker>
+            <date-picker :error="errorContainsKey('start')" :date="reservation.start"
+                         v-on:value:changed="setValue"></date-picker>
+            <time-picker :error="errorContainsKey('start')" :date="reservation.start"
+                         v-on:value:changed="setValue"></time-picker>
             <hr/>
             <person-picker
                 :persons="reservation.persons"
                 v-on:value:changed="setValue"
                 :error="errorContainsKey('persons')"
             ></person-picker>
+            <div v-if="toManyGuests" class="ml-4 text-xs italic text-red-600">
+                To many guests for given tables.
+            </div>
             <duration-picker
                 :duration="reservation.duration"
                 v-on:value:changed="setValue"
@@ -165,7 +169,17 @@ export default {
                 }
             },
             errors: state => state.reservations.errors
-        })
+        }),
+        toManyGuests() {
+            if (this.reservation.tables) {
+                const tables = this.reservation.tables;
+                if (tables.length > 0) {
+                    const seats = tables.map(table => table.seats).reduce((acc, cur) => acc + cur);
+                    return this.reservation.persons > seats;
+                }
+            }
+            return false;
+        }
     },
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <button
-        class="text-gray-600 shadow-lg bg-gray-200 hover:bg-gray-300 w-1/12 h-full rounded-full focus:outline-none"
+        class="text-gray-600 hover:text-indigo-600 border-2 border-gray-400 shadow-lg bg-gray-200 hover:border-indigo-400 w-1/12 h-full rounded-full focus:outline-none transition-color duration-200 ease-in-out"
         v-on:click="handleClick()"
     >
         <i :class="iconClass"></i>
@@ -26,10 +26,10 @@ export default {
         handleClick: function () {
             if (this.direction === "left") {
                 const newScope = subHours(this.timelineStart, 1);
-                this.$store.commit('updateScope', newScope);
+                this.$store.dispatch('updateScope', newScope);
             } else {
                 const newScope = addHours(this.timelineStart, 1);
-                this.$store.commit('updateScope', newScope);
+                this.$store.dispatch('updateScope', newScope);
             }
         }
     },

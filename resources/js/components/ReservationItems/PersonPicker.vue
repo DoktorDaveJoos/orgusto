@@ -2,7 +2,7 @@
     <div class="flex flex-col px-4 pb-2 pt-4">
     <span
         class="uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
-    >Number of people & duration</span>
+    >Number of guests & duration</span>
         <div class="flex justify-between">
             <div class="flex space-x-4">
                 <div v-if="error" class="text-red-400 flex items-center leading-tight">

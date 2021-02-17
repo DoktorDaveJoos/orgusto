@@ -5,9 +5,10 @@
                 <span class="p-2">Hours</span>
             </div>
             <div
-                class="w-1/6 border-r border-gray-500 font-light text-lg text-left"
                 v-for="i in 5"
                 :key="i"
+                class="w-1/6 font-light text-lg text-left"
+                :class="computedStyle(i -1)"
             >
                 <span class="p-1">{{ mapToHour(i - 1) }}</span>
             </div>
@@ -18,9 +19,10 @@
             </div>
             <div class="w-1/6 flex flex-row" v-for="i in 5" :key="i">
                 <div
-                    class="w-1/4 border-r border-gray-500 font-light text-sm text-left"
                     v-for="j in 4"
                     :key="j"
+                    class="w-1/4 font-light text-sm text-left"
+                    :class="computedStyle((i -1), j)"
                 >
                     <span class="p-1">{{ mapToQuarter(j) }}</span>
                 </div>
@@ -49,10 +51,23 @@ export default {
             }
             return hour;
         },
+        computedStyle: function (hour, minute = null) {
+                let isRed = this.mapToHour(hour) === 23;
+
+                if (minute === null && isRed) {
+                    return 'border-r-4 border-red-400';
+                }
+
+                if (isRed && this.mapToQuarter(minute) === '45') {
+                    return 'border-r-4 border-red-400';
+                }
+
+                return 'border-r border-gray-500';
+        }
     },
     computed: {
         ...mapState({
-           start: state => getHours(state.filter.timelineStart)
+            start: state => getHours(state.filter.timelineStart)
         }),
     }
 };

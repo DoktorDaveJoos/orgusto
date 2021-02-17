@@ -16,31 +16,30 @@
 
         <!-- Body -->
         <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row" @click="handleSlotClick(i)">
-            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full cursor-pointer" @click="">
-                <div v-if="isEdgeSlot(i) !== 0" class="m-0 flex flex-row w-full">
-                    <div
-                        v-if="isEdgeSlot(i) === 2"
-                        :class="slotColorAndBorder(i)"
-                        class="m-0 flex flex-row w-full">
-                            <span
-                                class="absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
-                            >{{ getReservation(i).name }}</span>
+
+            <!-- Reservation at slot -->
+            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full cursor-pointer">
+
+                <div class="m-0 flex flex-row w-full" :class="getSlotClass(i)">
+
+                    <div v-if="showInfo(i)" class="flex flex-row items-center pl-6">
+                        <div v-if="getReservation(i).done">
+                            <i class="fas fa-calendar-check text-gray-600"></i>
+                        </div>
+                        <div class="flex flex-col absolute overflow-x-visible" :class="getReservation(i).done ? 'pl-6' : null">
+                            <span class="text-sm font-medium" :class="getReservation(i).done ? 'text-gray-400' : 'text-gray-800'">{{ getReservation(i).name }}</span>
+                            <span v-show="!getReservation(i).done" class="text-gray-600 text-xs">
+                                <i class="fas fa-user-friends"></i>
+                                {{ getReservation(i).persons }} guests</span>
+                        </div>
                     </div>
-                    <div
-                        v-if="isEdgeSlot(i) === 1"
-                        :class="slotColor(i)"
-                        class="m-0 flex flex-row w-full rounded-r-full"
-                    >&nbsp;
-                    </div>
+
                 </div>
-                <div v-else :class="slotColor(i)" class="m-0 flex flex-row w-full">&nbsp;</div>
+
             </div>
 
-
-            <div
-                v-else
-                class="p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer"
-                @click="">
+            <!-- No Reservation at slot -->
+            <div v-else class="p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer">
                 <div class="self-center w-full text-center">
                     <i class="fas fa-plus text-xs"></i>
                 </div>
@@ -62,11 +61,23 @@ const SLOT_CONSTANTS = {
     LAST: 19
 }
 
-const SLOT_IDENT = {
-    EDGE_START: 2,
-    EDGE_END: 1,
-    BETWEEN: 0
-}
+const SlotMapper = new Proxy({
+    19: 'end'
+}, {
+    get(target, args) {
+        return target[args] ? target[args] : null;
+    }
+})
+
+const ClassMapper = new Proxy({
+    19: 'rounded-r-full',
+    'start': 'rounded-l-full',
+    'end': 'rounded-r-full'
+}, {
+    get(target, args) {
+        return target[args] ? target[args] : null;
+    }
+})
 
 export default {
     name: "orgusto-table",
@@ -80,6 +91,17 @@ export default {
 
             return this.getReservation(slot) !== undefined;
         },
+        getSlotClass(slot) {
+
+            const reservation = this.getReservation(slot);
+
+            return [
+                `bg-${reservation.color}-${reservation.done ? '100' : '200'}`,
+                ClassMapper[SlotMapper[slot]],
+                ClassMapper[this.isEdgeSlot(slot)]
+            ];
+
+        },
 
         isEdgeSlot(slot) {
 
@@ -91,16 +113,16 @@ export default {
 
             // check if is start of reservation
             if (isSameMinute(slotTime, reservationStart)) {
-                return SLOT_IDENT.EDGE_START;
+                return 'start'
             }
 
             // check if is end of reservation
             if (isSameMinute(addMinutes(slotTime, 15), reservationEnd)) {
-                return SLOT_IDENT.EDGE_END;
+                return 'end';
             }
 
-            // is normal field
-            return SLOT_IDENT.BETWEEN;
+            return null;
+
         },
 
         getReservation(slot) {
@@ -149,9 +171,14 @@ export default {
                 this.$store.dispatch('setActiveReservation', reservation.id);
                 this.$store.commit('openModal');
             }
+        },
+        showInfo(slot) {
+            return slot === 0 || this.isEdgeSlot(slot) === 'start';
+        },
 
-        }
     },
+
+
     computed: {
         ...mapState({
             table: function (state) {

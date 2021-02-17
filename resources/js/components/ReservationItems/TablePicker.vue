@@ -58,7 +58,7 @@ export default {
         },
         getAsNumber(parent, val) {
             return parseInt(val);
-        }
+        },
     },
     computed: {
         ...mapState({

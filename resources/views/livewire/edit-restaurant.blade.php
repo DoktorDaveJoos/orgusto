@@ -52,37 +52,37 @@
         @endforminput
     </div>
 
-    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">Settings</div>
+{{--    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">Settings</div>--}}
 
-    <div class="pt-4 px-6 text-gray-600 text-sm">
-        <p>
-            The <strong>default seat count</strong> determines with how many seats a new table will be created. You can subsequently adjust the number of seats per table for each table.
-        </p>
+{{--    <div class="pt-4 px-6 text-gray-600 text-sm">--}}
+{{--        <p>--}}
+{{--            The <strong>default seat count</strong> determines with how many seats a new table will be created. You can subsequently adjust the number of seats per table for each table.--}}
+{{--        </p>--}}
 
-        <p class="mt-2">
-            <strong>Bind seat count</strong> specifies that a table cannot be overbooked. This means that you can book a maximum of four people on a table with four seats.
-        </p>
+{{--        <p class="mt-2">--}}
+{{--            <strong>Bind seat count</strong> specifies that a table cannot be overbooked. This means that you can book a maximum of four people on a table with four seats.--}}
+{{--        </p>--}}
 
-    </div>
+{{--    </div>--}}
 
-    <div class="flex flex-col sm:flex-row w-2/3 flex-wrap p-6 ">
-        @forminput(['label' => 'Default seat count'])
-        <input id="default seat count" wire:model.debounce.500ms="default_table_seats" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Number of seats by default" />
-        @error('default_table_seats') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-        @forminput(['label' => 'Bind seat count'])
-        <label for="x123" class="inline-flex items-center cursor-pointer">
-            <span x-data="{ isChecked : @if($this->seat_reservation_bound) true @else false @endif }" class="relative">
-                <span class="block h-8 rounded-full shadow-inner bg-gray-200" style="width: 3.5rem"></span>
-                <span class="pl-1 w-6 h-6" x-bind:class="isChecked ? 'unchecked' : 'checked'">
-                    <input wire:model="seat_reservation_bound" id="x123" type="checkbox" class="absolute opacity-0 w-0 h-0" />
-                    <i class="fas fa-check text-gray-200 transition-opacity duration-300 ease-in-out" style="height: 0.125rem;" x-bind:class="isChecked ? 'opacity-0' : 'opacity-100'"></i>
-                </span>
-            </span>
-        </label>
-        @error('seat_reservation_bound') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-    </div>
+{{--    <div class="flex flex-col sm:flex-row w-2/3 flex-wrap p-6 ">--}}
+{{--        @forminput(['label' => 'Default seat count'])--}}
+{{--        <input id="default seat count" wire:model.debounce.500ms="default_table_seats" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Number of seats by default" />--}}
+{{--        @error('default_table_seats') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror--}}
+{{--        @endforminput--}}
+{{--        @forminput(['label' => 'Bind seat count'])--}}
+{{--        <label for="x123" class="inline-flex items-center cursor-pointer">--}}
+{{--            <span x-data="{ isChecked : @if($this->seat_reservation_bound) true @else false @endif }" class="relative">--}}
+{{--                <span class="block h-8 rounded-full shadow-inner bg-gray-200" style="width: 3.5rem"></span>--}}
+{{--                <span class="pl-1 w-6 h-6" x-bind:class="isChecked ? 'unchecked' : 'checked'">--}}
+{{--                    <input wire:model="seat_reservation_bound" id="x123" type="checkbox" class="absolute opacity-0 w-0 h-0" />--}}
+{{--                    <i class="fas fa-check text-gray-200 transition-opacity duration-300 ease-in-out" style="height: 0.125rem;" x-bind:class="isChecked ? 'opacity-0' : 'opacity-100'"></i>--}}
+{{--                </span>--}}
+{{--            </span>--}}
+{{--        </label>--}}
+{{--        @error('seat_reservation_bound') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror--}}
+{{--        @endforminput--}}
+{{--    </div>--}}
 
     @endinfocard
 

@@ -1,4 +1,4 @@
-import {toDate, startOfDay, endOfDay} from 'date-fns';
+import {isSameDay, getHours, addHours} from 'date-fns';
 
 const Routes = {
     reservations: '/reservations',
@@ -27,7 +27,9 @@ const buildQueryParams = (state, newPageLink = null) => {
         if (state.filter.dateFilter.mode === 'range') {
             const {start, end} = state.filter.dateRange;
             params.from = start.toISOString();
-            params.to = end.toISOString();
+            // TODO fix timezone issue
+            const consolidatedTo = addHours(end, 1);
+            params.to = consolidatedTo.toISOString();
         }
         if (state.filter.dateFilter.mode === 'single') {
             const {singleDate} = state.filter;
@@ -56,6 +58,17 @@ const buildPaginationParams = url => {
 
 export default {
 
+    loadReservationsProxy({dispatch}) {
+
+        const isManage = location.href.includes('/manage');
+        if (isManage) {
+            dispatch('loadScopedReservations');
+        } else {
+            dispatch('loadPaginatedReservations');
+        }
+
+    },
+
     loadPaginatedReservations({commit, state}, paginationLink = null) {
 
         const url = `${Routes.reservations}?${buildQueryParams(state, paginationLink).toString()}`
@@ -76,8 +89,12 @@ export default {
 
     loadScopedReservations({commit, state}) {
 
+        // TODO fix this timezone issue
+        const hours = getHours(state.filter.timelineStart);
+        const date = hours === 0 ? addHours(state.filter.timelineStart, 1) : state.filter.timelineStart;
+
         const query = {
-            date: state.filter.timelineStart.toISOString()
+            date: date.toISOString()
         };
 
         const url = Routes.reservations + '/scoped?' + new URLSearchParams(query).toString();
@@ -122,7 +139,6 @@ export default {
     setActiveReservation({dispatch, commit}, id) {
         commit('setActiveReservation', id);
         dispatch('loadAvailableTables');
-
     },
 
     loadAvailableTables({commit, state}) {
@@ -155,6 +171,11 @@ export default {
                     indicator: 'tables',
                     value: false
                 })
+            })
+            .catch(error => {
+                if (error.status === 401) {
+                    location.reload();
+                }
             })
     },
 
@@ -194,17 +215,12 @@ export default {
             axios.put(Routes.reservations + `/${payload.id}`, payload)
                 .then(() => {
                     // bring in sync
-                    dispatch('loadPaginatedReservations');
+                    dispatch('loadReservationsProxy');
                     // close modal
                     commit('closeModal');
                 })
                 .catch(error => {
-                    if (error.status === 422) {
-                        commit('setErrors', error.response.data.errors);
-                    } else {
-                        commit('setErrors', {tables: error.response.data.message});
-                    }
-
+                    commit('setErrors', error);
                 })
 
         } else {
@@ -212,16 +228,12 @@ export default {
             axios.post(Routes.reservations, payload)
                 .then(() => {
                     // bring in sync
-                    dispatch('loadPaginatedReservations');
+                    dispatch('loadReservationsProxy');
                     // close modal
                     commit('closeModal');
                 })
                 .catch(error => {
-                    if (error.status === 422) {
-                        commit('setErrors', error.response.data.errors);
-                    } else {
-                        commit('setErrors', {tables: error.response.data.message});
-                    }
+                    commit('setErrors', error)
                 })
 
         }
@@ -229,7 +241,7 @@ export default {
     },
 
     closeModal({commit, dispatch}) {
-        dispatch('loadPaginatedReservations');
+        dispatch('loadReservationsProxy')
         commit('closeModal');
         commit('clearErrors');
     },
@@ -271,21 +283,30 @@ export default {
 
     showAllFullFilled({commit, dispatch, state}, val) {
         commit('showAllFullFilled', val);
-        dispatch('loadPaginatedReservations');
+        dispatch('loadReservationsProxy');
     },
 
     activateRangeFilter({commit, dispatch, state}, payload) {
 
         commit('setDateFilterActive', payload);
         commit('setDateRange', payload.dateRange);
-        dispatch('loadPaginatedReservations');
+        dispatch('loadReservationsProxy');
 
     },
 
     activateSingleDateFilter({commit, dispatch, state}, payload) {
         commit('setDateFilterActive', payload);
         commit('setSingleDate', payload.singleDate);
-        dispatch('loadPaginatedReservations');
+        dispatch('loadReservationsProxy');
+    },
+
+    updateScope({commit, state, dispatch}, payload) {
+        if (!isSameDay(payload, state.filter.timelineStart)) {
+            commit('updateScope', payload);
+            dispatch('loadReservationsProxy');
+        } else {
+            commit('updateScope', payload);
+        }
     }
 
 

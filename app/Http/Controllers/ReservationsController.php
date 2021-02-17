@@ -53,7 +53,8 @@ class ReservationsController extends Controller
         return view('reservations');
     }
 
-    public function scoped(Request $request) {
+    public function scoped(Request $request)
+    {
 
         $restaurant = $this->getRestaurant();
 
@@ -104,28 +105,23 @@ class ReservationsController extends Controller
     public function store(CreateReservation $request)
     {
         $newReservation = $request->validated();
-        $this->validateTables($newReservation['start'],
-            $newReservation['duration'], $newReservation['tables']);
+
+        $this->validateTables($newReservation);
 
         $reservation = Reservation::create($newReservation);
         $reservation->tables()->attach($newReservation['tables']);
-        $reservation->save();
 
         return response(null, self::STATUS_CREATED);
     }
 
     public function update(CreateReservation $request, Reservation $reservation)
     {
-        $updatedReservation = $request->validated();
+        $updated = $request->validated();
 
-        $this->validateTables($updatedReservation['start'],
-            $updatedReservation['duration'], $updatedReservation['tables'],
-            $reservation);
+        $this->validateTables($updated, $reservation->id);
 
-        $reservation->update($updatedReservation);
-        $reservation->tables()->sync($updatedReservation['tables']);
-        $reservation->save();
-
+        $reservation->update($updated);
+        $reservation->tables()->sync($updated['tables']);
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -162,36 +158,33 @@ class ReservationsController extends Controller
      * Checks if given tables are available in period (start_date -> start_date + duration).
      * Aborts the request if tables are not available.
      *
-     * @param mixed $start_date - The start date.
-     * @param int $duration - Duration in minutes.
-     * @param array $tables - Array of tables to check.
-     * @param Reservation|null $reservation - The (optional) Reservation to check against.
+     * @param $updated - The reservation.
+     * @param null $existing_id
      */
-    private function validateTables($start_date, int $duration,
-                                    array $tables, Reservation $reservation = null): void
+    private function validateTables($updated, $existing_id = null): void
     {
-        if (!($start_date instanceof Carbon) || !($start_date instanceof CarbonImmutable)) {
-            $start_date = CarbonImmutable::parse($start_date);
-        }
+        $start = CarbonImmutable::parse($updated['start']);
+        $end = $start->addMinutes($updated['duration']);
 
-        $end_date = $start_date
-            ->addMinutes($duration);
+        $tables = Table::whereIn('id', $updated['tables'])->withReservationsBetween($start, $end)->get();
 
-        $tablesAlreadyBooked = Table::where('id', $tables)
-            ->withReservationsBetween($start_date, $end_date)->get();
-
-        $tablesAlreadyBooked->whenNotEmpty(function ($tables) use ($reservation, $end_date, $start_date) {
-            foreach ($tables as $table) {
-                foreach ($table['reservations'] as $item) {
-                    if (!$this->justBumping($item, $start_date, $end_date)) {
-                        if ($reservation === null || $item->id !== $reservation->id) {
-                            abort(self::STATUS_BAD_REQUEST,
-                                'Table number: ' . $table->table_number . ' is blocked by reservation: ' . $item->name);
-                        }
-                    }
-                }
-            }
+        // Remove all bumping reservations
+        $tables->each(function ($table) use ($start, $end) {
+            $table['reservations'] = $table['reservations']->filter(function ($reservation) use ($start, $end) {
+                return !$this->justBumping($reservation, $start, $end);
+            });
         });
+
+        // Check if left reservations are it-self
+        $tables->each(function ($table) use ($updated, $existing_id) {
+            $table['reservations']->each(function ($reservation) use ($updated, $table, $existing_id) {
+                if ($reservation->id !== $existing_id) {
+                    abort(self::STATUS_BAD_REQUEST,
+                        'Table number: ' . $table->table_number . ' is blocked by reservation: ' . $reservation->name);
+                }
+            });
+        });
+
     }
 
     private function justBumping($reservation, $start, $end)
@@ -201,7 +194,7 @@ class ReservationsController extends Controller
             return true;
         }
         // the reservation ends at the start - so its okay:
-        if (Carbon::parse($reservation->start)->addMinutes($reservation->duration)->isSameMinute($start)) {
+        if ($reservation->start->addMinutes($reservation->duration)->isSameMinute($start)) {
             return true;
         }
         return false;
