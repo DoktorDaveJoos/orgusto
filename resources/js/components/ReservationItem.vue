@@ -104,21 +104,28 @@
 
             <hr/>
 
-            <div class="flex justify-end p-4">
-                <button @click="handleClose"
-                        class="p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out">
-                    Cancel
-                </button>
-                <button v-if="reservation.id"
-                        @click="handleDelete"
-                        class="p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out"
-                >Delete
-                </button>
-                <button
-                    @click="handleSubmit"
-                    class="p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out"
-                >{{ this.reservation.id ? 'Update' : 'Save' }}
-                </button>
+            <div class="flex flex-row">
+                <div v-if="reservation.id" class="flex flex-row p-4 items-center">
+                    <input id="fulfilled" name="done" type="checkbox" v-model="reservation.done"
+                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mr-1">
+                    <label for="fulfilled" class="text-gray-700 uppercase text-xs">Fulfilled</label>
+                </div>
+                <div class="flex flex-1 justify-end p-4">
+                    <button @click="handleClose"
+                            class="p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out">
+                        Cancel
+                    </button>
+                    <button v-if="reservation.id"
+                            @click="handleDelete"
+                            class="p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out"
+                    >Delete
+                    </button>
+                    <button
+                        @click="handleSubmit"
+                        class="p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out"
+                    >{{ this.reservation.id ? 'Update' : 'Save' }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -145,7 +152,7 @@ export default {
             this.$store.dispatch('closeModal');
         },
         handleDelete() {
-
+            this.$store.dispatch('deleteReservation', this.reservation.id);
         },
         setValue(value) {
             const data = {

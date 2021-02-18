@@ -123,6 +123,16 @@ export default {
 
     },
 
+    deleteReservation({dispatch, commit}, id) {
+
+        axios.delete(`${Routes.reservations}/${id}`)
+            .then(() => {
+                commit('closeModal');
+                dispatch('loadReservationsProxy');
+            })
+
+    },
+
     createNewReservation({commit, dispatch}, preSelected) {
 
         commit('setNewReservation');

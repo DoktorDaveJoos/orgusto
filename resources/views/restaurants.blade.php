@@ -54,6 +54,47 @@
     @endslot
     @slot('table_body')
         @foreach($restaurants as $restaurant)
+
+
+            <tr class="">
+                <td class="px-6 py-4 whitespace-no-wrap">
+                    <div class="items-center">
+                        <div class="leading-5 font-medium text-gray-900">{{ $restaurant->name }}</div>
+                        <div class="text-xs leading-5 text-gray-500">{{ $restaurant->contact_email }}</div>
+                    </div>
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                    <div
+                        class="text-xs leading-5 text-gray-600">{{ $restaurant->street }} {{ $restaurant->street_number }}</div>
+                    <div
+                        class="text-xs leading-5 text-gray-600">{{ $restaurant->zip_code }} {{ $restaurant->city }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                    <span class="text-xs leading-5 font-semibold text-gray-800">
+                      {{ $restaurant->owner }}
+                    </span>
+                </td>
+                @tablecell {{ $restaurant->pivot->role }} @endtablecell
+                <td class="text-right pl-6 py-4 text-sm leading-5 font-medium">
+                    @if ($restaurant->pivot->role == 'admin')
+                        <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out"
+                           href="{{ route('restaurant.show', ['restaurant' => $restaurant]) }}">Edit</a>
+                    @else
+                        <span class="w-full text-sm px-3 py-2 mx-auto text-gray-400">edit</span>
+                    @endif
+                </td>
+                <td x-data class="flex justify-end py-4 pr-4">
+                    @if($restaurant->pivot->role === 'admin')
+                        <button
+                            x-on:click="$dispatch('open-delete{{ strtolower(str_replace(' ', '', $restaurant->name)) }}')"
+                            class="orgusto-button px-6 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out"
+                        >Remove
+                        </button>
+                    @else
+                        <span class="w-full text-sm px-3 py-2 text-gray-400">Remove</span>
+                    @endif
+                </td>
+            </tr>
             @modal(['event' => 'open-delete'. strtolower(str_replace(" ", "", $restaurant->name)) ])
             @slot('icon')
                 <i class="fas fa-utensils"></i>
@@ -62,6 +103,7 @@
                 id="modal-headline">
                 Delete {{ $restaurant->name }}
             </h3>
+
             <form method="POST" action="/restaurants/{{ $restaurant->id }}/delete" class="w-full -ml-2">
                 @csrf
                 <p class="my-2 text-gray-600 text-sm">
@@ -85,49 +127,14 @@
                     </button>
                 </div>
             </form>
+
             @endmodal
-            <tr class="">
-                <td class="px-6 py-4 whitespace-no-wrap">
-                    <div class="items-center">
-                        <div class="leading-5 font-medium text-gray-900">{{ $restaurant->name }}</div>
-                        <div class="text-xs leading-5 text-gray-500">{{ $restaurant->contact_email }}</div>
-                    </div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap">
-                    <div
-                        class="text-xs leading-5 text-gray-600">{{ $restaurant->street }} {{ $restaurant->street_number }}</div>
-                    <div
-                        class="text-xs leading-5 text-gray-600">{{ $restaurant->zip_code }} {{ $restaurant->city }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap">
-    <span class="text-xs leading-5 font-semibold text-gray-800">
-      {{ $restaurant->owner }}
-    </span>
-                </td>
-                @tablecell {{ $restaurant->pivot->role }} @endtablecell
-                <td class="text-right pl-6 py-4 text-sm leading-5 font-medium">
-                    @if ($restaurant->pivot->role == 'admin')
-                        <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out"
-                           href="{{ route('restaurant.show', ['restaurant' => $restaurant]) }}">Edit</a>
-                    @else
-                        <span class="w-full text-sm px-3 py-2 mx-auto text-gray-400">edit</span>
-                    @endif
-                </td>
-                <td x-data class="flex justify-end py-4 pr-4">
-                    @if($restaurant->pivot->role === 'admin')
-                        <button
-                            x-on:click="$dispatch('open-delete{{ strtolower(str_replace(' ', '', $restaurant->name)) }}')"
-                            class="orgusto-button px-6 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out"
-                        >Remove</button>
-                    @else
-                        <span class="w-full text-sm px-3 py-2 text-gray-400">Remove</span>
-                    @endif
-                </td>
-            </tr>
         @endforeach
     @endslot
     @endtable
     @endinfocard
+
+
 
     @modal(['event' => 'open-add'])
     @slot('icon')

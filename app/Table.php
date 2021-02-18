@@ -5,12 +5,14 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Table extends Model
 {
 
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'seats', 'table_number', 'description', 'room'
@@ -74,7 +76,7 @@ class Table extends Model
             })
 
             // aggregate reservations
-            ->with(["reservations" => function($query) use ($from, $to) {
+            ->with(["reservations" => function ($query) use ($from, $to) {
                 $query->whereBetween('start', [$from, $to])
                     ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
             }]);

@@ -21,6 +21,7 @@ class CreateTablesTable extends Migration
             $table->integer('seats');
             $table->text('description')->nullable();
             $table->string('room')->nullable();
+            $table->softDeletes();
 
             $table->foreign('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');
         });

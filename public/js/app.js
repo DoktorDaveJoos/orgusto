@@ -3233,6 +3233,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3251,7 +3258,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     handleClose: function handleClose() {
       this.$store.dispatch('closeModal');
     },
-    handleDelete: function handleDelete() {},
+    handleDelete: function handleDelete() {
+      this.$store.dispatch('deleteReservation', this.reservation.id);
+    },
     setValue: function setValue(value) {
       var data = {
         id: this.reservation.id,
@@ -73470,43 +73479,105 @@ var render = function() {
           _vm._v(" "),
           _c("hr"),
           _vm._v(" "),
-          _c("div", { staticClass: "flex justify-end p-4" }, [
-            _c(
-              "button",
-              {
-                staticClass:
-                  "p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out",
-                on: { click: _vm.handleClose }
-              },
-              [_vm._v("\n                Cancel\n            ")]
-            ),
-            _vm._v(" "),
+          _c("div", { staticClass: "flex flex-row" }, [
             _vm.reservation.id
-              ? _c(
-                  "button",
-                  {
+              ? _c("div", { staticClass: "flex flex-row p-4 items-center" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.reservation.done,
+                        expression: "reservation.done"
+                      }
+                    ],
                     staticClass:
-                      "p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out",
-                    on: { click: _vm.handleDelete }
-                  },
-                  [_vm._v("Delete\n            ")]
-                )
+                      "focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mr-1",
+                    attrs: { id: "fulfilled", name: "done", type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.reservation.done)
+                        ? _vm._i(_vm.reservation.done, null) > -1
+                        : _vm.reservation.done
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.reservation.done,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.reservation,
+                                "done",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.reservation,
+                                "done",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.reservation, "done", $$c)
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "text-gray-700 uppercase text-xs",
+                      attrs: { for: "fulfilled" }
+                    },
+                    [_vm._v("Fulfilled")]
+                  )
+                ])
               : _vm._e(),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass:
-                  "p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out",
-                on: { click: _vm.handleSubmit }
-              },
-              [
-                _vm._v(
-                  _vm._s(this.reservation.id ? "Update" : "Save") +
-                    "\n            "
-                )
-              ]
-            )
+            _c("div", { staticClass: "flex flex-1 justify-end p-4" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out",
+                  on: { click: _vm.handleClose }
+                },
+                [_vm._v("\n                    Cancel\n                ")]
+              ),
+              _vm._v(" "),
+              _vm.reservation.id
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out",
+                      on: { click: _vm.handleDelete }
+                    },
+                    [_vm._v("Delete\n                ")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out",
+                  on: { click: _vm.handleSubmit }
+                },
+                [
+                  _vm._v(
+                    _vm._s(this.reservation.id ? "Update" : "Save") +
+                      "\n                "
+                  )
+                ]
+              )
+            ])
           ])
         ],
         1
@@ -97908,9 +97979,17 @@ var buildPaginationParams = function buildPaginationParams(url) {
       commit('setTables', response.data.data);
     });
   },
-  createNewReservation: function createNewReservation(_ref6, preSelected) {
-    var commit = _ref6.commit,
-        dispatch = _ref6.dispatch;
+  deleteReservation: function deleteReservation(_ref6, id) {
+    var dispatch = _ref6.dispatch,
+        commit = _ref6.commit;
+    axios["delete"]("".concat(Routes.reservations, "/").concat(id)).then(function () {
+      commit('closeModal');
+      dispatch('loadReservationsProxy');
+    });
+  },
+  createNewReservation: function createNewReservation(_ref7, preSelected) {
+    var commit = _ref7.commit,
+        dispatch = _ref7.dispatch;
     commit('setNewReservation');
 
     if (preSelected) {
@@ -97922,15 +98001,15 @@ var buildPaginationParams = function buildPaginationParams(url) {
     dispatch('loadAvailableTables');
     commit('openModal');
   },
-  setActiveReservation: function setActiveReservation(_ref7, id) {
-    var dispatch = _ref7.dispatch,
-        commit = _ref7.commit;
+  setActiveReservation: function setActiveReservation(_ref8, id) {
+    var dispatch = _ref8.dispatch,
+        commit = _ref8.commit;
     commit('setActiveReservation', id);
     dispatch('loadAvailableTables');
   },
-  loadAvailableTables: function loadAvailableTables(_ref8) {
-    var commit = _ref8.commit,
-        state = _ref8.state;
+  loadAvailableTables: function loadAvailableTables(_ref9) {
+    var commit = _ref9.commit,
+        state = _ref9.state;
     // remove all tables
     commit('setAvailableTables', []);
     commit('setLoadingState', {
@@ -97956,9 +98035,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       }
     });
   },
-  updateReservation: function updateReservation(_ref9, data) {
-    var commit = _ref9.commit,
-        dispatch = _ref9.dispatch;
+  updateReservation: function updateReservation(_ref10, data) {
+    var commit = _ref10.commit,
+        dispatch = _ref10.dispatch;
     // mutate state
     commit('updateReservation', data); // getting tables if filter data is changed
 
@@ -97969,12 +98048,12 @@ var buildPaginationParams = function buildPaginationParams(url) {
       dispatch('loadAvailableTables');
     }
   },
-  saveReservation: function saveReservation(_ref10, reservation) {
+  saveReservation: function saveReservation(_ref11, reservation) {
     var _reservation$user;
 
-    var commit = _ref10.commit,
-        dispatch = _ref10.dispatch,
-        state = _ref10.state;
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch,
+        state = _ref11.state;
     commit('clearErrors');
 
     var payload = _objectSpread({}, reservation); // remove user object
@@ -98008,15 +98087,15 @@ var buildPaginationParams = function buildPaginationParams(url) {
       });
     }
   },
-  closeModal: function closeModal(_ref11) {
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch;
+  closeModal: function closeModal(_ref12) {
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch;
     dispatch('loadReservationsProxy');
     commit('closeModal');
     commit('clearErrors');
   },
-  loadRestaurant: function loadRestaurant(_ref12) {
-    var commit = _ref12.commit;
+  loadRestaurant: function loadRestaurant(_ref13) {
+    var commit = _ref13.commit;
     axios.get(Routes.restaurants).then(function (response) {
       var data = response.data;
       axios.get(Routes.restaurants + "/".concat(data[0].id)).then(function (response) {
@@ -98024,10 +98103,10 @@ var buildPaginationParams = function buildPaginationParams(url) {
       });
     });
   },
-  markFulfilled: function markFulfilled(_ref13, data) {
-    var commit = _ref13.commit,
-        state = _ref13.state,
-        dispatch = _ref13.dispatch;
+  markFulfilled: function markFulfilled(_ref14, data) {
+    var commit = _ref14.commit,
+        state = _ref14.state,
+        dispatch = _ref14.dispatch;
     var consolidatedData = {
       id: data.id,
       data: {
@@ -98042,33 +98121,33 @@ var buildPaginationParams = function buildPaginationParams(url) {
     dispatch('saveReservation', res);
     commit('setActiveReservation', null);
   },
-  showAllFullFilled: function showAllFullFilled(_ref14, val) {
-    var commit = _ref14.commit,
-        dispatch = _ref14.dispatch,
-        state = _ref14.state;
-    commit('showAllFullFilled', val);
-    dispatch('loadReservationsProxy');
-  },
-  activateRangeFilter: function activateRangeFilter(_ref15, payload) {
+  showAllFullFilled: function showAllFullFilled(_ref15, val) {
     var commit = _ref15.commit,
         dispatch = _ref15.dispatch,
         state = _ref15.state;
-    commit('setDateFilterActive', payload);
-    commit('setDateRange', payload.dateRange);
+    commit('showAllFullFilled', val);
     dispatch('loadReservationsProxy');
   },
-  activateSingleDateFilter: function activateSingleDateFilter(_ref16, payload) {
+  activateRangeFilter: function activateRangeFilter(_ref16, payload) {
     var commit = _ref16.commit,
         dispatch = _ref16.dispatch,
         state = _ref16.state;
     commit('setDateFilterActive', payload);
+    commit('setDateRange', payload.dateRange);
+    dispatch('loadReservationsProxy');
+  },
+  activateSingleDateFilter: function activateSingleDateFilter(_ref17, payload) {
+    var commit = _ref17.commit,
+        dispatch = _ref17.dispatch,
+        state = _ref17.state;
+    commit('setDateFilterActive', payload);
     commit('setSingleDate', payload.singleDate);
     dispatch('loadReservationsProxy');
   },
-  updateScope: function updateScope(_ref17, payload) {
-    var commit = _ref17.commit,
-        state = _ref17.state,
-        dispatch = _ref17.dispatch;
+  updateScope: function updateScope(_ref18, payload) {
+    var commit = _ref18.commit,
+        state = _ref18.state,
+        dispatch = _ref18.dispatch;
 
     if (!Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["isSameDay"])(payload, state.filter.timelineStart)) {
       commit('updateScope', payload);
