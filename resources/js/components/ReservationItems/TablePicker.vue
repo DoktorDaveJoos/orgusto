@@ -2,7 +2,7 @@
     <div class="flex flex-col p-4">
     <span
         class="uppercase font-medium text-xs text-gray-800 leading-tight"
-    >Free tables matching your reservation</span>
+    >{{ __('common.free_tables') }}</span>
         <div class="flex flex-wrap">
             <div v-if="hasTableError" class="text-red-400 flex items-center py-2 pr-4 leading-tight">
                 <i class="fas fa-times"></i>
@@ -18,16 +18,16 @@
             <div v-if="isLoading" class="flex flex-row my-2 items-center my-2 mr-2 text-gray-600 text-xs italic">
                 <div class="lds-dual-ring"></div>
                 <div class="ml-4 animate-pulse">
-                    Getting available tables ...
+                    {{ __('common.getting_tables') }}
                 </div>
             </div>
             <div v-if="!isLoading && tables.length === 0" class="my-2 mr-2 text-gray-600 text-xs italic">
-                No tables available for this reservation.
+                {{ __('common.no_tables') }}
             </div>
         </div>
         <div v-if="hasTableError">
             <span class="my-2 mr-2 text-red-600 text-xs italic">
-                {{ errors.tables }}
+                {{ errors.tables instanceof Array ? errors.tables[0] : errors.tables }}
             </span>
         </div>
     </div>

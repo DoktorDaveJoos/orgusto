@@ -5,11 +5,11 @@
             class="w-1/6 rounded-l-full border-r border-gray-300 m-0 p-2 bg-gray-200 text-gray-600 flex flex-row"
         >
             <div class="w-1/2 text-center flex flex-col">
-                <span class="uppercase leading-tight text-xs">Table</span>
+                <span class="uppercase leading-tight text-xs">{{ __('common.Tables') }}</span>
                 <span class="w-full text-center">{{ table.table_number }}</span>
             </div>
             <div class="w-1/2 text-center flex flex-col">
-                <span class="uppercase leading-tight text-xs">Seats</span>
+                <span class="uppercase leading-tight text-xs">{{ __('common.seats') }}</span>
                 <span class="w-full text-center">{{ table.seats }}</span>
             </div>
         </div>
@@ -30,7 +30,7 @@
                             <span class="text-sm font-medium" :class="getReservation(i).done ? 'text-gray-400' : 'text-gray-800'">{{ getReservation(i).name }}</span>
                             <span v-show="!getReservation(i).done" class="text-gray-600 text-xs">
                                 <i class="fas fa-user-friends"></i>
-                                {{ getReservation(i).persons }} guests</span>
+                                {{ getReservation(i).persons }} {{ __('common.guests') }}</span>
                         </div>
                     </div>
 

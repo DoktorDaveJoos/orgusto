@@ -11,10 +11,10 @@
             @guest
                 <div class="flex flex-1 justify-end">
                     <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 mr-6"
-                       href="{{ route('login') }}">{{ __('Login') }}</a>
+                       href="{{ route('login') }}">{{ __('auth.login') }}</a>
                     @if (Route::has('register'))
                         <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700"
-                           href="{{ route('register') }}">{{ __('Register') }}</a>
+                           href="{{ route('register') }}">{{ __('auth.register') }}</a>
                 </div>
             @endif
 
@@ -26,17 +26,17 @@
                         <a href="{{ route('reservations.show') }}"
                            class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('reservations*') ? 'font-semibold text-gray-800' : '' }}">
                             <i class="text-lg text-center far fa-calendar"></i>
-                            <span class="text-xs pt-1">{{ __('Reservations') }}</span>
+                            <span class="text-xs pt-1">{{ __('nav.reservations') }}</span>
                         </a>
                         <a href="{{ route('manage.show') }}"
                            class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('manage*') ? 'font-semibold text-gray-800' : '' }}">
                             <i class="text-lg text-center fa fa-stream"></i>
-                            <span class="text-xs pt-1">{{ __('Tables') }}</span>
+                            <span class="text-xs pt-1">{{ __('nav.tables') }}</span>
                         </a>
                         <a href="{{ route('restaurants.show') }}"
                            class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('restaurant*') ? 'font-semibold text-gray-800' : '' }}">
                             <i class="text-lg text-center fas fa-store-alt"></i>
-                            <span class="text-xs pt-1">{{ __('Restaurants') }}</span>
+                            <span class="text-xs pt-1">{{ __('nav.restaurants') }}</span>
                         </a>
 
 

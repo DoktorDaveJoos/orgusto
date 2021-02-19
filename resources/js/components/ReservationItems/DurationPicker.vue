@@ -19,7 +19,7 @@
                     <div class="flex justify-center mb-1">
             <span
                 class="text-center text-xs text-gray-500 uppercase font-light leading-tight"
-            >Duration</span>
+            >{{ __('common.duration') }}</span>
                     </div>
                     <hr/>
                     <div class="flex flex-col text-gray-800 p-1">
@@ -36,7 +36,7 @@
                 <select-button
                     slot="reference"
                     :selected="() => moreIsActive"
-                    :value="moreIsActive ? getReadableDuration(this.duration) : 'More'"
+                    :value="moreIsActive ? getReadableDuration(this.duration) : __('common.more')"
                     icon="fas fa-stopwatch"
                 ></select-button>
             </popper>

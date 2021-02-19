@@ -26,7 +26,7 @@
                 :error="errorContainsKey('persons')"
             ></person-picker>
             <div v-if="toManyGuests" class="ml-4 text-xs italic text-red-600">
-                To many guests for given tables.
+                {{ __('common.to_many_guests') }}
             </div>
             <duration-picker
                 :duration="reservation.duration"
@@ -44,9 +44,9 @@
 
                 <!--suppress HtmlFormInputWithoutLabel -->
                 <input
-                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4"
+                    class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
                     :class="reservation.name ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Name of the guest / group"
+                    :placeholder="__('common.name_guest')"
                     type="text"
                     v-model="reservation.name"
                 />
@@ -61,7 +61,7 @@
                 <input
                     class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
                     :class="reservation.notice ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Some additional information ..."
+                    :placeholder="__('common.additional_info')"
                     type="text"
                     v-model="reservation.notice"
                 />
@@ -90,7 +90,7 @@
                 <input
                     class="h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg"
                     :class="reservation.phone_number ? 'border-indigo-400 text-gray-800' : ''"
-                    placeholder="Phone number"
+                    :placeholder="__('common.phone_number')"
                     v-model="reservation.phone_number"
                 />
             </div>
@@ -108,22 +108,22 @@
                 <div v-if="reservation.id" class="flex flex-row p-4 items-center">
                     <input id="fulfilled" name="done" type="checkbox" v-model="reservation.done"
                            class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mr-1">
-                    <label for="fulfilled" class="text-gray-700 uppercase text-xs">Fulfilled</label>
+                    <label for="fulfilled" class="text-gray-700 uppercase text-xs">{{ __('common.fulfilled') }}</label>
                 </div>
                 <div class="flex flex-1 justify-end p-4">
                     <button @click="handleClose"
                             class="p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out">
-                        Cancel
+                        {{ __('common.cancel') }}
                     </button>
                     <button v-if="reservation.id"
                             @click="handleDelete"
                             class="p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out"
-                    >Delete
+                    >{{ __('common.delete') }}
                     </button>
                     <button
                         @click="handleSubmit"
                         class="p-2 px-4 rounded-lg bg-indigo-600 border-2 border-indigo-600 leading-tight text-sm text-gray-100 hover:bg-white hover:text-indigo-600 transition-colors duration-150 ease-in-out"
-                    >{{ this.reservation.id ? 'Update' : 'Save' }}
+                    >{{ this.reservation.id ? __('common.update') : __('common.save') }}
                     </button>
                 </div>
             </div>

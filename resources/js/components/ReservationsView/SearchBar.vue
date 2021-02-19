@@ -2,7 +2,7 @@
   <div class="relative text-gray-600 w-1/3">
     <input v-model="query"
            class="border-2 w-full border-gray-300 bg-white h-full px-5 pr-16 rounded-lg text-sm focus:outline-none"
-           type="search" name="search" placeholder="Search">
+           type="search" name="search" :placeholder="__('common.search')">
     <button type="submit" class="absolute right-0 top-0 mt-5 mr-4">
       <svg class="text-gray-600 -mt-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"

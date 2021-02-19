@@ -4,9 +4,10 @@
             <div v-if="error" class="text-red-400 flex items-center leading-tight">
                 <i class="fas fa-times"></i>
             </div>
-            <select-button value="today" :handle="setDate" :selected="isSelected"></select-button>
-            <select-button value="tomorrow" :handle="setDate" :selected="isSelected"></select-button>
-            <select-button value="day after tomorrow" :handle="setDate" :selected="isSelected"></select-button>
+            <select-button :value="__('common.today')" :handle="setDate" :selected="isSelected"></select-button>
+            <select-button :value="__('common.tomorrow')" :handle="setDate" :selected="isSelected"></select-button>
+            <select-button :value="__('common.day_after_tomorrow')" :handle="setDate"
+                           :selected="isSelected"></select-button>
         </div>
         <div>
             <v-date-picker v-model="duplicatedDate" :popover="{ visibility: 'click' }">
@@ -35,6 +36,7 @@ import {
     differenceInDays
 } from 'date-fns';
 
+
 export default {
     name: "DatePicker",
     props: ["date", "error"],
@@ -42,9 +44,9 @@ export default {
         return {
             duplicatedDate: parseISO(this.date),
             mappings: {
-                "today": () => startOfToday(),
-                "tomorrow": () => startOfTomorrow(),
-                "day after tomorrow": () => addDays(startOfTomorrow(), 1)
+                [this.__('common.today')]: () => startOfToday(),
+                [this.__('common.tomorrow')]: () => startOfTomorrow(),
+                [this.__('common.day_after_tomorrow')]: () => addDays(startOfTomorrow(), 1)
             }
         }
     },
@@ -72,17 +74,17 @@ export default {
             return isSameDay(this.mappings[day](), parseISO(this.date));
         },
         moreIsSelected() {
-            if (parseISO(this.date) < this.mappings["today"]()) {
+            if (parseISO(this.date) < this.mappings[this.__('common.today')]()) {
                 return true;
             } else {
-                return differenceInDays(parseISO(this.date), this.mappings["today"]()) > 2;
+                return differenceInDays(parseISO(this.date), this.mappings[this.__('common.today')]()) > 2;
             }
         },
         getReadableDate() {
             if (this.moreIsSelected()) {
                 return parseISO(this.date).toLocaleDateString();
             } else {
-                return 'Choose Date';
+                return this.__('common.choose_date');
             }
         }
     },

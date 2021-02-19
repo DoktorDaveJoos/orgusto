@@ -3365,6 +3365,9 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
 //
 //
 //
@@ -3392,19 +3395,17 @@ __webpack_require__.r(__webpack_exports__);
   name: "DatePicker",
   props: ["date", "error"],
   data: function data() {
+    var _mappings;
+
     return {
       duplicatedDate: Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date),
-      mappings: {
-        "today": function today() {
-          return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["startOfToday"])();
-        },
-        "tomorrow": function tomorrow() {
-          return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["startOfTomorrow"])();
-        },
-        "day after tomorrow": function dayAfterTomorrow() {
-          return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addDays"])(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["startOfTomorrow"])(), 1);
-        }
-      }
+      mappings: (_mappings = {}, _defineProperty(_mappings, this.__('common.today'), function () {
+        return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["startOfToday"])();
+      }), _defineProperty(_mappings, this.__('common.tomorrow'), function () {
+        return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["startOfTomorrow"])();
+      }), _defineProperty(_mappings, this.__('common.day_after_tomorrow'), function () {
+        return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addDays"])(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["startOfTomorrow"])(), 1);
+      }), _mappings)
     };
   },
   methods: {
@@ -3426,17 +3427,17 @@ __webpack_require__.r(__webpack_exports__);
       return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["isSameDay"])(this.mappings[day](), Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date));
     },
     moreIsSelected: function moreIsSelected() {
-      if (Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date) < this.mappings["today"]()) {
+      if (Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date) < this.mappings[this.__('common.today')]()) {
         return true;
       } else {
-        return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["differenceInDays"])(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date), this.mappings["today"]()) > 2;
+        return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["differenceInDays"])(Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date), this.mappings[this.__('common.today')]()) > 2;
       }
     },
     getReadableDate: function getReadableDate() {
       if (this.moreIsSelected()) {
         return Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["parseISO"])(this.date).toLocaleDateString();
       } else {
-        return 'Choose Date';
+        return this.__('common.choose_date');
       }
     }
   },
@@ -4468,21 +4469,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4492,23 +4478,8 @@ __webpack_require__.r(__webpack_exports__);
     handle: function handle(link) {
       this.$store.dispatch('loadPaginatedReservations', link);
     },
-    isPrevious: function isPrevious(label) {
-      return label.toString().includes('Previous');
-    },
-    isNext: function isNext(label) {
-      return label.toString().includes('Next');
-    },
     getProperClass: function getProperClass(link) {
       var isActive = link.active ? ' text-indigo-600 bg-indigo-100' : "";
-
-      if (this.isPrevious(link.label)) {
-        return 'rounded-l-md px-2' + isActive;
-      }
-
-      if (this.isNext(link.label)) {
-        return 'rounded-r-md px-2' + isActive;
-      }
-
       return 'px-4' + isActive;
     }
   },
@@ -33377,6 +33348,794 @@ if ( typeof noGlobal === "undefined" ) {
 
 return jQuery;
 } );
+
+
+/***/ }),
+
+/***/ "./node_modules/lang.js/src/lang.js":
+/*!******************************************!*\
+  !*** ./node_modules/lang.js/src/lang.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ *  Lang.js for Laravel localization in JavaScript.
+ *
+ *  @version 1.1.12
+ *  @license MIT https://github.com/rmariuzzo/Lang.js/blob/master/LICENSE
+ *  @site    https://github.com/rmariuzzo/Lang.js
+ *  @author  Rubens Mariuzzo <rubens@mariuzzo.com>
+ */
+
+(function(root, factory) {
+    'use strict';
+
+    if (true) {
+        // AMD support.
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+
+}(this, function() {
+    'use strict';
+
+    function inferLocale() {
+        if (typeof document !== 'undefined' && document.documentElement) {
+            return document.documentElement.lang;
+        }
+    };
+
+    function convertNumber(str) {
+        if (str === '-Inf') {
+            return -Infinity;
+        } else if (str === '+Inf' || str === 'Inf' || str === '*') {
+            return Infinity;
+        }
+        return parseInt(str, 10);
+    }
+
+    // Derived from: https://github.com/symfony/translation/blob/460390765eb7bb9338a4a323b8a4e815a47541ba/Interval.php
+    var intervalRegexp = /^({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])$/;
+    var anyIntervalRegexp = /({\s*(\-?\d+(\.\d+)?[\s*,\s*\-?\d+(\.\d+)?]*)\s*})|([\[\]])\s*(-Inf|\*|\-?\d+(\.\d+)?)\s*,\s*(\+?Inf|\*|\-?\d+(\.\d+)?)\s*([\[\]])/;
+
+    // Default options //
+
+    var defaults = {
+        locale: 'en'/** The default locale if not set. */
+    };
+
+    // Constructor //
+
+    var Lang = function(options) {
+        options = options || {};
+        this.locale = options.locale || inferLocale() || defaults.locale;
+        this.fallback = options.fallback;
+        this.messages = options.messages;
+    };
+
+    // Methods //
+
+    /**
+     * Set messages source.
+     *
+     * @param messages {object} The messages source.
+     *
+     * @return void
+     */
+    Lang.prototype.setMessages = function(messages) {
+        this.messages = messages;
+    };
+
+    /**
+     * Get the current locale.
+     *
+     * @return {string} The current locale.
+     */
+    Lang.prototype.getLocale = function() {
+        return this.locale || this.fallback;
+    };
+
+    /**
+     * Set the current locale.
+     *
+     * @param locale {string} The locale to set.
+     *
+     * @return void
+     */
+    Lang.prototype.setLocale = function(locale) {
+        this.locale = locale;
+    };
+
+    /**
+     * Get the fallback locale being used.
+     *
+     * @return void
+     */
+    Lang.prototype.getFallback = function() {
+        return this.fallback;
+    };
+
+    /**
+     * Set the fallback locale being used.
+     *
+     * @param fallback {string} The fallback locale.
+     *
+     * @return void
+     */
+    Lang.prototype.setFallback = function(fallback) {
+        this.fallback = fallback;
+    };
+
+    /**
+     * This method act as an alias to get() method.
+     *
+     * @param key {string} The key of the message.
+     * @param locale {string} The locale of the message
+     *
+     * @return {boolean} true if the given key is defined on the messages source, otherwise false.
+     */
+    Lang.prototype.has = function(key, locale) {
+        if (typeof key !== 'string' || !this.messages) {
+            return false;
+        }
+
+        return this._getMessage(key, locale) !== null;
+    };
+
+    /**
+     * Get a translation message.
+     *
+     * @param key {string} The key of the message.
+     * @param replacements {object} The replacements to be done in the message.
+     * @param locale {string} The locale to use, if not passed use the default locale.
+     *
+     * @return {string} The translation message, if not found the given key.
+     */
+    Lang.prototype.get = function(key, replacements, locale) {
+        if (!this.has(key, locale)) {
+            return key;
+        }
+
+        var message = this._getMessage(key, locale);
+        if (message === null) {
+            return key;
+        }
+
+        if (replacements) {
+            message = this._applyReplacements(message, replacements);
+        }
+
+        return message;
+    };
+
+    /**
+     * This method act as an alias to get() method.
+     *
+     * @param key {string} The key of the message.
+     * @param replacements {object} The replacements to be done in the message.
+     *
+     * @return {string} The translation message, if not found the given key.
+     */
+    Lang.prototype.trans = function(key, replacements) {
+        return this.get(key, replacements);
+    };
+
+    /**
+     * Gets the plural or singular form of the message specified based on an integer value.
+     *
+     * @param key {string} The key of the message.
+     * @param count {number} The number of elements.
+     * @param replacements {object} The replacements to be done in the message.
+     * @param locale {string} The locale to use, if not passed use the default locale.
+     *
+     * @return {string} The translation message according to an integer value.
+     */
+    Lang.prototype.choice = function(key, number, replacements, locale) {
+        // Set default values for parameters replace and locale
+        replacements = typeof replacements !== 'undefined'
+            ? replacements
+            : {};
+
+        // The count must be replaced if found in the message
+        replacements.count = number;
+
+        // Message to get the plural or singular
+        var message = this.get(key, replacements, locale);
+
+        // Check if message is not null or undefined
+        if (message === null || message === undefined) {
+            return message;
+        }
+
+        // Separate the plural from the singular, if any
+        var messageParts = message.split('|');
+
+        // Get the explicit rules, If any
+        var explicitRules = [];
+
+        for (var i = 0; i < messageParts.length; i++) {
+            messageParts[i] = messageParts[i].trim();
+
+            if (anyIntervalRegexp.test(messageParts[i])) {
+                var messageSpaceSplit = messageParts[i].split(/\s/);
+                explicitRules.push(messageSpaceSplit.shift());
+                messageParts[i] = messageSpaceSplit.join(' ');
+            }
+        }
+
+        // Check if there's only one message
+        if (messageParts.length === 1) {
+            // Nothing to do here
+            return message;
+        }
+
+        // Check the explicit rules
+        for (var j = 0; j < explicitRules.length; j++) {
+            if (this._testInterval(number, explicitRules[j])) {
+                return messageParts[j];
+            }
+        }
+
+        locale = locale || this._getLocale(key);
+        var pluralForm = this._getPluralForm(number, locale);
+
+        return messageParts[pluralForm];
+    };
+
+    /**
+     * This method act as an alias to choice() method.
+     *
+     * @param key {string} The key of the message.
+     * @param count {number} The number of elements.
+     * @param replacements {object} The replacements to be done in the message.
+     *
+     * @return {string} The translation message according to an integer value.
+     */
+    Lang.prototype.transChoice = function(key, count, replacements) {
+        return this.choice(key, count, replacements);
+    };
+
+    /**
+     * Parse a message key into components.
+     *
+     * @param key {string} The message key to parse.
+     * @param key {string} The message locale to parse
+     * @return {object} A key object with source and entries properties.
+     */
+    Lang.prototype._parseKey = function(key, locale) {
+        if (typeof key !== 'string' || typeof locale !== 'string') {
+            return null;
+        }
+
+        var segments = key.split('.');
+        var source = segments[0].replace(/\//g, '.');
+
+        return {
+            source: locale + '.' + source,
+            sourceFallback: this.getFallback() + '.' + source,
+            entries: segments.slice(1)
+        };
+    };
+
+    /**
+     * Returns a translation message. Use `Lang.get()` method instead, this methods assumes the key exists.
+     *
+     * @param key {string} The key of the message.
+     * @param locale {string} The locale of the message
+     *
+     * @return {string} The translation message for the given key.
+     */
+    Lang.prototype._getMessage = function(key, locale) {
+        locale = locale || this.getLocale();
+        
+        key = this._parseKey(key, locale);
+
+        // Ensure message source exists.
+        if (this.messages[key.source] === undefined && this.messages[key.sourceFallback] === undefined) {
+            return null;
+        }
+
+        // Get message from default locale.
+        var message = this.messages[key.source];
+        var entries = key.entries.slice();
+        var subKey = entries.join('.');
+        message = message !== undefined ? this._getValueInKey(message, subKey) : undefined;
+
+
+        // Get message from fallback locale.
+        if (typeof message !== 'string' && this.messages[key.sourceFallback]) {
+            message = this.messages[key.sourceFallback];
+            entries = key.entries.slice();
+            subKey = '';
+            while (entries.length && message !== undefined) {
+                var subKey = !subKey ? entries.shift() : subKey.concat('.', entries.shift());
+                if (message[subKey]) {
+                    message = message[subKey]
+                    subKey = '';
+                }
+            }
+        }
+
+        if (typeof message !== 'string') {
+            return null;
+        }
+
+        return message;
+    };
+
+    Lang.prototype._getValueInKey = function(obj, str) {
+        // If the full key exists just return the value
+        if (typeof obj[str] === 'string') {
+            return obj[str]
+        }
+
+        str = str.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+        str = str.replace(/^\./, '');           // strip a leading dot
+
+        var parts = str.split('.');
+
+        for (var i = 0, n = parts.length; i < n; ++i) {
+            var currentKey = parts.slice(0, i + 1).join('.');
+            var restOfTheKey = parts.slice(i + 1, parts.length).join('.')
+            
+            if (obj[currentKey]) {
+                return this._getValueInKey(obj[currentKey], restOfTheKey)
+            }
+        }
+
+        return obj;
+    };
+
+    /**
+     * Return the locale to be used between default and fallback.
+     * @param {String} key
+     * @return {String}
+     */
+    Lang.prototype._getLocale = function(key) {
+        key = this._parseKey(key, this.locale)
+        if (this.messages[key.source]) {
+            return this.locale;
+        }
+        if (this.messages[key.sourceFallback]) {
+            return this.fallback;
+        }
+        return null;
+    };
+
+    /**
+     * Find a message in a translation tree using both dotted keys and regular ones
+     *
+     * @param pathSegments {array} An array of path segments such as ['family', 'father']
+     * @param tree {object} The translation tree
+     */
+    Lang.prototype._findMessageInTree = function(pathSegments, tree) {
+        while (pathSegments.length && tree !== undefined) {
+            var dottedKey = pathSegments.join('.');
+            if (tree[dottedKey]) {
+                tree = tree[dottedKey];
+                break;
+            }
+
+            tree = tree[pathSegments.shift()]
+        }
+
+        return tree;
+    };
+
+    /**
+     * Sort replacement keys by length in descending order.
+     *
+     * @param a {string} Replacement key
+     * @param b {string} Sibling replacement key
+     * @return {number}
+     * @private
+     */
+    Lang.prototype._sortReplacementKeys = function(a, b) {
+        return b.length - a.length;
+    };
+
+    /**
+     * Apply replacements to a string message containing placeholders.
+     *
+     * @param message {string} The text message.
+     * @param replacements {object} The replacements to be done in the message.
+     *
+     * @return {string} The string message with replacements applied.
+     */
+    Lang.prototype._applyReplacements = function(message, replacements) {
+        var keys = Object.keys(replacements).sort(this._sortReplacementKeys);
+
+        keys.forEach(function(replace) {
+            message = message.replace(new RegExp(':' + replace, 'gi'), function (match) {
+                var value = replacements[replace];
+
+                // Capitalize all characters.
+                var allCaps = match === match.toUpperCase();
+                if (allCaps) {
+                    return value.toUpperCase();
+                }
+
+                // Capitalize first letter.
+                var firstCap = match === match.replace(/\w/i, function(letter) {
+                    return letter.toUpperCase();
+                });
+                if (firstCap) {
+                    return value.charAt(0).toUpperCase() + value.slice(1);
+                }
+
+                return value;
+            })
+        });
+        return message;
+    };
+
+    /**
+     * Checks if the given `count` is within the interval defined by the {string} `interval`
+     *
+     * @param  count     {int}    The amount of items.
+     * @param  interval  {string} The interval to be compared with the count.
+     * @return {boolean}          Returns true if count is within interval; false otherwise.
+     */
+    Lang.prototype._testInterval = function(count, interval) {
+        /**
+         * From the Symfony\Component\Translation\Interval Docs
+         *
+         * Tests if a given number belongs to a given math interval.
+         *
+         * An interval can represent a finite set of numbers:
+         *
+         *  {1,2,3,4}
+         *
+         * An interval can represent numbers between two numbers:
+         *
+         *  [1, +Inf]
+         *  ]-1,2[
+         *
+         * The left delimiter can be [ (inclusive) or ] (exclusive).
+         * The right delimiter can be [ (exclusive) or ] (inclusive).
+         * Beside numbers, you can use -Inf and +Inf for the infinite.
+         */
+
+        if (typeof interval !== 'string') {
+            throw 'Invalid interval: should be a string.';
+        }
+
+        interval = interval.trim();
+
+        var matches = interval.match(intervalRegexp);
+        if (!matches) {
+            throw 'Invalid interval: ' + interval;
+        }
+
+        if (matches[2]) {
+            var items = matches[2].split(',');
+            for (var i = 0; i < items.length; i++) {
+                if (parseInt(items[i], 10) === count) {
+                    return true;
+                }
+            }
+        } else {
+            // Remove falsy values.
+            matches = matches.filter(function(match) {
+                return !!match;
+            });
+
+            var leftDelimiter = matches[1];
+            var leftNumber = convertNumber(matches[2]);
+            if (leftNumber === Infinity) {
+                leftNumber = -Infinity;
+            }
+            var rightNumber = convertNumber(matches[3]);
+            var rightDelimiter = matches[4];
+
+            return (leftDelimiter === '[' ? count >= leftNumber : count > leftNumber)
+                && (rightDelimiter === ']' ? count <= rightNumber : count < rightNumber);
+        }
+
+        return false;
+    };
+
+    /**
+     * Returns the plural position to use for the given locale and number.
+     *
+     * The plural rules are derived from code of the Zend Framework (2010-09-25),
+     * which is subject to the new BSD license (http://framework.zend.com/license/new-bsd).
+     * Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+     *
+     * @param {Number} count
+     * @param {String} locale
+     * @return {Number}
+     */
+    Lang.prototype._getPluralForm = function(count, locale) {
+        switch (locale) {
+            case 'az':
+            case 'bo':
+            case 'dz':
+            case 'id':
+            case 'ja':
+            case 'jv':
+            case 'ka':
+            case 'km':
+            case 'kn':
+            case 'ko':
+            case 'ms':
+            case 'th':
+            case 'tr':
+            case 'vi':
+            case 'zh':
+                return 0;
+
+            case 'af':
+            case 'bn':
+            case 'bg':
+            case 'ca':
+            case 'da':
+            case 'de':
+            case 'el':
+            case 'en':
+            case 'eo':
+            case 'es':
+            case 'et':
+            case 'eu':
+            case 'fa':
+            case 'fi':
+            case 'fo':
+            case 'fur':
+            case 'fy':
+            case 'gl':
+            case 'gu':
+            case 'ha':
+            case 'he':
+            case 'hu':
+            case 'is':
+            case 'it':
+            case 'ku':
+            case 'lb':
+            case 'ml':
+            case 'mn':
+            case 'mr':
+            case 'nah':
+            case 'nb':
+            case 'ne':
+            case 'nl':
+            case 'nn':
+            case 'no':
+            case 'om':
+            case 'or':
+            case 'pa':
+            case 'pap':
+            case 'ps':
+            case 'pt':
+            case 'so':
+            case 'sq':
+            case 'sv':
+            case 'sw':
+            case 'ta':
+            case 'te':
+            case 'tk':
+            case 'ur':
+            case 'zu':
+                return (count == 1)
+                    ? 0
+                    : 1;
+
+            case 'am':
+            case 'bh':
+            case 'fil':
+            case 'fr':
+            case 'gun':
+            case 'hi':
+            case 'hy':
+            case 'ln':
+            case 'mg':
+            case 'nso':
+            case 'xbr':
+            case 'ti':
+            case 'wa':
+                return ((count === 0) || (count === 1))
+                    ? 0
+                    : 1;
+
+            case 'be':
+            case 'bs':
+            case 'hr':
+            case 'ru':
+            case 'sr':
+            case 'uk':
+                return ((count % 10 == 1) && (count % 100 != 11))
+                    ? 0
+                    : (((count % 10 >= 2) && (count % 10 <= 4) && ((count % 100 < 10) || (count % 100 >= 20)))
+                        ? 1
+                        : 2);
+
+            case 'cs':
+            case 'sk':
+                return (count == 1)
+                    ? 0
+                    : (((count >= 2) && (count <= 4))
+                        ? 1
+                        : 2);
+
+            case 'ga':
+                return (count == 1)
+                    ? 0
+                    : ((count == 2)
+                        ? 1
+                        : 2);
+
+            case 'lt':
+                return ((count % 10 == 1) && (count % 100 != 11))
+                    ? 0
+                    : (((count % 10 >= 2) && ((count % 100 < 10) || (count % 100 >= 20)))
+                        ? 1
+                        : 2);
+
+            case 'sl':
+                return (count % 100 == 1)
+                    ? 0
+                    : ((count % 100 == 2)
+                        ? 1
+                        : (((count % 100 == 3) || (count % 100 == 4))
+                            ? 2
+                            : 3));
+
+            case 'mk':
+                return (count % 10 == 1)
+                    ? 0
+                    : 1;
+
+            case 'mt':
+                return (count == 1)
+                    ? 0
+                    : (((count === 0) || ((count % 100 > 1) && (count % 100 < 11)))
+                        ? 1
+                        : (((count % 100 > 10) && (count % 100 < 20))
+                            ? 2
+                            : 3));
+
+            case 'lv':
+                return (count === 0)
+                    ? 0
+                    : (((count % 10 == 1) && (count % 100 != 11))
+                        ? 1
+                        : 2);
+
+            case 'pl':
+                return (count == 1)
+                    ? 0
+                    : (((count % 10 >= 2) && (count % 10 <= 4) && ((count % 100 < 12) || (count % 100 > 14)))
+                        ? 1
+                        : 2);
+
+            case 'cy':
+                return (count == 1)
+                    ? 0
+                    : ((count == 2)
+                        ? 1
+                        : (((count == 8) || (count == 11))
+                            ? 2
+                            : 3));
+
+            case 'ro':
+                return (count == 1)
+                    ? 0
+                    : (((count === 0) || ((count % 100 > 0) && (count % 100 < 20)))
+                        ? 1
+                        : 2);
+
+            case 'ar':
+                return (count === 0)
+                    ? 0
+                    : ((count == 1)
+                        ? 1
+                        : ((count == 2)
+                            ? 2
+                            : (((count % 100 >= 3) && (count % 100 <= 10))
+                                ? 3
+                                : (((count % 100 >= 11) && (count % 100 <= 99))
+                                    ? 4
+                                    : 5))));
+
+            default:
+                return 0;
+        }
+    };
+
+    return Lang;
+
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/laravel-vue-lang/dist/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/laravel-vue-lang/dist/index.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Lang = exports.default = void 0;
+const lang_js_1 = __importDefault(__webpack_require__(/*! lang.js */ "./node_modules/lang.js/src/lang.js"));
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+/**
+ * Determines if the given locale and domain combination is ignored.
+ */
+function shouldIgnore(ignore, locale, domain) {
+    for (let [ignoreLocale, ignoreDomains] of Object.entries(ignore)) {
+        if (locale === ignoreLocale && ignoreDomains.includes(domain)) {
+            return true;
+        }
+    }
+    return false;
+}
+/**
+ * Imports translations from the configured alias.
+ */
+function importTranslations({ ignore, globalTranslationsKey }) {
+    const catalogue = {};
+    const files = __webpack_require__("./resources/lang sync recursive \\.(php|json)$");
+    files.keys().forEach((file) => {
+        var _a, _b;
+        // Find localization files at the root directory
+        const [isGlobal, rootLocale] = (_a = /\.\/([A-Za-z0-9-_]+).(?:php|json)/.exec(file)) !== null && _a !== void 0 ? _a : [];
+        if (isGlobal) {
+            catalogue[`${rootLocale}.${globalTranslationsKey}`] = files(file);
+            return;
+        }
+        // Find localization files in a /lang/ directory
+        const [isScoped, locale, domain] = (_b = /\.\/([A-Za-z0-9-_]+)\/([A-Za-z0-9-_]+).(?:php|json)/.exec(file)) !== null && _b !== void 0 ? _b : [];
+        if (!ignore || !shouldIgnore(ignore, locale, domain)) {
+            catalogue[`${locale}.${domain}`] = files(file);
+        }
+    });
+    return catalogue;
+}
+/**
+ * Adds localization to Vue.
+ */
+const Lang = {
+    install: (Vue, options = {}) => {
+        var _a;
+        // Defines default options
+        options = Object.assign({ globalTranslationsKey: '__global__' }, options);
+        // Creates the Lang.js object
+        const i18n = new lang_js_1.default(Object.assign({ fallback: document.documentElement.lang || navigator.language, messages: (_a = options === null || options === void 0 ? void 0 : options.messages) !== null && _a !== void 0 ? _a : importTranslations(options) }, options));
+        // Defines a global translation function
+        const __ = (key, ...args) => {
+            // Non-global translations
+            if (key.match(/^[\w-]+(?:\.[\w-]+)+$/)) {
+                return i18n.get(key, ...args);
+            }
+            // Global translations
+            const result = i18n.get(`${options.globalTranslationsKey}.${key}`, ...args);
+            return result.startsWith(options.globalTranslationsKey)
+                ? result.substr(options.globalTranslationsKey.length + 1)
+                : result;
+        };
+        Vue.mixin({
+            methods: {
+                $lang: () => i18n,
+                __,
+            },
+        });
+    },
+};
+exports.default = Lang;
+exports.Lang = Lang;
 
 
 /***/ }),
@@ -72538,7 +73297,7 @@ var render = function() {
         [
           _c("div", { staticClass: "w-1/2 text-center flex flex-col" }, [
             _c("span", { staticClass: "uppercase leading-tight text-xs" }, [
-              _vm._v("Table")
+              _vm._v(_vm._s(_vm.__("common.Tables")))
             ]),
             _vm._v(" "),
             _c("span", { staticClass: "w-full text-center" }, [
@@ -72548,7 +73307,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "w-1/2 text-center flex flex-col" }, [
             _c("span", { staticClass: "uppercase leading-tight text-xs" }, [
-              _vm._v("Seats")
+              _vm._v(_vm._s(_vm.__("common.seats")))
             ]),
             _vm._v(" "),
             _c("span", { staticClass: "w-full text-center" }, [
@@ -72648,7 +73407,8 @@ var render = function() {
                                             _vm._s(
                                               _vm.getReservation(i).persons
                                             ) +
-                                            " guests"
+                                            " " +
+                                            _vm._s(_vm.__("common.guests"))
                                         )
                                       ]
                                     )
@@ -72788,7 +73548,18 @@ var render = function() {
         "div",
         { staticClass: "w-full flex flex-row" },
         [
-          _vm._m(0),
+          _c(
+            "div",
+            {
+              staticClass:
+                "w-1/6 border-r border-gray-500 font-light text-lg text-right"
+            },
+            [
+              _c("span", { staticClass: "p-2" }, [
+                _vm._v(_vm._s(_vm.__("common.hours")))
+              ])
+            ]
+          ),
           _vm._v(" "),
           _vm._l(5, function(i) {
             return _c(
@@ -72813,7 +73584,18 @@ var render = function() {
         "div",
         { staticClass: "w-full flex flex-row" },
         [
-          _vm._m(1),
+          _c(
+            "div",
+            {
+              staticClass:
+                "w-1/6 border-r border-gray-500 font-light text-sm text-right"
+            },
+            [
+              _c("span", { staticClass: "p-2" }, [
+                _vm._v(_vm._s(_vm.__("common.minutes")))
+              ])
+            ]
+          ),
           _vm._v(" "),
           _vm._l(5, function(i) {
             return _c(
@@ -72843,34 +73625,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "w-1/6 border-r border-gray-500 font-light text-lg text-right"
-      },
-      [_c("span", { staticClass: "p-2" }, [_vm._v("Hours")])]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "w-1/6 border-r border-gray-500 font-light text-sm text-right"
-      },
-      [_c("span", { staticClass: "p-2" }, [_vm._v("Minutes")])]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -73295,7 +74050,9 @@ var render = function() {
           _vm.toManyGuests
             ? _c("div", { staticClass: "ml-4 text-xs italic text-red-600" }, [
                 _vm._v(
-                  "\n            To many guests for given tables.\n        "
+                  "\n            " +
+                    _vm._s(_vm.__("common.to_many_guests")) +
+                    "\n        "
                 )
               ])
             : _vm._e(),
@@ -73332,11 +74089,11 @@ var render = function() {
                 }
               ],
               staticClass:
-                "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg mr-4",
+                "h-10 flex-1 text-sm rounded-lg bg-gray-300 text-gray-400 leading-tight px-4 focus:outline-none border-2 focus:border-indigo-400 focus:text-gray-800 hover:shadow-lg",
               class: _vm.reservation.name
                 ? "border-indigo-400 text-gray-800"
                 : "",
-              attrs: { placeholder: "Name of the guest / group", type: "text" },
+              attrs: { placeholder: _vm.__("common.name_guest"), type: "text" },
               domProps: { value: _vm.reservation.name },
               on: {
                 input: function($event) {
@@ -73376,7 +74133,7 @@ var render = function() {
                 ? "border-indigo-400 text-gray-800"
                 : "",
               attrs: {
-                placeholder: "Some additional information ...",
+                placeholder: _vm.__("common.additional_info"),
                 type: "text"
               },
               domProps: { value: _vm.reservation.notice },
@@ -73454,7 +74211,7 @@ var render = function() {
               class: _vm.reservation.phone_number
                 ? "border-indigo-400 text-gray-800"
                 : "",
-              attrs: { placeholder: "Phone number" },
+              attrs: { placeholder: _vm.__("common.phone_number") },
               domProps: { value: _vm.reservation.phone_number },
               on: {
                 input: function($event) {
@@ -73535,7 +74292,7 @@ var render = function() {
                       staticClass: "text-gray-700 uppercase text-xs",
                       attrs: { for: "fulfilled" }
                     },
-                    [_vm._v("Fulfilled")]
+                    [_vm._v(_vm._s(_vm.__("common.fulfilled")))]
                   )
                 ])
               : _vm._e(),
@@ -73548,7 +74305,13 @@ var render = function() {
                     "p-2 px-4 mr-4 rounded-lg bg-gray-400 text-gray-600 leading-tight text-sm hover:text-gray-800 hover:bg-gray-300 transition-colors duration-150 ease-in-out",
                   on: { click: _vm.handleClose }
                 },
-                [_vm._v("\n                    Cancel\n                ")]
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.__("common.cancel")) +
+                      "\n                "
+                  )
+                ]
               ),
               _vm._v(" "),
               _vm.reservation.id
@@ -73559,7 +74322,11 @@ var render = function() {
                         "p-2 px-4 mr-4 rounded-lg bg-red-600 text-gray-100 leading-tight text-sm hover:text-red-600 hover:bg-white transition-colors duration-150 ease-in-out",
                       on: { click: _vm.handleDelete }
                     },
-                    [_vm._v("Delete\n                ")]
+                    [
+                      _vm._v(
+                        _vm._s(_vm.__("common.delete")) + "\n                "
+                      )
+                    ]
                   )
                 : _vm._e(),
               _vm._v(" "),
@@ -73572,8 +74339,11 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    _vm._s(this.reservation.id ? "Update" : "Save") +
-                      "\n                "
+                    _vm._s(
+                      this.reservation.id
+                        ? _vm.__("common.update")
+                        : _vm.__("common.save")
+                    ) + "\n                "
                   )
                 ]
               )
@@ -73696,7 +74466,7 @@ var render = function() {
         _vm._v(" "),
         _c("select-button", {
           attrs: {
-            value: "today",
+            value: _vm.__("common.today"),
             handle: _vm.setDate,
             selected: _vm.isSelected
           }
@@ -73704,7 +74474,7 @@ var render = function() {
         _vm._v(" "),
         _c("select-button", {
           attrs: {
-            value: "tomorrow",
+            value: _vm.__("common.tomorrow"),
             handle: _vm.setDate,
             selected: _vm.isSelected
           }
@@ -73712,7 +74482,7 @@ var render = function() {
         _vm._v(" "),
         _c("select-button", {
           attrs: {
-            value: "day after tomorrow",
+            value: _vm.__("common.day_after_tomorrow"),
             handle: _vm.setDate,
             selected: _vm.isSelected
           }
@@ -73834,7 +74604,7 @@ var render = function() {
                       staticClass:
                         "text-center text-xs text-gray-500 uppercase font-light leading-tight"
                     },
-                    [_vm._v("Duration")]
+                    [_vm._v(_vm._s(_vm.__("common.duration")))]
                   )
                 ]),
                 _vm._v(" "),
@@ -73875,7 +74645,7 @@ var render = function() {
                 },
                 value: _vm.moreIsActive
                   ? _vm.getReadableDuration(this.duration)
-                  : "More",
+                  : _vm.__("common.more"),
                 icon: "fas fa-stopwatch"
               },
               slot: "reference"
@@ -73917,7 +74687,7 @@ var render = function() {
         staticClass:
           "uppercase font-medium text-xs text-gray-800 leading-tight mb-2"
       },
-      [_vm._v("Who are you?")]
+      [_vm._v(_vm._s(_vm.__("common.who_are_you")))]
     ),
     _vm._v(" "),
     _c(
@@ -73968,7 +74738,16 @@ var render = function() {
                   _c(
                     "a",
                     { attrs: { href: "/restaurants/" + _vm.settings.id } },
-                    [_vm._m(0)]
+                    [
+                      _c("span", { staticClass: "text-blue-600 text-xs" }, [
+                        _c("i", { staticClass: "fas fa-user-plus mr-1" }),
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm.__("common.add_employees")) +
+                            "\n                    "
+                        )
+                      ])
+                    ]
                   )
                 ])
               : _vm._e()
@@ -74000,7 +74779,7 @@ var render = function() {
                           staticClass:
                             "text-center text-xs text-gray-500 uppercase font-light leading-tight"
                         },
-                        [_vm._v("Employees")]
+                        [_vm._v(_vm._s(_vm.__("common.employees")))]
                       )
                     ]),
                     _vm._v(" "),
@@ -74070,17 +74849,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "text-blue-600 text-xs" }, [
-      _c("i", { staticClass: "fas fa-user-plus mr-1" }),
-      _vm._v("\n                        Add employees\n                    ")
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -74109,7 +74878,7 @@ var render = function() {
         staticClass:
           "uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
       },
-      [_vm._v("Number of guests & duration")]
+      [_vm._v(_vm._s(_vm.__("common.guests_duration")))]
     ),
     _vm._v(" "),
     _c(
@@ -74169,7 +74938,7 @@ var render = function() {
                       staticClass:
                         "text-center text-xs text-gray-500 uppercase font-light leading-tight"
                     },
-                    [_vm._v("Persons")]
+                    [_vm._v(_vm._s(_vm.__("common.guests")))]
                   )
                 ]),
                 _vm._v(" "),
@@ -74209,7 +74978,7 @@ var render = function() {
                 selected: function() {
                   return _vm.moreIsActive
                 },
-                value: _vm.moreIsActive ? _vm.persons : "More",
+                value: _vm.moreIsActive ? _vm.persons : _vm.__("common.more"),
                 icon: "fas fa-user-friends"
               },
               slot: "reference"
@@ -74403,7 +75172,7 @@ var render = function() {
           },
           value: _vm.active
             ? _vm.addZeros(_vm.hour) + ":" + _vm.addZeros(_vm.minute)
-            : "Choose time",
+            : _vm.__("common.choose_time"),
           icon: "fas fa-clock"
         },
         slot: "reference"
@@ -74440,7 +75209,7 @@ var render = function() {
       {
         staticClass: "uppercase font-medium text-xs text-gray-800 leading-tight"
       },
-      [_vm._v("Free tables matching your reservation")]
+      [_vm._v(_vm._s(_vm.__("common.free_tables")))]
     ),
     _vm._v(" "),
     _c(
@@ -74493,7 +75262,9 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "ml-4 animate-pulse" }, [
                   _vm._v(
-                    "\n                Getting available tables ...\n            "
+                    "\n                " +
+                      _vm._s(_vm.__("common.getting_tables")) +
+                      "\n            "
                   )
                 ])
               ]
@@ -74506,7 +75277,9 @@ var render = function() {
               { staticClass: "my-2 mr-2 text-gray-600 text-xs italic" },
               [
                 _vm._v(
-                  "\n            No tables available for this reservation.\n        "
+                  "\n            " +
+                    _vm._s(_vm.__("common.no_tables")) +
+                    "\n        "
                 )
               ]
             )
@@ -74518,7 +75291,15 @@ var render = function() {
     _vm.hasTableError
       ? _c("div", [
           _c("span", { staticClass: "my-2 mr-2 text-red-600 text-xs italic" }, [
-            _vm._v("\n            " + _vm._s(_vm.errors.tables) + "\n        ")
+            _vm._v(
+              "\n            " +
+                _vm._s(
+                  _vm.errors.tables instanceof Array
+                    ? _vm.errors.tables[0]
+                    : _vm.errors.tables
+                ) +
+                "\n        "
+            )
           ])
         ])
       : _vm._e()
@@ -74879,7 +75660,22 @@ var render = function() {
         },
         [
           _c("div", { staticClass: "bg-gray-200 justify-between px-6" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "flex flex-row justify-between py-4" }, [
+              _c(
+                "h3",
+                {
+                  staticClass:
+                    "text-lg self-center leading-6 font-medium text-gray-900"
+                },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.__("common.Reservations")) +
+                      "\n                "
+                  )
+                ]
+              )
+            ]),
             _vm._v(" "),
             _c(
               "div",
@@ -74902,14 +75698,16 @@ var render = function() {
                       [
                         _c("i", { staticClass: "fas fa-calendar-plus mr-2" }),
                         _vm._v(
-                          "\n                        New Reservation\n                    "
+                          "\n                        " +
+                            _vm._s(_vm.__("common.new_reservation")) +
+                            "\n                    "
                         )
                       ]
                     ),
                     _vm._v(" "),
                     _c("search-bar"),
                     _vm._v(" "),
-                    _c("div", { staticClass: "ml-2 flex items-center" }, [
+                    _c("div", { staticClass: "ml-4 flex items-center" }, [
                       _c("input", {
                         directives: [
                           {
@@ -74967,7 +75765,7 @@ var render = function() {
                           staticClass: "text-gray-700 uppercase text-xs",
                           attrs: { for: "past" }
                         },
-                        [_vm._v("Include past")]
+                        [_vm._v(_vm._s(_vm.__("common.include_past")))]
                       )
                     ])
                   ],
@@ -74994,7 +75792,7 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-5 py-2"
                   },
-                  [_vm._v("Name")]
+                  [_vm._v(_vm._s(_vm.__("common.name")))]
                 ),
                 _vm._v(" "),
                 _c(
@@ -75002,7 +75800,7 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-5 py-2"
                   },
-                  [_vm._v("Start")]
+                  [_vm._v(_vm._s(_vm.__("common.start")))]
                 ),
                 _vm._v(" "),
                 _c(
@@ -75010,7 +75808,7 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-4 py-2"
                   },
-                  [_vm._v("Duration")]
+                  [_vm._v(_vm._s(_vm.__("common.duration")))]
                 ),
                 _vm._v(" "),
                 _c(
@@ -75018,7 +75816,7 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-4 py-2"
                   },
-                  [_vm._v("Tables")]
+                  [_vm._v(_vm._s(_vm.__("common.tables")))]
                 ),
                 _vm._v(" "),
                 _c(
@@ -75026,7 +75824,7 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-4 py-2"
                   },
-                  [_vm._v("Persons")]
+                  [_vm._v(_vm._s(_vm.__("common.guests")))]
                 ),
                 _vm._v(" "),
                 _c(
@@ -75034,7 +75832,7 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-4 py-2"
                   },
-                  [_vm._v("Email")]
+                  [_vm._v(_vm._s(_vm.__("common.email")))]
                 ),
                 _vm._v(" "),
                 _c(
@@ -75042,11 +75840,11 @@ var render = function() {
                   {
                     staticClass: "text-xs font-medium text-gray-800 px-4 py-2"
                   },
-                  [_vm._v("Phone number")]
+                  [_vm._v(_vm._s(_vm.__("common.phone_number")))]
                 ),
                 _vm._v(" "),
                 _c(
-                  "th",
+                  "td",
                   {
                     staticClass:
                       "text-xs font-medium text-gray-800 px-4 py-2 flex flex-row center"
@@ -75103,7 +75901,11 @@ var render = function() {
                         }
                       }
                     }),
-                    _vm._v("\n                    Fulfilled\n                ")
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.__("common.fulfilled")) +
+                        "\n                "
+                    )
                   ]
                 )
               ]),
@@ -75122,7 +75924,29 @@ var render = function() {
                       staticClass:
                         "border border-b border-gray-200 cursor-pointer"
                     },
-                    [_vm._m(1)]
+                    [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "px-4 py-2 border-l-8 border-yellow-400"
+                        },
+                        [
+                          _c("div", { staticClass: "flex flex-col" }, [
+                            _c(
+                              "span",
+                              { staticClass: "text-gray-900 text-sm" },
+                              [_vm._v(_vm._s(_vm.__("common.no_reservations")))]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              { staticClass: "text-gray-600 text-xs italic" },
+                              [_vm._v(_vm._s(_vm.__("common.create_one")))]
+                            )
+                          ])
+                        ]
+                      )
+                    ]
                   )
                 : _vm._e()
             ],
@@ -75131,7 +75955,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "w-full bg-gray-200 rounded-b-lg px-2 py-2" },
+            { staticClass: "w-full bg-gray-200 rounded-b-lg px-6 py-2" },
             [_c("Paginator")],
             1
           )
@@ -75143,38 +75967,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-row justify-between py-4" }, [
-      _c(
-        "h3",
-        {
-          staticClass: "text-lg self-center leading-6 font-medium text-gray-900"
-        },
-        [_vm._v("\n                    Reservations\n                ")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "px-4 py-2 border-l-8 border-yellow-400" }, [
-      _c("div", { staticClass: "flex flex-col" }, [
-        _c("span", { staticClass: "text-gray-900 text-sm" }, [
-          _vm._v("No reservations so far.")
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "text-gray-600 text-xs italic" }, [
-          _vm._v("Create one :-)")
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -75231,7 +76024,7 @@ var render = function() {
                   _vm._s(
                     _vm.singleDateIsActive
                       ? _vm.singleDate.toLocaleDateString()
-                      : "Date"
+                      : _vm.__("common.Date")
                   )
                 )
               ]),
@@ -75286,7 +76079,7 @@ var render = function() {
                       ? _vm.dateRange.start.toLocaleDateString() +
                           " - " +
                           _vm.dateRange.end.toLocaleDateString()
-                      : "Date Range"
+                      : _vm.__("common.Date_range")
                   )
                 )
               ]),
@@ -75348,19 +76141,35 @@ var render = function() {
         [
           _c("div", [
             _c("p", { staticClass: "text-sm text-gray-700" }, [
-              _vm._v("\n                Showing\n                "),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("common.showing")) +
+                  "\n                "
+              ),
               _c("span", { staticClass: "font-medium" }, [
                 _vm._v(_vm._s(_vm.meta.from))
               ]),
-              _vm._v("\n                to\n                "),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("common.to")) +
+                  "\n                "
+              ),
               _c("span", { staticClass: "font-medium" }, [
                 _vm._v(_vm._s(_vm.meta.to))
               ]),
-              _vm._v("\n                of\n                "),
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("common.of")) +
+                  "\n                "
+              ),
               _c("span", { staticClass: "font-medium" }, [
                 _vm._v(_vm._s(_vm.meta.total))
               ]),
-              _vm._v("\n                results\n            ")
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("common.results")) +
+                  "\n            "
+              )
             ])
           ]),
           _vm._v(" "),
@@ -75372,78 +76181,17 @@ var render = function() {
                 attrs: { "aria-label": "Pagination" }
               },
               _vm._l(_vm.meta.links, function(link) {
-                return _c(
-                  "button",
-                  {
-                    staticClass:
-                      "relative inline-flex items-center py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none",
-                    class: _vm.getProperClass(link),
-                    on: {
-                      click: function($event) {
-                        return _vm.handle(link.url)
-                      }
+                return _c("button", {
+                  staticClass:
+                    "relative inline-flex items-center py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none",
+                  class: _vm.getProperClass(link),
+                  domProps: { innerHTML: _vm._s(link.label) },
+                  on: {
+                    click: function($event) {
+                      return _vm.handle(link.url)
                     }
-                  },
-                  [
-                    _vm.isPrevious(link.label)
-                      ? _c(
-                          "svg",
-                          {
-                            staticClass: "h-5 w-5",
-                            attrs: {
-                              xmlns: "http://www.w3.org/2000/svg",
-                              viewBox: "0 0 20 20",
-                              fill: "currentColor",
-                              "aria-hidden": "true"
-                            }
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                "fill-rule": "evenodd",
-                                d:
-                                  "M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z",
-                                "clip-rule": "evenodd"
-                              }
-                            })
-                          ]
-                        )
-                      : _vm._e(),
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(
-                          _vm.isPrevious(link.label) || _vm.isNext(link.label)
-                            ? ""
-                            : link.label
-                        ) +
-                        "\n                    "
-                    ),
-                    _vm.isNext(link.label)
-                      ? _c(
-                          "svg",
-                          {
-                            staticClass: "h-5 w-5",
-                            attrs: {
-                              xmlns: "http://www.w3.org/2000/svg",
-                              viewBox: "0 0 20 20",
-                              fill: "currentColor",
-                              "aria-hidden": "true"
-                            }
-                          },
-                          [
-                            _c("path", {
-                              attrs: {
-                                "fill-rule": "evenodd",
-                                d:
-                                  "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z",
-                                "clip-rule": "evenodd"
-                              }
-                            })
-                          ]
-                        )
-                      : _vm._e()
-                  ]
-                )
+                  }
+                })
               }),
               0
             )
@@ -75652,7 +76400,7 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
-      _c("th", [
+      _c("td", { staticClass: "px-4" }, [
         _c("input", {
           directives: [
             {
@@ -75740,7 +76488,11 @@ var render = function() {
       ],
       staticClass:
         "border-2 w-full border-gray-300 bg-white h-full px-5 pr-16 rounded-lg text-sm focus:outline-none",
-      attrs: { type: "search", name: "search", placeholder: "Search" },
+      attrs: {
+        type: "search",
+        name: "search",
+        placeholder: _vm.__("common.search")
+      },
       domProps: { value: _vm.query },
       on: {
         input: function($event) {
@@ -94663,6 +95415,8 @@ webpackContext.id = "./resources/js sync recursive \\.vue$/";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var v_calendar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! v-calendar */ "./node_modules/v-calendar/lib/v-calendar.umd.min.js");
 /* harmony import */ var v_calendar__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(v_calendar__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var laravel_vue_lang__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-vue-lang */ "./node_modules/laravel-vue-lang/dist/index.js");
+/* harmony import */ var laravel_vue_lang__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_lang__WEBPACK_IMPORTED_MODULE_1__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -94672,10 +95426,16 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window._ = _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+ // Localization
+
  // Use v-calendar & v-date-picker components
 
 Vue.use(v_calendar__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.use(__webpack_require__(/*! vue-moment */ "./node_modules/vue-moment/dist/vue-moment.js"));
+Vue.use(laravel_vue_lang__WEBPACK_IMPORTED_MODULE_1__["Lang"], {
+  locale: 'de',
+  fallback: 'en'
+});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -98366,6 +99126,254 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
     query: ""
   }
 });
+
+/***/ }),
+
+/***/ "./resources/lang sync recursive \\.(php|json)$":
+/*!*******************************************!*\
+  !*** ./resources/lang sync \.(php|json)$ ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./de/auth.php": "./resources/lang/de/auth.php",
+	"./de/common.php": "./resources/lang/de/common.php",
+	"./de/messages.php": "./resources/lang/de/messages.php",
+	"./de/nav.php": "./resources/lang/de/nav.php",
+	"./de/pagination.php": "./resources/lang/de/pagination.php",
+	"./de/passwords.php": "./resources/lang/de/passwords.php",
+	"./de/restaurants.php": "./resources/lang/de/restaurants.php",
+	"./de/validation.php": "./resources/lang/de/validation.php",
+	"./en/app.php": "./resources/lang/en/app.php",
+	"./en/auth.php": "./resources/lang/en/auth.php",
+	"./en/common.php": "./resources/lang/en/common.php",
+	"./en/nav.php": "./resources/lang/en/nav.php",
+	"./en/pagination.php": "./resources/lang/en/pagination.php",
+	"./en/passwords.php": "./resources/lang/en/passwords.php",
+	"./en/restaurants.php": "./resources/lang/en/restaurants.php",
+	"./en/validation.php": "./resources/lang/en/validation.php",
+	"./vendor/nova/en.json": "./resources/lang/vendor/nova/en.json",
+	"./vendor/nova/en/validation.php": "./resources/lang/vendor/nova/en/validation.php"
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	return __webpack_require__(id);
+}
+function webpackContextResolve(req) {
+	if(!__webpack_require__.o(map, req)) {
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
+	return map[req];
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = "./resources/lang sync recursive \\.(php|json)$";
+
+/***/ }),
+
+/***/ "./resources/lang/de/auth.php":
+/*!************************************!*\
+  !*** ./resources/lang/de/auth.php ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"failed":"Diese Anmeldedaten stimmen nicht mit unseren Aufzeichnungen überein.","throttle":"Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds erneut...","login":"Login","remember_me":"Eingeloggt bleiben","register":"Registrieren","not_registered":"Noch nicht registriert?","already_registered":"Bereits registriert?","password":"Passwort","reset_password ":"Passwort zurücksetzen","confirm_password":"Passwort bestätigen","forgot_password":"Passwort vergessen?","send_password_link":"Schicke Link zum Passwort zurücksetzen","confirm_before_continuing":"Bitte bestätige das Passwort bevor Du weiter machst.","verify":"Verifizieren","email":"Email Adresse","verify_email":"Bestätige deine Email Adresse","email_not_received":"Falls du keine Email erhalten hast","verification_link_sent":"Ein frischer Verifizierungslink wurde Dir zu deiner Email Adresse geschickt.","check_verification_link":"Bevor Du weiter machst, bestätige den Verifizierungslink den wir Dir auf deine Email geschickt haben.","request_another":"Klicke hier um einen neuen anzufordern."};
+
+/***/ }),
+
+/***/ "./resources/lang/de/common.php":
+/*!**************************************!*\
+  !*** ./resources/lang/de/common.php ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"restaurants":"Restaurants","Reservations":"Reservierungen","reservations":"reservierungen","new_reservation":"Neue Reservierung","no_reservations":"Keine Reservierungen bisher","create_one":"Erstelle eine :-)","name":"name","start":"beginn","duration":"dauer","tables":"tische","guests":"gäste","email":"email","phone_number":"Telefon","fulfilled":"erledigt","search":"Suche","include_past":"vergangenheit einbeziehen","date":"datum","date range":"datumsbereich","Date":"Datum","Date_range":"Datumsbereich","who_are_you":"wer bist du","today":"heute","tomorrow":"morgen","day_after_tomorrow":"übermorgen","choose_date":"wähle datum","choose_time":"wähle zeit","guests_duration":"anzahl der gäste & dauer","more":"mehr","name_guest":"Name des Gastes / Gruppe","additional_info":"Etwas mehr Information ...","free_tables":"Freie Tische die zu deiner Reservierung passen","no_tables":"Keine Tische für deine Reservierung gefunden","cancel":"Abbrechen","save":"Sichern","update":"Aktualisieren","delete":"Löschen","remove":"Entfernen","add_employees":"Mitarbeiter hinzufügen","getting_tables":"Hole verfügbare Tische ...","to_many_guests":"Zu viele Gäste für die gegebenen Tische.","employees":"Mitarbeiter","showing":"Zeige","to":"bis","of":"von","results":"Ergebnissen","Tables":"Tische","seats":"Sitzplätze","hours":"Stunden","minutes":"Minuten"};
+
+/***/ }),
+
+/***/ "./resources/lang/de/messages.php":
+/*!****************************************!*\
+  !*** ./resources/lang/de/messages.php ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"updated_restaurant":"Restaurant erfolgreich aktualisiert.","went_wrong":"Etwas ist schief gelaufen ...","table_created":"Tisch mit Nummer :table_number erfolgreich angelegt.","table_not_created":"Tisch mit Nummer :table_number konnte nicht angelegt werden. Kontaktieren Sie den Support.","table_deleted":"Tisch gelöscht.","table_not_deleted":"Tisch konnte nicht gelöscht werden. Kontaktieren Sie den Support.","user_detached":"Der Mitarbeiter / Benutzer: :email wurde erfolgreich entfernt.","table_updated":"Tisch erfolgreich aktualisiert","user_updated":"Benutzer erfolgreich aktualisiert","user_added":"Registrierter Nutzer :user_name :user_email erfolgreich hinzugefügt.","user_invited":"Erfolgreich eingeladen: :user_email","employee_added":"Mitarbeiter :name erfolgreich hinzugefügt","add":"hinzufügen","invite":"einladen"};
+
+/***/ }),
+
+/***/ "./resources/lang/de/nav.php":
+/*!***********************************!*\
+  !*** ./resources/lang/de/nav.php ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"reservations":"Reservierungen","tables":"Tische","restaurants":"Restaurants"};
+
+/***/ }),
+
+/***/ "./resources/lang/de/pagination.php":
+/*!******************************************!*\
+  !*** ./resources/lang/de/pagination.php ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"previous":"&laquo; Vorherige","next":"Nächste &raquo;"};
+
+/***/ }),
+
+/***/ "./resources/lang/de/passwords.php":
+/*!*****************************************!*\
+  !*** ./resources/lang/de/passwords.php ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"reset":"Ihr Passwort wurde zurückgesetzt!","sent":"Wir haben Ihnen den Link zum Zurücksetzen des Passworts per E-Mail zugeschickt!","throttled":"Bitte warten Sie, bevor Sie es erneut versuchen.","token":"Dieses Passwort-Reset-Token ist ungültig.","user":"Wir können keinen Benutzer mit dieser E-Mail-Adresse finden."};
+
+/***/ }),
+
+/***/ "./resources/lang/de/restaurants.php":
+/*!*******************************************!*\
+  !*** ./resources/lang/de/restaurants.php ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"restaurants":"Restaurants","name":"Name","address":"Adresse","owner":"Besitzer","role":"Rolle","email":"Email","street":"Straße","street_number":"Straßennummer","zip_code":"Postleitzahl","city":"Stadt / Gemeinde","add_restaurant":"Neues Restaurant","edit":"bearbeiten","remove":"entfernen","cancel":"abbrechen","close":"schließen","delete":"löschen","add":"hinzufügen","Delete":"Lösche","type":"Status","registered":"registriert","note_no_restaurant":"Wichtige Information: Du brauchst mindestens ein Restaurant. Erstelle dein erstes Restaurant oder beantrage den Zugriff auf ein bestehendes.","note_enter_restaurant_name":"Gib den Namen des Restaurants, das du löschen willst ein und drücke \"löschen\".","new_restaurant_placeholder":"Das wundervolle Restaurant ...","only_premium":"Diese Aktion können nur registrierte Premium Nutzer ausführen.","testing_purposes":"Right now this application is only for test purposes - please contact service team to inquire\n                premium\n                status for your account.\n                Thanks,\n                Orgusto Team","save_restaurant":"Speichern","last_updated":"zuletzt aktualisiert","information":"Information","accounts":"Mitarbeiter & Benutzer","add_account":"Mitarbeiter hinzufügen","tables":"Tische","add_table":"Tisch hinzufügen","table_number":"Tischnummer","table_seats":"Sitzplätze","table_description":"Beschreibung","access_level":"Berechtigung","belongs_to":"gehört zu","Table":"Tisch","add_employee":"Mitarbeiter hinzufügen","add_description":"Füge einen bestehenden Benutzer hinzu oder lade jemanden dazu ein:","account_email":"Email des Mitarbeiters","add_employee_name":"Name eines Mitarbeiters hinzufügen","important":"Wichtig:","add_by_name_warning":"Wenn ein Mitarbeiter bereits ein Orgusto Benutzerkonto hat sollten Sie den Mitarbeiter über \"Benutzerkonto\" hinzufügen","employee_name":"Name des Mitarbeiters","user_account":"Benutzerkonto","user_name":"Mitarbeitername"};
+
+/***/ }),
+
+/***/ "./resources/lang/de/validation.php":
+/*!******************************************!*\
+  !*** ./resources/lang/de/validation.php ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"accepted":":attribute muss akzeptiert werden.","active_url":":attribute ist keine korrekte URL.","after":":attribute muss ein Datum nach dem :date sein.","after_or_equal":":attribute muss ein Datum nach dem oder am :date sein.","alpha":":attribute darf nur Buchstaben enthalten.","alpha_dash":":attribute darf nur Buchstaben, Zahlen und Bindestriche enthalten.","alpha_num":":attribute darf nur Buchstaben und Zahlen enthalten.","array":":attribute muss eine Liste sein.","before":":attribute muss ein Datum vor dem :date sein.","before_or_equal":":attribute muss ein Datum vor dem oder am :date sein.","between":{"numeric":":attribute muss zwischen :min und :max sein.","file":":attribute muss zwischen :min und :max Kilobytes sein.","string":":attribute muss zwischen :min und :max Zeichen sein.","array":":attribute muss zwischen :min und :max Einträge haben."},"boolean":":attribute muss wahr oder falsch sein.","confirmed":"Die :attribute-Bestätigung stimmt nicht überein.","date":":attribute ist kein gültiges Datum.","date_format":":attribute entspricht nicht dem Format: :format.","different":":attribute und :other müssen verschieden sein.","digits":":attribute muss :digits Ziffern lang sein.","digits_between":":attribute muss zwischen :min und :max Ziffern lang sein.","dimensions":":attribute hat inkorrekte Bild-Dimensionen.","distinct":":attribute hat einen doppelten Wert.","email":":attribute muss eine korrekte E-Mail-Adresse sein.","ends_with":":attribute muss mit folgendem aufhören: :values.","exists":"Ausgewählte(s) :attribute ist inkorrekt.","file":":attribute muss eine Datei sein.","filled":":attribute muss ausgefüllt werden.","gt":{"numeric":":attribute muss größer :min sein.","file":":attribute muss größer :min Kilobytes groß sein.","string":":attribute muss größer :min Zeichen lang sein.","array":":attribute muss größer :min Einträge haben.."},"gte":{"numeric":":attribute muss größer gleich :gte sein.","file":":attribute muss größer gleich :gte Kilobytes groß sein.","string":":attribute muss größer gleich :gte Zeichen lang sein.","array":":attribute muss größer gleich :gte Einträge haben.."},"image":":attribute muss ein Bild sein.","in":"Ausgewählte(s) :attribute ist inkorrekt.","in_array":":attribute existiert nicht in :other.","integer":":attribute muss eine Ganzzahl sein.","ip":":attribute muss eine korrekte IP-Adresse sein.","ipv4":":attribute muss eine korrekte IPv4-Adresse sein.","ipv6":":attribute muss eine korrekte IPv6-Adresse sein.","json":":attribute muss ein korrekter JSON-String sein.","lt":{"numeric":":attribute muss kleiner :lt sein.","file":":attribute muss kleiner :lt Kilobytes groß sein.","string":":attribute muss kleiner :lt Zeichen lang sein.","array":":attribute muss kleiner :lt Einträge haben.."},"lte":{"numeric":":attribute muss kleiner gleich :lte sein.","file":":attribute muss kleiner gleich :lte Kilobytes groß sein.","string":":attribute muss kleiner gleich :lte Zeichen lang sein.","array":":attribute muss kleiner gleich :lte Einträge haben.."},"max":{"numeric":":attribute darf nicht größer :max sein.","file":":attribute darf nicht größer :max Kilobytes groß sein.","string":":attribute darf nicht größer :max Zeichen lang sein.","array":":attribute darf nicht größer :max Einträge haben.."},"mimes":":attribute muss eine Datei in folgendem Format sein: :values.","mimetypes":":attribute muss eine Datei in folgendem Format sein: :values.","min":{"numeric":":attribute muss mindestens :min sein.","file":":attribute muss mindestens :min Kilobytes groß sein.","string":":attribute muss mindestens :min Zeichen lang sein.","array":":attribute muss mindestens :min Einträge haben.."},"not_in":"Ausgewählte(s) :attribute ist inkorrekt.","not_regex":":attribute format ist invalide.","numeric":":attribute muss eine Zahl sein.","password":"Das Passwort ist inkorrekt.","present":":attribute muss gegeben sein.","regex":"Das :attribute-Format ist inkorrekt.","required":":attribute field wird benötigt.","required_if":":attribute field wird benötigt wenn :other einen Wert von :value hat.","required_unless":":attribute field wird benötigt außer :other ist in den Werten :values enthalten.","required_with":":attribute field wird benötigt wenn :values vorhanden ist.","required_with_all":":attribute field wird benötigt wenn :values vorhanden ist.","required_without":":attribute field wird benötigt wenn :values nicht vorhanden ist.","required_without_all":":attribute field wird benötigt wenn keine der Werte :values vorhanden ist.","same":":attribute und :other müssen gleich sein.","size":{"numeric":":attribute muss :size groß sein.","file":":attribute muss :size Kilobytes groß sein.","string":":attribute muss :size Zeichen lang sein.","array":":attribute muss :size Einträge enthalten."},"starts_with":":attribute muss mit einem der folgenden starten: :values.","string":":attribute muss Text sein.","timezone":":attribute muss eine korrekte Zeitzone sein.","unique":":attribute wurde bereits verwendet.","uploaded":"Der Upload von :attribute schlug fehl.","url":"Das :attribute-Format ist inkorrekt.","uuid":":attribute muss eine UUID sein.","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":[]};
+
+/***/ }),
+
+/***/ "./resources/lang/en/app.php":
+/*!***********************************!*\
+  !*** ./resources/lang/en/app.php ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"email_address":"Email adress","password":"Password","Remember me":"Remember me","throttle":"Too many login attempts. Please try again in :seconds seconds."};
+
+/***/ }),
+
+/***/ "./resources/lang/en/auth.php":
+/*!************************************!*\
+  !*** ./resources/lang/en/auth.php ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"failed":"These credentials do not match our records.","throttle":"Too many login attempts. Please try again in :seconds seconds.","login":"Login","remember_me":"Remember me","register":"Register","not_registered":"No registered yet?","already_registered":"Already registered?","password":"Password","reset_password ":"Reset Password","confirm_password":"Confirm Password","forgot_password":"Forgot your password?","send_password_link":"Send Password Reset Link","confirm_before_continuing":"Please confirm your password before continuing.","verify":"Verify","email":"Email address","verify_email":"Verify Your Email Address","email_not_received":"If you did not receive the email","verification_link_sent":"A fresh verification link has been sent to your email address.","check_verification_link":"Before proceeding, please check your email for a verification link.","request_another":"click here to request another"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/common.php":
+/*!**************************************!*\
+  !*** ./resources/lang/en/common.php ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"restaurants":"Restaurants","Reservations":"Reservations","reservations":"reservations","new_reservation":"New reservation","no_reservations":"No reservations so far","create_one":"Create one :-)","name":"name","start":"start","duration":"duration","tables":"tables","guests":"guests","email":"email","phone_number":"phone number","fulfilled":"fulfilled","search":"search","include_past":"include past","date":"date","date range":"date range","Date":"Date","Date range":"Date range","who_are_you":"who are you","today":"today","tomorrow":"tomorrow","day_after_tomorrow":"day after tomorrow","choose_date":"choose date","choose_time":"choose time","guests_duration":"number of guests & duration","more":"more","name_guest":"Name of the guest / group","additional_info":"Some additional information ...","free_tables":"free tables matching your reservation","no_tables":"No tables available for this reservation","cancel":"Cancel","save":"Save","updated":"Update","delete":"Delete","remove":"Remove","add_employees":"Add employees","getting_tables":"Getting available tables ...","showing":"Showing","to":"to","of":"of","results":"results"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/nav.php":
+/*!***********************************!*\
+  !*** ./resources/lang/en/nav.php ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"reservations":"Reservations","tables":"Tables","restaurants":"Restaurants"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/pagination.php":
+/*!******************************************!*\
+  !*** ./resources/lang/en/pagination.php ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"previous":"&laquo; Previous","next":"Next &raquo;"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/passwords.php":
+/*!*****************************************!*\
+  !*** ./resources/lang/en/passwords.php ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"reset":"Your password has been reset!","sent":"We have e-mailed your password reset link!","throttled":"Please wait before retrying.","token":"This password reset token is invalid.","user":"We can't find a user with that e-mail address."};
+
+/***/ }),
+
+/***/ "./resources/lang/en/restaurants.php":
+/*!*******************************************!*\
+  !*** ./resources/lang/en/restaurants.php ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"restaurants":"Restaurants","name":"Name","address":"Address","owner":"Owner","role":"Role","add_restaurant":"Add restaurant","edit":"edit","remove":"remove","cancel":"cancel","close":"close","delete":"delete","note_no_restaurant":"Please note: You need to have at least one restaurant. Create your first restaurant or request\n                        access to\n                        an existing one.","note_enter_restaurant_name":"Please type in the name of the restaurant you want delete and hit delete.","new_restaurant_placeholder":"The wonderfull restaurant ...","only_premium":"This feature is only for premium users.","testing_purposes":"Right now this application is only for test purposes - please contact service team to inquire\n                premium\n                status for your account.\n                Thanks,\n                Orgusto Team"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/validation.php":
+/*!******************************************!*\
+  !*** ./resources/lang/en/validation.php ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"accepted":"The :attribute must be accepted.","active_url":"The :attribute is not a valid URL.","after":"The :attribute must be a date after :date.","after_or_equal":"The :attribute must be a date after or equal to :date.","alpha":"The :attribute may only contain letters.","alpha_dash":"The :attribute may only contain letters, numbers, dashes and underscores.","alpha_num":"The :attribute may only contain letters and numbers.","array":"The :attribute must be an array.","before":"The :attribute must be a date before :date.","before_or_equal":"The :attribute must be a date before or equal to :date.","between":{"numeric":"The :attribute must be between :min and :max.","file":"The :attribute must be between :min and :max kilobytes.","string":"The :attribute must be between :min and :max characters.","array":"The :attribute must have between :min and :max items."},"boolean":"The :attribute field must be true or false.","confirmed":"The :attribute confirmation does not match.","date":"The :attribute is not a valid date.","date_equals":"The :attribute must be a date equal to :date.","date_format":"The :attribute does not match the format :format.","different":"The :attribute and :other must be different.","digits":"The :attribute must be :digits digits.","digits_between":"The :attribute must be between :min and :max digits.","dimensions":"The :attribute has invalid image dimensions.","distinct":"The :attribute field has a duplicate value.","email":"The :attribute must be a valid email address.","ends_with":"The :attribute must end with one of the following: :values.","exists":"The selected :attribute is invalid.","file":"The :attribute must be a file.","filled":"The :attribute field must have a value.","gt":{"numeric":"The :attribute must be greater than :value.","file":"The :attribute must be greater than :value kilobytes.","string":"The :attribute must be greater than :value characters.","array":"The :attribute must have more than :value items."},"gte":{"numeric":"The :attribute must be greater than or equal :value.","file":"The :attribute must be greater than or equal :value kilobytes.","string":"The :attribute must be greater than or equal :value characters.","array":"The :attribute must have :value items or more."},"image":"The :attribute must be an image.","in":"The selected :attribute is invalid.","in_array":"The :attribute field does not exist in :other.","integer":"The :attribute must be an integer.","ip":"The :attribute must be a valid IP address.","ipv4":"The :attribute must be a valid IPv4 address.","ipv6":"The :attribute must be a valid IPv6 address.","json":"The :attribute must be a valid JSON string.","lt":{"numeric":"The :attribute must be less than :value.","file":"The :attribute must be less than :value kilobytes.","string":"The :attribute must be less than :value characters.","array":"The :attribute must have less than :value items."},"lte":{"numeric":"The :attribute must be less than or equal :value.","file":"The :attribute must be less than or equal :value kilobytes.","string":"The :attribute must be less than or equal :value characters.","array":"The :attribute must not have more than :value items."},"max":{"numeric":"The :attribute may not be greater than :max.","file":"The :attribute may not be greater than :max kilobytes.","string":"The :attribute may not be greater than :max characters.","array":"The :attribute may not have more than :max items."},"mimes":"The :attribute must be a file of type: :values.","mimetypes":"The :attribute must be a file of type: :values.","min":{"numeric":"The :attribute must be at least :min.","file":"The :attribute must be at least :min kilobytes.","string":"The :attribute must be at least :min characters.","array":"The :attribute must have at least :min items."},"not_in":"The selected :attribute is invalid.","not_regex":"The :attribute format is invalid.","numeric":"The :attribute must be a number.","password":"The password is incorrect.","present":"The :attribute field must be present.","regex":"The :attribute format is invalid.","required":"The :attribute field is required.","required_if":"The :attribute field is required when :other is :value.","required_unless":"The :attribute field is required unless :other is in :values.","required_with":"The :attribute field is required when :values is present.","required_with_all":"The :attribute field is required when :values are present.","required_without":"The :attribute field is required when :values is not present.","required_without_all":"The :attribute field is required when none of :values are present.","same":"The :attribute and :other must match.","size":{"numeric":"The :attribute must be :size.","file":"The :attribute must be :size kilobytes.","string":"The :attribute must be :size characters.","array":"The :attribute must contain :size items."},"starts_with":"The :attribute must start with one of the following: :values.","string":"The :attribute must be a string.","timezone":"The :attribute must be a valid zone.","unique":"The :attribute has already been taken.","uploaded":"The :attribute failed to upload.","url":"The :attribute format is invalid.","uuid":"The :attribute must be a valid UUID.","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":[]};
+
+/***/ }),
+
+/***/ "./resources/lang/vendor/nova/en.json":
+/*!********************************************!*\
+  !*** ./resources/lang/vendor/nova/en.json ***!
+  \********************************************/
+/*! exports provided: Actions, Details, If you did not request a password reset, no further action is required., Reset Password, Sorry! You are not authorized to perform this action., You are receiving this email because we received a password reset request for your account., Confirm Password, Dashboard, Email Address, Forgot Your Password?, Forgot your password?, Login, Logout, Password, Remember Me, Resources, Send Password Reset Link, Welcome Back!, Delete Resource, Delete, Detach Resource, Detach, Detach Selected, Delete Selected, Force Delete Selected, Restore Selected, Restore Resource, Restore, Force Delete Resource, Force Delete, The :resource was created!, Are you sure you want to delete this resource?, Are you sure you want to delete the selected resources?, Are you sure you want to detach this resource?, Are you sure you want to detach the selected resources?, Are you sure you want to force delete this resource?, Are you sure you want to force delete the selected resources?, Are you sure you want to restore this resource?, Are you sure you want to restore the selected resources?, No :resource matched the given criteria., Another user has updated this resource since this page was loaded. Please refresh the page and try again., Are you sure you want to delete this file?, Are you sure you want to run this action?, Attach, Attach & Attach Another, Cancel, Choose, Choose File, Choose Type, Choose an option, Click to choose, Reset Filters, Create, Create & Add Another, Delete File, Edit, Edit Attached, Go Home, Hold Up!, Lens, New, Next, Only Trashed, Per Page, Please select a resource to perform this action on., Preview, Previous, No Data, No Current Data, No Prior Data, No Increase, No Results Found., Run Action, Select Action, Search, Press / to search, Select All, Select All Matching, Something went wrong., The action ran successfully!, The government won't let us show you what's behind these doors, This image, Update, Update & Continue Editing, View, We're lost in space. The page you were trying to view does not exist., Show Content, Hide Content, Whoops, Whoops!, With Trashed, Trashed, Write, could not be found., total, January, February, March, April, May, June, July, August, September, October, November, December, Afghanistan, Aland Islands, Albania, Algeria, American Samoa, Andorra, Angola, Anguilla, Antarctica, Antigua And Barbuda, Argentina, Armenia, Aruba, Australia, Austria, Azerbaijan, Bahamas, Bahrain, Bangladesh, Barbados, Belarus, Belgium, Belize, Benin, Bermuda, Bhutan, Bolivia, Bonaire, Sint Eustatius and Saba, Bosnia And Herzegovina, Botswana, Bouvet Island, Brazil, British Indian Ocean Territory, Brunei Darussalam, Bulgaria, Burkina Faso, Burundi, Cambodia, Cameroon, Canada, Cape Verde, Cayman Islands, Central African Republic, Chad, Chile, China, Christmas Island, Cocos (Keeling) Islands, Colombia, Comoros, Congo, Congo, Democratic Republic, Cook Islands, Costa Rica, Cote D'Ivoire, Croatia, Cuba, Curaçao, Cyprus, Czech Republic, Denmark, Djibouti, Dominica, Dominican Republic, Ecuador, Egypt, El Salvador, Equatorial Guinea, Eritrea, Estonia, Ethiopia, Falkland Islands (Malvinas), Faroe Islands, Fiji, Finland, France, French Guiana, French Polynesia, French Southern Territories, Gabon, Gambia, Georgia, Germany, Ghana, Gibraltar, Greece, Greenland, Grenada, Guadeloupe, Guam, Guatemala, Guernsey, Guinea, Guinea-Bissau, Guyana, Haiti, Heard Island & Mcdonald Islands, Holy See (Vatican City State), Honduras, Hong Kong, Hungary, Iceland, India, Indonesia, Iran, Islamic Republic Of, Iraq, Ireland, Isle Of Man, Israel, Italy, Jamaica, Japan, Jersey, Jordan, Kazakhstan, Kenya, Kiribati, Korea, Democratic People's Republic of, Korea, Kosovo, Kuwait, Kyrgyzstan, Lao People's Democratic Republic, Latvia, Lebanon, Lesotho, Liberia, Libyan Arab Jamahiriya, Liechtenstein, Lithuania, Luxembourg, Macao, Macedonia, Madagascar, Malawi, Malaysia, Maldives, Mali, Malta, Marshall Islands, Martinique, Mauritania, Mauritius, Mayotte, Mexico, Micronesia, Federated States Of, Moldova, Monaco, Mongolia, Montenegro, Montserrat, Morocco, Mozambique, Myanmar, Namibia, Nauru, Nepal, Netherlands, New Caledonia, New Zealand, Nicaragua, Niger, Nigeria, Niue, Norfolk Island, Northern Mariana Islands, Norway, Oman, Pakistan, Palau, Palestinian Territory, Occupied, Panama, Papua New Guinea, Paraguay, Peru, Philippines, Pitcairn, Poland, Portugal, Puerto Rico, Qatar, Reunion, Romania, Russian Federation, Rwanda, Saint Barthelemy, Saint Helena, Saint Kitts And Nevis, Saint Lucia, Saint Martin, Saint Pierre And Miquelon, Saint Vincent And Grenadines, Samoa, San Marino, Sao Tome And Principe, Saudi Arabia, Senegal, Serbia, Seychelles, Sierra Leone, Singapore, Sint Maarten (Dutch part), Slovakia, Slovenia, Solomon Islands, Somalia, South Africa, South Georgia And Sandwich Isl., South Sudan, Spain, Sri Lanka, Sudan, Suriname, Svalbard And Jan Mayen, Swaziland, Sweden, Switzerland, Syrian Arab Republic, Taiwan, Tajikistan, Tanzania, Thailand, Timor-Leste, Togo, Tokelau, Tonga, Trinidad And Tobago, Tunisia, Turkey, Turkmenistan, Turks And Caicos Islands, Tuvalu, Uganda, Ukraine, United Arab Emirates, United Kingdom, United States, United States Outlying Islands, Uruguay, Uzbekistan, Vanuatu, Venezuela, Viet Nam, Virgin Islands, British, Virgin Islands, U.S., Wallis And Futuna, Western Sahara, Yemen, Zambia, Zimbabwe, Yes, No, Action Name, Action Initiated By, Action Target, Action Status, Action Happened At, resource, resources, Choose date, The :resource was updated!, The resource was updated!, The :resource was deleted!, The :resource was restored!, Increase, Constant, Decrease, Reset Password Notification, Nova User, of, no file selected, Sorry, your session has expired., Reload, Key, Value, Add row, Attach :resource, Create :resource, Choose :resource, New :resource, Edit :resource, Update :resource, Choose :field, Download, Action, Changes, Original, This resource no longer exists, :resource Details, There are no available options for this resource., All resources loaded., Load :perPage More, :amount Total, Show All Fields, There was a problem submitting the form., There was a problem executing the action., *, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"Actions\":\"Actions\",\"Details\":\"Details\",\"If you did not request a password reset, no further action is required.\":\"If you did not request a password reset, no further action is required.\",\"Reset Password\":\"Reset Password\",\"Sorry! You are not authorized to perform this action.\":\"Sorry! You are not authorized to perform this action.\",\"You are receiving this email because we received a password reset request for your account.\":\"You are receiving this email because we received a password reset request for your account.\",\"Confirm Password\":\"Confirm Password\",\"Dashboard\":\"Dashboard\",\"Email Address\":\"Email Address\",\"Forgot Your Password?\":\"Forgot Your Password?\",\"Forgot your password?\":\"Forgot your password?\",\"Login\":\"Login\",\"Logout\":\"Logout\",\"Password\":\"Password\",\"Remember Me\":\"Remember Me\",\"Resources\":\"Resources\",\"Send Password Reset Link\":\"Send Password Reset Link\",\"Welcome Back!\":\"Welcome Back!\",\"Delete Resource\":\"Delete Resource\",\"Delete\":\"Delete\",\"Detach Resource\":\"Detach Resource\",\"Detach\":\"Detach\",\"Detach Selected\":\"Detach Selected\",\"Delete Selected\":\"Delete Selected\",\"Force Delete Selected\":\"Force Delete Selected\",\"Restore Selected\":\"Restore Selected\",\"Restore Resource\":\"Restore Resource\",\"Restore\":\"Restore\",\"Force Delete Resource\":\"Force Delete Resource\",\"Force Delete\":\"Force Delete\",\"The :resource was created!\":\"The :resource was created!\",\"Are you sure you want to delete this resource?\":\"Are you sure you want to delete this resource?\",\"Are you sure you want to delete the selected resources?\":\"Are you sure you want to delete the selected resources?\",\"Are you sure you want to detach this resource?\":\"Are you sure you want to detach this resource?\",\"Are you sure you want to detach the selected resources?\":\"Are you sure you want to detach the selected resources?\",\"Are you sure you want to force delete this resource?\":\"Are you sure you want to force delete this resource?\",\"Are you sure you want to force delete the selected resources?\":\"Are you sure you want to force delete the selected resources?\",\"Are you sure you want to restore this resource?\":\"Are you sure you want to restore this resource?\",\"Are you sure you want to restore the selected resources?\":\"Are you sure you want to restore the selected resources?\",\"No :resource matched the given criteria.\":\"No :resource matched the given criteria.\",\"Another user has updated this resource since this page was loaded. Please refresh the page and try again.\":\"Another user has updated this resource since this page was loaded. Please refresh the page and try again.\",\"Are you sure you want to delete this file?\":\"Are you sure you want to delete this file?\",\"Are you sure you want to run this action?\":\"Are you sure you want to run this action?\",\"Attach\":\"Attach\",\"Attach & Attach Another\":\"Attach & Attach Another\",\"Cancel\":\"Cancel\",\"Choose\":\"Choose\",\"Choose File\":\"Choose File\",\"Choose Type\":\"Choose Type\",\"Choose an option\":\"Choose an option\",\"Click to choose\":\"Click to choose\",\"Reset Filters\":\"Reset Filters\",\"Create\":\"Create\",\"Create & Add Another\":\"Create & Add Another\",\"Delete File\":\"Delete File\",\"Edit\":\"Edit\",\"Edit Attached\":\"Edit Attached\",\"Go Home\":\"Go Home\",\"Hold Up!\":\"Hold Up!\",\"Lens\":\"Lens\",\"New\":\"New\",\"Next\":\"Next\",\"Only Trashed\":\"Only Trashed\",\"Per Page\":\"Per Page\",\"Please select a resource to perform this action on.\":\"Please select a resource to perform this action on.\",\"Preview\":\"Preview\",\"Previous\":\"Previous\",\"No Data\":\"No Data\",\"No Current Data\":\"No Current Data\",\"No Prior Data\":\"No Prior Data\",\"No Increase\":\"No Increase\",\"No Results Found.\":\"No Results Found.\",\"Run Action\":\"Run Action\",\"Select Action\":\"Select Action\",\"Search\":\"Search\",\"Press / to search\":\"Press / to search\",\"Select All\":\"Select All\",\"Select All Matching\":\"Select All Matching\",\"Something went wrong.\":\"Something went wrong.\",\"The action ran successfully!\":\"The action ran successfully!\",\"The government won't let us show you what's behind these doors\":\"The government won't let us show you what's behind these doors\",\"This image\":\"This image\",\"Update\":\"Update\",\"Update & Continue Editing\":\"Update & Continue Editing\",\"View\":\"View\",\"We're lost in space. The page you were trying to view does not exist.\":\"We're lost in space. The page you were trying to view does not exist.\",\"Show Content\":\"Show Content\",\"Hide Content\":\"Hide Content\",\"Whoops\":\"Whoops\",\"Whoops!\":\"Whoops!\",\"With Trashed\":\"With Trashed\",\"Trashed\":\"Trashed\",\"Write\":\"Write\",\"could not be found.\":\"could not be found.\",\"total\":\"total\",\"January\":\"January\",\"February\":\"February\",\"March\":\"March\",\"April\":\"April\",\"May\":\"May\",\"June\":\"June\",\"July\":\"July\",\"August\":\"August\",\"September\":\"September\",\"October\":\"October\",\"November\":\"November\",\"December\":\"December\",\"Afghanistan\":\"Afghanistan\",\"Aland Islands\":\"Åland Islands\",\"Albania\":\"Albania\",\"Algeria\":\"Algeria\",\"American Samoa\":\"American Samoa\",\"Andorra\":\"Andorra\",\"Angola\":\"Angola\",\"Anguilla\":\"Anguilla\",\"Antarctica\":\"Antarctica\",\"Antigua And Barbuda\":\"Antigua and Barbuda\",\"Argentina\":\"Argentina\",\"Armenia\":\"Armenia\",\"Aruba\":\"Aruba\",\"Australia\":\"Australia\",\"Austria\":\"Austria\",\"Azerbaijan\":\"Azerbaijan\",\"Bahamas\":\"Bahamas\",\"Bahrain\":\"Bahrain\",\"Bangladesh\":\"Bangladesh\",\"Barbados\":\"Barbados\",\"Belarus\":\"Belarus\",\"Belgium\":\"Belgium\",\"Belize\":\"Belize\",\"Benin\":\"Benin\",\"Bermuda\":\"Bermuda\",\"Bhutan\":\"Bhutan\",\"Bolivia\":\"Bolivia\",\"Bonaire, Sint Eustatius and Saba\":\"Bonaire, Sint Eustatius and Saba\",\"Bosnia And Herzegovina\":\"Bosnia and Herzegovina\",\"Botswana\":\"Botswana\",\"Bouvet Island\":\"Bouvet Island\",\"Brazil\":\"Brazil\",\"British Indian Ocean Territory\":\"British Indian Ocean Territory\",\"Brunei Darussalam\":\"Brunei\",\"Bulgaria\":\"Bulgaria\",\"Burkina Faso\":\"Burkina Faso\",\"Burundi\":\"Burundi\",\"Cambodia\":\"Cambodia\",\"Cameroon\":\"Cameroon\",\"Canada\":\"Canada\",\"Cape Verde\":\"Cape Verde\",\"Cayman Islands\":\"Cayman Islands\",\"Central African Republic\":\"Central African Republic\",\"Chad\":\"Chad\",\"Chile\":\"Chile\",\"China\":\"China\",\"Christmas Island\":\"Christmas Island\",\"Cocos (Keeling) Islands\":\"Cocos (Keeling) Islands\",\"Colombia\":\"Colombia\",\"Comoros\":\"Comoros\",\"Congo\":\"Congo\",\"Congo, Democratic Republic\":\"Congo, Democratic Republic\",\"Cook Islands\":\"Cook Islands\",\"Costa Rica\":\"Costa Rica\",\"Cote D'Ivoire\":\"Côte d'Ivoire\",\"Croatia\":\"Croatia\",\"Cuba\":\"Cuba\",\"Curaçao\":\"Curaçao\",\"Cyprus\":\"Cyprus\",\"Czech Republic\":\"Czechia\",\"Denmark\":\"Denmark\",\"Djibouti\":\"Djibouti\",\"Dominica\":\"Dominica\",\"Dominican Republic\":\"Dominican Republic\",\"Ecuador\":\"Ecuador\",\"Egypt\":\"Egypt\",\"El Salvador\":\"El Salvador\",\"Equatorial Guinea\":\"Equatorial Guinea\",\"Eritrea\":\"Eritrea\",\"Estonia\":\"Estonia\",\"Ethiopia\":\"Ethiopia\",\"Falkland Islands (Malvinas)\":\"Falkland Islands (Malvinas)\",\"Faroe Islands\":\"Faroe Islands\",\"Fiji\":\"Fiji\",\"Finland\":\"Finland\",\"France\":\"France\",\"French Guiana\":\"French Guiana\",\"French Polynesia\":\"French Polynesia\",\"French Southern Territories\":\"French Southern Territories\",\"Gabon\":\"Gabon\",\"Gambia\":\"Gambia\",\"Georgia\":\"Georgia\",\"Germany\":\"Germany\",\"Ghana\":\"Ghana\",\"Gibraltar\":\"Gibraltar\",\"Greece\":\"Greece\",\"Greenland\":\"Greenland\",\"Grenada\":\"Grenada\",\"Guadeloupe\":\"Guadeloupe\",\"Guam\":\"Guam\",\"Guatemala\":\"Guatemala\",\"Guernsey\":\"Guernsey\",\"Guinea\":\"Guinea\",\"Guinea-Bissau\":\"Guinea-Bissau\",\"Guyana\":\"Guyana\",\"Haiti\":\"Haiti\",\"Heard Island & Mcdonald Islands\":\"Heard Island and McDonald Islands\",\"Holy See (Vatican City State)\":\"Vatican City\",\"Honduras\":\"Honduras\",\"Hong Kong\":\"Hong Kong\",\"Hungary\":\"Hungary\",\"Iceland\":\"Iceland\",\"India\":\"India\",\"Indonesia\":\"Indonesia\",\"Iran, Islamic Republic Of\":\"Iran\",\"Iraq\":\"Iraq\",\"Ireland\":\"Ireland\",\"Isle Of Man\":\"Isle of Man\",\"Israel\":\"Israel\",\"Italy\":\"Italy\",\"Jamaica\":\"Jamaica\",\"Japan\":\"Japan\",\"Jersey\":\"Jersey\",\"Jordan\":\"Jordan\",\"Kazakhstan\":\"Kazakhstan\",\"Kenya\":\"Kenya\",\"Kiribati\":\"Kiribati\",\"Korea, Democratic People's Republic of\":\"North Korea\",\"Korea\":\"South Korea\",\"Kosovo\":\"Kosovo\",\"Kuwait\":\"Kuwait\",\"Kyrgyzstan\":\"Kyrgyzstan\",\"Lao People's Democratic Republic\":\"Laos\",\"Latvia\":\"Latvia\",\"Lebanon\":\"Lebanon\",\"Lesotho\":\"Lesotho\",\"Liberia\":\"Liberia\",\"Libyan Arab Jamahiriya\":\"Libya\",\"Liechtenstein\":\"Liechtenstein\",\"Lithuania\":\"Lithuania\",\"Luxembourg\":\"Luxembourg\",\"Macao\":\"Macao\",\"Macedonia\":\"North Macedonia\",\"Madagascar\":\"Madagascar\",\"Malawi\":\"Malawi\",\"Malaysia\":\"Malaysia\",\"Maldives\":\"Maldives\",\"Mali\":\"Mali\",\"Malta\":\"Malta\",\"Marshall Islands\":\"Marshall Islands\",\"Martinique\":\"Martinique\",\"Mauritania\":\"Mauritania\",\"Mauritius\":\"Mauritius\",\"Mayotte\":\"Mayotte\",\"Mexico\":\"Mexico\",\"Micronesia, Federated States Of\":\"Micronesia\",\"Moldova\":\"Moldova\",\"Monaco\":\"Monaco\",\"Mongolia\":\"Mongolia\",\"Montenegro\":\"Montenegro\",\"Montserrat\":\"Montserrat\",\"Morocco\":\"Morocco\",\"Mozambique\":\"Mozambique\",\"Myanmar\":\"Myanmar\",\"Namibia\":\"Namibia\",\"Nauru\":\"Nauru\",\"Nepal\":\"Nepal\",\"Netherlands\":\"Netherlands\",\"New Caledonia\":\"New Caledonia\",\"New Zealand\":\"New Zealand\",\"Nicaragua\":\"Nicaragua\",\"Niger\":\"Niger\",\"Nigeria\":\"Nigeria\",\"Niue\":\"Niue\",\"Norfolk Island\":\"Norfolk Island\",\"Northern Mariana Islands\":\"Northern Mariana Islands\",\"Norway\":\"Norway\",\"Oman\":\"Oman\",\"Pakistan\":\"Pakistan\",\"Palau\":\"Palau\",\"Palestinian Territory, Occupied\":\"Palestinian Territories\",\"Panama\":\"Panama\",\"Papua New Guinea\":\"Papua New Guinea\",\"Paraguay\":\"Paraguay\",\"Peru\":\"Peru\",\"Philippines\":\"Philippines\",\"Pitcairn\":\"Pitcairn Islands\",\"Poland\":\"Poland\",\"Portugal\":\"Portugal\",\"Puerto Rico\":\"Puerto Rico\",\"Qatar\":\"Qatar\",\"Reunion\":\"Réunion\",\"Romania\":\"Romania\",\"Russian Federation\":\"Russia\",\"Rwanda\":\"Rwanda\",\"Saint Barthelemy\":\"St. Barthélemy\",\"Saint Helena\":\"St. Helena\",\"Saint Kitts And Nevis\":\"St. Kitts and Nevis\",\"Saint Lucia\":\"St. Lucia\",\"Saint Martin\":\"St. Martin\",\"Saint Pierre And Miquelon\":\"St. Pierre and Miquelon\",\"Saint Vincent And Grenadines\":\"St. Vincent and Grenadines\",\"Samoa\":\"Samoa\",\"San Marino\":\"San Marino\",\"Sao Tome And Principe\":\"São Tomé and Príncipe\",\"Saudi Arabia\":\"Saudi Arabia\",\"Senegal\":\"Senegal\",\"Serbia\":\"Serbia\",\"Seychelles\":\"Seychelles\",\"Sierra Leone\":\"Sierra Leone\",\"Singapore\":\"Singapore\",\"Sint Maarten (Dutch part)\":\"Sint Maarten\",\"Slovakia\":\"Slovakia\",\"Slovenia\":\"Slovenia\",\"Solomon Islands\":\"Solomon Islands\",\"Somalia\":\"Somalia\",\"South Africa\":\"South Africa\",\"South Georgia And Sandwich Isl.\":\"South Georgia and South Sandwich Islands\",\"South Sudan\":\"South Sudan\",\"Spain\":\"Spain\",\"Sri Lanka\":\"Sri Lanka\",\"Sudan\":\"Sudan\",\"Suriname\":\"Suriname\",\"Svalbard And Jan Mayen\":\"Svalbard and Jan Mayen\",\"Swaziland\":\"Eswatini\",\"Sweden\":\"Sweden\",\"Switzerland\":\"Switzerland\",\"Syrian Arab Republic\":\"Syria\",\"Taiwan\":\"Taiwan\",\"Tajikistan\":\"Tajikistan\",\"Tanzania\":\"Tanzania\",\"Thailand\":\"Thailand\",\"Timor-Leste\":\"Timor-Leste\",\"Togo\":\"Togo\",\"Tokelau\":\"Tokelau\",\"Tonga\":\"Tonga\",\"Trinidad And Tobago\":\"Trinidad and Tobago\",\"Tunisia\":\"Tunisia\",\"Turkey\":\"Turkey\",\"Turkmenistan\":\"Turkmenistan\",\"Turks And Caicos Islands\":\"Turks and Caicos Islands\",\"Tuvalu\":\"Tuvalu\",\"Uganda\":\"Uganda\",\"Ukraine\":\"Ukraine\",\"United Arab Emirates\":\"United Arab Emirates\",\"United Kingdom\":\"United Kingdom\",\"United States\":\"United States\",\"United States Outlying Islands\":\"U.S. Outlying Islands\",\"Uruguay\":\"Uruguay\",\"Uzbekistan\":\"Uzbekistan\",\"Vanuatu\":\"Vanuatu\",\"Venezuela\":\"Venezuela\",\"Viet Nam\":\"Vietnam\",\"Virgin Islands, British\":\"British Virgin Islands\",\"Virgin Islands, U.S.\":\"U.S. Virgin Islands\",\"Wallis And Futuna\":\"Wallis and Futuna\",\"Western Sahara\":\"Western Sahara\",\"Yemen\":\"Yemen\",\"Zambia\":\"Zambia\",\"Zimbabwe\":\"Zimbabwe\",\"Yes\":\"Yes\",\"No\":\"No\",\"Action Name\":\"Name\",\"Action Initiated By\":\"Initiated By\",\"Action Target\":\"Target\",\"Action Status\":\"Status\",\"Action Happened At\":\"Happened At\",\"resource\":\"resource\",\"resources\":\"resources\",\"Choose date\":\"Choose date\",\"The :resource was updated!\":\"The :resource was updated!\",\"The resource was updated!\":\"The resource was updated!\",\"The :resource was deleted!\":\"The :resource was deleted!\",\"The :resource was restored!\":\"The :resource was restored!\",\"Increase\":\"Increase\",\"Constant\":\"Constant\",\"Decrease\":\"Decrease\",\"Reset Password Notification\":\"Reset Password Notification\",\"Nova User\":\"Nova User\",\"of\":\"of\",\"no file selected\":\"no file selected\",\"Sorry, your session has expired.\":\"Sorry, your session has expired.\",\"Reload\":\"Reload\",\"Key\":\"Key\",\"Value\":\"Value\",\"Add row\":\"Add row\",\"Attach :resource\":\"Attach :resource\",\"Create :resource\":\"Create :resource\",\"Choose :resource\":\"Choose :resource\",\"New :resource\":\"New :resource\",\"Edit :resource\":\"Edit :resource\",\"Update :resource\":\"Update :resource\",\"Choose :field\":\"Choose :field\",\"Download\":\"Download\",\"Action\":\"Action\",\"Changes\":\"Changes\",\"Original\":\"Original\",\"This resource no longer exists\":\"This resource no longer exists\",\":resource Details\":\":resource Details\",\"There are no available options for this resource.\":\"There are no available options for this resource.\",\"All resources loaded.\":\"All resources loaded.\",\"Load :perPage More\":\"Load :perPage More\",\":amount Total\":\":amount Total\",\"Show All Fields\":\"Show All Fields\",\"There was a problem submitting the form.\":\"There was a problem submitting the form.\",\"There was a problem executing the action.\":\"There was a problem executing the action.\",\"*\":\"*\"}");
+
+/***/ }),
+
+/***/ "./resources/lang/vendor/nova/en/validation.php":
+/*!******************************************************!*\
+  !*** ./resources/lang/vendor/nova/en/validation.php ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"attached":"This :attribute is already attached.","relatable":"This :attribute may not be associated with this resource."};
 
 /***/ }),
 

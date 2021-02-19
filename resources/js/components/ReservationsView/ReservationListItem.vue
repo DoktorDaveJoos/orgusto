@@ -62,12 +62,12 @@
             </div>
 
         </td>
-        <th>
+        <td class="px-4">
             <input id="isDone" v-model="reservation.done" name="fulfilled" type="checkbox"
                    @click="handleMarkFulfilled"
                    @click.stop="stopEvent"
                    class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
-        </th>
+        </td>
 
 
     </tr>

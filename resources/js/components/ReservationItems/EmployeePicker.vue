@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col px-4 pb-4 pt-4">
-        <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-2">Who are you?</span>
+        <span class="uppercase font-medium text-xs text-gray-800 leading-tight mb-2">{{ __('common.who_are_you') }}</span>
         <div class="flex justify-between">
             <div class="flex space-x-4">
                 <div v-if="error" class="text-red-400 flex items-center leading-tight">
@@ -20,7 +20,7 @@
                     <a :href="`/restaurants/${settings.id}`">
                         <span class="text-blue-600 text-xs">
                             <i class="fas fa-user-plus mr-1"></i>
-                            Add employees
+                            {{ __('common.add_employees') }}
                         </span>
                     </a>
                 </div>
@@ -30,7 +30,7 @@
                 <div class="popper rounded-lg p-2 border border-gray-400 bg-white">
                     <div class="flex justify-center mb-1">
                         <span
-                            class="text-center text-xs text-gray-500 uppercase font-light leading-tight">Employees</span>
+                            class="text-center text-xs text-gray-500 uppercase font-light leading-tight">{{ __('common.employees') }}</span>
                     </div>
                     <hr/>
                     <div class="flex flex-wrap w-40 text-gray-800 p-1">

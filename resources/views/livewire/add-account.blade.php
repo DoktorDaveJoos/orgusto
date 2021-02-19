@@ -32,22 +32,22 @@
 
                 <div class="flex flex-col px-4 w-full">
                     <h3 class="text-lg leading-6 font-medium text-gray-900 flex flex-row" id="modal-headline">
-                        Add Employee
+                        {{  __('restaurants.add_employee') }}
                         <div wire:loading wire:target="addAccount" class="loader h-6 w-6 ml-4"></div>
                     </h3>
                     <div class="flex border-b border-gray-400 my-4 w-full">
-                        <button class="text-sm p-2 leading-tight text-gray-600 focus:outline-none" x-bind:class="{'border-b-4 border-gray-500 text-gray-800': tab === 'anon'}" x-on:click="tab = 'anon'">Name</button>
-                        <button class="mr-4 text-sm p-2 leading-tight text-gray-600 focus:outline-none" x-bind:class="{'border-b-4 border-gray-500 text-gray-800': tab === 'email'}" x-on:click="tab = 'email'">Account</button>
+                        <button class="text-sm p-2 leading-tight text-gray-600 focus:outline-none" x-bind:class="{'border-b-4 border-gray-500 text-gray-800': tab === 'anon'}" x-on:click="tab = 'anon'">{{  __('restaurants.user_name') }}</button>
+                        <button class="mr-4 text-sm p-2 leading-tight text-gray-600 focus:outline-none" x-bind:class="{'border-b-4 border-gray-500 text-gray-800': tab === 'email'}" x-on:click="tab = 'email'">{{  __('restaurants.user_account') }}</button>
                     </div>
 
                     <div x-show="tab === 'email'" class="mt-3 text-center sm:mt-0 sm:text-left">
                         <div class="mt-2">
                             <p class="text-sm leading-5 text-gray-500">
-                                Add an existing account or invite someone to collaborate:
+                                {{  __('restaurants.add_description') }}
                             </p>
                         </div>
-                        @forminput(['label' => 'email'])
-                        <input class="orgusto-input w-full px-4" type="text" name="user" list="usermails" placeholder="Account email" wire:model="searchTerm" />
+                        @forminput(['label' => __('restaurants.email')])
+                        <input class="orgusto-input w-full px-4" type="text" name="user" list="usermails" placeholder="{{  __('restaurants.account_email') }}" wire:model="searchTerm" />
                         <datalist id="usermails">
                             @if ($users)
                             @foreach($users as $user)
@@ -61,18 +61,18 @@
                     <div x-show="tab === 'anon'" class="mt-3 text-center sm:mt-0 sm:text-left w-full">
                         <div class="mt-2 text-gray-600 w-full">
                             <p class="text-sm leading-5">
-                                Add an employee.
+                                {{  __('restaurants.add_employee_name') }}
                             </p>
                             <br>
                             <p class="text-sm leading-5 font-semibold text-gray-800">
-                                Important note:
+                                {{  __('restaurants.important') }}
                             </p>
                             <p class="text-sm leading-5">
-                                Employees added by name can't login themeselves. If a login is required please add an employee account.
+                                {{  __('restaurants.add_by_name_warning') }}
                             </p>
                         </div>
                         @forminput(['label' => 'Name'])
-                        <input class="orgusto-input w-full px-4" type="text" name="anon_name" placeholder="Employee name" wire:model="anon_name" />
+                        <input class="orgusto-input w-full px-4" type="text" name="anon_name" placeholder="{{  __('restaurants.employee_name') }}" wire:model="anon_name" />
                         @endforminput
                     </div>
                 </div>
@@ -85,12 +85,12 @@
                     {{ $action_button_text }}
                 </button>
                 <button x-show="tab === 'anon'" @if($anon_is_disabled) disabled @endif wire:click="addAnonymousAccount" wire:loading.attr="disabled" type="button" class="orgusto-button bg-indigo-200 text-indigo-600 hover:text-white hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
-                    add
+                    {{  __('restaurants.add') }}
                 </button>
             </span>
             <span class="mt-3 flex sm:mt-0 sm:w-auto">
                 <button x-on:click="openModal = false" type="button" class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out">
-                    Cancel
+                    {{  __('restaurants.cancel') }}
                 </button>
             </span>
         </div>

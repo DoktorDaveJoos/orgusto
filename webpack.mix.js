@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
 const tailwindcss = require('tailwindcss');
+require('laravel-vue-lang');
 
 /*
  |--------------------------------------------------------------------------
@@ -18,6 +19,10 @@ mix.js('resources/js/app.js', 'public/js')
         module: {
             rules: [
                 {
+                    test: /resources[\\\/]lang.+\.(php)$/,
+                    loader: 'php-array-loader',
+                },
+                {
                     test: /\.tsx?$/,
                     loader: "ts-loader",
                     options: { appendTsSuffixTo: [/\.vue$/] },
@@ -26,6 +31,9 @@ mix.js('resources/js/app.js', 'public/js')
             ]
         },
         resolve: {
+            alias: {
+                '@lang': path.resolve('./resources/lang'),
+            },
             extensions: ["*", ".js", ".jsx", ".vue", ".ts", ".tsx"]
         }
     })
@@ -33,3 +41,4 @@ mix.js('resources/js/app.js', 'public/js')
         processCssUrls: false,
         postCss: [tailwindcss('./tailwind.config.js')]
     });
+

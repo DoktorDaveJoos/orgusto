@@ -52,7 +52,7 @@
         <select-button
             slot="reference"
             :selected="() => active"
-            :value="active ? addZeros(hour) + ':' + addZeros(minute) : 'Choose time'"
+            :value="active ? addZeros(hour) + ':' + addZeros(minute) : __('common.choose_time')"
             icon="fas fa-clock"
         ></select-button>
     </popper>
