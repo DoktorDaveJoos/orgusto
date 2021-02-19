@@ -2,7 +2,7 @@
     <div class="flex flex-col px-4 pb-2 pt-4">
     <span
         class="uppercase font-medium text-xs text-gray-800 leading-tight mb-1"
-    >Number of people & duration</span>
+    >{{ __('common.guests_duration') }}</span>
         <div class="flex justify-between">
             <div class="flex space-x-4">
                 <div v-if="error" class="text-red-400 flex items-center leading-tight">
@@ -22,7 +22,7 @@
                     <div class="flex justify-center mb-1">
             <span
                 class="text-center text-xs text-gray-500 uppercase font-light leading-tight"
-            >Persons</span>
+            >{{ __('common.guests') }}</span>
                     </div>
                     <hr/>
                     <div class="flex flex-wrap w-32 p-1 text-gray-800">
@@ -39,7 +39,7 @@
                 <select-button
                     slot="reference"
                     :selected="() => moreIsActive"
-                    :value=" moreIsActive ? persons : 'More'"
+                    :value=" moreIsActive ? persons : __('common.more')"
                     icon="fas fa-user-friends"
                 ></select-button>
             </popper>
@@ -47,41 +47,30 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script >
 
-// noinspection TypeScriptCheckImport
 import Popper from "vue-popperjs";
 
-export default Vue.extend({
+export default {
+    name: "PersonPicker",
     components: {
         popper: Popper
     },
-    props: {
-        init: Number,
-        error: Boolean
-    },
+    props: ["persons", "error"],
     data() {
-        return {
-            persons: this.init,
-        };
+        return {}
     },
     methods: {
-        setPerson(persons: number): void {
-            this.persons = persons;
+        setPerson(persons) {
+            this.$emit("value:changed", {persons: persons})
         },
     },
     computed: {
-        moreIsActive(): boolean {
+        moreIsActive() {
             return this.persons > 6;
         }
-    },
-    watch: {
-        persons: function () {
-            this.$emit('person:chosen', this.persons)
-        }
     }
-});
+}
 </script>
 
 <!--suppress CssUnusedSymbol -->

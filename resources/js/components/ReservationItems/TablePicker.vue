@@ -2,89 +2,104 @@
     <div class="flex flex-col p-4">
     <span
         class="uppercase font-medium text-xs text-gray-800 leading-tight"
-    >Free tables matching your reservation</span>
+    >{{ __('common.free_tables') }}</span>
         <div class="flex flex-wrap">
-            <div v-if="error" class="text-red-400 flex items-center py-2 pr-4 leading-tight">
+            <div v-if="hasTableError" class="text-red-400 flex items-center py-2 pr-4 leading-tight">
                 <i class="fas fa-times"></i>
             </div>
-            <div class="my-2 mr-2" v-for="table in tables.tables" :key="table.id">
+            <div class="my-2 mr-2" v-for="table in sortedTables" :key="table.id">
                 <select-button
-                    :value="table.table_number"
+                    v-if="table && table.table_number"
+                    :value="getAsNumber(table, table.table_number)"
                     :selected="() => isActive(table.id)"
                     :handle="() => handleTableClick(table.id)"
                 ></select-button>
             </div>
-            <div v-if="tables.tables.length === 0" class="my-2 mr-2 text-gray-600 text-xs italic">
-                No tables available for this reservation.
+            <div v-if="isLoading" class="flex flex-row my-2 items-center my-2 mr-2 text-gray-600 text-xs italic">
+                <div class="lds-dual-ring"></div>
+                <div class="ml-4 animate-pulse">
+                    {{ __('common.getting_tables') }}
+                </div>
+            </div>
+            <div v-if="!isLoading && tables.length === 0" class="my-2 mr-2 text-gray-600 text-xs italic">
+                {{ __('common.no_tables') }}
             </div>
         </div>
-
+        <div v-if="hasTableError">
+            <span class="my-2 mr-2 text-red-600 text-xs italic">
+                {{ errors.tables instanceof Array ? errors.tables[0] : errors.tables }}
+            </span>
+        </div>
     </div>
 </template>
 
-<script lang="ts">
+<script>
 
-import Vue, {PropType} from 'vue';
+import store from '../../store';
+import {mapState} from 'vuex';
 
-import axios from 'axios';
-import Filter from '../../models/Filter';
-import Tables from "../../models/Tables";
-import Table from "../../models/Table";
-import TablesRequest from "../../requests/TablesRequest";
-
-export default Vue.extend({
-    props: {
-        filterData: {
-            type: Object as PropType<Filter>
-        },
-        tablesEndpoint: String,
-        error: Boolean,
-        init: Object as PropType<Tables>
-    },
+export default {
+    name: "TablePicker",
+    props: ["selectedTables"],
+    store,
     data() {
-        return {
-            tables: this.init ? Tables.of(this.init) : Tables.empty(),
-            chosenTables: this.init ? Tables.of(this.init) : Tables.empty(),
-        };
-    },
-    mounted() {
-        this.updateTables(this.filterData);
+        return {}
     },
     methods: {
-        updateTables(filter: Filter): void {
-
-            const request: TablesRequest = TablesRequest.of(filter);
-
-            // reset tables before requesting
-            this.tables = this.init ? Tables.of(this.init) : Tables.empty();
-            this.chosenTables = this.init ? Tables.of(this.init) : Tables.empty();
-
-            axios.get(this.tablesEndpoint + '?' + request.queryParams)
-                .then((res: any) => {
-                    this.tables.merge(res.data);
-                })
-                .catch((err: any) => console.error(err));
-        },
-        handleTableClick(tableId: string): void {
-            const {tables} = this.tables;
-            const table: Table | undefined = tables.find(table => table.id === parseInt(tableId));
-            if (table) {
-                this.chosenTables.mergeTableOrElseRemove(table);
+        handleTableClick(tableId) {
+            if (this.selectedTables.find(table => table.id === tableId)) {
+                this.$emit("value:changed", {tables: this.selectedTables.filter(table => table.id !== tableId)});
+            } else {
+                this.$emit("value:changed", {tables: this.selectedTables.concat(this.tables.find(table => table.id === tableId))});
             }
-            this.$emit('tables:chosen', this.chosenTables);
         },
-        isActive(tableId: string): boolean {
-            return this.chosenTables.tables.find(table => table.id === parseInt(tableId)) !== undefined;
-        }
+        isActive(tableId) {
+            return this.selectedTables.find(table => table.id === tableId) !== undefined;
+        },
+        getAsNumber(parent, val) {
+            return parseInt(val);
+        },
     },
-    watch: {
-        filterData: 'updateTables',
-        init(n: Tables | Table, o: Tables | Table) {
-            this.tables = Tables.of(n);
-            this.chosenTables = Tables.of(n);
-            this.$emit('tables:chosen', this.chosenTables);
+    computed: {
+        ...mapState({
+            tables: state => state.restaurant.tables,
+            isLoading: state => state.loadingStates.tables,
+            errors: state => state.reservations.errors
+        }),
+        sortedTables() {
+            return this.tables.sort((a, b) => a.table_number - b.table_number);
+        },
+        hasTableError() {
+            return Object.keys(this.errors).includes('tables');
         }
-    },
-});
+    }
+}
 
 </script>
+
+<style scoped>
+.lds-dual-ring {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 0px;
+    border-radius: 50%;
+    border: 3px solid #374152;
+    border-color: #1f2a37 transparent #374152 transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+</style>

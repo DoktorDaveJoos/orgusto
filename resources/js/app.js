@@ -11,9 +11,17 @@ window._ = _ = require('lodash');
 window.Vue = require('vue');
 import VCalendar from 'v-calendar';
 
+// Localization
+import { Lang } from 'laravel-vue-lang';
+
 // Use v-calendar & v-date-picker components
 Vue.use(VCalendar);
 Vue.use(require('vue-moment'));
+Vue.use(Lang, {
+    locale: 'de',
+    fallback: 'en',
+})
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -49,13 +57,13 @@ var bus = new Vue({});
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+const store = require('./store');
+
 const app = new Vue({
     el: '#app',
     data: {
         bus: bus
-    }
+    },
+    store
 });
 
-const navApp = new Vue({
-    el: '#navApp'
-})

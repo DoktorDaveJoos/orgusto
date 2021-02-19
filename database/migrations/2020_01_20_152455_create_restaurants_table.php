@@ -25,6 +25,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('city')->nullable();
             $table->integer('default_table_seats')->default(4);
             $table->boolean('seat_reservation_bound')->default(true);
+            $table->softDeletes();
         });
     }
 

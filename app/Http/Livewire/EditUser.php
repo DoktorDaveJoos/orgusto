@@ -51,7 +51,7 @@ class EditUser extends Component
 
         $this->user->update($validated);
         $this->is_dirty = false;
-        $message = $this->user->wasChanged() ? 'User successfully changed' : 'Something went wrong';
+        $message = $this->user->wasChanged() ? __('messages.user_updated') : __('messages.went_wrong');
         session()->flash('message', $message);
     }
 

@@ -23,7 +23,6 @@ class ReservationsController extends Controller
         $this->middleware('auth');
     }
 
-    // TODO: Refactor -> easy to read
     public function index(Request $request)
     {
         $restaurant = $this->getRestaurant();
@@ -31,77 +30,66 @@ class ReservationsController extends Controller
             return redirect()->route('restaurants.show');
         }
 
-        // marked as fulfilled
-        $showIsFulfilled = $request->get('fulfilled') ?? false;
+        if ($request->get('search')) {
+            $user_ids = $restaurant->users()->get()->pluck('id');
 
-        $searchQuery = $request->get('searchQuery');
+            $query = Reservation::search($request->get('search'));
+            $user_ids->each(function ($item) use ($query) {
+                $query->where('user_id', $item);
+            });
 
-        $from = $this->getStartFromRequest($request);
-        $to = $this->getEndFromRequest($request);
-
-        $empty_search = false;
-
-        // No search query given
-        if (!$searchQuery) {
-            if ($showIsFulfilled) {
-                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id);
-                })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
-            } else {
-                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id)->where('done', false);
-                })->whereBetween('start', [$from, $to])->with(['tables', 'user'])->closest()->simplePaginate(20);
-            }
         } else {
-            // Search query given
-            $name_term = $name_term = '%' . $searchQuery . '%';
-            $constraints = [
-                ['name', 'like', $name_term],
-                ['start', '>=', $from],
-                ['start', '<=', $to]
-            ];
-
-            if ($showIsFulfilled) {
-                $found_by_name = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id);
-                })->where($constraints)->get();
-                $results = Reservation::search($searchQuery)->get();
-            } else {
-                $found_by_name = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id)->where('done', false);
-                })->where($constraints)->get();
-                $results = Reservation::search($searchQuery)->where('done', false)->get();
-            }
-
-            $reservations = $results
-                ->filter(function ($reservation, $key) use ($from, $to) {
-                    return $reservation->start >= $from && $reservation->start <= $to;
-                })
-                ->merge($found_by_name)
-                ->unique();
+            $query = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
+            });
         }
+        $this->buildQueryFromRequest($request, $query);
 
-        if (sizeof($reservations) < 1) {
-            $empty_search = true;
-
-            // Upcoming reservations
-            if ($showIsFulfilled) {
-                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id);
-                })->where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
-            } else {
-                $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id)->where('done', false);
-                })->where('start', '>', date('Y-m-d'))->with('user')->paginate(15);
-            }
-        }
+        $reservations = $query->paginate();
 
         if (request()->wantsJson()) {
             return ReservationResource::collection($reservations);
         }
-
-        return view('reservations', ['reservations' => $reservations, 'empty_search' => $empty_search, 'query' => $searchQuery]);
+        return view('reservations');
     }
+
+    public function scoped(Request $request)
+    {
+
+        $restaurant = $this->getRestaurant();
+
+        $from = $this->getStartFromRequest($request);
+        $to = $this->getEndFromRequest($request);
+
+        $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+            $q->where('restaurant_id', $restaurant->id);
+        })->whereBetween('start', [$from, $to])->get();
+
+        return ReservationResource::collection($reservations);
+    }
+
+
+    private function buildQueryFromRequest($request, $query)
+    {
+        if (!$request->get('done')) {
+            $query->where('done', 0);
+        }
+
+        if (!$request->get('past')) {
+            if ($request->get('from')) {
+                $query->where('start', '>=', $request->get('from'));
+            } else {
+                $query->where('start', '>=', Carbon::today());
+            }
+
+            if ($request->get('to')) {
+                $to = Carbon::parse($request->get('to'))->endOfDay();
+                $query->where('start', '<=', $to);
+            }
+        }
+
+    }
+
 
     public function show(Reservation $reservation)
     {
@@ -117,27 +105,29 @@ class ReservationsController extends Controller
     public function store(CreateReservation $request)
     {
         $newReservation = $request->validated();
-        $this->validateTables($newReservation['start'],
-            $newReservation['duration'], $newReservation['tables']);
+
+        $this->validateTables($newReservation);
 
         $reservation = Reservation::create($newReservation);
         $reservation->tables()->attach($newReservation['tables']);
-        $reservation->save();
 
         return response(null, self::STATUS_CREATED);
     }
 
     public function update(CreateReservation $request, Reservation $reservation)
     {
-        $updatedReservation = $request->validated();
+        $updated = $request->validated();
 
-        $this->validateTables($updatedReservation['start'],
-            $updatedReservation['duration'], $updatedReservation['tables'],
-            $reservation);
+        $this->validateTables($updated, $reservation->id);
 
-        $reservation->update($updatedReservation);
-        $reservation->tables()->sync($updatedReservation['tables']);
-        $reservation->save();
+        $reservation->update($updated);
+        $reservation->tables()->sync($updated['tables']);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 200
+            ]);
+        }
 
         return response(null, self::STATUS_NO_CONTENT);
     }
@@ -163,100 +153,50 @@ class ReservationsController extends Controller
         }
     }
 
-    public function search(Request $request)
-    {
-
-        $results = [];
-        $st = $request->searchQuery;
-        $from = $this->getStartFromRequest($request)->toDate();
-        $to = $this->getEndFromRequest($request)->toDate();
-
-        $name_term = '%' . $st . '%';
-
-        $constraints = [
-            ['name', 'like', $name_term],
-            ['start', '>=', $from],
-            ['start', '<=', $to]
-        ];
-
-        $found_by_name = Reservation::where($constraints)->get();
-
-        $results = Reservation::search($st)->get();
-
-        $results = $results
-            ->filter(function ($reservation, $key) use ($from, $to) {
-                return $reservation->start >= $from && $reservation->start <= $to;
-            })
-            ->merge($found_by_name)
-            ->unique()
-            ->map(function ($hit) use ($st) {
-                $expl_st = preg_split('/[" "]+/m', $st);
-
-                foreach ($expl_st as $elem) {
-                    $hit->name = preg_replace('/(' . $elem . ')/i', "<b>$1</b>", $hit->name);
-
-                    if (strpos($hit->notice, $elem) !== false) {
-                        $hit->notice = preg_replace('/(' . $elem . ')/i', "<b>$1</b>", $hit->notice);
-                        $hit->found_notice = true;
-                    }
-
-                    if (strpos($hit->email, $elem) !== false) {
-                        $hit->email = preg_replace('/(' . $elem . ')/i', "<b>$1</b>", $hit->email);
-                        $hit->found_email = true;
-                    }
-
-                    if (strpos($hit->phone_number, $elem) !== false) {
-                        $hit->phone_number = preg_replace('/(' . $elem . ')/i', "<b>$1</b>", $hit->phone_number);
-                        $hit->found_phone_number = true;
-                    }
-                }
-                return $hit;
-            });
-
-        if (request()->wantsJson()) {
-            return $results;
-        }
-
-        return view('reservations', ['reservations' => $results]);
-    }
 
     /**
      * Checks if given tables are available in period (start_date -> start_date + duration).
      * Aborts the request if tables are not available.
      *
-     * @param mixed $start_date - The start date.
-     * @param int $duration - Duration in minutes.
-     * @param array $tables - Array of tables to check.
-     * @param Reservation|null $reservation - The (optional) Reservation to check against.
+     * @param $updated - The reservation.
+     * @param null $existing_id
      */
-    private function validateTables($start_date, int $duration,
-                                    array $tables, Reservation $reservation = null): void
+    private function validateTables($updated, $existing_id = null): void
     {
-        if (!($start_date instanceof Carbon) || !($start_date instanceof CarbonImmutable)) {
-            $start_date = CarbonImmutable::parse($start_date);
-        }
+        $start = CarbonImmutable::parse($updated['start']);
+        $end = $start->addMinutes($updated['duration']);
 
-        $end_date = $start_date
-            ->addMinutes($duration);
+        $tables = Table::whereIn('id', $updated['tables'])->withReservationsBetween($start, $end)->get();
 
-        $tablesAlreadyBooked = Table::where('id', $tables)
-            ->withReservationsBetween($start_date, $end_date)
-            ->with('reservations')->get();
-
-        $tablesAlreadyBooked->whenNotEmpty(function ($tables) use ($reservation) {
-            if ($reservation === null) {
-                abort(self::STATUS_BAD_REQUEST,
-                    'Table with table number: ' . $tables->first()->table_number . ' cannot be booked for this period because the reservation overlaps with an existing one.');
-            } else {
-                foreach ($tables as $table) {
-                    foreach ($table->reservations as $bookedReservation) {
-                        if ($bookedReservation->id !== $reservation->id) {
-                            abort(self::STATUS_BAD_REQUEST,
-                                'Table with table number: ' . $tables->first()->table_number . ' cannot be booked for this period because the reservation overlaps with an existing one.');
-                        } // else -> it's not another reservation, updating is fine.
-                    }
-                }
-            }
+        // Remove all bumping reservations
+        $tables->each(function ($table) use ($start, $end) {
+            $table['reservations'] = $table['reservations']->filter(function ($reservation) use ($start, $end) {
+                return !$this->justBumping($reservation, $start, $end);
+            });
         });
+
+        // Check if left reservations are it-self
+        $tables->each(function ($table) use ($updated, $existing_id) {
+            $table['reservations']->each(function ($reservation) use ($updated, $table, $existing_id) {
+                if ($reservation->id !== $existing_id) {
+                    abort(self::STATUS_BAD_REQUEST,
+                        'Table number: ' . $table->table_number . ' is blocked by reservation: ' . $reservation->name);
+                }
+            });
+        });
+
+    }
+
+    private function justBumping($reservation, $start, $end)
+    {
+        // the reservation just starts at the end - so its okay:
+        if ($end->isSameMinute(Carbon::parse($reservation->start))) {
+            return true;
+        }
+        // the reservation ends at the start - so its okay:
+        if ($reservation->start->addMinutes($reservation->duration)->isSameMinute($start)) {
+            return true;
+        }
+        return false;
     }
 }

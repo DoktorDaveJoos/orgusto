@@ -11,6 +11,7 @@ class EditTable extends Component
     public $table;
     public $restaurant;
 
+//    public $id;
     public $seats;
     public $description;
     public $table_number;
@@ -56,7 +57,7 @@ class EditTable extends Component
         ]);
 
         $this->table->update($validated);
-        $message = $this->table->wasChanged() ? 'Table successfully changed' : 'Something went wrong';
+        $message = $this->table->wasChanged() ? __('messages.table_updated') : __('messages.went_wrong');
         session()->flash('message', $message);
     }
 

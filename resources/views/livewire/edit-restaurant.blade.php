@@ -4,98 +4,66 @@
     @slot('optional_button')
     <button type="button" @if (!$is_dirty) disabled @endif wire:click="submit" class="orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-colors duration-150 ease-in-out">
         <i class="fas fa-save mr-2"></i>
-        save restaurant
+        {{ __('restaurants.save_restaurant') }}
     </button>
     @endslot
 
     <div class="w-full px-6 py-4 bg-gray-200">
         <p class="text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-            Last updated {{ $this->getRestaurantUpdatedAtForHumans() }}
+            {{ __('restaurants.last_updated') }} {{ $this->getRestaurantUpdatedAtForHumans() }}
         </p>
     </div>
 
-    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">Information</div>
+    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">{{ __('restaurants.information') }}</div>
 
     <div class="flex flex-col sm:flex-row flex-wrap p-6 border-b border-gray-200">
-        @forminput(['label' => 'name'])
+        @forminput(['label' => __('restaurants.name')])
         <input id="name" wire:model.debounce.500ms="name" class="orgusto-input w-full sm:w-64 flex-1 transition-all duration-150 ease-in-out" placeholder="Restaurant name" />
         @error('name') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
-        @forminput(['label' => 'email'])
-        <input id="email" wire:model.debounce.500ms="contact_email" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Email" />
+        @forminput(['label' => __('restaurants.email')])
+        <input id="email" wire:model.debounce.500ms="contact_email" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.email') }}" />
         @error('contact_email') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
-        @forminput(['label' => 'owner'])
-        <input id="owner" wire:model.debounce.500ms="owner" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Owner" />
+        @forminput(['label' => __('restaurants.owner')])
+        <input id="owner" wire:model.debounce.500ms="owner" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.owner') }}" />
         @error('owner') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
     </div>
 
-    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">Address</div>
+    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">{{ __('restaurants.address') }}</div>
 
     <div class="flex flex-col sm:flex-row flex-wrap p-6 border-b border-gray-200">
-        @forminput(['label' => 'street'])
-        <input id="street" wire:model.debounce.500ms="street" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Street" />
+        @forminput(['label' => __('restaurants.street')])
+        <input id="street" wire:model.debounce.500ms="street" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.street') }}" />
         @error('street') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
-        @forminput(['label' => 'street number'])
-        <input id="street number" wire:model.debounce.500ms="street_number" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Street number" />
+        @forminput(['label' => __('restaurants.street_number')])
+        <input id="street number" wire:model.debounce.500ms="street_number" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.street_number') }}" />
         @error('street_number') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
-        @forminput(['label' => 'zip code'])
-        <input id="zip code" wire:model.debounce.500ms="zip_code" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Zip code" />
+        @forminput(['label' => __('restaurants.zip_code')])
+        <input id="zip code" wire:model.debounce.500ms="zip_code" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.zip_code') }}" />
         @error('zip_code') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
-        @forminput(['label' => 'city'])
-        <input id="city" wire:model.debounce.500ms="city" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="City" />
+        @forminput(['label' => __('restaurants.city')])
+        <input id="city" wire:model.debounce.500ms="city" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.city') }}" />
         @error('city') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-    </div>
-
-    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">Settings</div>
-
-    <div class="pt-4 px-6 text-gray-600 text-sm">
-        <p>
-            The <strong>default seat count</strong> determines with how many seats a new table will be created. You can subsequently adjust the number of seats per table for each table.
-        </p>
-
-        <p class="mt-2">
-            <strong>Bind seat count</strong> specifies that a table cannot be overbooked. This means that you can book a maximum of four people on a table with four seats.
-        </p>
-
-    </div>
-
-    <div class="flex flex-col sm:flex-row w-2/3 flex-wrap p-6 ">
-        @forminput(['label' => 'Default seat count'])
-        <input id="default seat count" wire:model.debounce.500ms="default_table_seats" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="Number of seats by default" />
-        @error('default_table_seats') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-        @forminput(['label' => 'Bind seat count'])
-        <label for="x123" class="inline-flex items-center cursor-pointer">
-            <span x-data="{ isChecked : @if($this->seat_reservation_bound) true @else false @endif }" class="relative">
-                <span class="block h-8 rounded-full shadow-inner bg-gray-200" style="width: 3.5rem"></span>
-                <span class="pl-1 w-6 h-6" x-bind:class="isChecked ? 'unchecked' : 'checked'">
-                    <input wire:model="seat_reservation_bound" id="x123" type="checkbox" class="absolute opacity-0 w-0 h-0" />
-                    <i class="fas fa-check text-gray-200 transition-opacity duration-300 ease-in-out" style="height: 0.125rem;" x-bind:class="isChecked ? 'opacity-0' : 'opacity-100'"></i>
-                </span>
-            </span>
-        </label>
-        @error('seat_reservation_bound') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
     </div>
 
     @endinfocard
 
-    @infocard(['title' => 'Accounts'])
+    @infocard(['title' => __('restaurants.accounts') ])
     @slot('optional_button')
     <button onclick="window.dispatchEvent(new CustomEvent('open-modal'))" class="orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-colors duration-150 ease-in-out">
         <i class="fas fa-plus mr-2"></i>
-        add account
+        {{ __('restaurants.add_account') }}
     </button>
     @endslot
     @table
     @slot('table_head')
-    @foreach(['Name', 'Email', 'Type', 'Role', '', ''] as $th)
+    @foreach([__('restaurants.name'), __('restaurants.email'), __('restaurants.type'), __('restaurants.role'), '', ''] as $th)
     @tablehead {{ $th }} @endtablehead
     @endforeach
     @endslot
@@ -112,12 +80,12 @@
         @tablecell {{ $user->pivot->role }} @endtablecell
         <td class="px-6 py-4 text-right text-sm leading-5 font-medium">
             @if ($user->type == 'anonymous' || $user->type == 'invited' || $user->id == auth()->user()->id)
-            <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out" href="{{ route('user.show', ['user' => $user]) }}">Edit</a>
+            <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out" href="{{ route('user.show', ['user' => $user]) }}">{{ __('restaurants.edit') }}</a>
             @endif
         </td>
         <td class="px-6 py-4 flex justify-end">
             @if($user->pivot->role != 'admin')
-            <button wire:click="removeAccount({{ $user->id }})" class="orgusto-button my-auto mr-0 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out">Remove</button>
+            <button wire:click="removeAccount({{ $user->id }})" class="orgusto-button my-auto mr-0 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out">{{ __('restaurants.remove') }}</button>
             @endif
         </td>
     </tr>
@@ -126,16 +94,16 @@
     @endtable
     @endinfocard
 
-    @infocard(['title' => 'Tables'])
+    @infocard(['title' => __('restaurants.tables') ])
     @slot('optional_button')
     <button wire:click="addTable" class="orgusto-button text-blue-600 hover:text-white hover:bg-blue-600 transition-colors duration-150 ease-in-out">
         <i class="fas fa-plus mr-2"></i>
-        add table
+        {{ __('restaurants.add_table') }}
     </button>
     @endslot
     @table
     @slot('table_head')
-    @foreach(['Table Number', 'Seats', 'Description', 'Updated at', '', ''] as $th)
+    @foreach([__('restaurants.table_number'), __('restaurants.table_seats'), __('restaurants.table_description'), __('restaurants.last_updated'), '', ''] as $th)
     @tablehead {{ $th }} @endtablehead
     @endforeach
     @endslot
@@ -147,10 +115,10 @@
         @tablecell {{ $table->description }} @endtablecell
         @tablecell {{ $table->updated_at }} @endtablecell
         <td class="px-6 py-4 text-right text-sm leading-5 font-medium">
-            <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out" href="{{ route('restaurant.table.show', ['restaurant' => $restaurant, 'table' => $table]) }}">Edit</a>
+            <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out" href="{{ route('restaurant.table.show', ['restaurant' => $restaurant, 'table' => $table]) }}">{{ __('restaurants.edit') }}</a>
         </td>
         <td class="px-6 py-4">
-            <button wire:click="deleteTable({{ $table->id }})" class="orgusto-button my-auto mr-0 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out">Delete</button>
+            <button wire:click="deleteTable({{ $table->id }})" class="orgusto-button my-auto mr-0 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out">{{ __('restaurants.delete') }}</button>
         </td>
     </tr>
     @endforeach

@@ -6,18 +6,18 @@
                 <span class="text-xs pt-1 pointer-events-none font-semibold">New reservation</span>
             </span>
         </button>
-        <orgusto-modal-wrapper :is-open="open" :handle-close="handleClose">
-            <reservation-item
-                v-on:modal:close="handleClose"
-                :tables-endpoint="tablesEndpoint"
-                :reservations-endpoint="reservationsEndpoint"
-                :reset="true"
-            ></reservation-item>
-        </orgusto-modal-wrapper>
+<!--        <orgusto-modal-wrapper :is-open="open" :handle-close="handleClose">-->
+<!--            <reservation-item-->
+<!--                :reservation="reservation"-->
+<!--                v-on:modal:close="handleClose"-->
+<!--            ></reservation-item>-->
+<!--        </orgusto-modal-wrapper>-->
     </div>
 </template>
 
 <script>
+
+import Reservation from "../models/Reservation";
 
 export default {
     props: ["tablesEndpoint", "reservationsEndpoint"],
@@ -33,6 +33,9 @@ export default {
         handleClose() {
             this.open = false;
         }
+    },
+    computed: {
+        reservation: () => Reservation.empty()
     }
 };
 </script>

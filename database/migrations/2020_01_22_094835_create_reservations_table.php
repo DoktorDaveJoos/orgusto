@@ -27,6 +27,7 @@ class CreateReservationsTable extends Migration
 
             $table->unsignedBigInteger('user_id');
             $table->boolean('done')->default(false);
+            $table->softDeletes();
         });
     }
 
