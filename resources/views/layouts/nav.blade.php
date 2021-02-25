@@ -1,7 +1,7 @@
 <nav class="flex justify-center @guest  @else bg-gray-200 shadow-md @endif sticky top-0 z-50">
-    <div class="max-w-6xl w-full flex flex-row justify-between p-2 content-center">
+    <div class="max-w-6xl w-full flex flex-row justify-between pl-6 p-2 content-center">
         <div class="flex flex-col items-center">
-            <a href="{{  route('home') }}">
+            <a href="@guest {{  route('home') }} @else {{ route('reservations.show') }} @endguest">
                 <img class="w-32" src="{{ asset('orgusto-logo-svg.svg') }}"/>
                 <span class="text-xs text-gray-600 text-italic">{{ config('app.version') }} - free premium</span>
             </a>
@@ -12,12 +12,9 @@
                 <div class="flex flex-1 justify-end">
                     <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 mr-6"
                        href="{{ route('login') }}">{{ __('auth.login') }}</a>
-                    @if (Route::has('register'))
-                        <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700"
-                           href="{{ route('register') }}">{{ __('auth.register') }}</a>
+                    <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 pr-6"
+                       href="{{ route('register') }}">{{ __('auth.register') }}</a>
                 </div>
-            @endif
-
             @else
                 <div class="flex flex-1 justify-between items-center">
 
@@ -39,13 +36,11 @@
                             <span class="text-xs pt-1">{{ __('nav.restaurants') }}</span>
                         </a>
 
-
                     </div>
                     <div>
                         <span class="text-gray-600 text-center hover:border-gray-600 pr-2 mr-6">
                             Hi, {{ Auth::user()->name }}!
                         </span>
-
 
                         <span
                             class="text-gray-600 text-center hover:border-gray-600 pr-2">Logout</span>
@@ -55,6 +50,7 @@
                     </div>
                 </div>
             @endguest
+
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                 @csrf
             </form>

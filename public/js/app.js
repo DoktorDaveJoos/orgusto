@@ -4178,6 +4178,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchReservation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SearchReservation */ "./resources/js/components/SearchReservation.vue");
 /* harmony import */ var _ReservationsView_SearchBar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ReservationsView/SearchBar */ "./resources/js/components/ReservationsView/SearchBar.vue");
 /* harmony import */ var _ReservationsView_Paginator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ReservationsView/Paginator */ "./resources/js/components/ReservationsView/Paginator.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
 //
 //
 //
@@ -4301,14 +4309,14 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.dispatch('showAllFullFilled', val);
     }
   },
-  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     reservations: function reservations(state) {
       return state.reservations;
     },
     filter: function filter(state) {
       return state.filter;
     }
-  }),
+  })),
   watch: {
     'filter.past': function filterPast() {
       this.$store.dispatch('loadPaginatedReservations');
@@ -99139,15 +99147,17 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
 var map = {
 	"./de/auth.php": "./resources/lang/de/auth.php",
 	"./de/common.php": "./resources/lang/de/common.php",
+	"./de/footer.php": "./resources/lang/de/footer.php",
 	"./de/messages.php": "./resources/lang/de/messages.php",
 	"./de/nav.php": "./resources/lang/de/nav.php",
 	"./de/pagination.php": "./resources/lang/de/pagination.php",
 	"./de/passwords.php": "./resources/lang/de/passwords.php",
 	"./de/restaurants.php": "./resources/lang/de/restaurants.php",
 	"./de/validation.php": "./resources/lang/de/validation.php",
-	"./en/app.php": "./resources/lang/en/app.php",
 	"./en/auth.php": "./resources/lang/en/auth.php",
 	"./en/common.php": "./resources/lang/en/common.php",
+	"./en/footer.php": "./resources/lang/en/footer.php",
+	"./en/messages.php": "./resources/lang/en/messages.php",
 	"./en/nav.php": "./resources/lang/en/nav.php",
 	"./en/pagination.php": "./resources/lang/en/pagination.php",
 	"./en/passwords.php": "./resources/lang/en/passwords.php",
@@ -99198,6 +99208,17 @@ module.exports = {"failed":"Diese Anmeldedaten stimmen nicht mit unseren Aufzeic
 /***/ (function(module, exports) {
 
 module.exports = {"restaurants":"Restaurants","Reservations":"Reservierungen","reservations":"reservierungen","new_reservation":"Neue Reservierung","no_reservations":"Keine Reservierungen bisher","create_one":"Erstelle eine :-)","name":"name","start":"beginn","duration":"dauer","tables":"tische","guests":"gäste","email":"email","phone_number":"Telefon","fulfilled":"erledigt","search":"Suche","include_past":"vergangenheit einbeziehen","date":"datum","date range":"datumsbereich","Date":"Datum","Date_range":"Datumsbereich","who_are_you":"wer bist du","today":"heute","tomorrow":"morgen","day_after_tomorrow":"übermorgen","choose_date":"wähle datum","choose_time":"wähle zeit","guests_duration":"anzahl der gäste & dauer","more":"mehr","name_guest":"Name des Gastes / Gruppe","additional_info":"Etwas mehr Information ...","free_tables":"Freie Tische die zu deiner Reservierung passen","no_tables":"Keine Tische für deine Reservierung gefunden","cancel":"Abbrechen","save":"Sichern","update":"Aktualisieren","delete":"Löschen","remove":"Entfernen","add_employees":"Mitarbeiter hinzufügen","getting_tables":"Hole verfügbare Tische ...","to_many_guests":"Zu viele Gäste für die gegebenen Tische.","employees":"Mitarbeiter","showing":"Zeige","to":"bis","of":"von","results":"Ergebnissen","Tables":"Tische","seats":"Sitzplätze","hours":"Stunden","minutes":"Minuten"};
+
+/***/ }),
+
+/***/ "./resources/lang/de/footer.php":
+/*!**************************************!*\
+  !*** ./resources/lang/de/footer.php ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"imprint":"Impressum","privacy":"Datenschutz"};
 
 /***/ }),
 
@@ -99267,17 +99288,6 @@ module.exports = {"accepted":":attribute muss akzeptiert werden.","active_url":"
 
 /***/ }),
 
-/***/ "./resources/lang/en/app.php":
-/*!***********************************!*\
-  !*** ./resources/lang/en/app.php ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = {"email_address":"Email adress","password":"Password","Remember me":"Remember me","throttle":"Too many login attempts. Please try again in :seconds seconds."};
-
-/***/ }),
-
 /***/ "./resources/lang/en/auth.php":
 /*!************************************!*\
   !*** ./resources/lang/en/auth.php ***!
@@ -99296,7 +99306,29 @@ module.exports = {"failed":"These credentials do not match our records.","thrott
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = {"restaurants":"Restaurants","Reservations":"Reservations","reservations":"reservations","new_reservation":"New reservation","no_reservations":"No reservations so far","create_one":"Create one :-)","name":"name","start":"start","duration":"duration","tables":"tables","guests":"guests","email":"email","phone_number":"phone number","fulfilled":"fulfilled","search":"search","include_past":"include past","date":"date","date range":"date range","Date":"Date","Date range":"Date range","who_are_you":"who are you","today":"today","tomorrow":"tomorrow","day_after_tomorrow":"day after tomorrow","choose_date":"choose date","choose_time":"choose time","guests_duration":"number of guests & duration","more":"more","name_guest":"Name of the guest / group","additional_info":"Some additional information ...","free_tables":"free tables matching your reservation","no_tables":"No tables available for this reservation","cancel":"Cancel","save":"Save","updated":"Update","delete":"Delete","remove":"Remove","add_employees":"Add employees","getting_tables":"Getting available tables ...","showing":"Showing","to":"to","of":"of","results":"results"};
+module.exports = {"restaurants":"Restaurants","Reservations":"Reservations","reservations":"reservations","new_reservation":"New reservation","no_reservations":"No reservations so far","create_one":"Create one :-)","name":"name","start":"start","duration":"duration","tables":"tables","guests":"guests","email":"email","phone_number":"phone number","fulfilled":"fulfilled","search":"search","include_past":"include past","date":"date","date range":"date range","Date":"Date","Date range":"Date range","who_are_you":"who are you","today":"today","tomorrow":"tomorrow","day_after_tomorrow":"day after tomorrow","choose_date":"choose date","choose_time":"choose time","guests_duration":"number of guests & duration","more":"more","name_guest":"Name of the guest / group","additional_info":"Some additional information ...","free_tables":"free tables matching your reservation","no_tables":"No tables available for this reservation","cancel":"Cancel","save":"Save","updated":"Update","delete":"Delete","remove":"Remove","add_employees":"Add employees","getting_tables":"Getting available tables ...","to_many_guests":"Too many guests for given tables...","employees":"Employees","showing":"Showing","to":"to","of":"of","results":"results","Tables":"Tables","seats":"Seats","hours":"Hours","minutes":"Minutes"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/footer.php":
+/*!**************************************!*\
+  !*** ./resources/lang/en/footer.php ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"imprint":"Imprint","privacy":"Privacy settings"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/messages.php":
+/*!****************************************!*\
+  !*** ./resources/lang/en/messages.php ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"updated_restaurant":"Restaurant successfully updated.","went_wrong":"Something went wrong ...","table_created":"Table :table_number successfully created.","table_not_created":"Table :table_number could not be created. Please contact service team.","table_deleted":"Table deleted.","table_not_deleted":"Table could not be deleted. Please contact service team.","user_detached":"Employee / user: :email successully removed.","table_updated":"Table successfully updated","user_updated":"User successfully updated","user_added":"Registered user :user_name :user_email added.","user_invited":"Successfully invited: :user_email","employee_added":"Employee :name added","add":"add","invite":"invite"};
 
 /***/ }),
 

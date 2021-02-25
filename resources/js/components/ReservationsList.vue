@@ -27,7 +27,9 @@
                         <div class="ml-4 flex items-center">
                             <input id="past" name="candidates" type="checkbox" v-model="filter.past"
                                    class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded mr-1">
-                            <label for="past" class="text-gray-700 uppercase text-xs">{{ __('common.include_past') }}</label>
+                            <label for="past" class="text-gray-700 uppercase text-xs">{{
+                                    __('common.include_past')
+                                }}</label>
                         </div>
                     </div>
 
@@ -119,12 +121,14 @@ export default {
             this.$store.dispatch('showAllFullFilled', val);
         }
     },
-    computed: mapState({
-        reservations: state => state.reservations,
-        filter: state => state.filter
-    }),
+    computed: {
+        ...mapState({
+            reservations: state => state.reservations,
+            filter: state => state.filter
+        }),
+    },
     watch: {
-        'filter.past': function() {
+        'filter.past': function () {
             this.$store.dispatch('loadPaginatedReservations')
         }
     }
