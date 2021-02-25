@@ -7,8 +7,8 @@
     </div>
 
     <div>
-        <a class="text-gray-800 text-sm mr-4 hover:text-indigo-800" href="{{ route('imprint') }}">Imprint</a>
-        <a class="text-gray-800 text-sm mr-4 hover:text-indigo-800" href="{{ route('privacy') }}">Privacy settings</a>
+        <a class="text-gray-800 text-sm mr-4 hover:text-indigo-800" href="{{ route('imprint') }}">{{ __('footer.imprint') }}</a>
+        <a class="text-gray-800 text-sm mr-4 hover:text-indigo-800" href="{{ route('privacy') }}">{{ __('footer.privacy') }}</a>
     </div>
 
 

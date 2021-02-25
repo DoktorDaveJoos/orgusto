@@ -69,8 +69,4 @@ return [
     'hours' => 'Stunden',
     'minutes' => 'Minuten'
 
-
-
-
-
 ];

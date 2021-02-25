@@ -54,12 +54,19 @@ return [
     'remove' => 'Remove',
     'add_employees' => 'Add employees',
     'getting_tables' => 'Getting available tables ...',
+    'to_many_guests' => 'Too many guests for given tables...',
+    'employees' => 'Employees',
 
     // pagination
     'showing' => 'Showing',
     'to' => 'to',
     'of' => 'of',
-    'results' => 'results'
+    'results' => 'results',
 
+    // tables
+    'Tables' => 'Tables',
+    'seats' => 'Seats',
+    'hours' => 'Hours',
+    'minutes' => 'Minutes'
 
 ];
