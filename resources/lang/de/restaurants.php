@@ -34,7 +34,7 @@ return [
     'registered' => 'registriert',
 
     // modals
-    'note_no_restaurant' => 'Wichtige Information: Du brauchst mindestens ein Restaurant. Erstelle dein erstes Restaurant oder beantrage den Zugriff auf ein bestehendes.',
+    'note_no_restaurant' => 'Wichtige Information: Du brauchst mindestens 1 Restaurant. Erstelle dein erstes Restaurant oder beantrage den Zugriff auf ein bestehendes.',
     'note_enter_restaurant_name' => 'Gib den Namen des Restaurants, das du löschen willst ein und drücke "löschen".',
     'new_restaurant_placeholder' => 'Das wundervolle Restaurant ...',
     'only_premium' => 'Diese Aktion können nur registrierte Premium Nutzer ausführen.',
@@ -58,6 +58,7 @@ return [
     'access_level' => 'Berechtigung',
     'belongs_to' => 'gehört zu',
     'Table' => 'Tisch',
+    'billing' => 'Rechnungsportal',
 
     // add account
     'add_employee' => 'Mitarbeiter hinzufügen',

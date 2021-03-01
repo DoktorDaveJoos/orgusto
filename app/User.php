@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory;
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'type', 'access_level'
+        'name', 'email', 'password', 'type'
     ];
 
     /**
@@ -44,6 +43,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Restaurant::class)->withPivot(['role']);
     }
 
+    public function selected()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
     public function firstRestaurant()
     {
         return $this->restaurants()->first();
@@ -59,8 +63,4 @@ class User extends Authenticatable
         return $this->email_verified_at < date("Y-m-d H:i:s");
     }
 
-    public function isPremium()
-    {
-        return $this->access_level === 'premium';
-    }
 }

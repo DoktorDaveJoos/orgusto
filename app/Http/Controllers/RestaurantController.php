@@ -50,28 +50,35 @@ class RestaurantController extends Controller
     public function store(CreateRestaurant $request)
     {
 
-        if (auth()->user()->restaurants()->get()->count() > 0) {
-            $request->session()->flash('message', 'Right now it\'s not allowed to create more than one restaurant.');
-            return redirect()->route('restaurants.show');
-        }
+        $restaurant = Restaurant::create([
+            'name' => $request->validated()['name'],
+            'owner_id' => $request->user()->id
+        ]);
 
-        $restaurant = Restaurant::create($request->validated());
+        // Add creator as owner
+        $restaurant->owner = auth()->user();
 
         // Make creator 'admin' automatically
         auth()->user()->restaurants()->attach($restaurant->id, ['role' => 'admin']);
 
+        // Set fresh created restaurant as selected_restaurant
+        auth()->user()->selected = $restaurant;
+
         if ($request->wantsJson()) {
             return $restaurant;
         }
+
         return redirect()->route('restaurant.show', ['restaurant' => $restaurant->id]);
     }
 
     public function destroy(DeleteRestaurant $request, Restaurant $restaurant)
     {
-        if ($request->validated()['name'] == $restaurant->name) {
+        if ($request->validated()['name'] == $restaurant->name && $restaurant->owner() === auth()->user()) {
             Restaurant::destroy($restaurant->id);
+            $request->session()->flash('message', __('messages.deleted_restaurant'));
+        } else {
+            $request->session()->flash('message', __('messages.deleted_not_restaurant'));
         }
-        $request->session()->flash('message', 'Successfully deleted restaurant.');
 
         return redirect()->route('restaurants.show');
     }

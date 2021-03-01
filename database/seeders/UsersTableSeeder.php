@@ -24,7 +24,6 @@ class UsersTableSeeder extends Seeder
             'name' => 'David Joos',
             'type' => 'registered',
             'selected_restaurant' => 1,
-            'access_level' => 'premium',
             'email_verified_at' => now(),
             'password' => bcrypt('test'),
             'email' => 'joos.code@gmail.com'
@@ -32,7 +31,8 @@ class UsersTableSeeder extends Seeder
 
         $baseRestaurant = [
             'id' => 1,
-            'name' => 'Amboss'
+            'name' => 'Amboss',
+            'owner_id' => 1
         ];
 
         // Create local test setup with login for baseUser and Restaurant "Amboss"

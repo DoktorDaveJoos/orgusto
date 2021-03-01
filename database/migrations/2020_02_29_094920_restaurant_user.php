@@ -17,7 +17,7 @@ class RestaurantUser extends Migration
             $table->increments('id');
             $table->unsignedInteger('restaurant_id');
             $table->unsignedInteger('user_id');
-            $table->string('role')->default('user');
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->timestamps();
 
             $table->index(['restaurant_id', 'user_id']);

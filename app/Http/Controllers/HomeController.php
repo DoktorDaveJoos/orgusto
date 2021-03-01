@@ -7,11 +7,14 @@ class HomeController extends Controller
 {
     /**
      * Show landing page.
-     *
-     * @return Renderable
      */
-    public function index()
+    public function show()
     {
+
+        if (auth()->user()) {
+            return redirect()->route('reservations.show');
+        }
+
         return view('home');
     }
 }

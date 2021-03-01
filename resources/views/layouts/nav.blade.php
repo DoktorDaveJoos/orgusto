@@ -1,4 +1,4 @@
-<nav class="flex justify-center @guest  @else bg-gray-200 shadow-md @endif sticky top-0 z-50">
+<nav class="flex justify-center @guest @else bg-gray-200 shadow-md sticky @endif top-0 z-50">
     <div class="max-w-6xl w-full flex flex-row justify-between pl-6 p-2 content-center">
         <div class="flex flex-col items-center">
             <a href="@guest {{  route('home') }} @else {{ route('reservations.show') }} @endguest">
@@ -37,16 +37,22 @@
                         </a>
 
                     </div>
-                    <div>
-                        <span class="text-gray-600 text-center hover:border-gray-600 pr-2 mr-6">
-                            Hi, {{ Auth::user()->name }}!
-                        </span>
-
-                        <span
-                            class="text-gray-600 text-center hover:border-gray-600 pr-2">Logout</span>
-                        <a class="fas fa-sign-out-alt text-gray-600" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                             document.getElementById('logout-form').submit();">
+                    <div class="flex flex-shrink items-center">
+                        <a href="{{ route('user.show', ['user' => auth()->user()->id ]) }}"
+                           class="group flex flex-row justify-between items-center rounded-md p-2 mr-6">
+                            <img class="w-8 mr-2" src="{{ asset('img/user-icon.svg') }}"/>
+                            <span
+                                class="group-hover:text-indigo-600 text-gray-600 text-center hover:border-gray-600 pr-2">
+                                Hi, {{ Auth::user()->name }}!
+                            </span>
                         </a>
+
+                        <a class="group" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                            <span class="group-hover:text-indigo-600 text-gray-600 pr-1">Logout</span>
+                            <i class="fas fa-sign-out-alt text-gray-600 group-hover:text-indigo-600"></i>
+                        </a>
+
                     </div>
                 </div>
             @endguest

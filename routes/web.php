@@ -6,6 +6,8 @@ use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,8 +22,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', [HomeController::class, 'show'])->name('home');
 
 Route::get('/imprint', function() {
     return view('imprint');
@@ -47,6 +48,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])
             ->name('user.show')
             ->middleware('can:view,user');
+
+        Route::post('/user/subscribe', function (Request $request) {
+            $request->user()->newSubscription(
+                'default', 'price_premium'
+            )->create($request->paymentMethodId);
+
+            // TODO
+        });
 
         Route::get('/', [UserController::class, 'users'])
             ->name('users.show');

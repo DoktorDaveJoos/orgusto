@@ -23,7 +23,7 @@
 
     @if($errors->any())
         <div x-data="{ open: true }" x-show="open"
-             class="flex flex-row items-center justify-between bg-red-600 p-4 my-4 rounded-md font-semibold text-sm leading-tight text-white w-full shadow-md">
+             class="flex flex-row items-center justify-between bg-red-600 p-4 my-4rounded-md font-semibold text-sm leading-tight text-white w-full shadow-md">
             <div class="flex flex-row items-center">
                 <div class="p-2 px-3 mr-2 bg-red-700 rounded-md">
                     <i class="fas fa-exclamation-triangle text-white"></i>
@@ -46,15 +46,13 @@
     @endslot
     @table
     @slot('table_head')
-        @foreach([__('restaurants.name'), __('restaurants.address'), __('restaurants.owner'), __('restaurants.role'), '', ''] as $th)
+        @foreach([__('restaurants.name'), __('restaurants.address'), __('restaurants.owner'), __('restaurants.role'), '', '', ''] as $th)
             @tablehead {{ $th }} @endtablehead
         @endforeach
     @endslot
     @slot('table_body')
         @foreach($restaurants as $restaurant)
-
-
-            <tr class="">
+            <tr>
                 <td class="px-6 py-4 whitespace-no-wrap">
                     <div class="items-center">
                         <div class="leading-5 font-medium text-gray-900">{{ $restaurant->name }}</div>
@@ -69,10 +67,15 @@
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap">
                     <span class="text-xs leading-5 font-semibold text-gray-800">
-                      {{ $restaurant->owner }}
+                      {{ $restaurant->owner->name }}
                     </span>
+                    <div class="text-xs leading-5 text-gray-500">{{ $restaurant->owner->email }}</div>
                 </td>
                 @tablecell {{ $restaurant->pivot->role }} @endtablecell
+                <td>
+                    <a href="{{ '/billing/restaurant/'. $restaurant->id }}"
+                       class="orgusto-button px-6 bg-gray-100 text-gray-600 hover:text-white hover:bg-gray-600 transition-colors duration-150 ease-in-out">{{ __('restaurants.billing') }}</a>
+                </td>
                 <td class="text-right pl-6 py-4 text-sm leading-5 font-medium">
                     @if ($restaurant->pivot->role == 'admin')
                         <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out"
@@ -81,6 +84,7 @@
                         <span class="w-full text-sm px-3 py-2 mx-auto text-gray-400">{{ __('restaurants.edit') }}</span>
                     @endif
                 </td>
+
                 <td x-data class="flex justify-end py-4 pr-4">
                     @if($restaurant->pivot->role === 'admin')
                         <button
@@ -132,8 +136,6 @@
     @endtable
     @endinfocard
 
-
-
     @modal(['event' => 'open-add'])
     @slot('icon')
         <i class="fas fa-utensils"></i>
@@ -143,46 +145,26 @@
         id="modal-headline">
         {{ __('restaurants.add_restaurant') }}
     </h3>
-    @if(auth()->user()->isPremium())
-        <form method="POST" action="/restaurants" class="w-full -ml-2">
-            @csrf
-            @forminput(['label' => 'Restaurant name'])
-            <input class="orgusto-input w-full" type="text" name="name"
-                   placeholder="{{ __('restaurants.new_restaurant_placeholder') }}"/>
-            @error('name') <span
-                class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-            @endforminput
-            <div class="px-4 flex flex-row-reverse">
-                <button type="submit"
-                        class="orgusto-button bg-indigo-200 text-indigo-600 hover:text-white hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
-                    {{ __('restaurants.add') }}
-                </button>
-                <button x-on:click="openModal = false" type="button"
-                        class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out mr-4">
-                    {{ __('restaurants.cancel') }}
-                </button>
-            </div>
-        </form>
-    @else
-        <div class="w-full leading-tight text-sm text-gray-600">
-            <p class="my-4">
-                <span class="font-semibold text-gray-900">This feature is only for premium users.</span>
-                <br><br>
-                Right now this application is only for test purposes - please contact service team to inquire
-                premium
-                status for your account.
-                <br><br>
-                Thanks,<br>
-                Orgusto Team
-            </p>
-            <div class="flex flex-row-reverse">
-                <button x-on:click="openModal = false" type="button"
-                        class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out mr-4">
-                    {{ __('restaurants.close') }}
-                </button>
-            </div>
+
+    <form method="POST" action="/restaurants" class="w-full -ml-2">
+        @csrf
+        @forminput(['label' => 'Restaurant name'])
+        <input class="orgusto-input w-full" type="text" name="name"
+               placeholder="{{ __('restaurants.new_restaurant_placeholder') }}"/>
+        @error('name') <span
+            class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
+        @endforminput
+        <div class="px-4 flex flex-row-reverse">
+            <button type="submit"
+                    class="orgusto-button bg-indigo-200 text-indigo-600 hover:text-white hover:bg-indigo-600 transition-colors duration-200 ease-in-out">
+                {{ __('restaurants.add') }}
+            </button>
+            <button x-on:click="openModal = false" type="button"
+                    class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out mr-4">
+                {{ __('restaurants.cancel') }}
+            </button>
         </div>
-    @endif
+    </form>
 
     @endmodal
 
