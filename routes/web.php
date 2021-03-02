@@ -7,6 +7,7 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BillingController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [HomeController::class, 'show'])->name('home');
+
+Route::post('/newsletter', [NewsletterController::class, 'subscribe']);
 
 Route::get('/imprint', function() {
     return view('imprint');

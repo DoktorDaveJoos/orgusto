@@ -1,5 +1,5 @@
 <nav class="flex justify-center @guest @else bg-gray-200 shadow-md sticky @endif top-0 z-50">
-    <div class="max-w-6xl w-full flex flex-row justify-between pl-6 p-2 content-center">
+    <div class="max-w-6xl w-full flex flex-row justify-between p-2 content-center">
         <div class="flex flex-col items-center">
             <a href="@guest {{  route('home') }} @else {{ route('reservations.show') }} @endguest">
                 <img class="w-32" src="{{ asset('orgusto-logo-svg.svg') }}"/>
@@ -9,10 +9,10 @@
         <div class="flex-1 flex flex-row items-center">
 
             @guest
-                <div class="flex flex-1 justify-end">
-                    <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 mr-6"
+                <div class="flex flex-1 justify-end font-semibold">
+                    <a class="text-l text-gray-600 hover:text-indigo-600 mr-6 transition-colors duration-150 ease-in-out"
                        href="{{ route('login') }}">{{ __('auth.login') }}</a>
-                    <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 pr-6"
+                    <a class="text-l text-gray-600 hover:text-indigo-600 transition-colors duration-150 ease-in-out"
                        href="{{ route('register') }}">{{ __('auth.register') }}</a>
                 </div>
             @else
