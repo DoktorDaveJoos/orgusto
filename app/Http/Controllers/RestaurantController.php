@@ -49,40 +49,56 @@ class RestaurantController extends Controller
 
     public function store(CreateRestaurant $request)
     {
+        $restaurant = Restaurant::create([
+            'name' => $request->validated()['name'],
+            'owner_id' => $request->user()->id
+        ]);
 
-        if (auth()->user()->restaurants()->get()->count() > 0) {
-            $request->session()->flash('message', 'Right now it\'s not allowed to create more than one restaurant.');
-            return redirect()->route('restaurants.show');
-        }
-
-        $restaurant = Restaurant::create($request->validated());
+        // Add creator as owner
+        $restaurant->owner = auth()->user();
 
         // Make creator 'admin' automatically
         auth()->user()->restaurants()->attach($restaurant->id, ['role' => 'admin']);
 
+        // Set fresh created restaurant as selected_restaurant
+        auth()->user()->selected_id = $restaurant->id;
+
         if ($request->wantsJson()) {
             return $restaurant;
         }
+
         return redirect()->route('restaurant.show', ['restaurant' => $restaurant->id]);
     }
 
     public function destroy(DeleteRestaurant $request, Restaurant $restaurant)
     {
-        if ($request->validated()['name'] == $restaurant->name) {
-            Restaurant::destroy($restaurant->id);
-        }
-        $request->session()->flash('message', 'Successfully deleted restaurant.');
+        $usersOfRestaurant = $restaurant->users;
 
-        return redirect()->route('restaurants.show');
+        $usersOfRestaurant->each(function($user) use($restaurant) {
+            if ($user->selected_id === $restaurant->id) {
+                $alternative = $user->firstRestaurant()->id;
+                $user->selected_id = $alternative ? $alternative : null;
+                $user->save();
+            }
+        });
+
+        if ($request->validated()['name'] === $restaurant->name && $restaurant->owner->id === auth()->user()->id) {
+            Restaurant::destroy($restaurant->id);
+            $request->session()->flash('message', __('messages.deleted_restaurant'));
+            return redirect()->route('restaurants.show');
+        } else {
+            $request->session()->flash('message', __('messages.deleted_not_restaurant'));
+            return redirect()->route('restaurants.show');
+        }
+
     }
 
-    public function formDestroy(DeleteRestaurant $request,Restaurant $restaurant) {
-        if ($request->validated()['name'] == $restaurant->name) {
-            Restaurant::destroy($restaurant->id);
-        }
-        $request->session()->flash('message', 'Successfully deleted restaurant.');
+    public function select(Restaurant $restaurant) {
+        $user = auth()->user();
+        $user->selected_id = $restaurant->id;
+        $user->save();
 
-        return redirect()->route('restaurants.show');
+        return back();
     }
 
     public function showTable(Request $request, Restaurant $restaurant, Table $table) {

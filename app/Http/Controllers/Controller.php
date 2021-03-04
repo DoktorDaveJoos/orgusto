@@ -23,7 +23,7 @@ class Controller extends BaseController
 
     public function getRestaurant()
     {
-        return auth()->user()->firstRestaurant();
+        return auth()->user()->selected;
     }
 
     protected function getStartFromRequest(Request $request): CarbonImmutable

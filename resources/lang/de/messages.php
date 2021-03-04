@@ -10,6 +10,8 @@ return [
     */
 
     'updated_restaurant' => 'Restaurant erfolgreich aktualisiert.',
+    'deleted_restaurant' => 'Restaurant gelöscht.',
+    'deleted_not_restaurant' => 'Restaurant konnte nicht gelöscht werden. Gehört Ihnen das Restaurant?',
     'went_wrong' => 'Etwas ist schief gelaufen ...',
     'table_created' => 'Tisch mit Nummer :table_number erfolgreich angelegt.',
     'table_not_created' => 'Tisch mit Nummer :table_number konnte nicht angelegt werden. Kontaktieren Sie den Support.',

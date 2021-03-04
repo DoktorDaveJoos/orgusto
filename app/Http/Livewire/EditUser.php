@@ -11,7 +11,6 @@ class EditUser extends Component
     public $user;
 
     public $name;
-    public $access_level;
     public $email;
     public $type;
 
@@ -27,7 +26,6 @@ class EditUser extends Component
         $this->user = $user;
 
         $this->name = $user->name;
-        $this->access_level = $user->access_level;
         $this->type = $user->type;
         $this->email = $user->email;
 

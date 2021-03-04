@@ -25,31 +25,6 @@
         <input id="email" wire:model.debounce.500ms="contact_email" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.email') }}" />
         @error('contact_email') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
         @endforminput
-        @forminput(['label' => __('restaurants.owner')])
-        <input id="owner" wire:model.debounce.500ms="owner" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.owner') }}" />
-        @error('owner') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-    </div>
-
-    <div class="pt-4 px-6 tracking-wider text-gray-800 uppercase">{{ __('restaurants.address') }}</div>
-
-    <div class="flex flex-col sm:flex-row flex-wrap p-6 border-b border-gray-200">
-        @forminput(['label' => __('restaurants.street')])
-        <input id="street" wire:model.debounce.500ms="street" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.street') }}" />
-        @error('street') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-        @forminput(['label' => __('restaurants.street_number')])
-        <input id="street number" wire:model.debounce.500ms="street_number" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.street_number') }}" />
-        @error('street_number') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-        @forminput(['label' => __('restaurants.zip_code')])
-        <input id="zip code" wire:model.debounce.500ms="zip_code" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.zip_code') }}" />
-        @error('zip_code') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
-        @forminput(['label' => __('restaurants.city')])
-        <input id="city" wire:model.debounce.500ms="city" class="orgusto-input w-full sm:w-64 transition-all duration-150 ease-in-out" placeholder="{{ __('restaurants.city') }}" />
-        @error('city') <span class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-        @endforminput
     </div>
 
     @endinfocard

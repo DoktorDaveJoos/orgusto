@@ -6,6 +6,9 @@ use App\Http\Controllers\ReservationsController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,8 +23,9 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Route::get('/', [HomeController::class, 'show'])->name('home');
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::post('/newsletter', [NewsletterController::class, 'subscribe']);
 
 Route::get('/imprint', function() {
     return view('imprint');
@@ -40,8 +44,12 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/user', [UserController::class, 'user'])
+        ->name('user.get');
+
     Route::get('/manage', [ManageController::class, 'index'])
-        ->name('manage.show');
+        ->name('manage.show')
+        ->middleware(['subscribed']);
 
     Route::prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])
@@ -74,16 +82,16 @@ Route::middleware(['auth'])->group(function () {
                 ->name('restaurant.destroy')
                 ->middleware('can:delete,restaurant');
 
-            Route::post('/delete', [RestaurantController::class, 'formDestroy'])
-                ->name('restaurant.formDestroy')
-                ->middleware('can:delete,restaurant');
+            Route::post('/select', [RestaurantController::class, 'select'])
+                ->name('restaurant.select')
+                ->middleware('can:view,restaurant');
 
             Route::get('/{table}', [RestaurantController::class, 'showTable'])
                 ->name('restaurant.table.show');
         });
     });
 
-    Route::prefix('/reservations')->group(function () {
+    Route::middleware(['subscribed'])->prefix('/reservations')->group(function () {
 
         Route::get('/', [ReservationsController::class, 'index'])
             ->name('reservations.show');

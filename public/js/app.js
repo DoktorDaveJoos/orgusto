@@ -2659,6 +2659,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2668,15 +2696,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {};
   },
   mounted: function mounted() {
-    this.$store.dispatch('loadTables');
-    this.$store.dispatch('loadEmployees');
-    this.$store.dispatch('loadScopedReservations');
+    this.$store.dispatch('loadUser');
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])({
+    user: function user(state) {
+      return state.user;
+    },
     allTables: function allTables(state) {
       return state.restaurant.allTables;
+    },
+    restaurant: function restaurant(state) {
+      return state.restaurant.settings;
     }
-  }))
+  })),
+  watch: {
+    user: function user(updated, old) {
+      if (updated !== undefined) {
+        this.$store.dispatch('loadTables');
+        this.$store.dispatch('loadEmployees');
+        this.$store.dispatch('loadScopedReservations');
+        this.$store.dispatch('loadRestaurant');
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -3908,6 +3950,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3953,6 +4005,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     errors: function errors(state) {
       return state.reservations.errors;
+    },
+    restaurant: function restaurant(state) {
+      return state.restaurant.settings;
     }
   }), {
     sortedTables: function sortedTables() {
@@ -4178,6 +4233,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchReservation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SearchReservation */ "./resources/js/components/SearchReservation.vue");
 /* harmony import */ var _ReservationsView_SearchBar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ReservationsView/SearchBar */ "./resources/js/components/ReservationsView/SearchBar.vue");
 /* harmony import */ var _ReservationsView_Paginator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ReservationsView/Paginator */ "./resources/js/components/ReservationsView/Paginator.vue");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
 //
 //
 //
@@ -4289,9 +4354,7 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   mounted: function mounted() {
-    this.$store.dispatch('loadPaginatedReservations');
-    this.$store.dispatch('loadEmployees');
-    this.$store.dispatch('loadRestaurant');
+    this.$store.dispatch('loadUser');
   },
   methods: {
     addNewReservation: function addNewReservation() {
@@ -4301,17 +4364,27 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.dispatch('showAllFullFilled', val);
     }
   },
-  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    user: function user(state) {
+      return state.user;
+    },
     reservations: function reservations(state) {
       return state.reservations;
     },
     filter: function filter(state) {
       return state.filter;
     }
-  }),
+  })),
   watch: {
     'filter.past': function filterPast() {
       this.$store.dispatch('loadPaginatedReservations');
+    },
+    user: function user(updated, old) {
+      if (updated) {
+        this.$store.dispatch('loadPaginatedReservations');
+        this.$store.dispatch('loadEmployees');
+        this.$store.dispatch('loadRestaurant');
+      }
     }
   }
 });
@@ -73476,46 +73549,107 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "w-full pl-4" },
-      [
-        _c("div", { staticClass: "mx-8" }, [
-          _c("div", { staticClass: "flex flex-row py-4" }, [
-            _c("div", { staticClass: "w-1/6" }, [_c("orgastro-timepicker")], 1),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "w-5/6 flex flex-row justify-between px-1 self-stretch"
-              },
-              [
-                _c("orgusto-scope-button", { attrs: { direction: "left" } }),
+    _vm.allTables.length > 0
+      ? _c(
+          "div",
+          { staticClass: "w-full pl-4" },
+          [
+            _c("div", { staticClass: "mx-8" }, [
+              _c("div", { staticClass: "flex flex-row py-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "w-1/6" },
+                  [_c("orgastro-timepicker")],
+                  1
+                ),
                 _vm._v(" "),
-                _c("orgusto-scope-button", { attrs: { direction: "right" } })
-              ],
-              1
-            )
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-5/6 flex flex-row justify-between px-1 self-stretch"
+                  },
+                  [
+                    _c("orgusto-scope-button", {
+                      attrs: { direction: "left" }
+                    }),
+                    _vm._v(" "),
+                    _c("orgusto-scope-button", {
+                      attrs: { direction: "right" }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("orgusto-timeline"),
+            _vm._v(" "),
+            _vm._l(_vm.allTables, function(table) {
+              return _c("orgusto-table", {
+                key: table.id,
+                attrs: { "table-id": table.id }
+              })
+            }),
+            _vm._v(" "),
+            _c("orgusto-modal-wrapper", [_c("reservation-item")], 1)
+          ],
+          2
+        )
+      : _c("div", { staticClass: "max-w-7xl mx-auto py-12 sm:px-6 lg:px-8" }, [
+          _c("div", { staticClass: "max-w-3xl mx-auto" }, [
+            _c("div", { staticClass: "bg-white shadow sm:rounded-lg" }, [
+              _c("div", { staticClass: "px-4 py-5 sm:p-6" }, [
+                _c(
+                  "h3",
+                  {
+                    staticClass: "text-lg leading-6 font-medium text-gray-900"
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Whoops!\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(0),
+                _vm._v(" "),
+                _c("div", { staticClass: "mt-3 text-sm" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "font-medium text-indigo-600 hover:text-indigo-500",
+                      attrs: { href: "/restaurants/" + _vm.restaurant.id }
+                    },
+                    [
+                      _vm._v(" Tisch anlegen "),
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("→")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
           ])
-        ]),
-        _vm._v(" "),
-        _c("orgusto-timeline"),
-        _vm._v(" "),
-        _vm._l(_vm.allTables, function(table) {
-          return _c("orgusto-table", {
-            key: table.id,
-            attrs: { "table-id": table.id }
-          })
-        }),
-        _vm._v(" "),
-        _c("orgusto-modal-wrapper", [_c("reservation-item")], 1)
-      ],
-      2
-    )
+        ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-2 max-w-xl text-sm text-gray-500" }, [
+      _c("p", [
+        _vm._v(
+          "\n                            Du hast noch keine Tische angelegt.\n                            Lege jetzt deinen ersten Tisch an und starte durch!\n                        "
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -75272,17 +75406,19 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         !_vm.isLoading && _vm.tables.length === 0
-          ? _c(
-              "div",
-              { staticClass: "my-2 mr-2 text-gray-600 text-xs italic" },
-              [
-                _vm._v(
-                  "\n            " +
-                    _vm._s(_vm.__("common.no_tables")) +
-                    "\n        "
+          ? _c("div", { staticClass: "my-2 mr-2 text-gray-600 text-xs" }, [
+              _c("span", { staticClass: "italic" }, [
+                _vm._v(_vm._s(_vm.__("common.no_tables")))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "mt-2" }, [
+                _c(
+                  "a",
+                  { attrs: { href: "/restaurants/" + _vm.restaurant.id } },
+                  [_vm._m(0)]
                 )
-              ]
-            )
+              ])
+            ])
           : _vm._e()
       ],
       2
@@ -75305,7 +75441,19 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "text-blue-600 text-xs" }, [
+      _c("i", { staticClass: "fas fa-plus pr-0.5" }),
+      _vm._v(
+        "\n                        Tische hinzufügen\n                    "
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -75945,8 +76093,13 @@ var render = function() {
                             )
                           ])
                         ]
-                      )
-                    ]
+                      ),
+                      _vm._v(" "),
+                      _vm._l(7, function(n) {
+                        return _c("td", { key: n })
+                      })
+                    ],
+                    2
                   )
                 : _vm._e()
             ],
@@ -98627,6 +98780,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var Routes = {
   reservations: '/reservations',
+  user: '/user',
   users: '/users',
   tables: '/tables',
   restaurants: '/restaurants',
@@ -98688,8 +98842,14 @@ var buildPaginationParams = function buildPaginationParams(url) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  loadReservationsProxy: function loadReservationsProxy(_ref) {
-    var dispatch = _ref.dispatch;
+  loadUser: function loadUser(_ref) {
+    var commit = _ref.commit;
+    axios.get(Routes.user).then(function (response) {
+      commit('setUser', response.data);
+    });
+  },
+  loadReservationsProxy: function loadReservationsProxy(_ref2) {
+    var dispatch = _ref2.dispatch;
     var isManage = location.href.includes('/manage');
 
     if (isManage) {
@@ -98698,9 +98858,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       dispatch('loadPaginatedReservations');
     }
   },
-  loadPaginatedReservations: function loadPaginatedReservations(_ref2) {
-    var commit = _ref2.commit,
-        state = _ref2.state;
+  loadPaginatedReservations: function loadPaginatedReservations(_ref3) {
+    var commit = _ref3.commit,
+        state = _ref3.state;
     var paginationLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     var url = "".concat(Routes.reservations, "?").concat(buildQueryParams(state, paginationLink).toString());
     axios.get(url).then(function (response) {
@@ -98712,9 +98872,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       commit('loadMetaData', meta);
     });
   },
-  loadScopedReservations: function loadScopedReservations(_ref3) {
-    var commit = _ref3.commit,
-        state = _ref3.state;
+  loadScopedReservations: function loadScopedReservations(_ref4) {
+    var commit = _ref4.commit,
+        state = _ref4.state;
     // TODO fix this timezone issue
     var hours = Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["getHours"])(state.filter.timelineStart);
     var date = hours === 0 ? Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addHours"])(state.filter.timelineStart, 1) : state.filter.timelineStart;
@@ -98726,30 +98886,30 @@ var buildPaginationParams = function buildPaginationParams(url) {
       commit('loadReservations', response.data.data);
     });
   },
-  loadEmployees: function loadEmployees(_ref4) {
-    var commit = _ref4.commit;
+  loadEmployees: function loadEmployees(_ref5) {
+    var commit = _ref5.commit;
     axios.get(Routes.users).then(function (response) {
       var data = response.data;
       commit('setEmployees', data);
     });
   },
-  loadTables: function loadTables(_ref5) {
-    var commit = _ref5.commit;
+  loadTables: function loadTables(_ref6) {
+    var commit = _ref6.commit;
     axios.get(Routes.tables + '/all').then(function (response) {
       commit('setTables', response.data.data);
     });
   },
-  deleteReservation: function deleteReservation(_ref6, id) {
-    var dispatch = _ref6.dispatch,
-        commit = _ref6.commit;
+  deleteReservation: function deleteReservation(_ref7, id) {
+    var dispatch = _ref7.dispatch,
+        commit = _ref7.commit;
     axios["delete"]("".concat(Routes.reservations, "/").concat(id)).then(function () {
       commit('closeModal');
       dispatch('loadReservationsProxy');
     });
   },
-  createNewReservation: function createNewReservation(_ref7, preSelected) {
-    var commit = _ref7.commit,
-        dispatch = _ref7.dispatch;
+  createNewReservation: function createNewReservation(_ref8, preSelected) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
     commit('setNewReservation');
 
     if (preSelected) {
@@ -98761,15 +98921,15 @@ var buildPaginationParams = function buildPaginationParams(url) {
     dispatch('loadAvailableTables');
     commit('openModal');
   },
-  setActiveReservation: function setActiveReservation(_ref8, id) {
-    var dispatch = _ref8.dispatch,
-        commit = _ref8.commit;
+  setActiveReservation: function setActiveReservation(_ref9, id) {
+    var dispatch = _ref9.dispatch,
+        commit = _ref9.commit;
     commit('setActiveReservation', id);
     dispatch('loadAvailableTables');
   },
-  loadAvailableTables: function loadAvailableTables(_ref9) {
-    var commit = _ref9.commit,
-        state = _ref9.state;
+  loadAvailableTables: function loadAvailableTables(_ref10) {
+    var commit = _ref10.commit,
+        state = _ref10.state;
     // remove all tables
     commit('setAvailableTables', []);
     commit('setLoadingState', {
@@ -98795,9 +98955,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       }
     });
   },
-  updateReservation: function updateReservation(_ref10, data) {
-    var commit = _ref10.commit,
-        dispatch = _ref10.dispatch;
+  updateReservation: function updateReservation(_ref11, data) {
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch;
     // mutate state
     commit('updateReservation', data); // getting tables if filter data is changed
 
@@ -98808,12 +98968,12 @@ var buildPaginationParams = function buildPaginationParams(url) {
       dispatch('loadAvailableTables');
     }
   },
-  saveReservation: function saveReservation(_ref11, reservation) {
+  saveReservation: function saveReservation(_ref12, reservation) {
     var _reservation$user;
 
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch,
-        state = _ref11.state;
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch,
+        state = _ref12.state;
     commit('clearErrors');
 
     var payload = _objectSpread({}, reservation); // remove user object
@@ -98847,26 +99007,24 @@ var buildPaginationParams = function buildPaginationParams(url) {
       });
     }
   },
-  closeModal: function closeModal(_ref12) {
-    var commit = _ref12.commit,
-        dispatch = _ref12.dispatch;
+  closeModal: function closeModal(_ref13) {
+    var commit = _ref13.commit,
+        dispatch = _ref13.dispatch;
     dispatch('loadReservationsProxy');
     commit('closeModal');
     commit('clearErrors');
   },
-  loadRestaurant: function loadRestaurant(_ref13) {
-    var commit = _ref13.commit;
-    axios.get(Routes.restaurants).then(function (response) {
-      var data = response.data;
-      axios.get(Routes.restaurants + "/".concat(data[0].id)).then(function (response) {
-        commit('setRestaurant', response.data);
-      });
+  loadRestaurant: function loadRestaurant(_ref14) {
+    var state = _ref14.state,
+        commit = _ref14.commit;
+    axios.get(Routes.restaurants + "/".concat(state.user.selected_id)).then(function (response) {
+      commit('setRestaurant', response.data);
     });
   },
-  markFulfilled: function markFulfilled(_ref14, data) {
-    var commit = _ref14.commit,
-        state = _ref14.state,
-        dispatch = _ref14.dispatch;
+  markFulfilled: function markFulfilled(_ref15, data) {
+    var commit = _ref15.commit,
+        state = _ref15.state,
+        dispatch = _ref15.dispatch;
     var consolidatedData = {
       id: data.id,
       data: {
@@ -98881,33 +99039,33 @@ var buildPaginationParams = function buildPaginationParams(url) {
     dispatch('saveReservation', res);
     commit('setActiveReservation', null);
   },
-  showAllFullFilled: function showAllFullFilled(_ref15, val) {
-    var commit = _ref15.commit,
-        dispatch = _ref15.dispatch,
-        state = _ref15.state;
-    commit('showAllFullFilled', val);
-    dispatch('loadReservationsProxy');
-  },
-  activateRangeFilter: function activateRangeFilter(_ref16, payload) {
+  showAllFullFilled: function showAllFullFilled(_ref16, val) {
     var commit = _ref16.commit,
         dispatch = _ref16.dispatch,
         state = _ref16.state;
-    commit('setDateFilterActive', payload);
-    commit('setDateRange', payload.dateRange);
+    commit('showAllFullFilled', val);
     dispatch('loadReservationsProxy');
   },
-  activateSingleDateFilter: function activateSingleDateFilter(_ref17, payload) {
+  activateRangeFilter: function activateRangeFilter(_ref17, payload) {
     var commit = _ref17.commit,
         dispatch = _ref17.dispatch,
         state = _ref17.state;
     commit('setDateFilterActive', payload);
+    commit('setDateRange', payload.dateRange);
+    dispatch('loadReservationsProxy');
+  },
+  activateSingleDateFilter: function activateSingleDateFilter(_ref18, payload) {
+    var commit = _ref18.commit,
+        dispatch = _ref18.dispatch,
+        state = _ref18.state;
+    commit('setDateFilterActive', payload);
     commit('setSingleDate', payload.singleDate);
     dispatch('loadReservationsProxy');
   },
-  updateScope: function updateScope(_ref18, payload) {
-    var commit = _ref18.commit,
-        state = _ref18.state,
-        dispatch = _ref18.dispatch;
+  updateScope: function updateScope(_ref19, payload) {
+    var commit = _ref19.commit,
+        state = _ref19.state,
+        dispatch = _ref19.dispatch;
 
     if (!Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["isSameDay"])(payload, state.filter.timelineStart)) {
       commit('updateScope', payload);
@@ -98976,6 +99134,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helper_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/helper */ "./resources/js/helper/helper.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  setUser: function setUser(state, payload) {
+    state.user = payload;
+  },
   loadReservations: function loadReservations(state, items) {
     state.reservations.items = items;
   },
@@ -99107,6 +99268,7 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
   },
   user: {},
   restaurant: {
+    id: null,
     users: [],
     tables: [],
     allTables: [],
@@ -99139,20 +99301,24 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
 var map = {
 	"./de/auth.php": "./resources/lang/de/auth.php",
 	"./de/common.php": "./resources/lang/de/common.php",
+	"./de/footer.php": "./resources/lang/de/footer.php",
 	"./de/messages.php": "./resources/lang/de/messages.php",
 	"./de/nav.php": "./resources/lang/de/nav.php",
 	"./de/pagination.php": "./resources/lang/de/pagination.php",
 	"./de/passwords.php": "./resources/lang/de/passwords.php",
 	"./de/restaurants.php": "./resources/lang/de/restaurants.php",
 	"./de/validation.php": "./resources/lang/de/validation.php",
-	"./en/app.php": "./resources/lang/en/app.php",
 	"./en/auth.php": "./resources/lang/en/auth.php",
 	"./en/common.php": "./resources/lang/en/common.php",
+	"./en/footer.php": "./resources/lang/en/footer.php",
+	"./en/messages.php": "./resources/lang/en/messages.php",
 	"./en/nav.php": "./resources/lang/en/nav.php",
 	"./en/pagination.php": "./resources/lang/en/pagination.php",
 	"./en/passwords.php": "./resources/lang/en/passwords.php",
 	"./en/restaurants.php": "./resources/lang/en/restaurants.php",
 	"./en/validation.php": "./resources/lang/en/validation.php",
+	"./spark/de.json": "./resources/lang/spark/de.json",
+	"./spark/en.json": "./resources/lang/spark/en.json",
 	"./vendor/nova/en.json": "./resources/lang/vendor/nova/en.json",
 	"./vendor/nova/en/validation.php": "./resources/lang/vendor/nova/en/validation.php"
 };
@@ -99201,6 +99367,17 @@ module.exports = {"restaurants":"Restaurants","Reservations":"Reservierungen","r
 
 /***/ }),
 
+/***/ "./resources/lang/de/footer.php":
+/*!**************************************!*\
+  !*** ./resources/lang/de/footer.php ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"imprint":"Impressum","privacy":"Datenschutz"};
+
+/***/ }),
+
 /***/ "./resources/lang/de/messages.php":
 /*!****************************************!*\
   !*** ./resources/lang/de/messages.php ***!
@@ -99208,7 +99385,7 @@ module.exports = {"restaurants":"Restaurants","Reservations":"Reservierungen","r
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = {"updated_restaurant":"Restaurant erfolgreich aktualisiert.","went_wrong":"Etwas ist schief gelaufen ...","table_created":"Tisch mit Nummer :table_number erfolgreich angelegt.","table_not_created":"Tisch mit Nummer :table_number konnte nicht angelegt werden. Kontaktieren Sie den Support.","table_deleted":"Tisch gelöscht.","table_not_deleted":"Tisch konnte nicht gelöscht werden. Kontaktieren Sie den Support.","user_detached":"Der Mitarbeiter / Benutzer: :email wurde erfolgreich entfernt.","table_updated":"Tisch erfolgreich aktualisiert","user_updated":"Benutzer erfolgreich aktualisiert","user_added":"Registrierter Nutzer :user_name :user_email erfolgreich hinzugefügt.","user_invited":"Erfolgreich eingeladen: :user_email","employee_added":"Mitarbeiter :name erfolgreich hinzugefügt","add":"hinzufügen","invite":"einladen"};
+module.exports = {"updated_restaurant":"Restaurant erfolgreich aktualisiert.","deleted_restaurant":"Restaurant gelöscht.","deleted_not_restaurant":"Restaurant konnte nicht gelöscht werden. Gehört Ihnen das Restaurant?","went_wrong":"Etwas ist schief gelaufen ...","table_created":"Tisch mit Nummer :table_number erfolgreich angelegt.","table_not_created":"Tisch mit Nummer :table_number konnte nicht angelegt werden. Kontaktieren Sie den Support.","table_deleted":"Tisch gelöscht.","table_not_deleted":"Tisch konnte nicht gelöscht werden. Kontaktieren Sie den Support.","user_detached":"Der Mitarbeiter / Benutzer: :email wurde erfolgreich entfernt.","table_updated":"Tisch erfolgreich aktualisiert","user_updated":"Benutzer erfolgreich aktualisiert","user_added":"Registrierter Nutzer :user_name :user_email erfolgreich hinzugefügt.","user_invited":"Erfolgreich eingeladen: :user_email","employee_added":"Mitarbeiter :name erfolgreich hinzugefügt","add":"hinzufügen","invite":"einladen"};
 
 /***/ }),
 
@@ -99252,7 +99429,7 @@ module.exports = {"reset":"Ihr Passwort wurde zurückgesetzt!","sent":"Wir haben
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = {"restaurants":"Restaurants","name":"Name","address":"Adresse","owner":"Besitzer","role":"Rolle","email":"Email","street":"Straße","street_number":"Straßennummer","zip_code":"Postleitzahl","city":"Stadt / Gemeinde","add_restaurant":"Neues Restaurant","edit":"bearbeiten","remove":"entfernen","cancel":"abbrechen","close":"schließen","delete":"löschen","add":"hinzufügen","Delete":"Lösche","type":"Status","registered":"registriert","note_no_restaurant":"Wichtige Information: Du brauchst mindestens ein Restaurant. Erstelle dein erstes Restaurant oder beantrage den Zugriff auf ein bestehendes.","note_enter_restaurant_name":"Gib den Namen des Restaurants, das du löschen willst ein und drücke \"löschen\".","new_restaurant_placeholder":"Das wundervolle Restaurant ...","only_premium":"Diese Aktion können nur registrierte Premium Nutzer ausführen.","testing_purposes":"Right now this application is only for test purposes - please contact service team to inquire\n                premium\n                status for your account.\n                Thanks,\n                Orgusto Team","save_restaurant":"Speichern","last_updated":"zuletzt aktualisiert","information":"Information","accounts":"Mitarbeiter & Benutzer","add_account":"Mitarbeiter hinzufügen","tables":"Tische","add_table":"Tisch hinzufügen","table_number":"Tischnummer","table_seats":"Sitzplätze","table_description":"Beschreibung","access_level":"Berechtigung","belongs_to":"gehört zu","Table":"Tisch","add_employee":"Mitarbeiter hinzufügen","add_description":"Füge einen bestehenden Benutzer hinzu oder lade jemanden dazu ein:","account_email":"Email des Mitarbeiters","add_employee_name":"Name eines Mitarbeiters hinzufügen","important":"Wichtig:","add_by_name_warning":"Wenn ein Mitarbeiter bereits ein Orgusto Benutzerkonto hat sollten Sie den Mitarbeiter über \"Benutzerkonto\" hinzufügen","employee_name":"Name des Mitarbeiters","user_account":"Benutzerkonto","user_name":"Mitarbeitername"};
+module.exports = {"restaurants":"Restaurants","name":"Name","address":"Adresse","owner":"Besitzer","role":"Rolle","email":"Email","street":"Straße","street_number":"Straßennummer","zip_code":"Postleitzahl","city":"Stadt / Gemeinde","add_restaurant":"Neues Restaurant","edit":"bearbeiten","remove":"entfernen","cancel":"abbrechen","close":"schließen","delete":"löschen","add":"hinzufügen","Delete":"Lösche","type":"Status","registered":"registriert","note_no_restaurant":"Wichtige Information: Du brauchst mindestens 1 Restaurant. Erstelle dein erstes Restaurant oder beantrage den Zugriff auf ein bestehendes.","note_enter_restaurant_name":"Gib den Namen des Restaurants, das du löschen willst ein und drücke \"löschen\".","new_restaurant_placeholder":"Das wundervolle Restaurant ...","only_premium":"Diese Aktion können nur registrierte Premium Nutzer ausführen.","testing_purposes":"Right now this application is only for test purposes - please contact service team to inquire\n                premium\n                status for your account.\n                Thanks,\n                Orgusto Team","save_restaurant":"Speichern","last_updated":"zuletzt aktualisiert","information":"Information","accounts":"Mitarbeiter & Benutzer","add_account":"Mitarbeiter hinzufügen","tables":"Tische","add_table":"Tisch hinzufügen","table_number":"Tischnummer","table_seats":"Sitzplätze","table_description":"Beschreibung","access_level":"Berechtigung","belongs_to":"gehört zu","Table":"Tisch","billing":"Rechnungsportal","add_employee":"Mitarbeiter hinzufügen","add_description":"Füge einen bestehenden Benutzer hinzu oder lade jemanden dazu ein:","account_email":"Email des Mitarbeiters","add_employee_name":"Name eines Mitarbeiters hinzufügen","important":"Wichtig:","add_by_name_warning":"Wenn ein Mitarbeiter bereits ein Orgusto Benutzerkonto hat sollten Sie den Mitarbeiter über \"Benutzerkonto\" hinzufügen","employee_name":"Name des Mitarbeiters","user_account":"Benutzerkonto","user_name":"Mitarbeitername"};
 
 /***/ }),
 
@@ -99264,17 +99441,6 @@ module.exports = {"restaurants":"Restaurants","name":"Name","address":"Adresse",
 /***/ (function(module, exports) {
 
 module.exports = {"accepted":":attribute muss akzeptiert werden.","active_url":":attribute ist keine korrekte URL.","after":":attribute muss ein Datum nach dem :date sein.","after_or_equal":":attribute muss ein Datum nach dem oder am :date sein.","alpha":":attribute darf nur Buchstaben enthalten.","alpha_dash":":attribute darf nur Buchstaben, Zahlen und Bindestriche enthalten.","alpha_num":":attribute darf nur Buchstaben und Zahlen enthalten.","array":":attribute muss eine Liste sein.","before":":attribute muss ein Datum vor dem :date sein.","before_or_equal":":attribute muss ein Datum vor dem oder am :date sein.","between":{"numeric":":attribute muss zwischen :min und :max sein.","file":":attribute muss zwischen :min und :max Kilobytes sein.","string":":attribute muss zwischen :min und :max Zeichen sein.","array":":attribute muss zwischen :min und :max Einträge haben."},"boolean":":attribute muss wahr oder falsch sein.","confirmed":"Die :attribute-Bestätigung stimmt nicht überein.","date":":attribute ist kein gültiges Datum.","date_format":":attribute entspricht nicht dem Format: :format.","different":":attribute und :other müssen verschieden sein.","digits":":attribute muss :digits Ziffern lang sein.","digits_between":":attribute muss zwischen :min und :max Ziffern lang sein.","dimensions":":attribute hat inkorrekte Bild-Dimensionen.","distinct":":attribute hat einen doppelten Wert.","email":":attribute muss eine korrekte E-Mail-Adresse sein.","ends_with":":attribute muss mit folgendem aufhören: :values.","exists":"Ausgewählte(s) :attribute ist inkorrekt.","file":":attribute muss eine Datei sein.","filled":":attribute muss ausgefüllt werden.","gt":{"numeric":":attribute muss größer :min sein.","file":":attribute muss größer :min Kilobytes groß sein.","string":":attribute muss größer :min Zeichen lang sein.","array":":attribute muss größer :min Einträge haben.."},"gte":{"numeric":":attribute muss größer gleich :gte sein.","file":":attribute muss größer gleich :gte Kilobytes groß sein.","string":":attribute muss größer gleich :gte Zeichen lang sein.","array":":attribute muss größer gleich :gte Einträge haben.."},"image":":attribute muss ein Bild sein.","in":"Ausgewählte(s) :attribute ist inkorrekt.","in_array":":attribute existiert nicht in :other.","integer":":attribute muss eine Ganzzahl sein.","ip":":attribute muss eine korrekte IP-Adresse sein.","ipv4":":attribute muss eine korrekte IPv4-Adresse sein.","ipv6":":attribute muss eine korrekte IPv6-Adresse sein.","json":":attribute muss ein korrekter JSON-String sein.","lt":{"numeric":":attribute muss kleiner :lt sein.","file":":attribute muss kleiner :lt Kilobytes groß sein.","string":":attribute muss kleiner :lt Zeichen lang sein.","array":":attribute muss kleiner :lt Einträge haben.."},"lte":{"numeric":":attribute muss kleiner gleich :lte sein.","file":":attribute muss kleiner gleich :lte Kilobytes groß sein.","string":":attribute muss kleiner gleich :lte Zeichen lang sein.","array":":attribute muss kleiner gleich :lte Einträge haben.."},"max":{"numeric":":attribute darf nicht größer :max sein.","file":":attribute darf nicht größer :max Kilobytes groß sein.","string":":attribute darf nicht größer :max Zeichen lang sein.","array":":attribute darf nicht größer :max Einträge haben.."},"mimes":":attribute muss eine Datei in folgendem Format sein: :values.","mimetypes":":attribute muss eine Datei in folgendem Format sein: :values.","min":{"numeric":":attribute muss mindestens :min sein.","file":":attribute muss mindestens :min Kilobytes groß sein.","string":":attribute muss mindestens :min Zeichen lang sein.","array":":attribute muss mindestens :min Einträge haben.."},"not_in":"Ausgewählte(s) :attribute ist inkorrekt.","not_regex":":attribute format ist invalide.","numeric":":attribute muss eine Zahl sein.","password":"Das Passwort ist inkorrekt.","present":":attribute muss gegeben sein.","regex":"Das :attribute-Format ist inkorrekt.","required":":attribute field wird benötigt.","required_if":":attribute field wird benötigt wenn :other einen Wert von :value hat.","required_unless":":attribute field wird benötigt außer :other ist in den Werten :values enthalten.","required_with":":attribute field wird benötigt wenn :values vorhanden ist.","required_with_all":":attribute field wird benötigt wenn :values vorhanden ist.","required_without":":attribute field wird benötigt wenn :values nicht vorhanden ist.","required_without_all":":attribute field wird benötigt wenn keine der Werte :values vorhanden ist.","same":":attribute und :other müssen gleich sein.","size":{"numeric":":attribute muss :size groß sein.","file":":attribute muss :size Kilobytes groß sein.","string":":attribute muss :size Zeichen lang sein.","array":":attribute muss :size Einträge enthalten."},"starts_with":":attribute muss mit einem der folgenden starten: :values.","string":":attribute muss Text sein.","timezone":":attribute muss eine korrekte Zeitzone sein.","unique":":attribute wurde bereits verwendet.","uploaded":"Der Upload von :attribute schlug fehl.","url":"Das :attribute-Format ist inkorrekt.","uuid":":attribute muss eine UUID sein.","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":[]};
-
-/***/ }),
-
-/***/ "./resources/lang/en/app.php":
-/*!***********************************!*\
-  !*** ./resources/lang/en/app.php ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = {"email_address":"Email adress","password":"Password","Remember me":"Remember me","throttle":"Too many login attempts. Please try again in :seconds seconds."};
 
 /***/ }),
 
@@ -99296,7 +99462,29 @@ module.exports = {"failed":"These credentials do not match our records.","thrott
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = {"restaurants":"Restaurants","Reservations":"Reservations","reservations":"reservations","new_reservation":"New reservation","no_reservations":"No reservations so far","create_one":"Create one :-)","name":"name","start":"start","duration":"duration","tables":"tables","guests":"guests","email":"email","phone_number":"phone number","fulfilled":"fulfilled","search":"search","include_past":"include past","date":"date","date range":"date range","Date":"Date","Date range":"Date range","who_are_you":"who are you","today":"today","tomorrow":"tomorrow","day_after_tomorrow":"day after tomorrow","choose_date":"choose date","choose_time":"choose time","guests_duration":"number of guests & duration","more":"more","name_guest":"Name of the guest / group","additional_info":"Some additional information ...","free_tables":"free tables matching your reservation","no_tables":"No tables available for this reservation","cancel":"Cancel","save":"Save","updated":"Update","delete":"Delete","remove":"Remove","add_employees":"Add employees","getting_tables":"Getting available tables ...","showing":"Showing","to":"to","of":"of","results":"results"};
+module.exports = {"restaurants":"Restaurants","Reservations":"Reservations","reservations":"reservations","new_reservation":"New reservation","no_reservations":"No reservations so far","create_one":"Create one :-)","name":"name","start":"start","duration":"duration","tables":"tables","guests":"guests","email":"email","phone_number":"phone number","fulfilled":"fulfilled","search":"search","include_past":"include past","date":"date","date range":"date range","Date":"Date","Date range":"Date range","who_are_you":"who are you","today":"today","tomorrow":"tomorrow","day_after_tomorrow":"day after tomorrow","choose_date":"choose date","choose_time":"choose time","guests_duration":"number of guests & duration","more":"more","name_guest":"Name of the guest / group","additional_info":"Some additional information ...","free_tables":"free tables matching your reservation","no_tables":"No tables available for this reservation","cancel":"Cancel","save":"Save","updated":"Update","delete":"Delete","remove":"Remove","add_employees":"Add employees","getting_tables":"Getting available tables ...","to_many_guests":"Too many guests for given tables...","employees":"Employees","showing":"Showing","to":"to","of":"of","results":"results","Tables":"Tables","seats":"Seats","hours":"Hours","minutes":"Minutes"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/footer.php":
+/*!**************************************!*\
+  !*** ./resources/lang/en/footer.php ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"imprint":"Imprint","privacy":"Privacy settings"};
+
+/***/ }),
+
+/***/ "./resources/lang/en/messages.php":
+/*!****************************************!*\
+  !*** ./resources/lang/en/messages.php ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = {"updated_restaurant":"Restaurant successfully updated.","went_wrong":"Something went wrong ...","table_created":"Table :table_number successfully created.","table_not_created":"Table :table_number could not be created. Please contact service team.","table_deleted":"Table deleted.","table_not_deleted":"Table could not be deleted. Please contact service team.","user_detached":"Employee / user: :email successully removed.","table_updated":"Table successfully updated","user_updated":"User successfully updated","user_added":"Registered user :user_name :user_email added.","user_invited":"Successfully invited: :user_email","employee_added":"Employee :name added","add":"add","invite":"invite"};
 
 /***/ }),
 
@@ -99352,6 +99540,28 @@ module.exports = {"restaurants":"Restaurants","name":"Name","address":"Address",
 /***/ (function(module, exports) {
 
 module.exports = {"accepted":"The :attribute must be accepted.","active_url":"The :attribute is not a valid URL.","after":"The :attribute must be a date after :date.","after_or_equal":"The :attribute must be a date after or equal to :date.","alpha":"The :attribute may only contain letters.","alpha_dash":"The :attribute may only contain letters, numbers, dashes and underscores.","alpha_num":"The :attribute may only contain letters and numbers.","array":"The :attribute must be an array.","before":"The :attribute must be a date before :date.","before_or_equal":"The :attribute must be a date before or equal to :date.","between":{"numeric":"The :attribute must be between :min and :max.","file":"The :attribute must be between :min and :max kilobytes.","string":"The :attribute must be between :min and :max characters.","array":"The :attribute must have between :min and :max items."},"boolean":"The :attribute field must be true or false.","confirmed":"The :attribute confirmation does not match.","date":"The :attribute is not a valid date.","date_equals":"The :attribute must be a date equal to :date.","date_format":"The :attribute does not match the format :format.","different":"The :attribute and :other must be different.","digits":"The :attribute must be :digits digits.","digits_between":"The :attribute must be between :min and :max digits.","dimensions":"The :attribute has invalid image dimensions.","distinct":"The :attribute field has a duplicate value.","email":"The :attribute must be a valid email address.","ends_with":"The :attribute must end with one of the following: :values.","exists":"The selected :attribute is invalid.","file":"The :attribute must be a file.","filled":"The :attribute field must have a value.","gt":{"numeric":"The :attribute must be greater than :value.","file":"The :attribute must be greater than :value kilobytes.","string":"The :attribute must be greater than :value characters.","array":"The :attribute must have more than :value items."},"gte":{"numeric":"The :attribute must be greater than or equal :value.","file":"The :attribute must be greater than or equal :value kilobytes.","string":"The :attribute must be greater than or equal :value characters.","array":"The :attribute must have :value items or more."},"image":"The :attribute must be an image.","in":"The selected :attribute is invalid.","in_array":"The :attribute field does not exist in :other.","integer":"The :attribute must be an integer.","ip":"The :attribute must be a valid IP address.","ipv4":"The :attribute must be a valid IPv4 address.","ipv6":"The :attribute must be a valid IPv6 address.","json":"The :attribute must be a valid JSON string.","lt":{"numeric":"The :attribute must be less than :value.","file":"The :attribute must be less than :value kilobytes.","string":"The :attribute must be less than :value characters.","array":"The :attribute must have less than :value items."},"lte":{"numeric":"The :attribute must be less than or equal :value.","file":"The :attribute must be less than or equal :value kilobytes.","string":"The :attribute must be less than or equal :value characters.","array":"The :attribute must not have more than :value items."},"max":{"numeric":"The :attribute may not be greater than :max.","file":"The :attribute may not be greater than :max kilobytes.","string":"The :attribute may not be greater than :max characters.","array":"The :attribute may not have more than :max items."},"mimes":"The :attribute must be a file of type: :values.","mimetypes":"The :attribute must be a file of type: :values.","min":{"numeric":"The :attribute must be at least :min.","file":"The :attribute must be at least :min kilobytes.","string":"The :attribute must be at least :min characters.","array":"The :attribute must have at least :min items."},"not_in":"The selected :attribute is invalid.","not_regex":"The :attribute format is invalid.","numeric":"The :attribute must be a number.","password":"The password is incorrect.","present":"The :attribute field must be present.","regex":"The :attribute format is invalid.","required":"The :attribute field is required.","required_if":"The :attribute field is required when :other is :value.","required_unless":"The :attribute field is required unless :other is in :values.","required_with":"The :attribute field is required when :values is present.","required_with_all":"The :attribute field is required when :values are present.","required_without":"The :attribute field is required when :values is not present.","required_without_all":"The :attribute field is required when none of :values are present.","same":"The :attribute and :other must match.","size":{"numeric":"The :attribute must be :size.","file":"The :attribute must be :size kilobytes.","string":"The :attribute must be :size characters.","array":"The :attribute must contain :size items."},"starts_with":"The :attribute must start with one of the following: :values.","string":"The :attribute must be a string.","timezone":"The :attribute must be a valid zone.","unique":"The :attribute has already been taken.","uploaded":"The :attribute failed to upload.","url":"The :attribute format is invalid.","uuid":"The :attribute must be a valid UUID.","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":[]};
+
+/***/ }),
+
+/***/ "./resources/lang/spark/de.json":
+/*!**************************************!*\
+  !*** ./resources/lang/spark/de.json ***!
+  \**************************************/
+/*! exports provided: :days day trial, Add VAT Number, Address Line 2, Address, Afghanistan, Albania, Algeria, American Samoa, An unexpected error occurred and we have notified our support team. Please try again later., Andorra, Angola, Anguilla, Antarctica, Antigua and Barbuda, Argentina, Armenia, Aruba, Australia, Austria, Azerbaijan, Bahamas, Bahrain, Bangladesh, Barbados, Belarus, Belgium, Belize, Benin, Bermuda, Bhutan, Billing Information, Billing Management, Bolivia, Plurinational State of, Bosnia and Herzegovina, Botswana, Bouvet Island, Brazil, British Indian Ocean Territory, Brunei Darussalam, Bulgaria, Burkina Faso, Burundi, Cambodia, Cameroon, Canada, Cancel Subscription, Cape Verde, Card, Cayman Islands, Central African Republic, Chad, Change Subscription Plan, Chile, China, Christmas Island, City, Cocos (Keeling) Islands, Colombia, Comoros, Confirm Payment, Confirm your :amount payment, Congo, Congo, the Democratic Republic of the, Cook Islands, Costa Rica, Country, Coupon, Croatia, Cuba, Current Subscription Plan, Currently Subscribed, Cyprus, Czech Republic, Côte d'Ivoire, Denmark, Djibouti, Dominica, Dominican Republic, Download Receipt, ex VAT, Ecuador, Egypt, El Salvador, Equatorial Guinea, Eritrea, Estonia, Ethiopia, Email Addresses, Extra Billing Information, Extra confirmation is needed to process your payment. Please continue to the payment page by clicking on the button below., Falkland Islands (Malvinas), Faroe Islands, Fiji, Finland, France, French Guiana, French Polynesia, French Southern Territories, Gabon, Gambia, Georgia, Germany, Ghana, Gibraltar, Greece, Greenland, Grenada, Guadeloupe, Guam, Guatemala, Guernsey, Guinea, Guinea-Bissau, Guyana, Haiti, Have a coupon code?, Having second thoughts about cancelling your subscription? You can instantly reactive your subscription at any time until the end of your current billing cycle. After your current billing cycle ends, you may choose an entirely new subscription plan., Heard Island and McDonald Islands, Holy See (Vatican City State), Honduras, Hong Kong, Hungary, Iceland, If you need to add specific contact or tax information to your receipts, like your full business name, VAT identification number, or address of record, you may add it here., India, Indonesia, Iran, Islamic Republic of, Iraq, Ireland, Isle of Man, Israel, It looks like you do not have an active subscription. You may choose one of the subscription plans below to get started. Subscription plans may be changed or cancelled at your convenience., Italy, Jamaica, Japan, Jersey, Jordan, Kazakhstan, Kenya, Kiribati, Korea, Democratic People's Republic of, Korea, Republic of, Kuwait, Kyrgyzstan, Lao People's Democratic Republic, Latvia, Lebanon, Lesotho, Liberia, Libyan Arab Jamahiriya, Liechtenstein, Lithuania, Luxembourg, Macao, Macedonia, the former Yugoslav Republic of, Madagascar, Malawi, Malaysia, Maldives, Mali, Malta, Managing billing for :billableName, Marshall Islands, Martinique, Mauritania, Mauritius, Mayotte, Mexico, Micronesia, Federated States of, Moldova, Republic of, Monaco, Mongolia, Montenegro, Monthly, monthly, Montserrat, Morocco, Mozambique, Myanmar, Namibia, Nauru, Nepal, Netherlands Antilles, Netherlands, Nevermind, I'll keep my old plan, New Caledonia, New Zealand, Nicaragua, Niger, Nigeria, Niue, Norfolk Island, Northern Mariana Islands, Norway, Oman, Our billing management portal allows you to conveniently manage your subscription plan, payment method, and download your recent invoices., Pakistan, Palau, Palestinian Territory, Occupied, Panama, Papua New Guinea, Paraguay, Payment Information, Peru, Philippines, Pitcairn, Poland, Portugal, Puerto Rico, Please provide a maximum of three receipt emails addresses., Qatar, Receipts, Receipt Email Addresses, Resume Subscription, Return to :appName, Romania, Russian Federation, Rwanda, Réunion, Saint Barthélemy, Saint Helena, Saint Kitts and Nevis, Saint Lucia, Saint Martin (French part), Saint Pierre and Miquelon, Saint Vincent and the Grenadines, Samoa, San Marino, Sao Tome and Principe, Saudi Arabia, Save, Select a different plan, Select, Senegal, Serbia, Seychelles, Sierra Leone, Signed in as, Singapore, Slovakia, Slovenia, Solomon Islands, Somalia, South Africa, South Georgia and the South Sandwich Islands, Spain, Sri Lanka, State / County, Subscribe, Subscription Information, Sudan, Suriname, Svalbard and Jan Mayen, Swaziland, Sweden, Switzerland, Syrian Arab Republic, Taiwan, Province of China, Tajikistan, Tanzania, United Republic of, Thailand, Thanks for your continued support. We've attached a copy of your invoice for your records. Please let us know if you have any questions or concerns., Thanks,, The provided VAT number is invalid., The provided coupon code is invalid., The selected country is invalid., The selected plan is invalid., Terms of Service, This account does not have an active subscription., The receipt emails must be valid email addresses., This subscription has expired and cannot be resumed. Please create a new subscription., Timor-Leste, Togo, Tokelau, Tonga, Total:, Trinidad and Tobago, Tunisia, Turkey, Turkmenistan, Turks and Caicos Islands, Tuvalu, Uganda, Ukraine, United Arab Emirates, United Kingdom, United States Minor Outlying Islands, United States, Update Payment Information, Update, Uruguay, Uzbekistan, VAT Number, Vanuatu, Venezuela, Bolivarian Republic of, Viet Nam, Virgin Islands, British, Virgin Islands, U.S., Wallis and Futuna, We are unable to process your payment. Please contact customer support., We will send a receipt download link to the email addresses that you specify below. You may separate multiple email addresses using commas., Western Sahara, Whoops! Something went wrong., Yearly, Yemen, You are currently within your free trial period. Your trial will expire on :date., You may cancel your subscription at any time. Once your subscription has been cancelled, you will have the option to resume the subscription until the end of your current billing cycle., Your :invoiceName invoice is now available!, Your card was declined. Please contact your card issuer for more information., Your current payment method is a credit card ending in :lastFour that expires on :expiration., Your registered VAT Number is :vatNumber., Zambia, Zimbabwe, Zip / Postal Code, Åland Islands, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\":days day trial\":\":days Probezeit\",\"Add VAT Number\":\"Mehrwertsteuernummer hinzufügen\",\"Address Line 2\":\"Adresse Zeile 2\",\"Address\":\"Adresse\",\"Afghanistan\":\"Afghanistan\",\"Albania\":\"Albanien\",\"Algeria\":\"Algerien\",\"American Samoa\":\"Amerikanisch-Samoa\",\"An unexpected error occurred and we have notified our support team. Please try again later.\":\"Es ist ein unerwarteter Fehler aufgetreten und wir haben unser Support-Team benachrichtigt. Bitte versuchen Sie es später noch einmal.\",\"Andorra\":\"Andorra\",\"Angola\":\"Angola\",\"Anguilla\":\"Anguilla\",\"Antarctica\":\"Antarktis\",\"Antigua and Barbuda\":\"Antigua und Barbuda\",\"Argentina\":\"Argentinien\",\"Armenia\":\"Armenien\",\"Aruba\":\"Aruba\",\"Australia\":\"Australien\",\"Austria\":\"Österreich\",\"Azerbaijan\":\"Aserbaidschan\",\"Bahamas\":\"Bahamas\",\"Bahrain\":\"Bahrain\",\"Bangladesh\":\"Bangladesch\",\"Barbados\":\"Barbados\",\"Belarus\":\"Weißrussland\",\"Belgium\":\"Belgien\",\"Belize\":\"Belize\",\"Benin\":\"Benin\",\"Bermuda\":\"Bermuda\",\"Bhutan\":\"Bhutan\",\"Billing Information\":\"Informationen zur Rechnungsstellung\",\"Billing Management\":\"Abrechnungs-Management\",\"Bolivia, Plurinational State of\":\"Bolivien, Plurinationaler Staat\",\"Bosnia and Herzegovina\":\"Bosnien und Herzegowina\",\"Botswana\":\"Botswana\",\"Bouvet Island\":\"Bouvetinsel\",\"Brazil\":\"Brasilien\",\"British Indian Ocean Territory\":\"Britisches Territorium im Indischen Ozean\",\"Brunei Darussalam\":\"Brunei Darussalam\",\"Bulgaria\":\"Bulgarien\",\"Burkina Faso\":\"Burkina Faso\",\"Burundi\":\"Burundi\",\"Cambodia\":\"Kambodscha\",\"Cameroon\":\"Kamerun\",\"Canada\":\"Kanada\",\"Cancel Subscription\":\"Abonnement kündigen\",\"Cape Verde\":\"Kap Verde\",\"Card\":\"Karte\",\"Cayman Islands\":\"Cayman-Inseln\",\"Central African Republic\":\"Zentralafrikanische Republik\",\"Chad\":\"Tschad\",\"Change Subscription Plan\":\"Abo-Plan ändern\",\"Chile\":\"Chile\",\"China\":\"China\",\"Christmas Island\":\"Weihnachtsinsel\",\"City\":\"Stadt\",\"Cocos (Keeling) Islands\":\"Cocos (Keeling) Inseln\",\"Colombia\":\"Kolumbien\",\"Comoros\":\"Komoren\",\"Confirm Payment\":\"Bestätigen Sie die Zahlung\",\"Confirm your :amount payment\":\"Bestätigen Sie Ihre :payment\",\"Congo\":\"Kongo\",\"Congo, the Democratic Republic of the\":\"Kongo, die Demokratische Republik\",\"Cook Islands\":\"Cook-Inseln\",\"Costa Rica\":\"Costa Rica\",\"Country\":\"Land\",\"Coupon\":\"Coupon\",\"Croatia\":\"Kroatien\",\"Cuba\":\"Kuba\",\"Current Subscription Plan\":\"Aktueller Abo-Plan\",\"Currently Subscribed\":\"Derzeit abonniert\",\"Cyprus\":\"Zypern\",\"Czech Republic\":\"Tschechische Republik\",\"Côte d'Ivoire\":\"Côte d'Ivoire\",\"Denmark\":\"Dänemark\",\"Djibouti\":\"Dschibuti\",\"Dominica\":\"Dominica\",\"Dominican Republic\":\"Dominikanische Republik\",\"Download Receipt\":\"Download Quittung\",\"ex VAT\":\"ex Mehrwertsteuer\",\"Ecuador\":\"Ecuador\",\"Egypt\":\"Ägypten\",\"El Salvador\":\"El Salvador\",\"Equatorial Guinea\":\"Äquatorial-Guinea\",\"Eritrea\":\"Eritrea\",\"Estonia\":\"Estland\",\"Ethiopia\":\"Äthiopien\",\"Email Addresses\":\"E-Mail-Adressen\",\"Extra Billing Information\":\"Zusätzliche Rechnungsinformationen\",\"Extra confirmation is needed to process your payment. Please continue to the payment page by clicking on the button below.\":\"Eine zusätzliche Bestätigung ist erforderlich, um Ihre Zahlung zu bearbeiten. Bitte fahren Sie mit der Zahlungsseite fort, indem Sie auf die Schaltfläche unten klicken.\",\"Falkland Islands (Malvinas)\":\"Falklandinseln (Malwinen)\",\"Faroe Islands\":\"Färöer Inseln\",\"Fiji\":\"Fidschi\",\"Finland\":\"Finnland\",\"France\":\"Frankreich\",\"French Guiana\":\"Französisch-Guayana\",\"French Polynesia\":\"Französisch-Polynesien\",\"French Southern Territories\":\"Französische Süd-Territorien\",\"Gabon\":\"Gabun\",\"Gambia\":\"Gambia\",\"Georgia\":\"Georgien\",\"Germany\":\"Deutschland\",\"Ghana\":\"Ghana\",\"Gibraltar\":\"Gibraltar\",\"Greece\":\"Griechenland\",\"Greenland\":\"Grönland\",\"Grenada\":\"Grenada\",\"Guadeloupe\":\"Guadeloupe\",\"Guam\":\"Guam\",\"Guatemala\":\"Guatemala\",\"Guernsey\":\"Guernsey\",\"Guinea\":\"Guinea\",\"Guinea-Bissau\":\"Guinea-Bissau\",\"Guyana\":\"Guyana\",\"Haiti\":\"Haiti\",\"Have a coupon code?\":\"Haben Sie einen Gutscheincode?\",\"Having second thoughts about cancelling your subscription? You can instantly reactive your subscription at any time until the end of your current billing cycle. After your current billing cycle ends, you may choose an entirely new subscription plan.\":\"Haben Sie Bedenken, Ihr Abonnement zu kündigen? Sie können Ihr Abonnement jederzeit bis zum Ende Ihres aktuellen Abrechnungszyklus sofort reaktivieren. Nach dem Ende Ihres aktuellen Abrechnungszeitraums können Sie einen völlig neuen Abonnementplan wählen.\",\"Heard Island and McDonald Islands\":\"Heard-Insel und McDonald-Inseln\",\"Holy See (Vatican City State)\":\"Vatikan Stadt\",\"Honduras\":\"Honduras\",\"Hong Kong\":\"Hong Kong\",\"Hungary\":\"Ungarn\",\"Iceland\":\"Island\",\"If you need to add specific contact or tax information to your receipts, like your full business name, VAT identification number, or address of record, you may add it here.\":\"Wenn Sie Ihren Quittungen bestimmte Kontakt- oder Steuerinformationen hinzufügen müssen, wie z. B. Ihren vollständigen Firmennamen, Ihre Umsatzsteuer-Identifikationsnummer oder Ihre Anschrift, können Sie diese hier hinzufügen.\",\"India\":\"Indien\",\"Indonesia\":\"Indonesien\",\"Iran, Islamic Republic of\":\"Iran\",\"Iraq\":\"Irak\",\"Ireland\":\"Irland\",\"Isle of Man\":\"Isle of Man\",\"Israel\":\"Israel\",\"It looks like you do not have an active subscription. You may choose one of the subscription plans below to get started. Subscription plans may be changed or cancelled at your convenience.\":\"Es sieht so aus, als hätten Sie kein aktives Abonnement. Sie können einen der unten aufgeführten Abonnementpläne wählen, um zu beginnen. Abonnement-Pläne können nach Belieben geändert oder gekündigt werden.\",\"Italy\":\"Italien\",\"Jamaica\":\"Jamaika\",\"Japan\":\"Japan\",\"Jersey\":\"Jersey\",\"Jordan\":\"Jordan\",\"Kazakhstan\":\"Kazakhstan\",\"Kenya\":\"Kenia\",\"Kiribati\":\"Kiribati\",\"Korea, Democratic People's Republic of\":\"Korea, Demokratische Republik\",\"Korea, Republic of\":\"Korea, Republik\",\"Kuwait\":\"Kuwait\",\"Kyrgyzstan\":\"Kyrgyzstan\",\"Lao People's Democratic Republic\":\"Lao People's Democratic Republic\",\"Latvia\":\"Lettland\",\"Lebanon\":\"Libanon\",\"Lesotho\":\"Lesotho\",\"Liberia\":\"Liberia\",\"Libyan Arab Jamahiriya\":\"Libyan Arab Jamahiriya\",\"Liechtenstein\":\"Liechtenstein\",\"Lithuania\":\"Litauen\",\"Luxembourg\":\"Luxemburg\",\"Macao\":\"Macao\",\"Macedonia, the former Yugoslav Republic of\":\"Macedonia, the former Yugoslav Republic of\",\"Madagascar\":\"Madagascar\",\"Malawi\":\"Malawi\",\"Malaysia\":\"Malaysia\",\"Maldives\":\"Maldives\",\"Mali\":\"Mali\",\"Malta\":\"Malta\",\"Managing billing for :billableName\":\"Verwalten der Abrechnung für :billableName\",\"Marshall Islands\":\"Marshall Islands\",\"Martinique\":\"Martinique\",\"Mauritania\":\"Mauritania\",\"Mauritius\":\"Mauritius\",\"Mayotte\":\"Mayotte\",\"Mexico\":\"Mexico\",\"Micronesia, Federated States of\":\"Micronesia, Federated States of\",\"Moldova, Republic of\":\"Moldova, Republic of\",\"Monaco\":\"Monaco\",\"Mongolia\":\"Mongolia\",\"Montenegro\":\"Montenegro\",\"Monthly\":\"Monatlich\",\"monthly\":\"monatlich\",\"Montserrat\":\"Montserrat\",\"Morocco\":\"Morocco\",\"Mozambique\":\"Mozambique\",\"Myanmar\":\"Myanmar\",\"Namibia\":\"Namibia\",\"Nauru\":\"Nauru\",\"Nepal\":\"Nepal\",\"Netherlands Antilles\":\"Netherlands Antilles\",\"Netherlands\":\"Netherlands\",\"Nevermind, I'll keep my old plan\":\"Vergessen Sie's, ich behalte meinen alten Plan\",\"New Caledonia\":\"New Caledonia\",\"New Zealand\":\"New Zealand\",\"Nicaragua\":\"Nicaragua\",\"Niger\":\"Niger\",\"Nigeria\":\"Nigeria\",\"Niue\":\"Niue\",\"Norfolk Island\":\"Norfolk Island\",\"Northern Mariana Islands\":\"Northern Mariana Islands\",\"Norway\":\"Norway\",\"Oman\":\"Oman\",\"Our billing management portal allows you to conveniently manage your subscription plan, payment method, and download your recent invoices.\":\"In unserem Billing Management Portal können Sie bequem Ihren Abonnementplan und Ihre Zahlungsmethode verwalten und Ihre letzten Rechnungen herunterladen.\",\"Pakistan\":\"Pakistan\",\"Palau\":\"Palau\",\"Palestinian Territory, Occupied\":\"Palestinian Territory, Occupied\",\"Panama\":\"Panama\",\"Papua New Guinea\":\"Papua New Guinea\",\"Paraguay\":\"Paraguay\",\"Payment Information\":\"Zahlungsinformationen\",\"Peru\":\"Peru\",\"Philippines\":\"Philippines\",\"Pitcairn\":\"Pitcairn\",\"Poland\":\"Poland\",\"Portugal\":\"Portugal\",\"Puerto Rico\":\"Puerto Rico\",\"Please provide a maximum of three receipt emails addresses.\":\"Bitte geben Sie maximal drei Empfangs-E-Mail-Adressen an.\",\"Qatar\":\"Qatar\",\"Receipts\":\"Quittungen\",\"Receipt Email Addresses\":\"Empfangs-E-Mail-Adressen\",\"Resume Subscription\":\"Fortsetzen des Abonnements\",\"Return to :appName\":\"Zurück zu :appName\",\"Romania\":\"Romania\",\"Russian Federation\":\"Russian Federation\",\"Rwanda\":\"Rwanda\",\"Réunion\":\"Réunion\",\"Saint Barthélemy\":\"Saint Barthélemy\",\"Saint Helena\":\"Saint Helena\",\"Saint Kitts and Nevis\":\"Saint Kitts and Nevis\",\"Saint Lucia\":\"Saint Lucia\",\"Saint Martin (French part)\":\"Saint Martin (French part)\",\"Saint Pierre and Miquelon\":\"Saint Pierre and Miquelon\",\"Saint Vincent and the Grenadines\":\"Saint Vincent and the Grenadines\",\"Samoa\":\"Samoa\",\"San Marino\":\"San Marino\",\"Sao Tome and Principe\":\"Sao Tome and Principe\",\"Saudi Arabia\":\"Saudi Arabia\",\"Save\":\"Speichern\",\"Select a different plan\":\"Wählen Sie einen anderen Plan\",\"Select\":\"Auswählen\",\"Senegal\":\"Senegal\",\"Serbia\":\"Serbia\",\"Seychelles\":\"Seychelles\",\"Sierra Leone\":\"Sierra Leone\",\"Signed in as\":\"Angemeldet als\",\"Singapore\":\"Singapore\",\"Slovakia\":\"Slovakia\",\"Slovenia\":\"Slovenia\",\"Solomon Islands\":\"Solomon Islands\",\"Somalia\":\"Somalia\",\"South Africa\":\"South Africa\",\"South Georgia and the South Sandwich Islands\":\"South Georgia and the South Sandwich Islands\",\"Spain\":\"Spain\",\"Sri Lanka\":\"Sri Lanka\",\"State / County\":\"Bundesland / Landkreis\",\"Subscribe\":\"Abonnieren\",\"Subscription Information\":\"Informationen zum Abonnement\",\"Sudan\":\"Sudan\",\"Suriname\":\"Suriname\",\"Svalbard and Jan Mayen\":\"Svalbard and Jan Mayen\",\"Swaziland\":\"Swaziland\",\"Sweden\":\"Sweden\",\"Switzerland\":\"Switzerland\",\"Syrian Arab Republic\":\"Syrian Arab Republic\",\"Taiwan, Province of China\":\"Taiwan, Province of China\",\"Tajikistan\":\"Tajikistan\",\"Tanzania, United Republic of\":\"Tanzania, United Republic of\",\"Thailand\":\"Thailand\",\"Thanks for your continued support. We've attached a copy of your invoice for your records. Please let us know if you have any questions or concerns.\":\"Vielen Dank für Ihre anhaltende Unterstützung. Wir haben eine Kopie Ihrer Rechnung für Ihre Unterlagen beigefügt. Bitte lassen Sie uns wissen, wenn Sie irgendwelche Fragen oder Bedenken haben.\",\"Thanks,\":\"Danke,\",\"The provided VAT number is invalid.\":\"Die angegebene Umsatzsteuernummer ist ungültig.\",\"The provided coupon code is invalid.\":\"Der angegebene Gutscheincode ist ungültig.\",\"The selected country is invalid.\":\"Das ausgewählte Land ist ungültig.\",\"The selected plan is invalid.\":\"Der ausgewählte Plan ist ungültig.\",\"Terms of Service\":\"Nutzungsbedingungen\",\"This account does not have an active subscription.\":\"Dieses Konto verfügt nicht über ein aktives Abonnement.\",\"The receipt emails must be valid email addresses.\":\"Die Empfangs-E-Mails müssen gültige E-Mail-Adressen sein.\",\"This subscription has expired and cannot be resumed. Please create a new subscription.\":\"Dieses Abonnement ist abgelaufen und kann nicht wieder aufgenommen werden. Bitte erstellen Sie ein neues Abonnement.\",\"Timor-Leste\":\"Timor-Leste\",\"Togo\":\"Togo\",\"Tokelau\":\"Tokelau\",\"Tonga\":\"Tonga\",\"Total:\":\"Gesamt:\",\"Trinidad and Tobago\":\"Trinidad and Tobago\",\"Tunisia\":\"Tunisia\",\"Turkey\":\"Turkey\",\"Turkmenistan\":\"Turkmenistan\",\"Turks and Caicos Islands\":\"Turks and Caicos Islands\",\"Tuvalu\":\"Tuvalu\",\"Uganda\":\"Uganda\",\"Ukraine\":\"Ukraine\",\"United Arab Emirates\":\"United Arab Emirates\",\"United Kingdom\":\"United Kingdom\",\"United States Minor Outlying Islands\":\"United States Minor Outlying Islands\",\"United States\":\"United States\",\"Update Payment Information\":\"Zahlungsinformationen aktualisieren\",\"Update\":\"Aktualisieren\",\"Uruguay\":\"Uruguay\",\"Uzbekistan\":\"Uzbekistan\",\"VAT Number\":\"Umsatzsteuer-Identifikationsnummer\",\"Vanuatu\":\"Vanuatu\",\"Venezuela, Bolivarian Republic of\":\"Venezuela, Bolivarian Republic of\",\"Viet Nam\":\"Viet Nam\",\"Virgin Islands, British\":\"Virgin Islands, British\",\"Virgin Islands, U.S.\":\"Virgin Islands, U.S.\",\"Wallis and Futuna\":\"Wallis and Futuna\",\"We are unable to process your payment. Please contact customer support.\":\"Wir können Ihre Zahlung nicht bearbeiten. Bitte kontaktieren Sie den Kundensupport.\",\"We will send a receipt download link to the email addresses that you specify below. You may separate multiple email addresses using commas.\":\"Wir senden einen Beleg-Download-Link an die E-Mail-Adressen, die Sie unten angeben. Sie können mehrere E-Mail-Adressen durch Kommata trennen.\",\"Western Sahara\":\"Western Sahara\",\"Whoops! Something went wrong.\":\"Huch! Da ist etwas schief gelaufen.\",\"Yearly\":\"Jährlich\",\"Yemen\":\"Yemen\",\"You are currently within your free trial period. Your trial will expire on :date.\":\"Sie befinden sich derzeit innerhalb Ihres kostenlosen Testzeitraums. Ihr Testzeitraum läuft am :date ab.\",\"You may cancel your subscription at any time. Once your subscription has been cancelled, you will have the option to resume the subscription until the end of your current billing cycle.\":\"Sie können Ihr Abonnement jederzeit kündigen. Sobald Ihr Abonnement gekündigt wurde, haben Sie die Möglichkeit, das Abonnement bis zum Ende Ihres aktuellen Abrechnungszyklus fortzusetzen.\",\"Your :invoiceName invoice is now available!\":\"Ihre :invoiceName Rechnung ist jetzt verfügbar!\",\"Your card was declined. Please contact your card issuer for more information.\":\"Ihre Karte wurde abgelehnt. Bitte kontaktieren Sie Ihren Kartenaussteller für weitere Informationen.\",\"Your current payment method is a credit card ending in :lastFour that expires on :expiration.\":\"Ihre aktuelle Zahlungsmethode ist eine Kreditkarte mit der Endung :lastFour, die am :expiration ausläuft.\",\"Your registered VAT Number is :vatNumber.\":\"Ihre registrierte Umsatzsteuer-Identifikationsnummer lautet :vatNumber.\",\"Zambia\":\"Zambia\",\"Zimbabwe\":\"Zimbabwe\",\"Zip / Postal Code\":\"Postleitzahl\",\"Åland Islands\":\"Åland Islands\"}");
+
+/***/ }),
+
+/***/ "./resources/lang/spark/en.json":
+/*!**************************************!*\
+  !*** ./resources/lang/spark/en.json ***!
+  \**************************************/
+/*! exports provided: :days day trial, Add VAT Number, Address Line 2, Address, Afghanistan, Albania, Algeria, American Samoa, An unexpected error occurred and we have notified our support team. Please try again later., Andorra, Angola, Anguilla, Antarctica, Antigua and Barbuda, Argentina, Armenia, Aruba, Australia, Austria, Azerbaijan, Bahamas, Bahrain, Bangladesh, Barbados, Belarus, Belgium, Belize, Benin, Bermuda, Bhutan, Billing Information, Billing Management, Bolivia, Plurinational State of, Bosnia and Herzegovina, Botswana, Bouvet Island, Brazil, British Indian Ocean Territory, Brunei Darussalam, Bulgaria, Burkina Faso, Burundi, Cambodia, Cameroon, Canada, Cancel Subscription, Cape Verde, Card, Cayman Islands, Central African Republic, Chad, Change Subscription Plan, Chile, China, Christmas Island, City, Cocos (Keeling) Islands, Colombia, Comoros, Confirm Payment, Confirm your :amount payment, Congo, Congo, the Democratic Republic of the, Cook Islands, Costa Rica, Country, Coupon, Croatia, Cuba, Current Subscription Plan, Currently Subscribed, Cyprus, Czech Republic, Côte d'Ivoire, Denmark, Djibouti, Dominica, Dominican Republic, Download Receipt, ex VAT, Ecuador, Egypt, El Salvador, Equatorial Guinea, Eritrea, Estonia, Ethiopia, Email Addresses, Extra Billing Information, Extra confirmation is needed to process your payment. Please continue to the payment page by clicking on the button below., Falkland Islands (Malvinas), Faroe Islands, Fiji, Finland, France, French Guiana, French Polynesia, French Southern Territories, Gabon, Gambia, Georgia, Germany, Ghana, Gibraltar, Greece, Greenland, Grenada, Guadeloupe, Guam, Guatemala, Guernsey, Guinea, Guinea-Bissau, Guyana, Haiti, Have a coupon code?, Having second thoughts about cancelling your subscription? You can instantly reactive your subscription at any time until the end of your current billing cycle. After your current billing cycle ends, you may choose an entirely new subscription plan., Heard Island and McDonald Islands, Holy See (Vatican City State), Honduras, Hong Kong, Hungary, Iceland, If you need to add specific contact or tax information to your receipts, like your full business name, VAT identification number, or address of record, you may add it here., India, Indonesia, Iran, Islamic Republic of, Iraq, Ireland, Isle of Man, Israel, It looks like you do not have an active subscription. You may choose one of the subscription plans below to get started. Subscription plans may be changed or cancelled at your convenience., Italy, Jamaica, Japan, Jersey, Jordan, Kazakhstan, Kenya, Kiribati, Korea, Democratic People's Republic of, Korea, Republic of, Kuwait, Kyrgyzstan, Lao People's Democratic Republic, Latvia, Lebanon, Lesotho, Liberia, Libyan Arab Jamahiriya, Liechtenstein, Lithuania, Luxembourg, Macao, Macedonia, the former Yugoslav Republic of, Madagascar, Malawi, Malaysia, Maldives, Mali, Malta, Managing billing for :billableName, Marshall Islands, Martinique, Mauritania, Mauritius, Mayotte, Mexico, Micronesia, Federated States of, Moldova, Republic of, Monaco, Mongolia, Montenegro, Monthly, monthly, Montserrat, Morocco, Mozambique, Myanmar, Namibia, Nauru, Nepal, Netherlands Antilles, Netherlands, Nevermind, I'll keep my old plan, New Caledonia, New Zealand, Nicaragua, Niger, Nigeria, Niue, Norfolk Island, Northern Mariana Islands, Norway, Oman, Our billing management portal allows you to conveniently manage your subscription plan, payment method, and download your recent invoices., Pakistan, Palau, Palestinian Territory, Occupied, Panama, Papua New Guinea, Paraguay, Payment Information, Peru, Philippines, Pitcairn, Poland, Portugal, Puerto Rico, Please provide a maximum of three receipt emails addresses., Qatar, Receipts, Receipt Email Addresses, Resume Subscription, Return to :appName, Romania, Russian Federation, Rwanda, Réunion, Saint Barthélemy, Saint Helena, Saint Kitts and Nevis, Saint Lucia, Saint Martin (French part), Saint Pierre and Miquelon, Saint Vincent and the Grenadines, Samoa, San Marino, Sao Tome and Principe, Saudi Arabia, Save, Select a different plan, Select, Senegal, Serbia, Seychelles, Sierra Leone, Signed in as, Singapore, Slovakia, Slovenia, Solomon Islands, Somalia, South Africa, South Georgia and the South Sandwich Islands, Spain, Sri Lanka, State / County, Subscribe, Subscription Information, Sudan, Suriname, Svalbard and Jan Mayen, Swaziland, Sweden, Switzerland, Syrian Arab Republic, Taiwan, Province of China, Tajikistan, Tanzania, United Republic of, Thailand, Thanks for your continued support. We've attached a copy of your invoice for your records. Please let us know if you have any questions or concerns., Thanks,, The provided VAT number is invalid., The provided coupon code is invalid., The selected country is invalid., The selected plan is invalid., Terms of Service, This account does not have an active subscription., The receipt emails must be valid email addresses., This subscription has expired and cannot be resumed. Please create a new subscription., Timor-Leste, Togo, Tokelau, Tonga, Total:, Trinidad and Tobago, Tunisia, Turkey, Turkmenistan, Turks and Caicos Islands, Tuvalu, Uganda, Ukraine, United Arab Emirates, United Kingdom, United States Minor Outlying Islands, United States, Update Payment Information, Update, Uruguay, Uzbekistan, VAT Number, Vanuatu, Venezuela, Bolivarian Republic of, Viet Nam, Virgin Islands, British, Virgin Islands, U.S., Wallis and Futuna, We are unable to process your payment. Please contact customer support., We will send a receipt download link to the email addresses that you specify below. You may separate multiple email addresses using commas., Western Sahara, Whoops! Something went wrong., Yearly, Yemen, You are currently within your free trial period. Your trial will expire on :date., You may cancel your subscription at any time. Once your subscription has been cancelled, you will have the option to resume the subscription until the end of your current billing cycle., Your :invoiceName invoice is now available!, Your card was declined. Please contact your card issuer for more information., Your current payment method is a credit card ending in :lastFour that expires on :expiration., Your registered VAT Number is :vatNumber., Zambia, Zimbabwe, Zip / Postal Code, Åland Islands, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\":days day trial\":\":days day trial\",\"Add VAT Number\":\"Add VAT Number\",\"Address Line 2\":\"Address Line 2\",\"Address\":\"Address\",\"Afghanistan\":\"Afghanistan\",\"Albania\":\"Albania\",\"Algeria\":\"Algeria\",\"American Samoa\":\"American Samoa\",\"An unexpected error occurred and we have notified our support team. Please try again later.\":\"An unexpected error occurred and we have notified our support team. Please try again later.\",\"Andorra\":\"Andorra\",\"Angola\":\"Angola\",\"Anguilla\":\"Anguilla\",\"Antarctica\":\"Antarctica\",\"Antigua and Barbuda\":\"Antigua and Barbuda\",\"Argentina\":\"Argentina\",\"Armenia\":\"Armenia\",\"Aruba\":\"Aruba\",\"Australia\":\"Australia\",\"Austria\":\"Austria\",\"Azerbaijan\":\"Azerbaijan\",\"Bahamas\":\"Bahamas\",\"Bahrain\":\"Bahrain\",\"Bangladesh\":\"Bangladesh\",\"Barbados\":\"Barbados\",\"Belarus\":\"Belarus\",\"Belgium\":\"Belgium\",\"Belize\":\"Belize\",\"Benin\":\"Benin\",\"Bermuda\":\"Bermuda\",\"Bhutan\":\"Bhutan\",\"Billing Information\":\"Billing Information\",\"Billing Management\":\"Billing Management\",\"Bolivia, Plurinational State of\":\"Bolivia, Plurinational State of\",\"Bosnia and Herzegovina\":\"Bosnia and Herzegovina\",\"Botswana\":\"Botswana\",\"Bouvet Island\":\"Bouvet Island\",\"Brazil\":\"Brazil\",\"British Indian Ocean Territory\":\"British Indian Ocean Territory\",\"Brunei Darussalam\":\"Brunei Darussalam\",\"Bulgaria\":\"Bulgaria\",\"Burkina Faso\":\"Burkina Faso\",\"Burundi\":\"Burundi\",\"Cambodia\":\"Cambodia\",\"Cameroon\":\"Cameroon\",\"Canada\":\"Canada\",\"Cancel Subscription\":\"Cancel Subscription\",\"Cape Verde\":\"Cape Verde\",\"Card\":\"Card\",\"Cayman Islands\":\"Cayman Islands\",\"Central African Republic\":\"Central African Republic\",\"Chad\":\"Chad\",\"Change Subscription Plan\":\"Change Subscription Plan\",\"Chile\":\"Chile\",\"China\":\"China\",\"Christmas Island\":\"Christmas Island\",\"City\":\"City\",\"Cocos (Keeling) Islands\":\"Cocos (Keeling) Islands\",\"Colombia\":\"Colombia\",\"Comoros\":\"Comoros\",\"Confirm Payment\":\"Confirm Payment\",\"Confirm your :amount payment\":\"Confirm your :amount payment\",\"Congo\":\"Congo\",\"Congo, the Democratic Republic of the\":\"Congo, the Democratic Republic of the\",\"Cook Islands\":\"Cook Islands\",\"Costa Rica\":\"Costa Rica\",\"Country\":\"Country\",\"Coupon\":\"Coupon\",\"Croatia\":\"Croatia\",\"Cuba\":\"Cuba\",\"Current Subscription Plan\":\"Current Subscription Plan\",\"Currently Subscribed\":\"Currently Subscribed\",\"Cyprus\":\"Cyprus\",\"Czech Republic\":\"Czech Republic\",\"Côte d'Ivoire\":\"Côte d'Ivoire\",\"Denmark\":\"Denmark\",\"Djibouti\":\"Djibouti\",\"Dominica\":\"Dominica\",\"Dominican Republic\":\"Dominican Republic\",\"Download Receipt\":\"Download Receipt\",\"ex VAT\":\"ex VAT\",\"Ecuador\":\"Ecuador\",\"Egypt\":\"Egypt\",\"El Salvador\":\"El Salvador\",\"Equatorial Guinea\":\"Equatorial Guinea\",\"Eritrea\":\"Eritrea\",\"Estonia\":\"Estonia\",\"Ethiopia\":\"Ethiopia\",\"Email Addresses\":\"Email Addresses\",\"Extra Billing Information\":\"Extra Billing Information\",\"Extra confirmation is needed to process your payment. Please continue to the payment page by clicking on the button below.\":\"Extra confirmation is needed to process your payment. Please continue to the payment page by clicking on the button below.\",\"Falkland Islands (Malvinas)\":\"Falkland Islands (Malvinas)\",\"Faroe Islands\":\"Faroe Islands\",\"Fiji\":\"Fiji\",\"Finland\":\"Finland\",\"France\":\"France\",\"French Guiana\":\"French Guiana\",\"French Polynesia\":\"French Polynesia\",\"French Southern Territories\":\"French Southern Territories\",\"Gabon\":\"Gabon\",\"Gambia\":\"Gambia\",\"Georgia\":\"Georgia\",\"Germany\":\"Germany\",\"Ghana\":\"Ghana\",\"Gibraltar\":\"Gibraltar\",\"Greece\":\"Greece\",\"Greenland\":\"Greenland\",\"Grenada\":\"Grenada\",\"Guadeloupe\":\"Guadeloupe\",\"Guam\":\"Guam\",\"Guatemala\":\"Guatemala\",\"Guernsey\":\"Guernsey\",\"Guinea\":\"Guinea\",\"Guinea-Bissau\":\"Guinea-Bissau\",\"Guyana\":\"Guyana\",\"Haiti\":\"Haiti\",\"Have a coupon code?\":\"Have a coupon code?\",\"Having second thoughts about cancelling your subscription? You can instantly reactive your subscription at any time until the end of your current billing cycle. After your current billing cycle ends, you may choose an entirely new subscription plan.\":\"Having second thoughts about cancelling your subscription? You can instantly reactive your subscription at any time until the end of your current billing cycle. After your current billing cycle ends, you may choose an entirely new subscription plan.\",\"Heard Island and McDonald Islands\":\"Heard Island and McDonald Islands\",\"Holy See (Vatican City State)\":\"Holy See (Vatican City State)\",\"Honduras\":\"Honduras\",\"Hong Kong\":\"Hong Kong\",\"Hungary\":\"Hungary\",\"Iceland\":\"Iceland\",\"If you need to add specific contact or tax information to your receipts, like your full business name, VAT identification number, or address of record, you may add it here.\":\"If you need to add specific contact or tax information to your receipts, like your full business name, VAT identification number, or address of record, you may add it here.\",\"India\":\"India\",\"Indonesia\":\"Indonesia\",\"Iran, Islamic Republic of\":\"Iran, Islamic Republic of\",\"Iraq\":\"Iraq\",\"Ireland\":\"Ireland\",\"Isle of Man\":\"Isle of Man\",\"Israel\":\"Israel\",\"It looks like you do not have an active subscription. You may choose one of the subscription plans below to get started. Subscription plans may be changed or cancelled at your convenience.\":\"It looks like you do not have an active subscription. You may choose one of the subscription plans below to get started. Subscription plans may be changed or cancelled at your convenience.\",\"Italy\":\"Italy\",\"Jamaica\":\"Jamaica\",\"Japan\":\"Japan\",\"Jersey\":\"Jersey\",\"Jordan\":\"Jordan\",\"Kazakhstan\":\"Kazakhstan\",\"Kenya\":\"Kenya\",\"Kiribati\":\"Kiribati\",\"Korea, Democratic People's Republic of\":\"Korea, Democratic People's Republic of\",\"Korea, Republic of\":\"Korea, Republic of\",\"Kuwait\":\"Kuwait\",\"Kyrgyzstan\":\"Kyrgyzstan\",\"Lao People's Democratic Republic\":\"Lao People's Democratic Republic\",\"Latvia\":\"Latvia\",\"Lebanon\":\"Lebanon\",\"Lesotho\":\"Lesotho\",\"Liberia\":\"Liberia\",\"Libyan Arab Jamahiriya\":\"Libyan Arab Jamahiriya\",\"Liechtenstein\":\"Liechtenstein\",\"Lithuania\":\"Lithuania\",\"Luxembourg\":\"Luxembourg\",\"Macao\":\"Macao\",\"Macedonia, the former Yugoslav Republic of\":\"Macedonia, the former Yugoslav Republic of\",\"Madagascar\":\"Madagascar\",\"Malawi\":\"Malawi\",\"Malaysia\":\"Malaysia\",\"Maldives\":\"Maldives\",\"Mali\":\"Mali\",\"Malta\":\"Malta\",\"Managing billing for :billableName\":\"Managing billing for :billableName\",\"Marshall Islands\":\"Marshall Islands\",\"Martinique\":\"Martinique\",\"Mauritania\":\"Mauritania\",\"Mauritius\":\"Mauritius\",\"Mayotte\":\"Mayotte\",\"Mexico\":\"Mexico\",\"Micronesia, Federated States of\":\"Micronesia, Federated States of\",\"Moldova, Republic of\":\"Moldova, Republic of\",\"Monaco\":\"Monaco\",\"Mongolia\":\"Mongolia\",\"Montenegro\":\"Montenegro\",\"Monthly\":\"Monthly\",\"monthly\":\"monthly\",\"Montserrat\":\"Montserrat\",\"Morocco\":\"Morocco\",\"Mozambique\":\"Mozambique\",\"Myanmar\":\"Myanmar\",\"Namibia\":\"Namibia\",\"Nauru\":\"Nauru\",\"Nepal\":\"Nepal\",\"Netherlands Antilles\":\"Netherlands Antilles\",\"Netherlands\":\"Netherlands\",\"Nevermind, I'll keep my old plan\":\"Nevermind, I'll keep my old plan\",\"New Caledonia\":\"New Caledonia\",\"New Zealand\":\"New Zealand\",\"Nicaragua\":\"Nicaragua\",\"Niger\":\"Niger\",\"Nigeria\":\"Nigeria\",\"Niue\":\"Niue\",\"Norfolk Island\":\"Norfolk Island\",\"Northern Mariana Islands\":\"Northern Mariana Islands\",\"Norway\":\"Norway\",\"Oman\":\"Oman\",\"Our billing management portal allows you to conveniently manage your subscription plan, payment method, and download your recent invoices.\":\"Our billing management portal allows you to conveniently manage your subscription plan, payment method, and download your recent invoices.\",\"Pakistan\":\"Pakistan\",\"Palau\":\"Palau\",\"Palestinian Territory, Occupied\":\"Palestinian Territory, Occupied\",\"Panama\":\"Panama\",\"Papua New Guinea\":\"Papua New Guinea\",\"Paraguay\":\"Paraguay\",\"Payment Information\":\"Payment Information\",\"Peru\":\"Peru\",\"Philippines\":\"Philippines\",\"Pitcairn\":\"Pitcairn\",\"Poland\":\"Poland\",\"Portugal\":\"Portugal\",\"Puerto Rico\":\"Puerto Rico\",\"Please provide a maximum of three receipt emails addresses.\":\"Please provide a maximum of three receipt emails addresses.\",\"Qatar\":\"Qatar\",\"Receipts\":\"Receipts\",\"Receipt Email Addresses\":\"Receipt Email Addresses\",\"Resume Subscription\":\"Resume Subscription\",\"Return to :appName\":\"Return to :appName\",\"Romania\":\"Romania\",\"Russian Federation\":\"Russian Federation\",\"Rwanda\":\"Rwanda\",\"Réunion\":\"Réunion\",\"Saint Barthélemy\":\"Saint Barthélemy\",\"Saint Helena\":\"Saint Helena\",\"Saint Kitts and Nevis\":\"Saint Kitts and Nevis\",\"Saint Lucia\":\"Saint Lucia\",\"Saint Martin (French part)\":\"Saint Martin (French part)\",\"Saint Pierre and Miquelon\":\"Saint Pierre and Miquelon\",\"Saint Vincent and the Grenadines\":\"Saint Vincent and the Grenadines\",\"Samoa\":\"Samoa\",\"San Marino\":\"San Marino\",\"Sao Tome and Principe\":\"Sao Tome and Principe\",\"Saudi Arabia\":\"Saudi Arabia\",\"Save\":\"Save\",\"Select a different plan\":\"Select a different plan\",\"Select\":\"Select\",\"Senegal\":\"Senegal\",\"Serbia\":\"Serbia\",\"Seychelles\":\"Seychelles\",\"Sierra Leone\":\"Sierra Leone\",\"Signed in as\":\"Signed in as\",\"Singapore\":\"Singapore\",\"Slovakia\":\"Slovakia\",\"Slovenia\":\"Slovenia\",\"Solomon Islands\":\"Solomon Islands\",\"Somalia\":\"Somalia\",\"South Africa\":\"South Africa\",\"South Georgia and the South Sandwich Islands\":\"South Georgia and the South Sandwich Islands\",\"Spain\":\"Spain\",\"Sri Lanka\":\"Sri Lanka\",\"State / County\":\"State / County\",\"Subscribe\":\"Subscribe\",\"Subscription Information\":\"Subscription Information\",\"Sudan\":\"Sudan\",\"Suriname\":\"Suriname\",\"Svalbard and Jan Mayen\":\"Svalbard and Jan Mayen\",\"Swaziland\":\"Swaziland\",\"Sweden\":\"Sweden\",\"Switzerland\":\"Switzerland\",\"Syrian Arab Republic\":\"Syrian Arab Republic\",\"Taiwan, Province of China\":\"Taiwan, Province of China\",\"Tajikistan\":\"Tajikistan\",\"Tanzania, United Republic of\":\"Tanzania, United Republic of\",\"Thailand\":\"Thailand\",\"Thanks for your continued support. We've attached a copy of your invoice for your records. Please let us know if you have any questions or concerns.\":\"Thanks for your continued support. We've attached a copy of your invoice for your records. Please let us know if you have any questions or concerns.\",\"Thanks,\":\"Thanks,\",\"The provided VAT number is invalid.\":\"The provided VAT number is invalid.\",\"The provided coupon code is invalid.\":\"The provided coupon code is invalid.\",\"The selected country is invalid.\":\"The selected country is invalid.\",\"The selected plan is invalid.\":\"The selected plan is invalid.\",\"Terms of Service\":\"Terms of Service\",\"This account does not have an active subscription.\":\"This account does not have an active subscription.\",\"The receipt emails must be valid email addresses.\":\"The receipt emails must be valid email addresses.\",\"This subscription has expired and cannot be resumed. Please create a new subscription.\":\"This subscription has expired and cannot be resumed. Please create a new subscription.\",\"Timor-Leste\":\"Timor-Leste\",\"Togo\":\"Togo\",\"Tokelau\":\"Tokelau\",\"Tonga\":\"Tonga\",\"Total:\":\"Total:\",\"Trinidad and Tobago\":\"Trinidad and Tobago\",\"Tunisia\":\"Tunisia\",\"Turkey\":\"Turkey\",\"Turkmenistan\":\"Turkmenistan\",\"Turks and Caicos Islands\":\"Turks and Caicos Islands\",\"Tuvalu\":\"Tuvalu\",\"Uganda\":\"Uganda\",\"Ukraine\":\"Ukraine\",\"United Arab Emirates\":\"United Arab Emirates\",\"United Kingdom\":\"United Kingdom\",\"United States Minor Outlying Islands\":\"United States Minor Outlying Islands\",\"United States\":\"United States\",\"Update Payment Information\":\"Update Payment Information\",\"Update\":\"Update\",\"Uruguay\":\"Uruguay\",\"Uzbekistan\":\"Uzbekistan\",\"VAT Number\":\"VAT Number\",\"Vanuatu\":\"Vanuatu\",\"Venezuela, Bolivarian Republic of\":\"Venezuela, Bolivarian Republic of\",\"Viet Nam\":\"Viet Nam\",\"Virgin Islands, British\":\"Virgin Islands, British\",\"Virgin Islands, U.S.\":\"Virgin Islands, U.S.\",\"Wallis and Futuna\":\"Wallis and Futuna\",\"We are unable to process your payment. Please contact customer support.\":\"We are unable to process your payment. Please contact customer support.\",\"We will send a receipt download link to the email addresses that you specify below. You may separate multiple email addresses using commas.\":\"We will send a receipt download link to the email addresses that you specify below. You may separate multiple email addresses using commas.\",\"Western Sahara\":\"Western Sahara\",\"Whoops! Something went wrong.\":\"Whoops! Something went wrong.\",\"Yearly\":\"Yearly\",\"Yemen\":\"Yemen\",\"You are currently within your free trial period. Your trial will expire on :date.\":\"You are currently within your free trial period. Your trial will expire on :date.\",\"You may cancel your subscription at any time. Once your subscription has been cancelled, you will have the option to resume the subscription until the end of your current billing cycle.\":\"You may cancel your subscription at any time. Once your subscription has been cancelled, you will have the option to resume the subscription until the end of your current billing cycle.\",\"Your :invoiceName invoice is now available!\":\"Your :invoiceName invoice is now available!\",\"Your card was declined. Please contact your card issuer for more information.\":\"Your card was declined. Please contact your card issuer for more information.\",\"Your current payment method is a credit card ending in :lastFour that expires on :expiration.\":\"Your current payment method is a credit card ending in :lastFour that expires on :expiration.\",\"Your registered VAT Number is :vatNumber.\":\"Your registered VAT Number is :vatNumber.\",\"Zambia\":\"Zambia\",\"Zimbabwe\":\"Zimbabwe\",\"Zip / Postal Code\":\"Zip / Postal Code\",\"Åland Islands\":\"Åland Islands\"}");
 
 /***/ }),
 

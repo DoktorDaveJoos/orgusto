@@ -44,7 +44,7 @@ class RestaurantPolicy
      */
     public function create(User $user)
     {
-        return ($user->access_level === 'premium');
+        return true;
     }
 
     /**

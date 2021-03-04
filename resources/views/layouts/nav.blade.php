@@ -1,64 +1,101 @@
-<nav class="flex justify-center @guest  @else bg-gray-200 shadow-md @endif sticky top-0 z-50">
-    <div class="max-w-6xl w-full flex flex-row justify-between p-2 content-center">
-        <div class="flex flex-col items-center">
-            <a href="{{  route('home') }}">
+<nav class="flex justify-center @guest @else bg-gray-200 shadow-md sticky @endif top-0 z-50">
+
+    <div class="max-w-6xl w-full flex flex-row justify-between content-center">
+
+        <div class="flex flex-row items-center">
+            <a href="@guest {{ route('home') }} @else {{ route('reservations.show') }} @endguest">
                 <img class="w-32" src="{{ asset('orgusto-logo-svg.svg') }}"/>
-                <span class="text-xs text-gray-600 text-italic">{{ config('app.version') }} - free premium</span>
             </a>
         </div>
-        <div class="flex-1 flex flex-row items-center">
 
-            @guest
-                <div class="flex flex-1 justify-end">
-                    <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700 mr-6"
-                       href="{{ route('login') }}">{{ __('auth.login') }}</a>
-                    @if (Route::has('register'))
-                        <a class="text-l orgusto-lead text-gray-600 hover:text-gray-700"
-                           href="{{ route('register') }}">{{ __('auth.register') }}</a>
-                </div>
-            @endif
+        @guest
+            <div class="flex flex-1 py-6 justify-end font-semibold">
+                <a class="text-l text-gray-600 hover:text-indigo-600 mr-6 transition-colors duration-150 ease-in-out"
+                   href="{{ route('login') }}">{{ __('auth.login') }}</a>
+                <a class="text-l text-gray-600 hover:text-indigo-600 transition-colors duration-150 ease-in-out"
+                   href="{{ route('register') }}">{{ __('auth.register') }}</a>
+            </div>
+        @else
+            <div class="flex items-center">
+                @if(auth()->user()->restaurants->count() > 1 || !auth()->user()->selected)
+                    <x-restaurant-switcher></x-restaurant-switcher>
+                @endif
 
-            @else
-                <div class="flex flex-1 justify-between items-center">
+                <a href="{{ route('reservations.show') }}"
+                   class="px-6 py-3 ml-6 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('reservations*') ? 'font-semibold text-indigo-600' : '' }}">
+                    <i class="text-lg text-center far fa-calendar"></i>
+                    <span class="text-xs pt-1">{{ __('nav.reservations') }}</span>
+                </a>
 
-                    <div class="flex-1 flex justify-center text-gray-600">
+                <a href="{{ route('manage.show') }}"
+                   class="px-6 py-3 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('manage*') ? 'font-semibold text-indigo-600' : '' }}">
+                    <i class="text-lg text-center fa fa-stream"></i>
+                    <span class="text-xs pt-1">{{ __('nav.tables') }}</span>
+                </a>
 
-                        <a href="{{ route('reservations.show') }}"
-                           class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('reservations*') ? 'font-semibold text-gray-800' : '' }}">
-                            <i class="text-lg text-center far fa-calendar"></i>
-                            <span class="text-xs pt-1">{{ __('nav.reservations') }}</span>
-                        </a>
-                        <a href="{{ route('manage.show') }}"
-                           class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('manage*') ? 'font-semibold text-gray-800' : '' }}">
-                            <i class="text-lg text-center fa fa-stream"></i>
-                            <span class="text-xs pt-1">{{ __('nav.tables') }}</span>
-                        </a>
-                        <a href="{{ route('restaurants.show') }}"
-                           class="px-4 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('restaurant*') ? 'font-semibold text-gray-800' : '' }}">
-                            <i class="text-lg text-center fas fa-store-alt"></i>
-                            <span class="text-xs pt-1">{{ __('nav.restaurants') }}</span>
-                        </a>
+            </div>
 
+            <div class="flex flex-row items-center">
 
-                    </div>
-                    <div>
-                        <span class="text-gray-600 text-center hover:border-gray-600 pr-2 mr-6">
-                            Hi, {{ Auth::user()->name }}!
-                        </span>
+                <div class="mx-auto text-right">
 
+                    <div x-data="{ open: false }" @keydown.window.escape="open = false" @click.away="open = false"
+                         class="relative inline-block text-left">
+                        <div>
+                            <button @click="open = !open" type="button"
+                                    class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none"
+                                    id="options-menu" aria-haspopup="true" aria-expanded="true"
+                                    x-bind:aria-expanded="open">
 
-                        <span
-                            class="text-gray-600 text-center hover:border-gray-600 pr-2">Logout</span>
-                        <a class="fas fa-sign-out-alt text-gray-600" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                <img class="w-8 mr-2" src="{{ asset('img/user-icon.svg') }}"/>
+                                {{ Auth::user()->name }}
+                                <svg class="-mr-1 ml-2 h-5 w-5" x-description="Heroicon name: solid/chevron-down"
+                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                     aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <transition enter-active-class="transition ease-out duration-100"
+                                    enter-class="transform opacity-0 scale-95"
+                                    enter-to-class="transform opacity-100 scale-100"
+                                    leave-active-class="transition ease-in duration-75"
+                                    leave-class="transform opacity-100 scale-100"
+                                    leave-to-class="transform opacity-0 scale-95">
+                            <div x-show="open" x-description="Dropdown panel, show/hide based on dropdown state."
+                                 class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                <div class="py-1" role="menu" aria-orientation="vertical"
+                                     aria-labelledby="options-menu">
+
+                                    <a href="{{ route('user.show', ['user' => auth()->user()->id ]) }}"
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                       role="menuitem">Profil</a>
+
+                                    <a class="group block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                       href="{{ route('restaurants.show') }}">
+                                        {{ __('nav.restaurants') }}
+                                    </a>
+
+                                    <a class="group block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                                       href="{{ route('logout') }}" onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
-                        </a>
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                          class="hidden">@csrf</form>
+                                </div>
+                            </div>
+                        </transition>
                     </div>
+
                 </div>
-            @endguest
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                @csrf
-            </form>
-        </div>
+                @endguest
+            </div>
     </div>
 </nav>
+
 
