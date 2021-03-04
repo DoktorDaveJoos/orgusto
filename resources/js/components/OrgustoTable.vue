@@ -5,42 +5,41 @@
             class="w-1/6 rounded-l-full border-r border-gray-300 m-0 p-2 bg-gray-200 text-gray-600 flex flex-row"
         >
             <div class="w-1/2 text-center flex flex-col">
-                <span class="uppercase leading-tight text-xs">Table</span>
+                <span class="uppercase leading-tight text-xs">{{ __('common.Tables') }}</span>
                 <span class="w-full text-center">{{ table.table_number }}</span>
             </div>
             <div class="w-1/2 text-center flex flex-col">
-                <span class="uppercase leading-tight text-xs">Seats</span>
+                <span class="uppercase leading-tight text-xs">{{ __('common.seats') }}</span>
                 <span class="w-full text-center">{{ table.seats }}</span>
             </div>
         </div>
 
         <!-- Body -->
-        <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row">
-            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full">
-                <div v-if="isEdgeSlot(i) !== 0" class="m-0 flex flex-row w-full">
-                    <div
-                        v-if="isEdgeSlot(i) === 2"
-                        :class="slotColorAndBorder(i)"
-                        class="m-0 flex flex-row w-full"
-                    >
-            <span
-                class="absolute overflow-x-visible text-gray-700 self-center pl-6 text-sm leading-tight z-0"
-            >{{ getReservation(i).name }}</span>
+        <div v-for="(n, i) in 20" :key="i" style="width: 4.166665%" class="flex flex-row" @click="handleSlotClick(i)">
+
+            <!-- Reservation at slot -->
+            <div v-if="slotHasReservation(i)" class="m-0 flex flex-row w-full cursor-pointer">
+
+                <div class="m-0 flex flex-row w-full" :class="getSlotClass(i)">
+
+                    <div v-if="showInfo(i)" class="flex flex-row items-center pl-6">
+                        <div v-if="getReservation(i).done">
+                            <i class="fas fa-calendar-check text-gray-600"></i>
+                        </div>
+                        <div class="flex flex-col absolute overflow-x-visible" :class="getReservation(i).done ? 'pl-6' : null">
+                            <span class="text-sm font-medium" :class="getReservation(i).done ? 'text-gray-400' : 'text-gray-800'">{{ getReservation(i).name }}</span>
+                            <span v-show="!getReservation(i).done" class="text-gray-600 text-xs">
+                                <i class="fas fa-user-friends"></i>
+                                {{ getReservation(i).persons }} {{ __('common.guests') }}</span>
+                        </div>
                     </div>
-                    <div
-                        v-if="isEdgeSlot(i) === 1"
-                        :class="slotColor(i)"
-                        class="m-0 flex flex-row w-full rounded-r-full"
-                    >&nbsp;
-                    </div>
+
                 </div>
-                <div v-else :class="slotColor(i)" class="m-0 flex flex-row w-full">&nbsp;</div>
+
             </div>
-            <div
-                v-else
-                class="p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer"
-                @click="addNewReservationAt(i)"
-            >
+
+            <!-- No Reservation at slot -->
+            <div v-else class="p-0 switchChild flex w-full text-gray-300 hover:text-gray-400 cursor-pointer">
                 <div class="self-center w-full text-center">
                     <i class="fas fa-plus text-xs"></i>
                 </div>
@@ -50,81 +49,94 @@
     </div>
 </template>
 
-<script lang="ts">
-import OrgustoDate from "../models/OrgustoDate";
-import Reservation from "../models/Reservation";
-import Vue from "vue";
+<script>
+
+import store from '../store';
+import {mapState} from 'vuex';
+
+import {addMinutes, parseISO, format, isSameMinute} from 'date-fns';
 
 const SLOT_CONSTANTS = {
     FIRST: 0,
     LAST: 19
 }
 
-const SLOT_IDENT = {
-    EDGE_START: 2,
-    EDGE_END: 1,
-    BETWEEN: 0
-}
+const SlotMapper = new Proxy({
+    19: 'end'
+}, {
+    get(target, args) {
+        return target[args] ? target[args] : null;
+    }
+})
 
-export default Vue.extend({
+const ClassMapper = new Proxy({
+    19: 'rounded-r-full',
+    'start': 'rounded-l-full',
+    'end': 'rounded-r-full'
+}, {
+    get(target, args) {
+        return target[args] ? target[args] : null;
+    }
+})
+
+export default {
     name: "orgusto-table",
-    props: {
-        table: {
-            type: Object,
-            required: true,
-        },
-        tables: {
-            type: Array,
-            required: true,
-        },
-        slotClicked: Function,
-        timelineStart: OrgustoDate,
-    },
+    store,
+    props: ['tableId'],
     methods: {
-        slotHasReservation(slot: number): boolean {
+        slotHasReservation(slot) {
             if (this.reservations.length === 0) {
                 return false;
             }
 
             return this.getReservation(slot) !== undefined;
         },
+        getSlotClass(slot) {
 
-        isEdgeSlot(slot: number): number {
-            const reservation: any = this.getReservation(slot);
+            const reservation = this.getReservation(slot);
 
-            const reservationStart = OrgustoDate.ofString(reservation.start);
-            const reservationEnd = reservationStart.addMinutes(reservation.duration);
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
+            return [
+                `bg-${reservation.color}-${reservation.done ? '100' : '200'}`,
+                ClassMapper[SlotMapper[slot]],
+                ClassMapper[this.isEdgeSlot(slot)]
+            ];
+
+        },
+
+        isEdgeSlot(slot) {
+
+            const reservation = this.getReservation(slot);
+
+            const reservationStart = parseISO(reservation.start);
+            const reservationEnd = addMinutes(reservationStart, reservation.duration);
+            const slotTime = addMinutes(this.timelineStart, (slot * 15));
 
             // check if is start of reservation
-            if (slotTime.isSame(reservationStart)) {
-                return SLOT_IDENT.EDGE_START;
+            if (isSameMinute(slotTime, reservationStart)) {
+                return 'start'
             }
 
             // check if is end of reservation
-            if (slotTime.addMinutes(15).isSame(reservationEnd)) {
-                return SLOT_IDENT.EDGE_END;
+            if (isSameMinute(addMinutes(slotTime, 15), reservationEnd)) {
+                return 'end';
             }
 
-            // is normal field
-            return SLOT_IDENT.BETWEEN;
+            return null;
+
         },
 
-        getReservation(slot: number): any | undefined {
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
+        getReservation(slot) {
+            const slotTime = addMinutes(this.timelineStart, (slot * 15));
 
-            return this.reservationsArray.find(
-                (reservation: any) => {
+            return this.reservations.find(reservation => {
+                const start = parseISO(reservation.start);
+                const end = addMinutes(start, reservation.duration);
+                return slotTime >= start && slotTime < end;
+            })
 
-                    const reservationStart = OrgustoDate.ofString(reservation.start);
-                    const reservationEnd = reservationStart.addMinutes(reservation.duration);
-
-                    return slotTime.asDate >= reservationStart.asDate &&
-                        slotTime.asDate < reservationEnd.asDate;
-                });
         },
 
-        slotColorAndBorder(slot: number): Array<string> {
+        slotColorAndBorder(slot) {
             const reservation = this.getReservation(slot);
 
             return [
@@ -133,33 +145,50 @@ export default Vue.extend({
             ];
         },
 
-        slotColor(slot): string {
-            const reservation: any | undefined = this.getReservation(slot);
+        slotColor(slot) {
+            const reservation = this.getReservation(slot);
 
             const rounded_right = slot === SLOT_CONSTANTS.LAST ? " rounded-r-full" : "";
             return reservation ? "bg-" + reservation.color + "-200" : "" + rounded_right;
         },
+        getTime(slot) {
+            const slotTime = addMinutes(this.timelineStart, (slot * 15));
+            return format(slotTime, "HH:mm");
+        },
 
-        addNewReservationAt(slot: number): void {
-            const slotTime = this.timelineStart.addMinutes(slot * 15);
+        handleSlotClick(slot) {
+
             const reservation = this.getReservation(slot);
 
-            this.slotClicked(this.table, slotTime, reservation);
+            if (!reservation) {
+                const slotTime = addMinutes(this.timelineStart, (slot * 15));
+                const preSelected = {
+                    tables: Array.of(this.table),
+                    start: slotTime.toISOString()
+                }
+                this.$store.dispatch('createNewReservation', preSelected);
+            } else {
+                this.$store.dispatch('setActiveReservation', reservation.id);
+                this.$store.commit('openModal');
+            }
+        },
+        showInfo(slot) {
+            return slot === 0 || this.isEdgeSlot(slot) === 'start';
         },
 
-        getTime(slot: number): string {
-            return this.timelineStart.addMinutes(slot * 15).readableTime;
-        },
     },
+
+
     computed: {
-        reservations(): Array<any> {
-            return this.table.reservations;
-        },
-        reservationsArray(): Array<any> {
-            return Object.keys(this.reservations).map(
-                (key) => this.reservations[key]
-            );
-        },
+        ...mapState({
+            table: function (state) {
+                return state.restaurant.allTables.find(table => table.id === this.tableId);
+            },
+            timelineStart: state => state.filter.timelineStart,
+            reservations: function (state) {
+                return state.reservations.items.filter(reservation => reservation.tables.find(table => table.id === this.tableId));
+            }
+        }),
     },
-});
+};
 </script>

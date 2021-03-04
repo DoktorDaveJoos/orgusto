@@ -1,46 +1,41 @@
 <template>
-    <v-date-picker v-model="computedDate" :input-props="inputProps" :input-debounce="500"></v-date-picker>
+    <v-date-picker v-model="computedDate" :input-props="inputProps" :update-on-input="false"></v-date-picker>
 </template>
 
 <script>
-import OrgustoDate from "../models/OrgustoDate";
+import store from '../store';
+import {setHours, setMinutes, getHours, getMinutes, isSameDay, startOfToday} from 'date-fns';
 
 export default {
-    name: "orgastro-timepicker",
-    props: {
-        date: {
-            type: String,
-            required: true
-        }
-    },
+    name: "orgusto-timepicker",
+    store,
     data() {
-        return {
-            inputProps: {
-                class:
-                    "text-gray-600 shadow-lg rounded-full bg-gray-200 p-2 text-center w-full cursor-pointer self-center hover:text-gray-800 transition-color duration-200 ease-in-out"
-            }
-        };
+        return {}
     },
     computed: {
         computedDate: {
             get() {
-                return new Date(this.date);
+                return this.$store.state.filter.timelineStart;
             },
             set(val) {
-                if (!moment(this.date).isSame(moment(val), "date")) {
-                    this.date = val;
-                }
+                const hours = getHours(this.computedDate);
+                const minutes = getMinutes(this.computedDate);
+
+                const newScope = setHours(setMinutes(val, minutes), hours);
+                this.$store.dispatch('updateScope', newScope)
+            },
+        },
+        isActive() {
+            return !isSameDay(this.computedDate, startOfToday());
+        },
+        inputProps() {
+            return {
+                class: [
+                    "border-2 shadow-lg rounded-full bg-gray-200 p-2 text-center w-full cursor-pointer self-center hover:text-gray-800 focus:outline-none transition-color duration-200 ease-in-out",
+                    this.isActive ? "border-indigo-400 text-indigo-600" : "text-gray-600 border-gray-400"
+                ]
             }
-        }
+        },
     },
-    watch: {
-        date: function (newDate, oldDate) {
-            this.$bus.$emit("scopeEvent", {
-                msg: "scope event",
-                type: "date",
-                value: OrgustoDate.ofString(newDate).format("yyyy-MM-dd")
-            });
-        }
-    }
 };
 </script>

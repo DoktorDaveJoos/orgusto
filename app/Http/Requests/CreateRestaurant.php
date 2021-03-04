@@ -24,7 +24,7 @@ class CreateRestaurant extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:60'
+            'name' => 'required|max:60',
         ];
     }
 }

@@ -18,13 +18,10 @@ class CreateRestaurantsTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('contact_email')->nullable();
-            $table->string('owner')->nullable();
-            $table->string('street')->nullable();
-            $table->integer('street_number')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->string('city')->nullable();
+            $table->unsignedBigInteger('owner_id');
             $table->integer('default_table_seats')->default(4);
-            $table->boolean('seat_reservation_bound')->default(true);
+            $table->boolean('seat_reservation_bound')->default(false);
+            $table->softDeletes();
         });
     }
 

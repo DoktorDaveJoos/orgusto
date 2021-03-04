@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
 
@@ -12,8 +13,29 @@ class Reservation extends Model
     use HasFactory;
     use Notifiable;
     use Searchable;
+    use SoftDeletes;
 
     public $asYouType = true;
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return $this->only(
+            'id',
+            'name',
+            'notice',
+            'persons',
+            'start',
+            'duration',
+            'email',
+            'phone_number',
+            'user_id'
+        );
+    }
 
     protected $fillable = [
         'name',
@@ -24,7 +46,8 @@ class Reservation extends Model
         'color',
         'email',
         'phone_number',
-        'user_id'
+        'user_id',
+        'done'
     ];
 
     protected $casts = [
@@ -39,33 +62,6 @@ class Reservation extends Model
      */
     protected $dates = ['start'];
 
-    /**
-     * Get the indexable data array for the model.
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        return $this->only('id', 'name', 'notice', 'email', 'phone_number');
-    }
-
-    public function getHumanReadableDate()
-    {
-        if ($this->start->isToday()) {
-            return "Today";
-        }
-
-        if ($this->start->isTomorrow()) {
-            return "Tomorrow";
-        }
-
-        if ($this->start->isYesterday()) {
-            return "Yesterday";
-        }
-
-        return $this->start->format("d.m");
-    }
-
     public function getHumanReadableTime()
     {
         return $this->start->format('H:i');
@@ -73,7 +69,7 @@ class Reservation extends Model
 
     public function scopeClosest($query)
     {
-        return $query->orderBy('start', 'desc');
+        return $query->orderBy('start', 'asc');
     }
 
     public function tables()

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetAvailableTables;
+use App\Http\Resources\TableResource;
+use App\Reservation;
 use Carbon\CarbonImmutable;
 
 class TablesController extends Controller
@@ -22,16 +24,31 @@ class TablesController extends Controller
     {
         $start_date = CarbonImmutable::createFromDate($request->get('start'));
 
+
         $end_date = $start_date
             ->addMinutes($request->get('m'));
 
-        $persons = $request->get('persons') ?? 0;
-
         $restaurant = $this->getRestaurant();
+
+        $r_id = $request->get('r_id');
+        $reservation = Reservation::find($r_id);
+        if ($reservation) {
+            $bookedTables = $reservation->tables;
+            $freeTables = $restaurant->tables()
+                ->availableBetween($start_date, $end_date)
+                ->get();
+            return $bookedTables->concat($freeTables)->unique();
+        }
 
         return $restaurant->tables()
             ->availableBetween($start_date, $end_date)
             ->get();
+    }
+
+    public function allTables() {
+
+        return TableResource::collection($this->getRestaurant()->tables);
+
     }
 
 }

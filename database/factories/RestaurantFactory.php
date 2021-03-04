@@ -23,7 +23,7 @@ class RestaurantFactory extends Factory
     {
         return [
             'name' => $this->faker->name,
-            'owner' => $this->faker->name,
+            'owner_id' => 1,
             'contact_email' => $this->faker->email,
         ];
     }

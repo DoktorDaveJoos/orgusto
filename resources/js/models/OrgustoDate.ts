@@ -10,9 +10,11 @@ import {
     format,
     addDays,
     addHours,
+    subHours,
     addMinutes,
     isToday,
     isEqual,
+    isSameDay,
     differenceInDays,
     setYear,
     setMonth,
@@ -23,7 +25,8 @@ import {
     setHours,
     getHours,
     setMinutes,
-    getMinutes
+    getMinutes,
+    startOfToday
 } from 'date-fns';
 
 export default class OrgustoDate {
@@ -78,6 +81,10 @@ export default class OrgustoDate {
      */
     public static ofAny(date: any): OrgustoDate {
 
+        if (date instanceof OrgustoDate) {
+            return date;
+        }
+
         if (date instanceof Date) {
             return new OrgustoDate(date);
         }
@@ -103,8 +110,17 @@ export default class OrgustoDate {
         return new OrgustoDate(new Date(date));
     }
 
+    /**
+     * Returns an instance of OrgustoDate with new Date().
+     * @return {@link OrgustoDate}
+     * @deprecated - use {@link #default} instead
+     */
     public static now(): OrgustoDate {
         return OrgustoDate.ofAny(new Date());
+    }
+
+    public static default(): OrgustoDate {
+        return OrgustoDate.ofDate(startOfToday()).setHours(18).setMinutes(0);
     }
 
     public addDays(days: number): OrgustoDate {
@@ -115,6 +131,10 @@ export default class OrgustoDate {
         return new OrgustoDate(addHours(this.asDate, hours));
     }
 
+    public subtractHours(hours: number): OrgustoDate {
+        return new OrgustoDate(subHours(this.asDate, hours));
+    }
+
     public addMinutes(minutes: number): OrgustoDate {
         return new OrgustoDate(addMinutes(this.asDate, minutes));
     }
@@ -123,21 +143,22 @@ export default class OrgustoDate {
         return isEqual(this.asDate, toCompare.asDate);
     }
 
+    public isSameDay(toCompare: Date): boolean {
+        return isSameDay(new Date(this.asISO), new Date(toCompare));
+    }
+
     public setDateOnly(newDate: Date): OrgustoDate {
-
         let tmpDate = this.asDate;
-        setYear(tmpDate, getYear(newDate));
-        setMonth(tmpDate, getMonth(newDate));
-        setDay(tmpDate, getDay(newDate));
-        return OrgustoDate.ofAny(tmpDate);
-
+        tmpDate = setYear(tmpDate, getYear(newDate));
+        tmpDate = setMonth(tmpDate, getMonth(newDate));
+        tmpDate = setDay(tmpDate, getDay(newDate));
+        return OrgustoDate.ofDate(tmpDate);
     }
 
     public setTimeOnly(newDate: Date): OrgustoDate {
-
         let tmpDate = this.asDate;
-        setHours(tmpDate, getHours(newDate));
-        setMinutes(tmpDate, getMinutes(newDate));
+        tmpDate = setHours(tmpDate, getHours(newDate));
+        tmpDate = setMinutes(tmpDate, getMinutes(newDate));
         return OrgustoDate.ofAny(tmpDate);
 
     }

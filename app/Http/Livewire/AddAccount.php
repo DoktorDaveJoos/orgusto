@@ -41,12 +41,12 @@ class AddAccount extends Component
             'searchTerm' => 'email|required'
         ]);
 
-        $message = 'Something went wrong';
+        $message = __('messages.went_wrong');
 
         $user_to_add = User::where('email', $this->searchTerm)->first();
         if ($user_to_add) {
             $this->restaurant->users()->attach($user_to_add->id, ['role' => 'user']);
-            $message = 'Registered User: ' . $user_to_add->name . ' ' . $user_to_add->email . ' successfully added.';
+            $message = __('messages.user_added', ['user_name' => $user_to_add->name, 'user_email' => $user_to_add->email]);
         } else {
             $invited_user = User::create([
                 'email' => $this->searchTerm,
@@ -55,7 +55,7 @@ class AddAccount extends Component
             ]);
             $this->restaurant->users()->attach($invited_user->id, ['role' => 'user']);
             Mail::to($invited_user->email)->send(new UserInvited($this->restaurant, $invited_user));
-            $message = 'Successfully invited: ' . $invited_user->email;
+            $message = __('messages.user_invited', ['user_email' => $user_to_add->email]);
         }
         $this->emitTo('edit-restaurant', 'userAdded', $message);
         $this->dispatchBrowserEvent('close-add-account');
@@ -71,7 +71,7 @@ class AddAccount extends Component
         $anonymous_user->email = 'anonymous@' . $anonymous_user->id;
         $anonymous_user->save();
         $this->restaurant->users()->attach($anonymous_user->id, ['role' => 'user']);
-        $this->emitTo('edit-restaurant', 'userAdded', 'Employee: ' . $anonymous_user->name . ' successfully added.');
+        $this->emitTo('edit-restaurant', 'userAdded', __('messages.employee_added', ['name' => $anonymous_user->name]));
         $this->dispatchBrowserEvent('close-add-account');
     }
 
@@ -80,7 +80,7 @@ class AddAccount extends Component
         if ($this->searchTerm && strlen($this->searchTerm) > 2) {
             $searchTerm = '%' . $this->searchTerm . '%';
             $this->users = User::where('email', 'like', $searchTerm)->get();
-            $this->action_button_text = sizeof($this->users) > 0 ? 'add' : 'invite';
+            $this->action_button_text = sizeof($this->users) > 0 ? __('messages.add') : __('messages.invite');
             $this->is_disabled = false;
         } else {
             $this->is_disabled = true;

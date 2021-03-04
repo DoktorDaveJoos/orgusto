@@ -34,7 +34,7 @@ export default class Duration implements BasicDuration {
     }
 
     asJson(): any {
-        return { "h": this.h, "m": this.m };
+        return {"h": this.h, "m": this.m};
     }
 
     public static boilerPlate(): Duration {
@@ -64,8 +64,8 @@ export default class Duration implements BasicDuration {
      *
      * @deprecated - use {@link #ofMinutes} instead.
      */
-    public static of(hour: number, minute: number): Duration {
-        return new Duration(hour *60 + minute);
+    public static of(hour: number, minute: number): number {
+        return hour * 60 + minute;
     }
 
     /**

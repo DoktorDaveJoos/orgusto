@@ -77,7 +77,7 @@ class EditRestaurant extends Component
             'owner' => 'string|max:255',
             'name' => 'string|max:255',
             'city' => 'string|max:255',
-            'zip_code' => 'integer',
+            'zip_code' => 'string',
         ]);
 
         if ($isValidated) {
@@ -110,7 +110,7 @@ class EditRestaurant extends Component
 
         $this->restaurant->update($validated);
         $this->is_dirty = false;
-        $message = $this->restaurant->wasChanged() ? 'Successfully updated restaurant' : 'Something went wrong';
+        $message = $this->restaurant->wasChanged() ? __('messages.updated_restaurant') : __('messages.went_wrong');
 
         session()->flash('message', $message);
     }
@@ -127,9 +127,9 @@ class EditRestaurant extends Component
         ]);
 
         if ($newTable) {
-            session()->flash('message', 'Table with number: ' . $newTable->table_number . ' created');
+            session()->flash('message', __('messages.table_created', ['table_number' =>  $newTable->table_number]));
         } else {
-            session()->flash('message', 'Table with number: ' . $newTable->table_number . ' not created. Contact service team.');
+            session()->flash('message', __('messages.table_not_created', ['table_number' =>  $newTable->table_number]));
         }
 
         $this->tables = $this->restaurant->tables()->get();
@@ -143,9 +143,9 @@ class EditRestaurant extends Component
 
         $deleted = Table::destroy($id);
         if ($deleted) {
-            session()->flash('message', 'Table deleted');
+            session()->flash('message',  __('messages.table_deleted'));
         } else {
-            session()->flash('message', 'Table not deleted. Contact service team.');
+            session()->flash('message', __('messages.table_not_deleted'));
         }
         $this->tables = $this->restaurant->tables()->get();
     }
@@ -155,7 +155,7 @@ class EditRestaurant extends Component
         $this->authorize('update', $this->restaurant);
         $user = User::find($id);
         $this->restaurant->users()->detach($id);
-        session()->flash('message', 'User: ' . $user->email . ' successfully detached from restaurant.');
+        session()->flash('message', __('messages.user_detached', ['email' => $user->email]));
     }
 
     public function render()

@@ -7,7 +7,7 @@
       {{ $slot }}
     </span>
   </div>
-  <button @click="$refs.notification.classList.add('opacity-0'); window.setTimeout(() => $refs.notification.parentElement.removeChild($refs.notification), 200);">
+  <button x-on:click="$refs.notification.classList.add('opacity-0'); window.setTimeout(() => $refs.notification.parentElement.removeChild($refs.notification), 200);">
     <i class="fas fa-times text-white"></i>
   </button>
 </div>

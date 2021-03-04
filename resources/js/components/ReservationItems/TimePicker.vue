@@ -58,68 +58,61 @@
         </div>
         <div>
             <single-time-picker
-                :active="singleTimePickerActive"
-                :time="time"
+                :active="moreIsActive()"
+                :date="date"
                 :set-single-time="setTime"
             ></single-time-picker>
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script >
 
-import Vue from 'vue';
-import OrgustoDate from "../../models/OrgustoDate";
+import {getHours, getMinutes, setHours, setMinutes, parseISO} from 'date-fns';
 
-export default Vue.extend({
-    props: {
-        init: OrgustoDate,
-        error: String
-    },
+export default {
+    name: "TimePicker",
+    props: ["date", "error"],
     data() {
         return {
-            hour: this.init.hour,
-            minute: this.init.minute,
-            time: this.init,
-            singleTimePickerActive: false
-        };
-    },
-    mounted() {
-        this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+            copiedDate: parseISO(this.date),
+            singleTimePickerActive: this.moreIsActive(),
+        }
     },
     methods: {
-        setHour(hour: number): void {
-            this.hour = hour;
+        setHour(hour) {
+            const newDate = setHours(parseISO(this.date), hour);
+            this.$emit("value:changed", {start: newDate.toISOString()});
         },
-        setMinute(minute: number): void {
-            if (!this.singleTimePickerActive) this.minute = minute;
+        setMinute(minute){
+            const newDate = setMinutes(parseISO(this.date), minute);
+            this.$emit("value:changed", {start: newDate.toISOString()});
         },
-        setTime(time: OrgustoDate): void {
-            this.hour = time.hour;
-            this.minute = time.minute;
+        setTime(date) {
+            let newDate = setMinutes(parseISO(this.date), getMinutes(date));
+            newDate = setHours(newDate, getHours(date));
+            this.$emit("value:changed", {start: newDate.toISOString()});
         },
-        setSingleTimeState(): void {
-            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
-            this.time = OrgustoDate.ofAny(this.time.asDate).setHours(this.hour).setMinutes(this.minute);
-            this.$emit("time:chosen", this.time);
-        },
-        getButtonClass(minute: number): string {
-            if (this.singleTimePickerActive) {
+        getButtonClass(minute){
+            if (this.moreIsActive()) {
                 return "opacity-50 cursor-not-allowed hover:shadow-none";
+            } else {
+                return getMinutes(parseISO(this.date)) === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
             }
-            return this.minute === minute ? 'border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg' : '';
+        },
+        moreIsActive() {
+            return getHours(parseISO(this.date)) < 17 || getHours(parseISO(this.date)) > 20;
         }
     },
-    watch: {
-        hour: 'setSingleTimeState',
-        minute: 'setSingleTimeState',
-        init(n: OrgustoDate, o: OrgustoDate) {
-            this.hour = n.hour;
-            this.minute = n.minute;
-            this.singleTimePickerActive = this.hour < 17 || this.hour > 20;
+    computed: {
+        hour: function() {
+            return getHours(parseISO(this.date));
+        },
+        minute: function() {
+            return getMinutes(parseISO(this.date));
         }
     }
-});
+}
 </script>
 
 <style>

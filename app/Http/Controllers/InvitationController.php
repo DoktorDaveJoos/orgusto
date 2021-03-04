@@ -54,7 +54,6 @@ class InvitationController extends Controller
             $user->update([
                 'name' => $validated['name'],
                 'password' => Hash::make($validated['password']),
-                'access_level' => 'premium',
                 'type' => 'registered'
             ]);
 

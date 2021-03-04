@@ -25,7 +25,8 @@ class ReservationResource extends JsonResource
             'color' => $this->color,
             'notice' => $this->notice,
             'phone_number' => $this->phone_number,
-            'user' => new UserResource($this->user)
+            'user' => new UserResource($this->user),
+            'done' => $this->done,
         ];
     }
 }

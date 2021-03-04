@@ -11,7 +11,7 @@
             </div>
             <input
                 id="reservations.search"
-                class="bg-white pl-2 form-input block w-full sm:text-sm sm:leading-5 focus:outline-none"
+                class="bg-white pl-2 form-input block w-full rounded-full sm:text-sm sm:leading-5 focus:outline-none"
                 placeholder="Search name, email, phone number..."
                 v-model="searchQuery"
                 v-on:keyup.enter="handleSubmit"
@@ -77,9 +77,9 @@
                 class="focus:outline-none leading-tight h-full w-12 rounded-r-full transition-colors duration-150 ease-in-out"
                 :class="isShowingFilter ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'"
             >
-        <span class="sm:text-sm sm:leading-5 mx-2 self-center">
-          <i class="fas fa-filter"></i>
-        </span>
+                <span class="sm:text-sm sm:leading-5 mx-2 self-center">
+                  <i class="fas fa-filter"></i>
+                </span>
             </button>
 
             <div
@@ -92,7 +92,15 @@
                     </div>
                     <hr/>
                     <div>
-                        <!-- todo -->
+
+<!--                        show fulfilled-->
+                        <label class="flex items-center p-4">
+                            <input type="checkbox" class="form-checkbox" v-model="fulfilled">
+                            <span class="ml-2 text-sm text-gray-600">Show fulfilled</span>
+                        </label>
+
+
+
                     </div>
                 </div>
             </div>
@@ -100,34 +108,28 @@
 
         <!-- Date filter -->
         <div
-            class="group mt-1 relative rounded-full border-2 border-gray-400 focus-within:border-blue-400 shadow-lg bg-white pl-10 flex flex-row w-1/3"
-        >
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <span class="text-gray-600 sm:text-sm sm:leading-5 mx-2">
-          <i v-if="quickFilterIncludes" class="fas fa-fast-forward"></i>
-          <i v-else class="fas fa-calendar-day"></i>
-        </span>
-            </div>
-            <div class="w-full flex flex-row justify-center">
-                <div class="relative inline-block text-left">
-                    <div class="h-full">
-            <span class="h-full">
-              <button
-                  id="options-menu"
-                  @click="isShowingDateFilter = !isShowingDateFilter"
-                  type="button"
-                  class="justify-center h-full w-full px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-600 hover:text-indigo-500 focus:outline-none focus:outline-none transition ease-in-out duration-150"
-                  aria-haspopup="true"
-                  aria-expanded="true"
-              >{{ dateFilter }}</button>
-            </span>
-                    </div>
-                </div>
+            class="group mt-1 relative rounded-full border-2 border-gray-400 focus-within:border-blue-400 shadow-lg bg-white flex flex-row w-1/3">
+            <div class="w-full flex justify-center">
+                <button
+                    id="options-menu"
+                    @click="isShowingDateFilter = !isShowingDateFilter"
+                    type="button"
+                    class="flex w-full h-full items-center rounded-full px-4 py-2 bg-white text-sm leading-5 font-medium text-gray-600 hover:text-indigo-500 focus:outline-none focus:outline-none transition ease-in-out duration-150"
+                    aria-haspopup="true"
+                    aria-expanded="true"
+                >
+                    <i v-if="quickFilterIncludes" class="fas fa-fast-forward pointer-events-none"></i>
+                    <i v-else class="fas fa-calendar-day pointer-events-none"></i>
+                    <span class="flex w-full justify-center pointer-events-none">
+                        {{ dateFilter }}
+
+                    </span>
+                </button>
             </div>
             <div
                 id="dateFilterDetail"
                 v-if="isShowingDateFilter"
-                class="origin-bottom-left border border-gray-400 -ml-10 absolute mt-12 w-full right-auto rounded-md shadow-lg"
+                class="origin-bottom-left border border-gray-400 absolute mt-12 w-full right-auto rounded-md shadow-lg"
             >
                 <div class="rounded-md bg-white shadow-xs">
                     <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
@@ -244,7 +246,8 @@ export default {
                 end: new Date()
             },
             singleDate: new Date(),
-            quickFilter: ["Today", "Tomorrow", "Next week", "Next month"]
+            quickFilter: ["Today", "Tomorrow", "Next week", "Next month"],
+            fulfilled: new URLSearchParams(window.location.search).has('fulfilled')
         };
     },
     methods: {
@@ -276,8 +279,8 @@ export default {
             this.isCalculating = true;
             setTimeout(() => {
                 this.searchOnType();
-            }, 500);
-        }, 500),
+            }, 50);
+        }, 50),
         handleSubmit: function () {
             var queryParams = {};
 
@@ -320,6 +323,23 @@ export default {
         },
         results: function () {
             this.isShowingRecommendations = this.searchQuery.length > 0;
+        },
+        fulfilled() {
+            if (this.fulfilled === true) {
+                const queryParams = new URLSearchParams(window.location.search);
+                const filler = queryParams.has('from') ? '&' : '?';
+                location.href =
+                    location.href + filler + "fulfilled=true";
+            } else {
+                const queryParams = new URLSearchParams(window.location.search);
+                if (queryParams.has('fulfilled')) {
+                    queryParams.delete('fulfilled');
+                    let newUrl = location.href;
+                    newUrl = newUrl.replace(location.search, '');
+                    const filler = queryParams.toString().length > 0 ? '?' : '';
+                    location.href = newUrl + filler + queryParams.toString();
+                }
+            }
         }
     },
     computed: {

@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @infocard(['title' => __('Reset Password')])
+    @infocard(['title' => __('auth.reset_password')])
 
     <div class="p-4 flex justify-center">
 
@@ -21,7 +21,7 @@
                     <div class="flex flex-col">
 
                         @forminput(['label' => 'email'])
-                        <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email"
+                        <input id="email" placeholder="{{ __('auth.email') }}" type="email"
                                class="orgusto-input @error('email') is-invalid @enderror"
                                name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                         @endforminput
@@ -37,7 +37,7 @@
 
                         <button type="submit"
                                 class="orgusto-button text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-150 ease-in-out">
-                            <i class="fas fa-share mr-2"></i>{{ __('Send Password Reset Link') }}
+                            <i class="fas fa-share mr-2"></i>{{ __('auth.send_password_link') }}
                         </button>
 
                     </div>

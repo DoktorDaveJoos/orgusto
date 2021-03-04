@@ -92,7 +92,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'de',
 
     /*
     |--------------------------------------------------------------------------
@@ -118,7 +118,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'de',
 
     /*
     |--------------------------------------------------------------------------
@@ -185,12 +185,13 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\SparkServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         // Search
-        Laravel\Scout\ScoutServiceProvider::class
-
+        Laravel\Scout\ScoutServiceProvider::class,
+        TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
     ],
 
     /*

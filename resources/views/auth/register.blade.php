@@ -2,7 +2,7 @@
 
 @section('content')
 
-    @infocard(['title' => __('Register')])
+    @infocard(['title' => __('auth.register')])
 
     <div class="p-4 flex justify-center">
 
@@ -24,7 +24,7 @@
                 @enderror
 
                 @forminput(['label' => 'email'])
-                <input id="email" placeholder="{{ __('E-Mail Address') }}" type="email"
+                <input id="email" placeholder="{{ __('auth.email') }}" type="email"
                        class="orgusto-input @error('email') is-invalid @enderror"
                        name="email" value="{{ old('email') }}" required autocomplete="email">
                 @endforminput
@@ -35,7 +35,7 @@
                 @enderror
 
                 @forminput(['label' => 'password'])
-                <input id="password" placeholder="{{ __('Password') }}" type="password"
+                <input id="password" placeholder="{{ __('auth.password') }}" type="password"
                        class="orgusto-input @error('password') is-invalid @enderror"
                        name="password" required autocomplete="new-password">
                 @endforminput
@@ -46,7 +46,7 @@
                 @enderror
 
                 @forminput(['label' => 'confirm password'])
-                <input id="password-confirm" placeholder="{{ __('Confirm Password') }}" type="password"
+                <input id="password-confirm" placeholder="{{ __('auth.confirm_password') }}" type="password"
                        class="orgusto-input"
                        name="password_confirmation" required autocomplete="new-password">
                 @endforminput
@@ -55,11 +55,11 @@
 
                     <button type="submit"
                             class="orgusto-button text-blue-600 hover:bg-blue-600 hover:text-white transition-colors duration-150 ease-in-out">
-                        <i class="fas fa-user-check mr-2"></i> {{ __('Register') }}
+                        <i class="fas fa-user-check mr-2"></i> {{ __('auth.register') }}
                     </button>
 
                     <a class="text-sm text-gray-600 hover:text-blue-400" href="{{ route('login') }}">
-                        {{ __('Already registered?') }}
+                        {{ __('auth.already_registered') }}
                     </a>
                 </div>
             </form>
