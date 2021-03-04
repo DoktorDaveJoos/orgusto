@@ -2659,6 +2659,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2668,15 +2696,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {};
   },
   mounted: function mounted() {
-    this.$store.dispatch('loadTables');
-    this.$store.dispatch('loadEmployees');
-    this.$store.dispatch('loadScopedReservations');
+    this.$store.dispatch('loadUser');
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])({
+    user: function user(state) {
+      return state.user;
+    },
     allTables: function allTables(state) {
       return state.restaurant.allTables;
+    },
+    restaurant: function restaurant(state) {
+      return state.restaurant.settings;
     }
-  }))
+  })),
+  watch: {
+    user: function user(updated, old) {
+      if (updated !== undefined) {
+        this.$store.dispatch('loadTables');
+        this.$store.dispatch('loadEmployees');
+        this.$store.dispatch('loadScopedReservations');
+        this.$store.dispatch('loadRestaurant');
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -3908,6 +3950,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3953,6 +4005,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     errors: function errors(state) {
       return state.reservations.errors;
+    },
+    restaurant: function restaurant(state) {
+      return state.restaurant.settings;
     }
   }), {
     sortedTables: function sortedTables() {
@@ -4280,6 +4335,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
@@ -4297,9 +4354,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {};
   },
   mounted: function mounted() {
-    this.$store.dispatch('loadPaginatedReservations');
-    this.$store.dispatch('loadEmployees');
-    this.$store.dispatch('loadRestaurant');
+    this.$store.dispatch('loadUser');
   },
   methods: {
     addNewReservation: function addNewReservation() {
@@ -4310,6 +4365,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+    user: function user(state) {
+      return state.user;
+    },
     reservations: function reservations(state) {
       return state.reservations;
     },
@@ -4320,6 +4378,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   watch: {
     'filter.past': function filterPast() {
       this.$store.dispatch('loadPaginatedReservations');
+    },
+    user: function user(updated, old) {
+      if (updated) {
+        this.$store.dispatch('loadPaginatedReservations');
+        this.$store.dispatch('loadEmployees');
+        this.$store.dispatch('loadRestaurant');
+      }
     }
   }
 });
@@ -73484,46 +73549,107 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "w-full pl-4" },
-      [
-        _c("div", { staticClass: "mx-8" }, [
-          _c("div", { staticClass: "flex flex-row py-4" }, [
-            _c("div", { staticClass: "w-1/6" }, [_c("orgastro-timepicker")], 1),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "w-5/6 flex flex-row justify-between px-1 self-stretch"
-              },
-              [
-                _c("orgusto-scope-button", { attrs: { direction: "left" } }),
+    _vm.allTables.length > 0
+      ? _c(
+          "div",
+          { staticClass: "w-full pl-4" },
+          [
+            _c("div", { staticClass: "mx-8" }, [
+              _c("div", { staticClass: "flex flex-row py-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "w-1/6" },
+                  [_c("orgastro-timepicker")],
+                  1
+                ),
                 _vm._v(" "),
-                _c("orgusto-scope-button", { attrs: { direction: "right" } })
-              ],
-              1
-            )
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "w-5/6 flex flex-row justify-between px-1 self-stretch"
+                  },
+                  [
+                    _c("orgusto-scope-button", {
+                      attrs: { direction: "left" }
+                    }),
+                    _vm._v(" "),
+                    _c("orgusto-scope-button", {
+                      attrs: { direction: "right" }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("orgusto-timeline"),
+            _vm._v(" "),
+            _vm._l(_vm.allTables, function(table) {
+              return _c("orgusto-table", {
+                key: table.id,
+                attrs: { "table-id": table.id }
+              })
+            }),
+            _vm._v(" "),
+            _c("orgusto-modal-wrapper", [_c("reservation-item")], 1)
+          ],
+          2
+        )
+      : _c("div", { staticClass: "max-w-7xl mx-auto py-12 sm:px-6 lg:px-8" }, [
+          _c("div", { staticClass: "max-w-3xl mx-auto" }, [
+            _c("div", { staticClass: "bg-white shadow sm:rounded-lg" }, [
+              _c("div", { staticClass: "px-4 py-5 sm:p-6" }, [
+                _c(
+                  "h3",
+                  {
+                    staticClass: "text-lg leading-6 font-medium text-gray-900"
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Whoops!\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(0),
+                _vm._v(" "),
+                _c("div", { staticClass: "mt-3 text-sm" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass:
+                        "font-medium text-indigo-600 hover:text-indigo-500",
+                      attrs: { href: "/restaurants/" + _vm.restaurant.id }
+                    },
+                    [
+                      _vm._v(" Tisch anlegen "),
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("→")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
           ])
-        ]),
-        _vm._v(" "),
-        _c("orgusto-timeline"),
-        _vm._v(" "),
-        _vm._l(_vm.allTables, function(table) {
-          return _c("orgusto-table", {
-            key: table.id,
-            attrs: { "table-id": table.id }
-          })
-        }),
-        _vm._v(" "),
-        _c("orgusto-modal-wrapper", [_c("reservation-item")], 1)
-      ],
-      2
-    )
+        ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-2 max-w-xl text-sm text-gray-500" }, [
+      _c("p", [
+        _vm._v(
+          "\n                            Du hast noch keine Tische angelegt.\n                            Lege jetzt deinen ersten Tisch an und starte durch!\n                        "
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -75280,17 +75406,19 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         !_vm.isLoading && _vm.tables.length === 0
-          ? _c(
-              "div",
-              { staticClass: "my-2 mr-2 text-gray-600 text-xs italic" },
-              [
-                _vm._v(
-                  "\n            " +
-                    _vm._s(_vm.__("common.no_tables")) +
-                    "\n        "
+          ? _c("div", { staticClass: "my-2 mr-2 text-gray-600 text-xs" }, [
+              _c("span", { staticClass: "italic" }, [
+                _vm._v(_vm._s(_vm.__("common.no_tables")))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "mt-2" }, [
+                _c(
+                  "a",
+                  { attrs: { href: "/restaurants/" + _vm.restaurant.id } },
+                  [_vm._m(0)]
                 )
-              ]
-            )
+              ])
+            ])
           : _vm._e()
       ],
       2
@@ -75313,7 +75441,19 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "text-blue-600 text-xs" }, [
+      _c("i", { staticClass: "fas fa-plus pr-0.5" }),
+      _vm._v(
+        "\n                        Tische hinzufügen\n                    "
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -75953,8 +76093,13 @@ var render = function() {
                             )
                           ])
                         ]
-                      )
-                    ]
+                      ),
+                      _vm._v(" "),
+                      _vm._l(7, function(n) {
+                        return _c("td", { key: n })
+                      })
+                    ],
+                    2
                   )
                 : _vm._e()
             ],
@@ -98635,6 +98780,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var Routes = {
   reservations: '/reservations',
+  user: '/user',
   users: '/users',
   tables: '/tables',
   restaurants: '/restaurants',
@@ -98696,8 +98842,14 @@ var buildPaginationParams = function buildPaginationParams(url) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  loadReservationsProxy: function loadReservationsProxy(_ref) {
-    var dispatch = _ref.dispatch;
+  loadUser: function loadUser(_ref) {
+    var commit = _ref.commit;
+    axios.get(Routes.user).then(function (response) {
+      commit('setUser', response.data);
+    });
+  },
+  loadReservationsProxy: function loadReservationsProxy(_ref2) {
+    var dispatch = _ref2.dispatch;
     var isManage = location.href.includes('/manage');
 
     if (isManage) {
@@ -98706,9 +98858,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       dispatch('loadPaginatedReservations');
     }
   },
-  loadPaginatedReservations: function loadPaginatedReservations(_ref2) {
-    var commit = _ref2.commit,
-        state = _ref2.state;
+  loadPaginatedReservations: function loadPaginatedReservations(_ref3) {
+    var commit = _ref3.commit,
+        state = _ref3.state;
     var paginationLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     var url = "".concat(Routes.reservations, "?").concat(buildQueryParams(state, paginationLink).toString());
     axios.get(url).then(function (response) {
@@ -98720,9 +98872,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       commit('loadMetaData', meta);
     });
   },
-  loadScopedReservations: function loadScopedReservations(_ref3) {
-    var commit = _ref3.commit,
-        state = _ref3.state;
+  loadScopedReservations: function loadScopedReservations(_ref4) {
+    var commit = _ref4.commit,
+        state = _ref4.state;
     // TODO fix this timezone issue
     var hours = Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["getHours"])(state.filter.timelineStart);
     var date = hours === 0 ? Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addHours"])(state.filter.timelineStart, 1) : state.filter.timelineStart;
@@ -98734,30 +98886,30 @@ var buildPaginationParams = function buildPaginationParams(url) {
       commit('loadReservations', response.data.data);
     });
   },
-  loadEmployees: function loadEmployees(_ref4) {
-    var commit = _ref4.commit;
+  loadEmployees: function loadEmployees(_ref5) {
+    var commit = _ref5.commit;
     axios.get(Routes.users).then(function (response) {
       var data = response.data;
       commit('setEmployees', data);
     });
   },
-  loadTables: function loadTables(_ref5) {
-    var commit = _ref5.commit;
+  loadTables: function loadTables(_ref6) {
+    var commit = _ref6.commit;
     axios.get(Routes.tables + '/all').then(function (response) {
       commit('setTables', response.data.data);
     });
   },
-  deleteReservation: function deleteReservation(_ref6, id) {
-    var dispatch = _ref6.dispatch,
-        commit = _ref6.commit;
+  deleteReservation: function deleteReservation(_ref7, id) {
+    var dispatch = _ref7.dispatch,
+        commit = _ref7.commit;
     axios["delete"]("".concat(Routes.reservations, "/").concat(id)).then(function () {
       commit('closeModal');
       dispatch('loadReservationsProxy');
     });
   },
-  createNewReservation: function createNewReservation(_ref7, preSelected) {
-    var commit = _ref7.commit,
-        dispatch = _ref7.dispatch;
+  createNewReservation: function createNewReservation(_ref8, preSelected) {
+    var commit = _ref8.commit,
+        dispatch = _ref8.dispatch;
     commit('setNewReservation');
 
     if (preSelected) {
@@ -98769,15 +98921,15 @@ var buildPaginationParams = function buildPaginationParams(url) {
     dispatch('loadAvailableTables');
     commit('openModal');
   },
-  setActiveReservation: function setActiveReservation(_ref8, id) {
-    var dispatch = _ref8.dispatch,
-        commit = _ref8.commit;
+  setActiveReservation: function setActiveReservation(_ref9, id) {
+    var dispatch = _ref9.dispatch,
+        commit = _ref9.commit;
     commit('setActiveReservation', id);
     dispatch('loadAvailableTables');
   },
-  loadAvailableTables: function loadAvailableTables(_ref9) {
-    var commit = _ref9.commit,
-        state = _ref9.state;
+  loadAvailableTables: function loadAvailableTables(_ref10) {
+    var commit = _ref10.commit,
+        state = _ref10.state;
     // remove all tables
     commit('setAvailableTables', []);
     commit('setLoadingState', {
@@ -98803,9 +98955,9 @@ var buildPaginationParams = function buildPaginationParams(url) {
       }
     });
   },
-  updateReservation: function updateReservation(_ref10, data) {
-    var commit = _ref10.commit,
-        dispatch = _ref10.dispatch;
+  updateReservation: function updateReservation(_ref11, data) {
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch;
     // mutate state
     commit('updateReservation', data); // getting tables if filter data is changed
 
@@ -98816,12 +98968,12 @@ var buildPaginationParams = function buildPaginationParams(url) {
       dispatch('loadAvailableTables');
     }
   },
-  saveReservation: function saveReservation(_ref11, reservation) {
+  saveReservation: function saveReservation(_ref12, reservation) {
     var _reservation$user;
 
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch,
-        state = _ref11.state;
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch,
+        state = _ref12.state;
     commit('clearErrors');
 
     var payload = _objectSpread({}, reservation); // remove user object
@@ -98855,26 +99007,24 @@ var buildPaginationParams = function buildPaginationParams(url) {
       });
     }
   },
-  closeModal: function closeModal(_ref12) {
-    var commit = _ref12.commit,
-        dispatch = _ref12.dispatch;
+  closeModal: function closeModal(_ref13) {
+    var commit = _ref13.commit,
+        dispatch = _ref13.dispatch;
     dispatch('loadReservationsProxy');
     commit('closeModal');
     commit('clearErrors');
   },
-  loadRestaurant: function loadRestaurant(_ref13) {
-    var commit = _ref13.commit;
-    axios.get(Routes.restaurants).then(function (response) {
-      var data = response.data;
-      axios.get(Routes.restaurants + "/".concat(data[0].id)).then(function (response) {
-        commit('setRestaurant', response.data);
-      });
+  loadRestaurant: function loadRestaurant(_ref14) {
+    var state = _ref14.state,
+        commit = _ref14.commit;
+    axios.get(Routes.restaurants + "/".concat(state.user.selected_id)).then(function (response) {
+      commit('setRestaurant', response.data);
     });
   },
-  markFulfilled: function markFulfilled(_ref14, data) {
-    var commit = _ref14.commit,
-        state = _ref14.state,
-        dispatch = _ref14.dispatch;
+  markFulfilled: function markFulfilled(_ref15, data) {
+    var commit = _ref15.commit,
+        state = _ref15.state,
+        dispatch = _ref15.dispatch;
     var consolidatedData = {
       id: data.id,
       data: {
@@ -98889,33 +99039,33 @@ var buildPaginationParams = function buildPaginationParams(url) {
     dispatch('saveReservation', res);
     commit('setActiveReservation', null);
   },
-  showAllFullFilled: function showAllFullFilled(_ref15, val) {
-    var commit = _ref15.commit,
-        dispatch = _ref15.dispatch,
-        state = _ref15.state;
-    commit('showAllFullFilled', val);
-    dispatch('loadReservationsProxy');
-  },
-  activateRangeFilter: function activateRangeFilter(_ref16, payload) {
+  showAllFullFilled: function showAllFullFilled(_ref16, val) {
     var commit = _ref16.commit,
         dispatch = _ref16.dispatch,
         state = _ref16.state;
-    commit('setDateFilterActive', payload);
-    commit('setDateRange', payload.dateRange);
+    commit('showAllFullFilled', val);
     dispatch('loadReservationsProxy');
   },
-  activateSingleDateFilter: function activateSingleDateFilter(_ref17, payload) {
+  activateRangeFilter: function activateRangeFilter(_ref17, payload) {
     var commit = _ref17.commit,
         dispatch = _ref17.dispatch,
         state = _ref17.state;
     commit('setDateFilterActive', payload);
+    commit('setDateRange', payload.dateRange);
+    dispatch('loadReservationsProxy');
+  },
+  activateSingleDateFilter: function activateSingleDateFilter(_ref18, payload) {
+    var commit = _ref18.commit,
+        dispatch = _ref18.dispatch,
+        state = _ref18.state;
+    commit('setDateFilterActive', payload);
     commit('setSingleDate', payload.singleDate);
     dispatch('loadReservationsProxy');
   },
-  updateScope: function updateScope(_ref18, payload) {
-    var commit = _ref18.commit,
-        state = _ref18.state,
-        dispatch = _ref18.dispatch;
+  updateScope: function updateScope(_ref19, payload) {
+    var commit = _ref19.commit,
+        state = _ref19.state,
+        dispatch = _ref19.dispatch;
 
     if (!Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["isSameDay"])(payload, state.filter.timelineStart)) {
       commit('updateScope', payload);
@@ -98984,6 +99134,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helper_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/helper */ "./resources/js/helper/helper.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  setUser: function setUser(state, payload) {
+    state.user = payload;
+  },
   loadReservations: function loadReservations(state, items) {
     state.reservations.items = items;
   },
@@ -99115,6 +99268,7 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
   },
   user: {},
   restaurant: {
+    id: null,
     users: [],
     tables: [],
     allTables: [],

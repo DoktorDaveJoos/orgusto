@@ -13,7 +13,7 @@
     @yield('vue-setup')
     @livewireStyles
     @livewireScripts
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.1/dist/alpine.min.js" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -27,6 +27,7 @@
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
+@include('trial-banner')
 @include('layouts.nav')
 <div id="app" class="mb-24 flex-grow">
     @yield('content')

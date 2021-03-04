@@ -44,21 +44,17 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/user', [UserController::class, 'user'])
+        ->name('user.get');
+
     Route::get('/manage', [ManageController::class, 'index'])
-        ->name('manage.show');
+        ->name('manage.show')
+        ->middleware(['subscribed']);
 
     Route::prefix('/users')->group(function () {
         Route::get('/{user}', [UserController::class, 'show'])
             ->name('user.show')
             ->middleware('can:view,user');
-
-        Route::post('/user/subscribe', function (Request $request) {
-            $request->user()->newSubscription(
-                'default', 'price_premium'
-            )->create($request->paymentMethodId);
-
-            // TODO
-        });
 
         Route::get('/', [UserController::class, 'users'])
             ->name('users.show');
@@ -86,16 +82,16 @@ Route::middleware(['auth'])->group(function () {
                 ->name('restaurant.destroy')
                 ->middleware('can:delete,restaurant');
 
-            Route::post('/delete', [RestaurantController::class, 'formDestroy'])
-                ->name('restaurant.formDestroy')
-                ->middleware('can:delete,restaurant');
+            Route::post('/select', [RestaurantController::class, 'select'])
+                ->name('restaurant.select')
+                ->middleware('can:view,restaurant');
 
             Route::get('/{table}', [RestaurantController::class, 'showTable'])
                 ->name('restaurant.table.show');
         });
     });
 
-    Route::prefix('/reservations')->group(function () {
+    Route::middleware(['subscribed'])->prefix('/reservations')->group(function () {
 
         Route::get('/', [ReservationsController::class, 'index'])
             ->name('reservations.show');

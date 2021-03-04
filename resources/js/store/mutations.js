@@ -2,6 +2,10 @@ import {createEmptyReservation} from '../helper/helper';
 
 export default {
 
+    setUser(state, payload) {
+      state.user = payload;
+    },
+
     loadReservations(state, items) {
         state.reservations.items = items;
     },

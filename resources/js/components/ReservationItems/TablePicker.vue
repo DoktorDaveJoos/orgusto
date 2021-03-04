@@ -21,8 +21,18 @@
                     {{ __('common.getting_tables') }}
                 </div>
             </div>
-            <div v-if="!isLoading && tables.length === 0" class="my-2 mr-2 text-gray-600 text-xs italic">
-                {{ __('common.no_tables') }}
+            <div v-if="!isLoading && tables.length === 0" class="my-2 mr-2 text-gray-600 text-xs">
+                <span class="italic">{{ __('common.no_tables') }}</span>
+                <p class="mt-2">
+                    <a :href="`/restaurants/${restaurant.id}`">
+                        <span class="text-blue-600 text-xs">
+                            <i class="fas fa-plus pr-0.5"></i>
+                            Tische hinzufügen
+                        </span>
+                    </a>
+                </p>
+
+
             </div>
         </div>
         <div v-if="hasTableError">
@@ -64,7 +74,8 @@ export default {
         ...mapState({
             tables: state => state.restaurant.tables,
             isLoading: state => state.loadingStates.tables,
-            errors: state => state.reservations.errors
+            errors: state => state.reservations.errors,
+            restaurant: state => state.restaurant.settings
         }),
         sortedTables() {
             return this.tables.sort((a, b) => a.table_number - b.table_number);

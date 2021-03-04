@@ -72,6 +72,8 @@
                             <span class="text-gray-600 text-xs italic">{{ __('common.create_one') }}</span>
                         </div>
                     </td>
+                    <!-- fill -->
+                    <td v-for="n in 7" :key="n"></td>
                 </tr>
 
             </table>
@@ -109,9 +111,7 @@ export default {
         return {}
     },
     mounted() {
-        this.$store.dispatch('loadPaginatedReservations');
-        this.$store.dispatch('loadEmployees');
-        this.$store.dispatch('loadRestaurant');
+        this.$store.dispatch('loadUser');
     },
     methods: {
         addNewReservation() {
@@ -123,6 +123,7 @@ export default {
     },
     computed: {
         ...mapState({
+            user: state => state.user,
             reservations: state => state.reservations,
             filter: state => state.filter
         }),
@@ -130,6 +131,13 @@ export default {
     watch: {
         'filter.past': function () {
             this.$store.dispatch('loadPaginatedReservations')
+        },
+        user(updated, old) {
+            if (updated) {
+                this.$store.dispatch('loadPaginatedReservations');
+                this.$store.dispatch('loadEmployees');
+                this.$store.dispatch('loadRestaurant');
+            }
         }
     }
 }

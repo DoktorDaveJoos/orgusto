@@ -28,6 +28,7 @@ export default {
     },
     user: {},
     restaurant: {
+        id: null,
         users: [],
         tables: [],
         allTables: [],

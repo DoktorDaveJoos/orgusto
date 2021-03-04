@@ -26,9 +26,6 @@
         @forminput(['label' => __('restaurants.email')])
         <span id="email" class="pt-2 text-gray-600 leading-tight text-sm"><i class="fas fa-envelope mr-2"></i>{{ $email }}</span>
         @endforminput
-        @forminput(['label' => __('restaurants.access_level')])
-        <span id="email" class="pt-2 text-gray-600 leading-tight text-sm"><i class="fas fa-key mr-2"></i>{{ $access_level }}</span>
-        @endforminput
         @forminput(['label' => __('restaurants.type')])
         <div id="type" x-data="{handle:'{{ $user->type}}' }" class="text-xs leading-5 mt-1">
             <span class="font-semibold rounded-full -ml-2 px-2 py-1" x-bind:class="handle === 'registered' ? 'text-green-800 bg-green-200' : 'text-gray-800 bg-gray-200'">{{ $user->type }}</span>

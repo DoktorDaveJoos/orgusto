@@ -72,65 +72,83 @@
                     <div class="text-xs leading-5 text-gray-500">{{ $restaurant->owner->email }}</div>
                 </td>
                 @tablecell {{ $restaurant->pivot->role }} @endtablecell
-                <td>
-                    <a href="{{ '/billing/restaurant/'. $restaurant->id }}"
-                       class="orgusto-button px-6 bg-gray-100 text-gray-600 hover:text-white hover:bg-gray-600 transition-colors duration-150 ease-in-out">{{ __('restaurants.billing') }}</a>
-                </td>
-                <td class="text-right pl-6 py-4 text-sm leading-5 font-medium">
-                    @if ($restaurant->pivot->role == 'admin')
-                        <a class="orgusto-button text-indigo-600 bg-indigo-100 hover:text-white hover:bg-indigo-600 transition-colors duration-150 ease-in-out"
-                           href="{{ route('restaurant.show', ['restaurant' => $restaurant]) }}">{{ __('restaurants.edit') }}</a>
+
+                <td class="text-xs">
+                    @if ($restaurant->owner->id === auth()->user()->id)
+                        <a class="bg-gray-200 hover:bg-gray-100 rounded-full p-2.5 transition-colors duration-75 ease-in-out"
+                            href="{{ '/billing/restaurant/'. $restaurant->id }}">
+                            <i class="fas fa-receipt mr-0.5"></i>
+                            {{ __('restaurants.billing') }}
+                        </a>
                     @else
-                        <span class="w-full text-sm px-3 py-2 mx-auto text-gray-400">{{ __('restaurants.edit') }}</span>
+                        <span class="text-gray-400 cursor-not-allowed">Rechnungsportal</span>
                     @endif
                 </td>
 
-                <td x-data class="flex justify-end py-4 pr-4">
+                <td class="text-xs">
+                    @if ($restaurant->pivot->role == 'admin')
+                        <a class="bg-indigo-200 hover:bg-indigo-100 text-indigo-600 rounded-full p-2.5 transition-colors duration-75 ease-in-out"
+                           href="{{ route('restaurant.show', ['restaurant' => $restaurant]) }}">
+                            <i class="fas fa-edit mr-0.5"></i>
+                            {{ __('restaurants.edit') }}
+                        </a>
+                    @else
+                        <span class="text-gray-400 cursor-not-allowed">{{ __('restaurants.edit') }}</span>
+                    @endif
+                </td>
+
+                <td x-data class="text-xs">
                     @if($restaurant->pivot->role === 'admin')
                         <button
+                            class="bg-red-200 hover:bg-red-100 text-red-600 rounded-full p-2.5 transition-colors duration-75 ease-in-out"
                             x-on:click="$dispatch('open-delete{{ strtolower(str_replace(' ', '', $restaurant->name)) }}')"
-                            class="orgusto-button px-6 bg-red-100 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-150 ease-in-out"
-                        >{{ __('restaurants.remove') }}
+                        >
+                            <i class="fas fa-trash-alt mr-0.5"></i>
+                            {{ __('restaurants.remove') }}
                         </button>
                     @else
-                        <span class="w-full text-sm px-3 py-2 text-gray-400">{{ __('restaurants.remove') }}</span>
+                        <span class="text-gray-400 cursor-not-allowed">{{ __('restaurants.remove') }}</span>
                     @endif
+
+                    @modal(['event' => 'open-delete'. strtolower(str_replace(" ", "", $restaurant->name)) ])
+                    @slot('icon')
+                        <i class="fas fa-utensils"></i>
+                    @endslot
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 flex flex-row justify-center sm:justify-start"
+                        id="modal-headline">
+                        {{ __('restaurants.Delete') }} {{ $restaurant->name }}
+                    </h3>
+
+                    <form method="POST" action="/restaurants/{{ $restaurant->id }}" class="w-full -ml-2">
+                        @csrf
+                        @method('DELETE')
+                        <p class="my-2 text-gray-600 text-sm">
+                            {{ __('restaurants.note_enter_restaurant_name') }}
+                        </p>
+                        @forminput(['label' => 'Restaurant name'])
+                        <input required pattern="{{ $restaurant->name }}" class="orgusto-input w-full" type="text"
+                               name="name"
+                               placeholder="{{ $restaurant->name }}"/>
+                        @error('name') <span
+                            class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
+                        @endforminput
+                        <div class="px-4 flex flex-row-reverse">
+                            <button type="submit"
+                                    class="orgusto-button bg-red-200 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-200 ease-in-out">
+                                {{ __('restaurants.delete') }}!
+                            </button>
+                            <button x-on:click="openModal = false" type="button"
+                                    class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out mr-4">
+                                {{ __('restaurants.cancel') }}
+                            </button>
+                        </div>
+                    </form>
+
+                    @endmodal
                 </td>
             </tr>
-            @modal(['event' => 'open-delete'. strtolower(str_replace(" ", "", $restaurant->name)) ])
-            @slot('icon')
-                <i class="fas fa-utensils"></i>
-            @endslot
-            <h3 class="text-lg leading-6 font-medium text-gray-900 flex flex-row justify-center sm:justify-start"
-                id="modal-headline">
-                {{ __('restaurants.Delete') }} {{ $restaurant->name }}
-            </h3>
 
-            <form method="POST" action="/restaurants/{{ $restaurant->id }}/delete" class="w-full -ml-2">
-                @csrf
-                <p class="my-2 text-gray-600 text-sm">
-                    {{ __('restaurants.note_enter_restaurant_name') }}
-                </p>
-                @forminput(['label' => 'Restaurant name'])
-                <input required pattern="{{ $restaurant->name }}" class="orgusto-input w-full" type="text"
-                       name="name"
-                       placeholder="{{ $restaurant->name }}"/>
-                @error('name') <span
-                    class="text-sm text-red-600 font-light leading-tight">{{ $message }}</span> @enderror
-                @endforminput
-                <div class="px-4 flex flex-row-reverse">
-                    <button type="submit"
-                            class="orgusto-button bg-red-200 text-red-600 hover:text-white hover:bg-red-600 transition-colors duration-200 ease-in-out">
-                        {{ __('restaurants.delete') }}!
-                    </button>
-                    <button x-on:click="openModal = false" type="button"
-                            class="orgusto-button hover:bg-gray-600 hover:text-white transition-colors duration-200 ease-in-out mr-4">
-                        {{ __('restaurants.cancel') }}
-                    </button>
-                </div>
-            </form>
 
-            @endmodal
         @endforeach
     @endslot
     @endtable

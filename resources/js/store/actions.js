@@ -2,6 +2,7 @@ import {isSameDay, getHours, addHours} from 'date-fns';
 
 const Routes = {
     reservations: '/reservations',
+    user: '/user',
     users: '/users',
     tables: '/tables',
     restaurants: '/restaurants',
@@ -57,6 +58,13 @@ const buildPaginationParams = url => {
 }
 
 export default {
+
+    loadUser({commit}) {
+        axios.get(Routes.user)
+            .then(response => {
+                commit('setUser', response.data)
+            });
+    },
 
     loadReservationsProxy({dispatch}) {
 
@@ -256,17 +264,11 @@ export default {
         commit('clearErrors');
     },
 
-    loadRestaurant({commit}) {
+    loadRestaurant({state, commit}) {
 
-        axios.get(Routes.restaurants)
+        axios.get(Routes.restaurants + `/${state.user.selected_id}`)
             .then(response => {
-
-                const {data} = response;
-
-                axios.get(Routes.restaurants + `/${data[0].id}`)
-                    .then(response => {
-                        commit('setRestaurant', response.data);
-                    })
+                commit('setRestaurant', response.data);
             })
 
     },
