@@ -133,6 +133,8 @@ class EditRestaurant extends Component
                 ]);
                 session()->flash('message', __('messages.table_created', ['table_number' => $newTable->table_number]));
             }
+        } else {
+            session()->flash('message', 'Bevor du Tische hinzufügst musst Du dich zuerst für einen Plan entscheiden :-).');
         }
         $this->tables = $this->restaurant->tables()->get();
     }
@@ -140,8 +142,6 @@ class EditRestaurant extends Component
     public function deleteTable($id)
     {
         $this->authorize('delete', $this->restaurant);
-
-        $table_reservations = Table::find($id)->reservations()->get();
 
         $deleted = Table::destroy($id);
         if ($deleted) {

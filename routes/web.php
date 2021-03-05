@@ -9,6 +9,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\HomeController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,6 +46,22 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::get('/email/verify', function () {
+        return view('auth.verify');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        return redirect()->route('restaurants.show');
+    })->middleware(['signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'Verification link sent!');
+    })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
     Route::get('/user', [UserController::class, 'user'])
         ->name('user.get');
 
@@ -60,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('users.show');
     });
 
-    Route::prefix('/restaurants')->group(function () {
+    Route::middleware(['verified'])->prefix('/restaurants')->group(function () {
 
         Route::get('/', [RestaurantController::class, 'index'])
             ->name('restaurants.show');

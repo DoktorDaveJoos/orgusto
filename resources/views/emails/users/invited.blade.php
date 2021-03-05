@@ -1,14 +1,14 @@
 @component('mail::message')
-# You have been invited!
+# Du wurdest eingeladen!
 
-You are invited to join Orugsto.
+Du wurdest zu Orugsto eingeladen.
 
-Just register **for free** and start working on **{{ $restaurant->name }}**.
+Melde dich **kostenlos** and und starte die Arbeit an **{{ $restaurant->name }}**.
 
 @component('mail::button', ['url' => $url])
-Register for free
+Kostenlos registrieren
 @endcomponent
 
-Thanks,<br>
+Danke,<br>
 {{ config('app.name') }} Team
 @endcomponent

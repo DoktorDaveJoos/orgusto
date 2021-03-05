@@ -150,6 +150,7 @@
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
                             Wilkommen bei Orgusto :-)
                         </h3>
+
                         <div class="mt-2 max-w-xl text-sm text-gray-500">
                             <p class="py-2">
                                 Du hast bisher noch <strong>kein</strong> Restaurant angelegt.
@@ -165,9 +166,11 @@
                         </div>
                         <div class="mt-3 text-sm">
                             <button x-data x-on:click="$dispatch('open-add')"
-                                    class="font-medium text-indigo-600 hover:text-indigo-500"> Restaurant anlegen <span
+                                    class="font-medium text-indigo-600 hover:text-indigo-500"> Restaurant anlegen
+                                <span
                                     aria-hidden="true">→</span></button>
                         </div>
+
                     </div>
                 </div>
 
