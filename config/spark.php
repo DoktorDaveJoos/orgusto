@@ -80,17 +80,19 @@ return [
 
         'restaurant' => [
             'model' => Restaurant::class,
-            'trial_days' => 30,
+            'trial_days' => 7,
             'plans' => [
                 [
                     'name' => 'Standard',
-                    'short_description' => 'Das Einsteigerpaket. Manage deine Reservierungen und nutze dein volles Potenzial.',
-                    'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 'price_1IP7wgLMmvjDxaukeo5GfldO'),
-                    'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 'price_1IP7wgLMmvjDxaukASXkxiLA'),
+                    'short_description' => 'Eine Woche kostenlos. Sollten wir Dich nicht überzeugen können, kannst du jederzeit kündigen.',
+                    'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 'price_1IRZSPLMmvjDxaukmZ3sT9bz'),
+                    'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 'price_1IRZTxLMmvjDxaukGIAlGjTD'),
+                    'yearly_incentive' => 'Spare 10%',
                     'features' => [
-                        'Unbeschränkt viele Reservierungen.',
-                        'Schalte Mitarbeiter-Accounts für dein Restaurant frei.',
-                        'Bis zu 200 Tische.',
+                        'Unbegrenzte Reservierungen',
+                        'Rollen & Nutzerrechte',
+                        'Bis zu 100 Tische.',
+                        'Support via Telefon & Email',
                     ],
                     'archived' => false,
                 ],

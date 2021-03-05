@@ -16,8 +16,7 @@ class BillingMiddelware
      */
     public function handle(Request $request, Closure $next)
     {
-
-        if ($request->user() && !$request->user()->selected->subscribed()) {
+        if ($request->user() && $request->user()->selected && !$request->user()->selected->subscribed()) {
             $request->session()->flash('message', 'Du musst dich erst für einen Plan entscheiden :-)');
             return redirect()->route('restaurants.show');
         }

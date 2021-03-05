@@ -42,11 +42,11 @@ class SparkServiceProvider extends ServiceProvider
         });
 
         Spark::billable(Restaurant::class)->checkPlanEligibility(function (Restaurant $billable, Plan $plan) {
-            // if ($billable->projects > 5 && $plan->name == 'Basic') {
-            //     throw ValidationException::withMessages([
-            //         'plan' => 'You have too many projects for the selected plan.'
-            //     ]);
-            // }
+             if ($billable->tables->count() > 100 && $plan->name == 'Standard') {
+                 throw ValidationException::withMessages([
+                     'plan' => 'Leider hast du die maximale Anzahl an Tischen für den Plan: '. $plan->name .' erreicht.'
+                 ]);
+             }
         });
     }
 }

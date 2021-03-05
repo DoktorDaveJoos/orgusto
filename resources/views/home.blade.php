@@ -17,13 +17,13 @@
 
         <div class="relative bg-gray-100 pb-10 pt-6">
             <div class="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl">
-                <h2 class="text-base font-semibold tracking-wider text-indigo-600 uppercase">dein reservierungstool</h2>
+                <h2 class="text-base font-semibold tracking-wider text-indigo-600 uppercase">Dein Restaurant Manager</h2>
                 <p class="mt-2 text-3xl text-gray-900 font-extrabold tracking-tight sm:text-4xl">
-                    Reservierungen. Einfach. Immer. Überall.
+                    Dein Restaurant. Einfach. Immer. Überall.
                 </p>
                 <p class="mt-5 max-w-prose mx-auto text-xl text-gray-500">
-                    Organisiere deine Reservierungen von überall und all deinen Geräten. Wieso kompliziert wenn es auch
-                    einfach geht?
+                    Organisiere deine Reservierungen, deine Take Away Bestellungen und vieles mehr! Orgusto ist all das,
+                    was du brauchst um dein Restaurant optimal auszulasten und immer den Überblick zu behalten.
                 </p>
                 <div class="mt-12">
                     <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -182,9 +182,7 @@
                         Das richtige Paket für jedes Restaurant!
                     </p>
                     <p class="text-xl text-gray-300">
-                        Wir rechnen pro Restaurant ab! Das ermöglicht es Dir hochflexibel auf die jeweiligen
-                        Anforderungen
-                        deiner Restaurants einzugehen.
+                        Du kannst jedes Paket eine Woche lang kostenfrei testen. Wenn wir es nicht schaffen Dich zu überzeugen, kannst du jederzeit kündigen.
                     </p>
                 </div>
             </div>
@@ -211,7 +209,7 @@
                                     </span>
                                 </div>
                                 <p class="mt-2 pl-1 text-l text-gray-500">
-                                    <strong>€315,90</strong> jährlich
+                                    <strong>€313,20</strong> jährlich
                                 </p>
                                 <p class="mt-5 text-lg text-gray-500">
                                     Kündbar entsprechend monatlich oder jährlich.
@@ -259,7 +257,7 @@
                                             </svg>
                                         </div>
                                         <p class="ml-3 text-base text-gray-700">
-                                            Bis zu 200 Tische
+                                            Bis zu 100 Tische
                                         </p>
                                     </li>
 
@@ -276,6 +274,28 @@
                                             Support via Mail & Telefon
                                         </p>
                                     </li>
+
+                                    <li class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                 aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <p class="ml-3 text-base text-gray-700">
+                                            Take Away Online Shop *
+                                        </p>
+                                    </li>
+
+                                    <li class="flex items-start">
+                                        <p class="text-xs text-gray-700">
+                                            * Noch nicht verfügbar
+                                        </p>
+                                    </li>
+
+
 
                                 </ul>
                                 <div class="rounded-md shadow">
@@ -297,14 +317,11 @@
                                     </h3>
                                 </div>
                                 <div class="mt-4 flex items-baseline text-6xl font-extrabold">
-                                    €49
+                                    €59*
                                     <span class="ml-1 text-2xl font-medium text-gray-500">
                                       /mo
                                     </span>
                                 </div>
-                                <p class="mt-2 pl-1 text-l text-gray-500">
-                                    <strong>€515,90</strong> jährlich
-                                </p>
                                 <p class="mt-5 text-lg text-gray-500">
                                     Kündbar entsprechend monatlich oder jährlich.
                                 </p>
@@ -408,6 +425,26 @@
                                         </div>
                                         <p class="ml-3 text-base text-gray-700">
                                             Online Reservierungen über deine Webseite
+                                        </p>
+                                    </li>
+
+                                    <li class="flex items-start">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                 aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <p class="ml-3 text-base text-gray-700">
+                                            Take Away Online Shop
+                                        </p>
+                                    </li>
+
+                                    <li class="flex items-start">
+                                        <p class="text-xs text-gray-700">
+                                            * Preis des Pakets kann sich noch ändern
                                         </p>
                                     </li>
 

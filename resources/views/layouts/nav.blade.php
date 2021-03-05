@@ -17,21 +17,23 @@
             </div>
         @else
             <div class="flex items-center">
-                @if(auth()->user()->restaurants->count() > 1 || !auth()->user()->selected)
+                @if(auth()->user()->restaurants->count() > 1 || (!auth()->user()->selected && auth()->user()->restaurants->count() >= 1))
                     <x-restaurant-switcher></x-restaurant-switcher>
                 @endif
 
-                <a href="{{ route('reservations.show') }}"
-                   class="px-6 py-3 ml-6 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('reservations*') ? 'font-semibold text-indigo-600' : '' }}">
-                    <i class="text-lg text-center far fa-calendar"></i>
-                    <span class="text-xs pt-1">{{ __('nav.reservations') }}</span>
-                </a>
+                @if(auth()->user()->restaurants->count() >= 1)
+                    <a href="{{ route('reservations.show') }}"
+                       class="px-6 py-3 ml-6 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('reservations*') ? 'font-semibold text-indigo-600' : '' }}">
+                        <i class="text-lg text-center far fa-calendar"></i>
+                        <span class="text-xs pt-1">{{ __('nav.reservations') }}</span>
+                    </a>
 
-                <a href="{{ route('manage.show') }}"
-                   class="px-6 py-3 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('manage*') ? 'font-semibold text-indigo-600' : '' }}">
-                    <i class="text-lg text-center fa fa-stream"></i>
-                    <span class="text-xs pt-1">{{ __('nav.tables') }}</span>
-                </a>
+                    <a href="{{ route('manage.show') }}"
+                       class="px-6 py-3 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out {{ request()->routeIs('manage*') ? 'font-semibold text-indigo-600' : '' }}">
+                        <i class="text-lg text-center fa fa-stream"></i>
+                        <span class="text-xs pt-1">{{ __('nav.tables') }}</span>
+                    </a>
+                @endif
 
             </div>
 
@@ -43,7 +45,7 @@
                          class="relative inline-block text-left">
                         <div>
                             <button @click="open = !open" type="button"
-                                    class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none"
+                                    class="inline-flex items-center justify-center w-full px-4 py-4 text-sm font-medium text-gray-700 focus:outline-none"
                                     id="options-menu" aria-haspopup="true" aria-expanded="true"
                                     x-bind:aria-expanded="open">
 

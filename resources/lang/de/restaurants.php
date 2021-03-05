@@ -36,6 +36,7 @@ return [
     // modals
     'note_no_restaurant' => 'Wichtige Information: Du brauchst mindestens 1 Restaurant. Erstelle dein erstes Restaurant oder beantrage den Zugriff auf ein bestehendes.',
     'note_enter_restaurant_name' => 'Gib den Namen des Restaurants, das du löschen willst ein und drücke "löschen".',
+    'note_delete_restaurant_subscription' => 'Alle Abonnements zu diesem Restaurant werden mit der Löschung gekündigt.',
     'new_restaurant_placeholder' => 'Das wundervolle Restaurant ...',
     'only_premium' => 'Diese Aktion können nur registrierte Premium Nutzer ausführen.',
     'testing_purposes' => 'Right now this application is only for test purposes - please contact service team to inquire
