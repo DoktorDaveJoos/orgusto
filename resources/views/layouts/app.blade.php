@@ -27,7 +27,7 @@
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
-@include('trial-banner')
+
 @include('layouts.nav')
 <div id="app" class="mb-24 flex-grow">
     @yield('content')
