@@ -26,6 +26,11 @@ class Restaurant extends Model
         'trial_ends_at' => 'datetime',
     ];
 
+    public function stripeEmail()
+    {
+        return $this->owner->email;
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class)->withPivot(['role']);

@@ -121,17 +121,21 @@ class EditRestaurant extends Component
 
         $max_table_number = $this->tables->max('table_number') + 1;
 
-        $newTable = $this->restaurant->tables()->create([
-            'table_number' => $max_table_number,
-            'seats' => $this->default_table_seats,
-        ]);
+        if ($this->restaurant->subscribed()) {
 
-        if ($newTable) {
-            session()->flash('message', __('messages.table_created', ['table_number' =>  $newTable->table_number]));
+            // TODO fix that shit
+            if ($this->restaurant->tables->count() > 100) {
+                session()->flash('message', 'Du hast die maximale Anzahl an Tischen für diesen Plan erreicht.');
+            } else {
+                $newTable = $this->restaurant->tables()->create([
+                    'table_number' => $max_table_number,
+                    'seats' => $this->default_table_seats,
+                ]);
+                session()->flash('message', __('messages.table_created', ['table_number' => $newTable->table_number]));
+            }
         } else {
-            session()->flash('message', __('messages.table_not_created', ['table_number' =>  $newTable->table_number]));
+            session()->flash('message', 'Bevor du Tische hinzufügst musst Du dich zuerst für einen Plan entscheiden :-).');
         }
-
         $this->tables = $this->restaurant->tables()->get();
     }
 
@@ -139,11 +143,9 @@ class EditRestaurant extends Component
     {
         $this->authorize('delete', $this->restaurant);
 
-        $table_reservations = Table::find($id)->reservations()->get();
-
         $deleted = Table::destroy($id);
         if ($deleted) {
-            session()->flash('message',  __('messages.table_deleted'));
+            session()->flash('message', __('messages.table_deleted'));
         } else {
             session()->flash('message', __('messages.table_not_deleted'));
         }

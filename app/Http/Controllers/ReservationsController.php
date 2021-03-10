@@ -68,13 +68,14 @@ class ReservationsController extends Controller
         return ReservationResource::collection($reservations);
     }
 
-
     private function buildQueryFromRequest($request, $query)
     {
         if (!$request->get('done')) {
             $query->where('done', 0);
         }
+    }
 
+    public function filterOutByRequest($request, $query) {
         if (!$request->get('past')) {
             if ($request->get('from')) {
                 $query->where('start', '>=', $request->get('from'));
@@ -87,9 +88,7 @@ class ReservationsController extends Controller
                 $query->where('start', '<=', $to);
             }
         }
-
     }
-
 
     public function show(Reservation $reservation)
     {

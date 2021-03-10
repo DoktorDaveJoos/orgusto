@@ -49,24 +49,29 @@ class RestaurantController extends Controller
 
     public function store(CreateRestaurant $request)
     {
+
+        $user = $request->user();
+
         $restaurant = Restaurant::create([
             'name' => $request->validated()['name'],
-            'owner_id' => $request->user()->id
+            'owner_id' => $user->id
         ]);
 
         // Add creator as owner
-        $restaurant->owner = auth()->user();
+        $restaurant->owner = $user;
 
         // Make creator 'admin' automatically
-        auth()->user()->restaurants()->attach($restaurant->id, ['role' => 'admin']);
+        $user->restaurants()->attach($restaurant->id, ['role' => 'admin']);
 
         // Set fresh created restaurant as selected_restaurant
-        auth()->user()->selected_id = $restaurant->id;
+        $user->selected_id = $restaurant->id;
+        $user->save();
 
         if ($request->wantsJson()) {
             return $restaurant;
         }
 
+        $request->session()->flash('message', 'Dein Restaurant '. $restaurant->name .' wurde erfolgreich angelegt.');
         return redirect()->route('restaurant.show', ['restaurant' => $restaurant->id]);
     }
 
@@ -82,7 +87,15 @@ class RestaurantController extends Controller
             }
         });
 
+        // Only Owner can delete restaurant
         if ($request->validated()['name'] === $restaurant->name && $restaurant->owner->id === auth()->user()->id) {
+
+            // Cancel Subscription
+            if (optional($restaurant->subscription())->recurring()) {
+                $restaurant->subscription()->cancelNow();
+            }
+
+            // Delete Restaurant
             Restaurant::destroy($restaurant->id);
             $request->session()->flash('message', __('messages.deleted_restaurant'));
             return redirect()->route('restaurants.show');

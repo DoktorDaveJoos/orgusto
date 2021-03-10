@@ -303,6 +303,7 @@
     "Western Sahara" : "Western Sahara",
     "Whoops! Something went wrong." : "Huch! Da ist etwas schief gelaufen.",
     "Yearly" : "Jährlich",
+    "yearly": "jährlich",
     "Yemen" : "Yemen",
     "You are currently within your free trial period. Your trial will expire on :date." : "Sie befinden sich derzeit innerhalb Ihres kostenlosen Testzeitraums. Ihr Testzeitraum läuft am :date ab.",
     "You may cancel your subscription at any time. Once your subscription has been cancelled, you will have the option to resume the subscription until the end of your current billing cycle." : "Sie können Ihr Abonnement jederzeit kündigen. Sobald Ihr Abonnement gekündigt wurde, haben Sie die Möglichkeit, das Abonnement bis zum Ende Ihres aktuellen Abrechnungszyklus fortzusetzen.",
@@ -313,5 +314,6 @@
     "Zambia" : "Zambia",
     "Zimbabwe" : "Zimbabwe",
     "Zip / Postal Code" : "Postleitzahl",
-    "Åland Islands" : "Åland Islands"
+    "Åland Islands" : "Åland Islands",
+    "TAX": "Mehrwertsteuer"
 }
