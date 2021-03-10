@@ -1,4 +1,4 @@
-<nav class="flex justify-center @guest @else bg-gray-200 shadow-md sticky @endif top-0 z-50">
+<nav class="flex justify-center @guest @else bg-gray-200 shadow-md sticky @endif top-0 z-50 h-20">
 
     <div class="max-w-6xl w-full flex flex-row justify-between content-center">
 
@@ -99,5 +99,7 @@
             </div>
     </div>
 </nav>
+
+@include('trial-banner')
 
 
