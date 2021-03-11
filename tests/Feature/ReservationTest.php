@@ -15,7 +15,10 @@ class ReservationTest extends AbstractTestSetup
             'id' => self::TEST_USER_ID
         ]);
 
+        $this->assertDatabaseCount('reservations', 0);
+
         $table = Table::first();
+
         $reservation = $this->createReservationRequestPayload([$table->id]);
 
         $response = $this->actingAs($user)

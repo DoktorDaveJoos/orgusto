@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Restaurant;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class RestaurantFactory extends Factory
 {
@@ -17,14 +18,42 @@ class RestaurantFactory extends Factory
     /**
      * Define the model's default state.
      *
+     * @param int $ownerId
      * @return array
      */
-    public function definition()
+    public function definition($ownerId = 1)
     {
         return [
             'name' => $this->faker->name,
-            'owner_id' => 1,
+            'owner_id' => $ownerId,
             'contact_email' => $this->faker->email,
         ];
     }
+
+
+    public function withSubscription($planId = null)
+    {
+
+        return $this->afterCreating(function ($restaurant) use ($planId) {
+
+            $subscription = $restaurant->subscriptions()->create([
+                'name' => 'Standard',
+                'stripe_id' => Str::random(10),
+                'stripe_status' => 'active',
+                'stripe_plan' => $planId,
+                'quantity' => 1,
+                'trial_ends_at' => null,
+                'ends_at' => null
+            ]);
+
+            $subscription->items()->create([
+                'stripe_id' => Str::random(10),
+                'stripe_plan' => $planId,
+                'quantity' => 1
+            ]);
+
+        });
+
+    }
+
 }

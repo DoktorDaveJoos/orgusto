@@ -8,30 +8,22 @@ use App\Table;
 use App\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use phpDocumentor\Reflection\Types\Boolean;
 use Tests\TestCase;
 
 abstract class AbstractTestSetup extends TestCase
 {
     use RefreshDatabase;
+
     const TEST_USER_ID = 9999;
     const TEST_RESTAURANT_ID = 9999;
     const TEST_RESTAURANT_NAME = 'test_restaurant';
 
-    private $isPremium = true;
     private $isAdmin = true;
 
-    /**
-     * Creates a User with {@link #TEST_USER_ID} as ID.
-     *
-     * @param bool $isPremium - indicates if {@code User} is allowed to create a {@code Restaurant}
-     * @return User - the created User
-     */
-    public function setupUserWithPremiumAccess(bool $isPremium): User
+    public function setupUser(): User
     {
         return User::factory()->create([
-            'id' => self::TEST_USER_ID,
-            'access_level' => $isPremium ? 'premium' : 'free'
+            'id' => self::TEST_USER_ID
         ]);
     }
 
@@ -55,9 +47,17 @@ abstract class AbstractTestSetup extends TestCase
         ]);
     }
 
+    function setupRestaurantWithSubscription(): void
+    {
+        Restaurant::factory()->withSubscription('Standard')->create([
+            'name' => self::TEST_RESTAURANT_NAME,
+            'id' => self::TEST_RESTAURANT_ID
+        ]);
+    }
+
     /**
      * Creates a User with a Restaurant.
-     * The user has admin rights and premium access.
+     * The user has admin rights and the restaurant is subscribed.
      *
      * @return User - The {@code User} which has a {@code Restaurant} with 10 {@code Table}'s.
      */
@@ -65,7 +65,6 @@ abstract class AbstractTestSetup extends TestCase
     {
         $testUser = [
             'id' => self::TEST_USER_ID,
-            'access_level' => $this->isPremium ? 'premium' : 'free'
         ];
 
         $testRestaurant = [
@@ -75,17 +74,12 @@ abstract class AbstractTestSetup extends TestCase
 
         return User::factory()->hasAttached(
             Restaurant::factory()
+                ->withSubscription('Standard')
                 ->state($testRestaurant)
                 ->has(Table::factory()->count(10)),
             ['role' => $this->isAdmin ? 'admin' : 'user']
         )->create($testUser);
 
-    }
-
-    function withPremium(bool $isPremium): AbstractTestSetup
-    {
-        $this->isPremium = $isPremium;
-        return $this;
     }
 
     function withAdmin(bool $isAdmin): AbstractTestSetup
@@ -94,10 +88,10 @@ abstract class AbstractTestSetup extends TestCase
         return $this;
     }
 
-    function createReservationRequestPayload($tableIds, String $name = 'test_reservation'): array
+    function createReservationRequestPayload($tableIds, string $name = 'test_reservation'): array
     {
         return [
-            'start' => CarbonImmutable::now(),
+            'start' => CarbonImmutable::now()->setTime(17, 0)->toISOString(),
             'persons' => 2,
             'user_id' => self::TEST_USER_ID,
             'duration' => 120,
@@ -110,12 +104,11 @@ abstract class AbstractTestSetup extends TestCase
         ];
     }
 
-    function createReservationForTable(Table $table): Reservation
+    function createReservationForTable(): Reservation
     {
         return $reservation = Reservation::factory()->create([
             'user_id' => self::TEST_USER_ID
         ]);
-
     }
 
 }
