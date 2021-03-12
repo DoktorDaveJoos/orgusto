@@ -15,7 +15,10 @@ class ReservationTest extends AbstractTestSetup
             'id' => self::TEST_USER_ID
         ]);
 
+        $this->assertDatabaseCount('reservations', 0);
+
         $table = Table::first();
+
         $reservation = $this->createReservationRequestPayload([$table->id]);
 
         $response = $this->actingAs($user)
@@ -133,7 +136,7 @@ class ReservationTest extends AbstractTestSetup
 
         $response->assertNoContent(); // successfully deleted
 
-        $this->assertDeleted($reservation);
+        $this->assertSoftDeleted($reservation);
     }
 
     public function testReservationGetsNotDeletedFromRandomUser()
@@ -216,6 +219,7 @@ class ReservationTest extends AbstractTestSetup
                 'name' => 'test_reservation',
                 'email' => 'test@test.de',
                 'color' => 'gray',
+                'done' => 0,
                 'notice' => 'some notice',
                 'phone_number' => '+49 172 2541810',
                 'user' => [
@@ -259,6 +263,7 @@ class ReservationTest extends AbstractTestSetup
                 'name' => 'test_reservation',
                 'email' => 'test@test.de',
                 'color' => 'gray',
+                'done' => 0,
                 'notice' => 'some notice',
                 'phone_number' => '+49 172 2541810',
                 'user' => [

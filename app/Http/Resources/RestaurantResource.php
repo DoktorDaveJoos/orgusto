@@ -18,13 +18,8 @@ class RestaurantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'table_count' => $this->table_count,
             'contact_email' => $this->contact_email,
-            'owner' => $this->owner,
-            'street' => $this->street,
-            'zip_code' => $this->zip_code,
-            'street_number' => $this->street_number,
-            'city' => $this->city,
+            'owner' => new UserResource($this->owner),
             'default_table_seats' => $this->default_table_seats,
             'seat_reservation_bound' => $this->seat_reservation_bound
         ];

@@ -1,6 +1,7 @@
 <?php
 
 namespace Tests\Feature;
+
 use App\Table;
 
 class TableTest extends AbstractTestSetup
@@ -10,14 +11,14 @@ class TableTest extends AbstractTestSetup
     {
         $user = $this
             ->withAdmin(true)
-            ->withPremium(true)->buildTestSetup();
+            ->buildTestSetup();
 
         $restaurant = $user->firstRestaurant();
 
         $table = Table::first();
 
         $response = $this->actingAs($user)
-            ->getJson('/restaurants/' . $restaurant->id . '/' .$table->id);
+            ->getJson('/restaurants/' . $restaurant->id . '/' . $table->id);
 
         $response->assertExactJson([
             'data' => [
