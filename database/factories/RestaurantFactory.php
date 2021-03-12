@@ -31,13 +31,18 @@ class RestaurantFactory extends Factory
     }
 
 
+    /**
+     * Indicate that the restaurant should have a subscription plan.
+     *
+     * @param string $planId
+     * @return Factory
+     */
     public function withSubscription($planId = null)
     {
-
         return $this->afterCreating(function ($restaurant) use ($planId) {
 
             $subscription = $restaurant->subscriptions()->create([
-                'name' => 'Standard',
+                'name' => 'default',
                 'stripe_id' => Str::random(10),
                 'stripe_status' => 'active',
                 'stripe_plan' => $planId,
@@ -53,7 +58,6 @@ class RestaurantFactory extends Factory
             ]);
 
         });
-
     }
 
 }

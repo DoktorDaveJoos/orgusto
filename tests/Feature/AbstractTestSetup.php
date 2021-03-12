@@ -69,16 +69,22 @@ abstract class AbstractTestSetup extends TestCase
 
         $testRestaurant = [
             'name' => self::TEST_RESTAURANT_NAME,
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
+            'owner_id' => self::TEST_USER_ID
         ];
 
-        return User::factory()->hasAttached(
+        $user = User::factory()->hasAttached(
             Restaurant::factory()
                 ->withSubscription('Standard')
                 ->state($testRestaurant)
-                ->has(Table::factory()->count(10)),
+                ->has(Table::factory()->count(10))
+                ->create(),
             ['role' => $this->isAdmin ? 'admin' : 'user']
         )->create($testUser);
+
+        $user->selected_id = self::TEST_RESTAURANT_ID;
+
+        return $user;
 
     }
 

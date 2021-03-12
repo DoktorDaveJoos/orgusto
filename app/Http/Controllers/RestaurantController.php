@@ -91,7 +91,7 @@ class RestaurantController extends Controller
         if ($request->validated()['name'] === $restaurant->name && $restaurant->owner->id === auth()->user()->id) {
 
             // Cancel Subscription
-            if (optional($restaurant->subscription())->recurring()) {
+            if (optional($restaurant->subscription())->recurring() && 'testing' !== app()->environment()) {
                 $restaurant->subscription()->cancelNow();
             }
 
