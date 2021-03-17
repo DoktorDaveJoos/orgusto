@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
+        "@sentry/tracing": "^6.2.2",
+        "@sentry/vue": "^6.2.2",
         "date-fns": "^2.12.0",
         "laravel-vue-lang": "^3.1.1",
         "v-calendar": "^1.0.6",
