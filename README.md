@@ -30,7 +30,7 @@ To tag for a new release, use the builtin scripts to automatically create releas
 # Create new release for production channel (e.g. current version 0.1.0)
 npm run release # -> 0.1.1
 # Create new release for beta channel (e.g. current version 0.1.0)
-npm run release:beta # -> 0.1.1-beta0
+npm run release:beta # -> 0.1.1-beta.0
 # Create new release and major, minor, patch, etc. (e.g. current version 0.1.0)
 npm run release:as minor # -> 0.2.0
 # Finally, push your changes (make sure to include tags)
