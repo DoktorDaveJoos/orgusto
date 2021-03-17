@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Reservation;
 use Illuminate\Database\Seeder;
 
-
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -15,10 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            UsersTableSeeder::class,
-            RestaurantsTableSeeder::class,
-            TablesTableSeeder::class,
-        ]);
+        $this->call([UsersTableSeeder::class, RestaurantsTableSeeder::class, TablesTableSeeder::class]);
     }
 }

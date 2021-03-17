@@ -26,24 +26,28 @@ class UsersTableSeeder extends Seeder
             'selected_restaurant' => 1,
             'email_verified_at' => now(),
             'password' => bcrypt('test'),
-            'email' => 'joos.code@gmail.com'
+            'email' => 'joos.code@gmail.com',
         ];
 
         $baseRestaurant = [
             'id' => 1,
             'name' => 'Amboss',
-            'owner_id' => 1
+            'owner_id' => 1,
         ];
 
         // Create local test setup with login for baseUser and Restaurant "Amboss"
-        User::factory()->hasAttached(
-            Restaurant::factory()
-                ->state($baseRestaurant)
-                ->has(Table::factory()->count(10)),
-            ['role' => 'admin']
-        )->create($baseUser);
+        User::factory()
+            ->hasAttached(
+                Restaurant::factory()
+                    ->state($baseRestaurant)
+                    ->has(Table::factory()->count(10)),
+                ['role' => 'admin']
+            )
+            ->create($baseUser);
 
         // Create random users
-        User::factory()->count(10)->create();
+        User::factory()
+            ->count(10)
+            ->create();
     }
 }

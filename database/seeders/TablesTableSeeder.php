@@ -15,8 +15,9 @@ class TablesTableSeeder extends Seeder
      */
     public function run()
     {
-        Table::factory()->count(10)->has(
-            Reservation::factory()->count(10)
-        )->create();
+        Table::factory()
+            ->count(10)
+            ->has(Reservation::factory()->count(10))
+            ->create();
     }
 }

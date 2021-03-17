@@ -6,7 +6,6 @@ use Illuminate\View\Component;
 
 class RestaurantSwitcher extends Component
 {
-
     public $restaurants;
     public $selected;
 

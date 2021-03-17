@@ -10,7 +10,6 @@ class HomeController extends Controller
      */
     public function show()
     {
-
         if (auth()->user()) {
             return redirect()->route('reservations.show');
         }

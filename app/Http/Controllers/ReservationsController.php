@@ -12,7 +12,6 @@ use Illuminate\Support\Carbon;
 
 class ReservationsController extends Controller
 {
-
     /**
      * Create a new controller instance.
      *
@@ -31,13 +30,15 @@ class ReservationsController extends Controller
         }
 
         if ($request->get('search')) {
-            $user_ids = $restaurant->users()->get()->pluck('id');
+            $user_ids = $restaurant
+                ->users()
+                ->get()
+                ->pluck('id');
 
             $query = Reservation::search($request->get('search'));
             $user_ids->each(function ($item) use ($query) {
                 $query->where('user_id', $item);
             });
-
         } else {
             $query = Reservation::whereHas('tables', function ($q) use ($restaurant) {
                 $q->where('restaurant_id', $restaurant->id);
@@ -55,7 +56,6 @@ class ReservationsController extends Controller
 
     public function scoped(Request $request)
     {
-
         $restaurant = $this->getRestaurant();
 
         $from = $this->getStartFromRequest($request);
@@ -63,7 +63,9 @@ class ReservationsController extends Controller
 
         $reservations = Reservation::whereHas('tables', function ($q) use ($restaurant) {
             $q->where('restaurant_id', $restaurant->id);
-        })->whereBetween('start', [$from, $to])->get();
+        })
+            ->whereBetween('start', [$from, $to])
+            ->get();
 
         return ReservationResource::collection($reservations);
     }
@@ -75,7 +77,8 @@ class ReservationsController extends Controller
         }
     }
 
-    public function filterOutByRequest($request, $query) {
+    public function filterOutByRequest($request, $query)
+    {
         if (!$request->get('past')) {
             if ($request->get('from')) {
                 $query->where('start', '>=', $request->get('from'));
@@ -96,9 +99,15 @@ class ReservationsController extends Controller
             return new ReservationResource($reservation);
         }
 
-        $reservations = Reservation::where('id', $reservation->id)->with('user')->paginate(15);
+        $reservations = Reservation::where('id', $reservation->id)
+            ->with('user')
+            ->paginate(15);
 
-        return view('reservations', ['reservations' => $reservations, 'empty_search' => false, 'card_title' => 'Found:']);
+        return view('reservations', [
+            'reservations' => $reservations,
+            'empty_search' => false,
+            'card_title' => 'Found:',
+        ]);
     }
 
     public function store(CreateReservation $request)
@@ -124,7 +133,7 @@ class ReservationsController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status' => 200
+                'status' => 200,
             ]);
         }
 
@@ -148,10 +157,12 @@ class ReservationsController extends Controller
             $reservation->delete();
             return response(null, self::STATUS_NO_CONTENT);
         } catch (\Exception $e) {
-            return response('Resource with id: <' . $reservation->id . '> could not be deleted.', self::STATUS_INTERNAL_SERVER_ERROR);
+            return response(
+                'Resource with id: <' . $reservation->id . '> could not be deleted.',
+                self::STATUS_INTERNAL_SERVER_ERROR
+            );
         }
     }
-
 
     /**
      * Checks if given tables are available in period (start_date -> start_date + duration).
@@ -165,7 +176,9 @@ class ReservationsController extends Controller
         $start = CarbonImmutable::parse($updated['start']);
         $end = $start->addMinutes($updated['duration']);
 
-        $tables = Table::whereIn('id', $updated['tables'])->withReservationsBetween($start, $end)->get();
+        $tables = Table::whereIn('id', $updated['tables'])
+            ->withReservationsBetween($start, $end)
+            ->get();
 
         // Remove all bumping reservations
         $tables->each(function ($table) use ($start, $end) {
@@ -178,12 +191,13 @@ class ReservationsController extends Controller
         $tables->each(function ($table) use ($updated, $existing_id) {
             $table['reservations']->each(function ($reservation) use ($updated, $table, $existing_id) {
                 if ($reservation->id !== $existing_id) {
-                    abort(self::STATUS_BAD_REQUEST,
-                        'Table number: ' . $table->table_number . ' is blocked by reservation: ' . $reservation->name);
+                    abort(
+                        self::STATUS_BAD_REQUEST,
+                        'Table number: ' . $table->table_number . ' is blocked by reservation: ' . $reservation->name
+                    );
                 }
             });
         });
-
     }
 
     private function justBumping($reservation, $start, $end)

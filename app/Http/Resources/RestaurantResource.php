@@ -21,7 +21,7 @@ class RestaurantResource extends JsonResource
             'contact_email' => $this->contact_email,
             'owner' => new UserResource($this->owner),
             'default_table_seats' => $this->default_table_seats,
-            'seat_reservation_bound' => $this->seat_reservation_bound
+            'seat_reservation_bound' => $this->seat_reservation_bound,
         ];
     }
 }

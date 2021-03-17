@@ -23,7 +23,7 @@ abstract class AbstractTestSetup extends TestCase
     public function setupUser(): User
     {
         return User::factory()->create([
-            'id' => self::TEST_USER_ID
+            'id' => self::TEST_USER_ID,
         ]);
     }
 
@@ -43,16 +43,18 @@ abstract class AbstractTestSetup extends TestCase
     {
         Restaurant::factory()->create([
             'name' => self::TEST_RESTAURANT_NAME,
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
         ]);
     }
 
     function setupRestaurantWithSubscription(): void
     {
-        Restaurant::factory()->withSubscription('Standard')->create([
-            'name' => self::TEST_RESTAURANT_NAME,
-            'id' => self::TEST_RESTAURANT_ID
-        ]);
+        Restaurant::factory()
+            ->withSubscription('Standard')
+            ->create([
+                'name' => self::TEST_RESTAURANT_NAME,
+                'id' => self::TEST_RESTAURANT_ID,
+            ]);
     }
 
     /**
@@ -70,22 +72,23 @@ abstract class AbstractTestSetup extends TestCase
         $testRestaurant = [
             'name' => self::TEST_RESTAURANT_NAME,
             'id' => self::TEST_RESTAURANT_ID,
-            'owner_id' => self::TEST_USER_ID
+            'owner_id' => self::TEST_USER_ID,
         ];
 
-        $user = User::factory()->hasAttached(
-            Restaurant::factory()
-                ->withSubscription('Standard')
-                ->state($testRestaurant)
-                ->has(Table::factory()->count(10))
-                ->create(),
-            ['role' => $this->isAdmin ? 'admin' : 'user']
-        )->create($testUser);
+        $user = User::factory()
+            ->hasAttached(
+                Restaurant::factory()
+                    ->withSubscription('Standard')
+                    ->state($testRestaurant)
+                    ->has(Table::factory()->count(10))
+                    ->create(),
+                ['role' => $this->isAdmin ? 'admin' : 'user']
+            )
+            ->create($testUser);
 
         $user->selected_id = self::TEST_RESTAURANT_ID;
 
         return $user;
-
     }
 
     function withAdmin(bool $isAdmin): AbstractTestSetup
@@ -97,7 +100,9 @@ abstract class AbstractTestSetup extends TestCase
     function createReservationRequestPayload($tableIds, string $name = 'test_reservation'): array
     {
         return [
-            'start' => CarbonImmutable::now()->setTime(17, 0)->toISOString(),
+            'start' => CarbonImmutable::now()
+                ->setTime(17, 0)
+                ->toISOString(),
             'persons' => 2,
             'user_id' => self::TEST_USER_ID,
             'duration' => 120,
@@ -106,16 +111,14 @@ abstract class AbstractTestSetup extends TestCase
             'email' => 'test@test.de',
             'color' => 'gray',
             'notice' => 'some notice',
-            'phone_number' => '+49 172 2541810'
+            'phone_number' => '+49 172 2541810',
         ];
     }
 
     function createReservationForTable(): Reservation
     {
         return $reservation = Reservation::factory()->create([
-            'user_id' => self::TEST_USER_ID
+            'user_id' => self::TEST_USER_ID,
         ]);
     }
-
 }
-

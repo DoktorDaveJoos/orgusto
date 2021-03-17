@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'type' => $this->type,
-            'role' => $this->firstRestaurant()->pivot->role
+            'role' => $this->firstRestaurant()->pivot->role,
         ];
     }
 }

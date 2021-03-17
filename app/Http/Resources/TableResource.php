@@ -19,7 +19,7 @@ class TableResource extends JsonResource
             'seats' => $this->seats,
             'table_number' => $this->table_number,
             'description' => $this->description,
-            'room' => $this->room
+            'room' => $this->room,
         ];
     }
 }

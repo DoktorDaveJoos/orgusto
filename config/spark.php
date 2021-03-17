@@ -4,7 +4,6 @@ use App\Restaurant;
 use Spark\Features;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Spark Path
@@ -43,10 +42,10 @@ return [
     |
     */
 
-     'brand' =>  [
-         'logo' => realpath(__DIR__.'/../public/orgusto-logo-small.svg'),
-         'color' => 'bg-indigo-600',
-     ],
+    'brand' => [
+        'logo' => realpath(__DIR__ . '/../public/orgusto-logo-small.svg'),
+        'color' => 'bg-indigo-600',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -77,14 +76,14 @@ return [
     */
 
     'billables' => [
-
         'restaurant' => [
             'model' => Restaurant::class,
             'trial_days' => 7,
             'plans' => [
                 [
                     'name' => 'Standard',
-                    'short_description' => 'Eine Woche kostenlos. Sollten wir Dich nicht überzeugen können, kannst du jederzeit kündigen.',
+                    'short_description' =>
+                        'Eine Woche kostenlos. Sollten wir Dich nicht überzeugen können, kannst du jederzeit kündigen.',
                     'monthly_id' => env('SPARK_STANDARD_MONTHLY_PLAN', 'price_1IRZSPLMmvjDxaukmZ3sT9bz'),
                     'yearly_id' => env('SPARK_STANDARD_YEARLY_PLAN', 'price_1IRZTxLMmvjDxaukGIAlGjTD'),
                     'yearly_incentive' => 'Spare 10%',
@@ -98,10 +97,7 @@ return [
                 ],
             ],
         ],
-
     ],
 
-    'features' => [
-        Features::euVatCollection(['home-country' => 'DE']),
-    ],
+    'features' => [Features::euVatCollection(['home-country' => 'DE'])],
 ];

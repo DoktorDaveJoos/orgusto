@@ -8,10 +8,8 @@ use App\Reservation;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 
-
 class ManageController extends Controller
 {
-
     /**
      * Create a new controller instance.
      *
@@ -30,13 +28,13 @@ class ManageController extends Controller
             return redirect()->route('restaurants.show');
         }
 
-//        $from = $this->getStartFromRequest($request)->toDate();
-//        $to = $this->getEndFromRequest($request)->toDate();
+        //        $from = $this->getStartFromRequest($request)->toDate();
+        //        $to = $this->getEndFromRequest($request)->toDate();
 
-//        $tables = $restaurant->tables()->with(['reservations' =>
-//            function ($query) use ($from, $to) {
-//                $query->whereBetween('start', [$from, $to])->with(['user', 'reservations']);
-//            }])->sortByTableNumber()->get();
+        //        $tables = $restaurant->tables()->with(['reservations' =>
+        //            function ($query) use ($from, $to) {
+        //                $query->whereBetween('start', [$from, $to])->with(['user', 'reservations']);
+        //            }])->sortByTableNumber()->get();
 
         if ($request->wantsJson()) {
             return TableResource::collection($restaurant->tables);
