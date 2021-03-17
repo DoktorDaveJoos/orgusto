@@ -8,7 +8,7 @@ require('./bootstrap');
 
 window._ = _ = require('lodash');
 
-Vue = window.Vue = require('vue');
+window.Vue = require('vue');
 import VCalendar from 'v-calendar';
 
 // Localization
