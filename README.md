@@ -6,15 +6,13 @@
 
 ## About Orgusto
 
-Orgusto ist crap! 💩
-
 Visit the [Beta](https://beta.orgusto.com)
 
 ## Development
 
 ### Code style
 
-Code style rules are enforced with the help of `husky`, `lint-staged` and `prettier`. All project files are automatically checked and fixed before committing, making sure all complies to the code style defined in `.prettierrc`.
+Enforce code style rules with the help of `husky`, `lint-staged` and `prettier`. All project files are automatically checked and fixed before committing, making sure all complies to the code style defined in `.prettierrc`.
 
 ### Commits
 
