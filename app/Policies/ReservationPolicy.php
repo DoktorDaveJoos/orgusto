@@ -40,7 +40,10 @@ class ReservationPolicy
      */
     public function create(User $user)
     {
-        return $this->onlyRegisteredOrElseDenyWithMessage($user, 'Only registered user are allowed to create reservations.');
+        return $this->onlyRegisteredOrElseDenyWithMessage(
+            $user,
+            'Only registered user are allowed to create reservations.'
+        );
     }
 
     /**
@@ -53,8 +56,10 @@ class ReservationPolicy
     public function view(User $user, Reservation $reservation)
     {
         return $this->onlyUsersOfTheRestaurantOrElseDenyWithMessage(
-            $user, $reservation,
-            'Only admins or users of the restaurant are allowed to view this reservation.');
+            $user,
+            $reservation,
+            'Only admins or users of the restaurant are allowed to view this reservation.'
+        );
     }
 
     /**
@@ -67,8 +72,10 @@ class ReservationPolicy
     public function update(User $user, Reservation $reservation)
     {
         return $this->onlyUsersOfTheRestaurantOrElseDenyWithMessage(
-            $user, $reservation,
-            'Only admins or users of the restaurant are allowed to update the reservations.');
+            $user,
+            $reservation,
+            'Only admins or users of the restaurant are allowed to update the reservations.'
+        );
     }
 
     /**
@@ -81,8 +88,10 @@ class ReservationPolicy
     public function delete(User $user, Reservation $reservation)
     {
         return $this->onlyUsersOfTheRestaurantOrElseDenyWithMessage(
-            $user, $reservation,
-            'Only admins or users of the restaurant are allowed to delete reservations.');
+            $user,
+            $reservation,
+            'Only admins or users of the restaurant are allowed to delete reservations.'
+        );
     }
 
     /**
@@ -94,9 +103,7 @@ class ReservationPolicy
      */
     private function onlyRegisteredOrElseDenyWithMessage(User $user, $message)
     {
-        return $user->type === 'registered'
-            ? Response::allow()
-            : Response::deny($message);
+        return $user->type === 'registered' ? Response::allow() : Response::deny($message);
     }
 
     /**
@@ -107,15 +114,20 @@ class ReservationPolicy
      * @param string $message - The message if not allowed
      * @return Response
      */
-    private function onlyUsersOfTheRestaurantOrElseDenyWithMessage(User $user, Reservation $reservation, string $message)
-    {
-        $restaurant = $reservation->tables()->first()->restaurant()->first();
+    private function onlyUsersOfTheRestaurantOrElseDenyWithMessage(
+        User $user,
+        Reservation $reservation,
+        string $message
+    ) {
+        $restaurant = $reservation
+            ->tables()
+            ->first()
+            ->restaurant()
+            ->first();
         $userRestaurant = $user->firstRestaurant();
         if (!$userRestaurant) {
             return Response::deny($message);
         }
-        return $userRestaurant->id === $restaurant->id
-            ? Response::allow()
-            : Response::deny($message);
+        return $userRestaurant->id === $restaurant->id ? Response::allow() : Response::deny($message);
     }
 }

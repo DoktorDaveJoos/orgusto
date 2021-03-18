@@ -47,20 +47,18 @@ class InvitationController extends Controller
      */
     public function update(UpdateInvitedUser $request, User $user)
     {
-
         if ($user->type === 'invited') {
             $validated = $request->validated();
 
             $user->update([
                 'name' => $validated['name'],
                 'password' => Hash::make($validated['password']),
-                'type' => 'registered'
+                'type' => 'registered',
             ]);
 
             return redirect('/login')->with('message', 'Successfully fullfilled invitation. You can login now!');
         } else {
             abort(403);
         }
-
     }
 }

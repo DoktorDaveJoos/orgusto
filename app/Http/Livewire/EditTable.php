@@ -11,7 +11,7 @@ class EditTable extends Component
     public $table;
     public $restaurant;
 
-//    public $id;
+    //    public $id;
     public $seats;
     public $description;
     public $table_number;
@@ -40,10 +40,11 @@ class EditTable extends Component
         $this->validateOnly($field, [
             'table_number' => 'integer',
             'seats' => 'integer',
-            'description' => 'string|nullable|max:255'
+            'description' => 'string|nullable|max:255',
         ]);
 
-        $this->is_dirty = $this->table->table_number != $this->table_number ||
+        $this->is_dirty =
+            $this->table->table_number != $this->table_number ||
             $this->table->seats != $this->seats ||
             $this->table->description != $this->description;
     }
@@ -53,7 +54,7 @@ class EditTable extends Component
         $validated = $this->validate([
             'table_number' => 'required|integer',
             'seats' => 'required|integer',
-            'description' => 'string|nullable|max:255'
+            'description' => 'string|nullable|max:255',
         ]);
 
         $this->table->update($validated);

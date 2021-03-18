@@ -29,11 +29,11 @@ Route::get('/', [HomeController::class, 'show'])->name('home');
 
 Route::post('/newsletter', [NewsletterController::class, 'subscribe']);
 
-Route::get('/imprint', function() {
+Route::get('/imprint', function () {
     return view('imprint');
 })->name('imprint');
 
-Route::get('/privacy', function() {
+Route::get('/privacy', function () {
     return view('dataprotection');
 })->name('privacy');
 
@@ -45,7 +45,6 @@ Route::prefix('/invitation')->group(function () {
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
-
     Route::get('/email/verify', function () {
         return view('auth.verify');
     })->name('verification.notice');
@@ -54,16 +53,19 @@ Route::middleware(['auth'])->group(function () {
         $request->fulfill();
 
         return redirect()->route('restaurants.show');
-    })->middleware(['signed'])->name('verification.verify');
+    })
+        ->middleware(['signed'])
+        ->name('verification.verify');
 
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
 
         return back()->with('message', 'Verification link sent!');
-    })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    })
+        ->middleware(['auth', 'throttle:6,1'])
+        ->name('verification.send');
 
-    Route::get('/user', [UserController::class, 'user'])
-        ->name('user.get');
+    Route::get('/user', [UserController::class, 'user'])->name('user.get');
 
     Route::get('/manage', [ManageController::class, 'index'])
         ->name('manage.show')
@@ -74,76 +76,70 @@ Route::middleware(['auth'])->group(function () {
             ->name('user.show')
             ->middleware('can:view,user');
 
-        Route::get('/', [UserController::class, 'users'])
-            ->name('users.show');
+        Route::get('/', [UserController::class, 'users'])->name('users.show');
     });
 
-    Route::middleware(['verified'])->prefix('/restaurants')->group(function () {
+    Route::middleware(['verified'])
+        ->prefix('/restaurants')
+        ->group(function () {
+            Route::get('/', [RestaurantController::class, 'index'])->name('restaurants.show');
 
-        Route::get('/', [RestaurantController::class, 'index'])
-            ->name('restaurants.show');
+            Route::post('/', [RestaurantController::class, 'store'])
+                ->name('restaurants.store')
+                ->middleware('can:create,App\Models\Restaurant');
 
-        Route::post('/', [RestaurantController::class, 'store'])
-            ->name('restaurants.store')
-            ->middleware('can:create,App\Models\Restaurant');
+            Route::prefix('/{restaurant}')->group(function () {
+                Route::get('/', [RestaurantController::class, 'show'])
+                    ->name('restaurant.show')
+                    ->middleware('can:view,restaurant');
 
-        Route::prefix('/{restaurant}')->group(function () {
-            Route::get('/', [RestaurantController::class, 'show'])
-                ->name('restaurant.show')
-                ->middleware('can:view,restaurant');
+                Route::put('/', [RestaurantController::class, 'update'])
+                    ->name('restaurant.update')
+                    ->middleware('can:update,restaurant');
 
-            Route::put('/', [RestaurantController::class, 'update'])
-                ->name('restaurant.update')
-                ->middleware('can:update,restaurant');
+                Route::delete('/', [RestaurantController::class, 'destroy'])
+                    ->name('restaurant.destroy')
+                    ->middleware('can:delete,restaurant');
 
-            Route::delete('/', [RestaurantController::class, 'destroy'])
-                ->name('restaurant.destroy')
-                ->middleware('can:delete,restaurant');
+                Route::post('/select', [RestaurantController::class, 'select'])
+                    ->name('restaurant.select')
+                    ->middleware('can:view,restaurant');
 
-            Route::post('/select', [RestaurantController::class, 'select'])
-                ->name('restaurant.select')
-                ->middleware('can:view,restaurant');
-
-            Route::get('/{table}', [RestaurantController::class, 'showTable'])
-                ->name('restaurant.table.show');
+                Route::get('/{table}', [RestaurantController::class, 'showTable'])->name('restaurant.table.show');
+            });
         });
-    });
 
-    Route::middleware(['subscribed'])->prefix('/reservations')->group(function () {
+    Route::middleware(['subscribed'])
+        ->prefix('/reservations')
+        ->group(function () {
+            Route::get('/', [ReservationsController::class, 'index'])->name('reservations.show');
 
-        Route::get('/', [ReservationsController::class, 'index'])
-            ->name('reservations.show');
+            Route::get('/scoped', [ReservationsController::class, 'scoped'])->name('reservations.scoped');
 
-        Route::get('/scoped', [ReservationsController::class, 'scoped'])
-            ->name('reservations.scoped');
+            Route::post('/', [ReservationsController::class, 'store'])
+                ->name('reservations.store')
+                ->middleware('can:create,App\Models\Reservation');
 
-        Route::post('/', [ReservationsController::class, 'store'])
-            ->name('reservations.store')
-            ->middleware('can:create,App\Models\Reservation');
+            Route::get('/{reservation}', [ReservationsController::class, 'show'])
+                ->name('reservation.show')
+                ->middleware('can:view,reservation');
 
-        Route::get('/{reservation}', [ReservationsController::class, 'show'])
-            ->name('reservation.show')
-            ->middleware('can:view,reservation');
+            Route::put('/{reservation}', [ReservationsController::class, 'update'])
+                ->name('reservation.update')
+                ->middleware('can:update,reservation');
 
-        Route::put('/{reservation}', [ReservationsController::class, 'update'])
-            ->name('reservation.update')
-            ->middleware('can:update,reservation');
+            Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])
+                ->name('reservation.destroy')
+                ->middleware('can:delete,reservation');
 
-        Route::delete('/{reservation}', [ReservationsController::class, 'destroy'])
-            ->name('reservation.destroy')
-            ->middleware('can:delete,reservation');
-
-        Route::put('/{reservation}/fulfilled', [ReservationsController::class, 'done'])
-            ->name('reservation.done')
-            ->middleware('can:update,reservation');
-
-    });
+            Route::put('/{reservation}/fulfilled', [ReservationsController::class, 'done'])
+                ->name('reservation.done')
+                ->middleware('can:update,reservation');
+        });
 
     Route::prefix('/tables')->group(function () {
-        Route::get('/', [TablesController::class, 'index'])
-            ->name('tables.index');
+        Route::get('/', [TablesController::class, 'index'])->name('tables.index');
 
-        Route::get('/all', [TablesController::class, 'allTables'])
-            ->name('tables.all');
+        Route::get('/all', [TablesController::class, 'allTables'])->name('tables.all');
     });
 });

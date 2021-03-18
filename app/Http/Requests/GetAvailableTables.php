@@ -26,7 +26,7 @@ class GetAvailableTables extends FormRequest
         return [
             'start' => 'required|date',
             'm' => 'required|integer',
-            'persons' => 'integer'
+            'persons' => 'integer',
         ];
     }
 }

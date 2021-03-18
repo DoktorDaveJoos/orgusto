@@ -18,7 +18,7 @@ class Restaurant extends Model
         'contact_email',
         'owner_id',
         'default_table_seats',
-        'seat_reservation_bound'
+        'seat_reservation_bound',
     ];
 
     protected $casts = [

@@ -42,12 +42,14 @@ class EditRestaurant extends Component
 
     public function getUsersWithPivot()
     {
-        return $this->restaurant->users()->withPivot('role')->get();
+        return $this->restaurant
+            ->users()
+            ->withPivot('role')
+            ->get();
     }
 
     public function mount(Restaurant $restaurant)
     {
-
         $this->is_dirty = false;
 
         $this->restaurant = $restaurant;
@@ -81,7 +83,8 @@ class EditRestaurant extends Component
         ]);
 
         if ($isValidated) {
-            $this->is_dirty = $this->restaurant->contact_email != $this->contact_email ||
+            $this->is_dirty =
+                $this->restaurant->contact_email != $this->contact_email ||
                 $this->restaurant->zip_code != $this->zip_code ||
                 $this->restaurant->street != $this->street ||
                 $this->restaurant->owner != $this->owner ||
@@ -122,7 +125,6 @@ class EditRestaurant extends Component
         $max_table_number = $this->tables->max('table_number') + 1;
 
         if ($this->restaurant->subscribed()) {
-
             // TODO fix that shit
             if ($this->restaurant->tables->count() > 100) {
                 session()->flash('message', 'Du hast die maximale Anzahl an Tischen für diesen Plan erreicht.');
@@ -134,7 +136,10 @@ class EditRestaurant extends Component
                 session()->flash('message', __('messages.table_created', ['table_number' => $newTable->table_number]));
             }
         } else {
-            session()->flash('message', 'Bevor du Tische hinzufügst musst Du dich zuerst für einen Plan entscheiden :-).');
+            session()->flash(
+                'message',
+                'Bevor du Tische hinzufügst musst Du dich zuerst für einen Plan entscheiden :-).'
+            );
         }
         $this->tables = $this->restaurant->tables()->get();
     }

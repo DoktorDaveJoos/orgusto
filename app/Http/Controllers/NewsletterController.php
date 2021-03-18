@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class NewsletterController extends Controller
 {
     //
-    public function subscribe(Request $request) {
-
+    public function subscribe(Request $request)
+    {
         $found = Newsletter::where('email', $request->input('email'))->first();
 
         if ($found) {
@@ -20,11 +20,9 @@ class NewsletterController extends Controller
         $request->session()->flash('newsletter', 'Cool, du bist für den Newsletter registriert.');
 
         Newsletter::create([
-            'email' => $request->input('email')
+            'email' => $request->input('email'),
         ]);
 
         return redirect()->route('home');
-
     }
-
 }

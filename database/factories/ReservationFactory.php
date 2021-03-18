@@ -26,14 +26,9 @@ class ReservationFactory extends Factory
             'name' => $this->faker->name,
             'duration' => $this->faker->randomElement([90, 120, 180]),
             'persons' => $this->faker->randomDigitNotNull,
-            'start' => $this->faker->dateTimeBetween(
-                CarbonImmutable::now(),
-                CarbonImmutable::now()->addDays(7)
-            ),
+            'start' => $this->faker->dateTimeBetween(CarbonImmutable::now(), CarbonImmutable::now()->addDays(7)),
             'notice' => $this->faker->text,
-            'color' => $this->faker->randomElement([
-                'green', 'red', 'gray', 'blue'
-            ]),
+            'color' => $this->faker->randomElement(['green', 'red', 'gray', 'blue']),
             'email' => $this->faker->safeEmail,
             'phone_number' => '01722541810',
             'user_id' => $this->faker->randomDigitNotNull,

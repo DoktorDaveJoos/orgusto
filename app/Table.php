@@ -10,13 +10,10 @@ use Illuminate\Support\Facades\DB;
 
 class Table extends Model
 {
-
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = [
-        'seats', 'table_number', 'description', 'room'
-    ];
+    protected $fillable = ['seats', 'table_number', 'description', 'room'];
 
     public function scopeSortByTableNumber($query)
     {
@@ -53,9 +50,12 @@ class Table extends Model
         $to = Carbon::parse($to)->subMinute();
         return $query
             ->whereDoesntHave('reservations', function ($q) use ($from, $to) {
-                $q->whereBetween('start', [$from, $to])
-                    ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
-            })->whereDoesntHave('reservations', function ($q) use ($from, $to) {
+                $q->whereBetween('start', [$from, $to])->orWhereBetween(
+                    DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'),
+                    [$from, $to]
+                );
+            })
+            ->whereDoesntHave('reservations', function ($q) use ($from, $to) {
                 $q->where('start', '<=', $from)->where(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), '>=', $to);
             });
     }
@@ -66,8 +66,10 @@ class Table extends Model
 
             // either start or end is between from, to
             ->whereHas('reservations', function ($q) use ($from, $to) {
-                $q->whereBetween('start', [$from, $to])
-                    ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+                $q->whereBetween('start', [$from, $to])->orWhereBetween(
+                    DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'),
+                    [$from, $to]
+                );
             })
 
             // start is before from and end is after to
@@ -76,10 +78,13 @@ class Table extends Model
             })
 
             // aggregate reservations
-            ->with(["reservations" => function ($query) use ($from, $to) {
-                $query->whereBetween('start', [$from, $to])
-                    ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
-            }]);
+            ->with([
+                'reservations' => function ($query) use ($from, $to) {
+                    $query
+                        ->whereBetween('start', [$from, $to])
+                        ->orWhereBetween(DB::raw('DATE_ADD(start, INTERVAL duration MINUTE)'), [$from, $to]);
+                },
+            ]);
     }
 
     public function scopeWithEnoughSeats($query, $persons)

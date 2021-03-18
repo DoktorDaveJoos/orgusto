@@ -47,7 +47,7 @@ class CreateReservation extends FormRequest
             'color' => [Rule::in(['gray', 'indigo', 'blue', 'green', 'red', 'orange', 'w'])],
             'notice' => 'max:255',
             'phone_number' => 'max:15',
-            'done' => 'boolean'
+            'done' => 'boolean',
         ];
     }
 }

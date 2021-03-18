@@ -36,7 +36,6 @@ class UserInvited extends Mailable
     {
         $url = route('invitation.show', ['user' => $this->user->id]);
 
-        return $this->markdown('emails.users.invited')
-            ->with(['url' => $url]);
+        return $this->markdown('emails.users.invited')->with(['url' => $url]);
     }
 }

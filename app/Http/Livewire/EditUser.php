@@ -7,7 +7,6 @@ use App\User;
 
 class EditUser extends Component
 {
-
     public $user;
 
     public $name;
@@ -35,7 +34,7 @@ class EditUser extends Component
     public function updated($field, $value)
     {
         $this->validateOnly($field, [
-            'name' => 'string'
+            'name' => 'string',
         ]);
 
         $this->is_dirty = $this->user->name != $this->name;
