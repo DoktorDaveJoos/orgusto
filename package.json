@@ -1,7 +1,7 @@
 {
     "name": "orgusto",
     "private": true,
-    "version": "0.1.1-beta.2",
+    "version": "0.1.1-beta.3",
     "scripts": {
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -11,7 +11,7 @@
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prettier:check": "prettier --config .prettierrc --check \"{app,bootstrap,config,database,routes,tests}/**/*.{js,ts,css,html,php,vue}\"",
-        "prettier:fix": "prettier --config .prettierrc --write \"{app,bootstrap,config,database,routes,tests}/**/*.{js,ts,css,html,php,vue}\"",
+        "prettier:fix": "prettier --config .prettierrc --write \"{app,bootstrap,config,database,routes,tests,resources}/**/*.{js,ts,css,html,php,vue}\"",
         "release": "standard-version",
         "release:as": "standard-version --release-as",
         "release:alpha": "standard-version --prerelease alpha",
