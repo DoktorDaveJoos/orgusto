@@ -1,5 +1,7 @@
 {
+    "name": "orgusto",
     "private": true,
+    "version": "0.1.1-beta.2",
     "scripts": {
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -7,17 +9,30 @@
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prettier:check": "prettier --config .prettierrc --check \"{app,bootstrap,config,database,routes,tests}/**/*.{js,ts,css,html,php,vue}\"",
+        "prettier:fix": "prettier --config .prettierrc --write \"{app,bootstrap,config,database,routes,tests}/**/*.{js,ts,css,html,php,vue}\"",
+        "release": "standard-version",
+        "release:as": "standard-version --release-as",
+        "release:alpha": "standard-version --prerelease alpha",
+        "release:beta": "standard-version --prerelease beta"
     },
     "devDependencies": {
+        "@commitlint/cli": "^12.0.1",
+        "@commitlint/config-conventional": "^12.0.1",
+        "@prettier/plugin-php": "^0.16.1",
         "axios": "^0.19.2",
         "cross-env": "^5.1",
+        "husky": "^4.3.8",
         "jquery": "^3.5.0",
         "laravel-mix": "^5.0.4",
+        "lint-staged": "^10.5.4",
         "lodash": "^4.17.15",
+        "prettier": "^1.19.1",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.26.5",
         "sass-loader": "7.*",
+        "standard-version": "^9.1.1",
         "tailwindcss": "^2.0.2",
         "ts-loader": "^8.0.3",
         "typescript": "^4.0.2",
@@ -25,6 +40,8 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
+        "@sentry/tracing": "^6.2.2",
+        "@sentry/vue": "^6.2.2",
         "date-fns": "^2.12.0",
         "laravel-vue-lang": "^3.1.1",
         "v-calendar": "^1.0.6",
@@ -32,5 +49,18 @@
         "vue-popperjs": "^2.3.0",
         "vuex": "^3.6.2"
     },
-    "name": "orgusto"
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged",
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx}": [
+            "prettier --write"
+        ],
+        "*.{json,md}": [
+            "prettier --write"
+        ]
+    }
 }

@@ -115,9 +115,6 @@ class RestaurantPolicy
     private function returnSuccessForAdmin(Model $restaurant)
     {
         $pivot = $restaurant->pivot->role;
-        return $pivot === 'admin'
-            ? Response::allow()
-            : Response::deny('You do not own this restaurant');
+        return $pivot === 'admin' ? Response::allow() : Response::deny('You do not own this restaurant');
     }
-
 }

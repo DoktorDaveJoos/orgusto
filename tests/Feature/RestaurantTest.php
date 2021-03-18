@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\UserResource;
+use App\User;
+
 class RestaurantTest extends AbstractTestSetup
 {
     public function testRestaurantCreated()
@@ -9,92 +12,75 @@ class RestaurantTest extends AbstractTestSetup
         $this->setupSingleRestaurant();
 
         $this->assertDatabaseHas('restaurants', [
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
         ]);
     }
 
     public function testRestaurantGetsCreated()
     {
-        $premiumUser = $this->setupUserWithPremiumAccess(true);
+        $user = $this->setupUser();
 
         $this->assertDatabaseHas('users', [
             'id' => self::TEST_USER_ID,
-            'access_level' => 'premium'
         ]);
 
-        $response = $this->actingAs($premiumUser)
-            ->post('/restaurants', ['name' => self::TEST_RESTAURANT_NAME]);
+        $response = $this->actingAs($user)->post('/restaurants', ['name' => self::TEST_RESTAURANT_NAME]);
 
         // expect 302 because if succeeded, you will be redirected to detail page with new restaurant
         $response->assertRedirect();
 
         $this->assertDatabaseHas('restaurants', [
-            'name' => self::TEST_RESTAURANT_NAME
+            'name' => self::TEST_RESTAURANT_NAME,
         ]);
     }
 
     // TODO: Route not implemented
-//    public function testRestaurantGetsUpdated()
-//    {
-//        $premiumUser = $this->buildTestSetup();
-//
-//        $this->assertDatabaseHas('users', [
-//            'id' => self::TEST_USER_ID,
-//            'access_level' => 'premium'
-//        ]);
-//
-//        $response = $this->actingAs($premiumUser)
-//            ->put('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => 'updated']);
-//
-//        $response->assertOk();
-//
-//        $response = $this->actingAs($premiumUser)
-//            ->getJson('/restaurants/' . self::TEST_RESTAURANT_ID);
-//
-//        $response->dump();
-//
-//        $this->assertDatabaseHas('restaurants', [
-//            'id' => self::TEST_RESTAURANT_ID,
-//            'name' => 'updated'
-//        ]);
-//    }
+    //    public function testRestaurantGetsUpdated()
+    //    {
+    //        $premiumUser = $this->buildTestSetup();
+    //
+    //        $this->assertDatabaseHas('users', [
+    //            'id' => self::TEST_USER_ID,
+    //            'access_level' => 'premium'
+    //        ]);
+    //
+    //        $response = $this->actingAs($premiumUser)
+    //            ->put('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => 'updated']);
+    //
+    //        $response->assertOk();
+    //
+    //        $response = $this->actingAs($premiumUser)
+    //            ->getJson('/restaurants/' . self::TEST_RESTAURANT_ID);
+    //
+    //        $response->dump();
+    //
+    //        $this->assertDatabaseHas('restaurants', [
+    //            'id' => self::TEST_RESTAURANT_ID,
+    //            'name' => 'updated'
+    //        ]);
+    //    }
 
     public function testRestaurantGetsDeleted()
     {
-        $premiumUser = $this->buildTestSetup();
+        $user = $this->buildTestSetup();
 
         $this->assertDatabaseHas('users', [
             'id' => self::TEST_USER_ID,
-            'access_level' => 'premium'
         ]);
 
-        $response = $this->actingAs($premiumUser)
-            ->delete('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
+        $this->assertDatabaseHas('restaurants', [
+            'id' => self::TEST_RESTAURANT_ID,
+        ]);
+
+        $response = $this->actingAs($user)->delete('/restaurants/' . self::TEST_RESTAURANT_ID, [
+            'name' => self::TEST_RESTAURANT_NAME,
+        ]);
 
         $response->assertRedirect();
         $response->assertSessionHasNoErrors();
 
-        $this->assertDatabaseMissing('restaurants', [
-            'id' => self::TEST_RESTAURANT_ID
-        ]);
-    }
-
-    public function testRestaurantCantBeCreatedFromFreeUser()
-    {
-        $freeUser = $this->setupUserWithPremiumAccess(false);
-
-        $this->assertDatabaseHas('users', [
-            'id' => self::TEST_USER_ID,
-            'access_level' => 'free'
-        ]);
-
-        $response = $this->actingAs($freeUser)
-            ->post('/restaurants', ['name' => self::TEST_RESTAURANT_NAME]);
-
-        $response->assertForbidden();
-
-        $this->assertDatabaseMissing('restaurants', [
-            'name' => self::TEST_RESTAURANT_NAME
+        $this->assertSoftDeleted('restaurants', [
+            'id' => self::TEST_RESTAURANT_ID,
         ]);
     }
 
@@ -107,17 +93,16 @@ class RestaurantTest extends AbstractTestSetup
         ]);
 
         $this->assertDatabaseHas('restaurants', [
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
         ]);
 
-        $response = $this->actingAs($freeUser)
-            ->put('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => 'updated']);
+        $response = $this->actingAs($freeUser)->put('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => 'updated']);
 
         $response->assertForbidden();
 
         $this->assertDatabaseHas('restaurants', [
             'id' => self::TEST_RESTAURANT_ID,
-            'name' => self::TEST_RESTAURANT_NAME
+            'name' => self::TEST_RESTAURANT_NAME,
         ]);
     }
 
@@ -130,46 +115,44 @@ class RestaurantTest extends AbstractTestSetup
         ]);
 
         $this->assertDatabaseHas('restaurants', [
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
         ]);
 
-        $response = $this->actingAs($freeUser)
-            ->delete('/restaurants/' . self::TEST_RESTAURANT_ID, ['name' => self::TEST_RESTAURANT_NAME]);
+        $response = $this->actingAs($freeUser)->delete('/restaurants/' . self::TEST_RESTAURANT_ID, [
+            'name' => self::TEST_RESTAURANT_NAME,
+        ]);
 
         $response->assertForbidden();
 
         $this->assertDatabaseHas('restaurants', [
             'id' => self::TEST_RESTAURANT_ID,
-            'name' => self::TEST_RESTAURANT_NAME
+            'name' => self::TEST_RESTAURANT_NAME,
         ]);
     }
 
     public function testRestaurantResourceShow()
     {
-        $user = $this
-            ->withAdmin(true)
-            ->withPremium(true)->buildTestSetup();
+        $user = $this->withAdmin(true)->buildTestSetup();
 
         $restaurant = $user->firstRestaurant();
 
-        $response = $this->actingAs($user)
-            ->getJson('/restaurants/' . $restaurant->id);
+        $response = $this->actingAs($user)->getJson('/restaurants/' . $restaurant->id);
 
-        $response->assertExactJson([
+        $response->assertJsonFragment([
             'data' => [
                 'id' => $restaurant->id,
                 'name' => $restaurant->name,
-                'table_count' => $restaurant->table_count,
                 'contact_email' => $restaurant->contact_email,
-                'owner' => $restaurant->owner,
-                'street' => $restaurant->street,
-                'zip_code' => $restaurant->zip_code,
-                'street_number' => $restaurant->street_number,
-                'city' => $restaurant->city,
+                'owner' => [
+                    'email' => $restaurant->owner->email,
+                    'id' => $restaurant->owner->id,
+                    'name' => $restaurant->owner->name,
+                    'role' => 'admin',
+                    'type' => $restaurant->owner->type,
+                ],
                 'default_table_seats' => $restaurant->default_table_seats,
-                'seat_reservation_bound' => $restaurant->seat_reservation_bound
-            ]
+                'seat_reservation_bound' => $restaurant->seat_reservation_bound,
+            ],
         ]);
     }
-
 }

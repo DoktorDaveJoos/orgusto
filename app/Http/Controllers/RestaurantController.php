@@ -24,9 +24,12 @@ class RestaurantController extends Controller
 
     public function index(Request $request)
     {
-        $restaurants = auth()->user()->restaurants()->get();
+        $restaurants = auth()
+            ->user()
+            ->restaurants()
+            ->get();
 
-        if($request->wantsJson()) {
+        if ($request->wantsJson()) {
             return $restaurants->toJSON();
         }
 
@@ -49,12 +52,11 @@ class RestaurantController extends Controller
 
     public function store(CreateRestaurant $request)
     {
-
         $user = $request->user();
 
         $restaurant = Restaurant::create([
             'name' => $request->validated()['name'],
-            'owner_id' => $user->id
+            'owner_id' => $user->id,
         ]);
 
         // Add creator as owner
@@ -71,7 +73,7 @@ class RestaurantController extends Controller
             return $restaurant;
         }
 
-        $request->session()->flash('message', 'Dein Restaurant '. $restaurant->name .' wurde erfolgreich angelegt.');
+        $request->session()->flash('message', 'Dein Restaurant ' . $restaurant->name . ' wurde erfolgreich angelegt.');
         return redirect()->route('restaurant.show', ['restaurant' => $restaurant->id]);
     }
 
@@ -79,7 +81,7 @@ class RestaurantController extends Controller
     {
         $usersOfRestaurant = $restaurant->users;
 
-        $usersOfRestaurant->each(function($user) use($restaurant) {
+        $usersOfRestaurant->each(function ($user) use ($restaurant) {
             if ($user->selected_id === $restaurant->id) {
                 $alternative = $user->firstRestaurant()->id;
                 $user->selected_id = $alternative ? $alternative : null;
@@ -89,9 +91,8 @@ class RestaurantController extends Controller
 
         // Only Owner can delete restaurant
         if ($request->validated()['name'] === $restaurant->name && $restaurant->owner->id === auth()->user()->id) {
-
             // Cancel Subscription
-            if (optional($restaurant->subscription())->recurring()) {
+            if (optional($restaurant->subscription())->recurring() && 'testing' !== app()->environment()) {
                 $restaurant->subscription()->cancelNow();
             }
 
@@ -103,10 +104,10 @@ class RestaurantController extends Controller
             $request->session()->flash('message', __('messages.deleted_not_restaurant'));
             return redirect()->route('restaurants.show');
         }
-
     }
 
-    public function select(Restaurant $restaurant) {
+    public function select(Restaurant $restaurant)
+    {
         $user = auth()->user();
         $user->selected_id = $restaurant->id;
         $user->save();
@@ -114,8 +115,8 @@ class RestaurantController extends Controller
         return back();
     }
 
-    public function showTable(Request $request, Restaurant $restaurant, Table $table) {
-
+    public function showTable(Request $request, Restaurant $restaurant, Table $table)
+    {
         if ($request->wantsJson()) {
             return new TableResource($table);
         }

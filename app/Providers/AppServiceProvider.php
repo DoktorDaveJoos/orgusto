@@ -25,13 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         Blade::directive('filterByTable', function ($array, $tableNumber) {
             $filterByTable = function ($arrayToFilter, $number) {
                 if (in_array($number, $arrayToFilter->tables)) {
-                    return TRUE;
+                    return true;
                 } else {
-                    return FALSE;
+                    return false;
                 }
             };
 

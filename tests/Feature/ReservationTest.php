@@ -12,19 +12,21 @@ class ReservationTest extends AbstractTestSetup
         $user = $this->buildTestSetup();
 
         $this->assertDatabaseHas('users', [
-            'id' => self::TEST_USER_ID
+            'id' => self::TEST_USER_ID,
         ]);
 
+        $this->assertDatabaseCount('reservations', 0);
+
         $table = Table::first();
+
         $reservation = $this->createReservationRequestPayload([$table->id]);
 
-        $response = $this->actingAs($user)
-            ->post('/reservations', $reservation);
+        $response = $this->actingAs($user)->post('/reservations', $reservation);
 
         $response->assertCreated();
 
         $this->assertDatabaseHas('reservations', [
-            'name' => 'test_reservation'
+            'name' => 'test_reservation',
         ]);
     }
 
@@ -38,13 +40,12 @@ class ReservationTest extends AbstractTestSetup
 
         $reservation2 = $this->createReservationRequestPayload([$table->id], 'second');
 
-        $response = $this->actingAs($user)
-            ->post('/reservations', $reservation2);
+        $response = $this->actingAs($user)->post('/reservations', $reservation2);
 
         $response->assertStatus(400); // Bad Request
 
         $this->assertDatabaseMissing('reservations', [
-            'name' => 'second'
+            'name' => 'second',
         ]);
     }
 
@@ -56,8 +57,7 @@ class ReservationTest extends AbstractTestSetup
         $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
         $reservation->tables()->attach($table->id);
 
-        $response = $this->actingAs($user)
-            ->get('/reservations/' . $reservation->id);
+        $response = $this->actingAs($user)->get('/reservations/' . $reservation->id);
 
         $response->assertOk();
     }
@@ -72,21 +72,19 @@ class ReservationTest extends AbstractTestSetup
         $reservation->tables()->attach($table->id);
 
         $this->assertDatabaseHas('reservations', [
-            'id' => $reservation->id
+            'id' => $reservation->id,
         ]);
 
         $updatedReservation = $this->createReservationRequestPayload([$table->id]);
         $updatedReservation['name'] = 'updated';
 
-        $response = $this->actingAs($user)
-            ->put('/reservations/' . $reservation->id, $updatedReservation);
+        $response = $this->actingAs($user)->put('/reservations/' . $reservation->id, $updatedReservation);
 
         $response->assertNoContent(); // updated
 
         $this->assertDatabaseHas('reservations', [
-            'name' => 'updated'
+            'name' => 'updated',
         ]);
-
     }
 
     public function testReservationGetsNotUpdatedBecauseNewTimeFrameHasOtherReservation()
@@ -109,8 +107,7 @@ class ReservationTest extends AbstractTestSetup
         $updatedReservation['start'] = $reservation0->start->addDay()->toDateTimeString();
         $updatedReservation['tables'] = [$table->id];
 
-        $response = $this->actingAs($user)
-            ->put('/reservations/' . $reservation0->id, $updatedReservation);
+        $response = $this->actingAs($user)->put('/reservations/' . $reservation0->id, $updatedReservation);
 
         $response->assertStatus(400); // Bad Request
     }
@@ -125,15 +122,14 @@ class ReservationTest extends AbstractTestSetup
         $reservation->tables()->attach($table->id);
 
         $this->assertDatabaseHas('reservations', [
-            'id' => $reservation->id
+            'id' => $reservation->id,
         ]);
 
-        $response = $this->actingAs($user)
-            ->delete('/reservations/' . $reservation->id);
+        $response = $this->actingAs($user)->delete('/reservations/' . $reservation->id);
 
         $response->assertNoContent(); // successfully deleted
 
-        $this->assertDeleted($reservation);
+        $this->assertSoftDeleted($reservation);
     }
 
     public function testReservationGetsNotDeletedFromRandomUser()
@@ -146,11 +142,10 @@ class ReservationTest extends AbstractTestSetup
         $reservation->tables()->attach($table->id);
 
         $this->assertDatabaseHas('reservations', [
-            'id' => $reservation->id
+            'id' => $reservation->id,
         ]);
 
-        $response = $this->actingAs($this->setupRandomUser())
-            ->delete('/reservations/' . $reservation->id);
+        $response = $this->actingAs($this->setupRandomUser())->delete('/reservations/' . $reservation->id);
 
         $response->assertForbidden();
     }
@@ -166,8 +161,10 @@ class ReservationTest extends AbstractTestSetup
         $updatedReservation = $this->createReservationRequestPayload([$table->id]);
         $updatedReservation['name'] = 'updated';
 
-        $response = $this->actingAs($this->setupRandomUser())
-            ->put('/reservations/' . $reservation->id, $updatedReservation);
+        $response = $this->actingAs($this->setupRandomUser())->put(
+            '/reservations/' . $reservation->id,
+            $updatedReservation
+        );
 
         $response->assertForbidden();
     }
@@ -180,8 +177,7 @@ class ReservationTest extends AbstractTestSetup
         $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
         $reservation->tables()->attach($table->id);
 
-        $response = $this->actingAs($this->setupRandomUser())
-            ->get('/reservations/' . $reservation->id);
+        $response = $this->actingAs($this->setupRandomUser())->get('/reservations/' . $reservation->id);
 
         $response->assertForbidden();
     }
@@ -195,8 +191,7 @@ class ReservationTest extends AbstractTestSetup
         $reservation->tables()->attach($table->id);
         $reservation->save();
 
-        $response = $this->actingAs($user)
-            ->getJson('/reservations/' . $reservation->id);
+        $response = $this->actingAs($user)->getJson('/reservations/' . $reservation->id);
 
         $response->assertExactJson([
             'data' => [
@@ -210,12 +205,13 @@ class ReservationTest extends AbstractTestSetup
                         'seats' => $table->seats,
                         'table_number' => $table->table_number,
                         'description' => $table->description,
-                        'room' => $table->room
-                    ]
+                        'room' => $table->room,
+                    ],
                 ],
                 'name' => 'test_reservation',
                 'email' => 'test@test.de',
                 'color' => 'gray',
+                'done' => 0,
                 'notice' => 'some notice',
                 'phone_number' => '+49 172 2541810',
                 'user' => [
@@ -223,9 +219,9 @@ class ReservationTest extends AbstractTestSetup
                     'name' => $user->name,
                     'email' => $user->email,
                     'type' => $user->type,
-                    'role' => $user->firstRestaurant()->pivot->role
-                ]
-            ]
+                    'role' => $user->firstRestaurant()->pivot->role,
+                ],
+            ],
         ]);
     }
 
@@ -238,38 +234,39 @@ class ReservationTest extends AbstractTestSetup
         $reservation->tables()->attach($table->id);
         $reservation->save();
 
-        $response = $this->actingAs($user)
-            ->getJson('/reservations');
+        $response = $this->actingAs($user)->getJson('/reservations');
 
         $response->assertJsonFragment([
-            'data' => [[
-                'id' => $reservation->id,
-                'start' => $reservation->start,
-                'persons' => 2,
-                'duration' => 120,
-                'tables' => [
-                    [
-                        'id' => $table->id,
-                        'seats' => $table->seats,
-                        'table_number' => $table->table_number,
-                        'description' => $table->description,
-                        'room' => $table->room
-                    ]
+            'data' => [
+                [
+                    'id' => $reservation->id,
+                    'start' => $reservation->start,
+                    'persons' => 2,
+                    'duration' => 120,
+                    'tables' => [
+                        [
+                            'id' => $table->id,
+                            'seats' => $table->seats,
+                            'table_number' => $table->table_number,
+                            'description' => $table->description,
+                            'room' => $table->room,
+                        ],
+                    ],
+                    'name' => 'test_reservation',
+                    'email' => 'test@test.de',
+                    'color' => 'gray',
+                    'done' => 0,
+                    'notice' => 'some notice',
+                    'phone_number' => '+49 172 2541810',
+                    'user' => [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'type' => $user->type,
+                        'role' => $user->firstRestaurant()->pivot->role,
+                    ],
                 ],
-                'name' => 'test_reservation',
-                'email' => 'test@test.de',
-                'color' => 'gray',
-                'notice' => 'some notice',
-                'phone_number' => '+49 172 2541810',
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'type' => $user->type,
-                    'role' => $user->firstRestaurant()->pivot->role
-                ]
-            ]
-        ]]);
+            ],
+        ]);
     }
-
 }

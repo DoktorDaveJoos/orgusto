@@ -15,9 +15,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
         'App\Restaurant' => 'App\Policies\RestaurantPolicy',
-        'App\User' => 'App\Policies\UserPolicy'
+        'App\User' => 'App\Policies\UserPolicy',
     ];
 
     /**
@@ -30,12 +29,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
-            return (new MailMessage)
+            return (new MailMessage())
+                ->greeting('Willkommen bei Orgusto!')
+                ->salutation('Vielen lieben Dank, dein Orgusto Team :-)')
                 ->subject('Email Adresse bestätigen')
                 ->line('Klicken Sie auf die Schaltfläche unten, um Ihre E-Mail-Adresse zu bestätigen.')
                 ->action('E-Mail Adresse bestätigen', $url);
         });
-
-
     }
 }

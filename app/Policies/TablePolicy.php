@@ -39,7 +39,10 @@ class TablePolicy
      */
     public function view(User $user, Table $table)
     {
-        $tables = $user->restaurants->first()->tables()->get();
+        $tables = $user->restaurants
+            ->first()
+            ->tables()
+            ->get();
         return $tables->contains($table->id);
     }
 }

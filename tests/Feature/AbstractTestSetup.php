@@ -8,30 +8,22 @@ use App\Table;
 use App\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use phpDocumentor\Reflection\Types\Boolean;
 use Tests\TestCase;
 
 abstract class AbstractTestSetup extends TestCase
 {
     use RefreshDatabase;
+
     const TEST_USER_ID = 9999;
     const TEST_RESTAURANT_ID = 9999;
     const TEST_RESTAURANT_NAME = 'test_restaurant';
 
-    private $isPremium = true;
     private $isAdmin = true;
 
-    /**
-     * Creates a User with {@link #TEST_USER_ID} as ID.
-     *
-     * @param bool $isPremium - indicates if {@code User} is allowed to create a {@code Restaurant}
-     * @return User - the created User
-     */
-    public function setupUserWithPremiumAccess(bool $isPremium): User
+    public function setupUser(): User
     {
         return User::factory()->create([
             'id' => self::TEST_USER_ID,
-            'access_level' => $isPremium ? 'premium' : 'free'
         ]);
     }
 
@@ -51,13 +43,23 @@ abstract class AbstractTestSetup extends TestCase
     {
         Restaurant::factory()->create([
             'name' => self::TEST_RESTAURANT_NAME,
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
         ]);
+    }
+
+    function setupRestaurantWithSubscription(): void
+    {
+        Restaurant::factory()
+            ->withSubscription('Standard')
+            ->create([
+                'name' => self::TEST_RESTAURANT_NAME,
+                'id' => self::TEST_RESTAURANT_ID,
+            ]);
     }
 
     /**
      * Creates a User with a Restaurant.
-     * The user has admin rights and premium access.
+     * The user has admin rights and the restaurant is subscribed.
      *
      * @return User - The {@code User} which has a {@code Restaurant} with 10 {@code Table}'s.
      */
@@ -65,27 +67,28 @@ abstract class AbstractTestSetup extends TestCase
     {
         $testUser = [
             'id' => self::TEST_USER_ID,
-            'access_level' => $this->isPremium ? 'premium' : 'free'
         ];
 
         $testRestaurant = [
             'name' => self::TEST_RESTAURANT_NAME,
-            'id' => self::TEST_RESTAURANT_ID
+            'id' => self::TEST_RESTAURANT_ID,
+            'owner_id' => self::TEST_USER_ID,
         ];
 
-        return User::factory()->hasAttached(
-            Restaurant::factory()
-                ->state($testRestaurant)
-                ->has(Table::factory()->count(10)),
-            ['role' => $this->isAdmin ? 'admin' : 'user']
-        )->create($testUser);
+        $user = User::factory()
+            ->hasAttached(
+                Restaurant::factory()
+                    ->withSubscription('Standard')
+                    ->state($testRestaurant)
+                    ->has(Table::factory()->count(10))
+                    ->create(),
+                ['role' => $this->isAdmin ? 'admin' : 'user']
+            )
+            ->create($testUser);
 
-    }
+        $user->selected_id = self::TEST_RESTAURANT_ID;
 
-    function withPremium(bool $isPremium): AbstractTestSetup
-    {
-        $this->isPremium = $isPremium;
-        return $this;
+        return $user;
     }
 
     function withAdmin(bool $isAdmin): AbstractTestSetup
@@ -94,10 +97,12 @@ abstract class AbstractTestSetup extends TestCase
         return $this;
     }
 
-    function createReservationRequestPayload($tableIds, String $name = 'test_reservation'): array
+    function createReservationRequestPayload($tableIds, string $name = 'test_reservation'): array
     {
         return [
-            'start' => CarbonImmutable::now(),
+            'start' => CarbonImmutable::now()
+                ->setTime(17, 0)
+                ->toISOString(),
             'persons' => 2,
             'user_id' => self::TEST_USER_ID,
             'duration' => 120,
@@ -106,17 +111,14 @@ abstract class AbstractTestSetup extends TestCase
             'email' => 'test@test.de',
             'color' => 'gray',
             'notice' => 'some notice',
-            'phone_number' => '+49 172 2541810'
+            'phone_number' => '+49 172 2541810',
         ];
     }
 
-    function createReservationForTable(Table $table): Reservation
+    function createReservationForTable(): Reservation
     {
         return $reservation = Reservation::factory()->create([
-            'user_id' => self::TEST_USER_ID
+            'user_id' => self::TEST_USER_ID,
         ]);
-
     }
-
 }
-

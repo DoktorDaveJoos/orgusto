@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Mail Driver
@@ -16,7 +15,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'postmark'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +55,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'noreply@orgusto.com'),
-        'name' => env('MAIL_FROM_NAME', 'Orgusto'),
+        'address' => env('MAIL_FROM_ADDRESS', 'team@orgusto.com'),
+        'name' => env('MAIL_FROM_NAME', 'Orgusto Team'),
     ],
 
     /*
@@ -115,9 +114,7 @@ return [
     'markdown' => [
         'theme' => 'default',
 
-        'paths' => [
-            resource_path('views/vendor/mail'),
-        ],
+        'paths' => [resource_path('views/vendor/mail')],
     ],
 
     /*
@@ -133,4 +130,8 @@ return [
 
     'log_channel' => env('MAIL_LOG_CHANNEL'),
 
+    'postmark' => [
+        'transport' => 'postmark',
+        'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),
+    ],
 ];

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Mail;
 
 class AddAccount extends Component
 {
-
     public $searchTerm;
     public $anon_name;
     public $restaurant;
@@ -31,14 +30,14 @@ class AddAccount extends Component
     public function updated($field)
     {
         $this->validateOnly($field, [
-            'searchTerm' => 'email'
+            'searchTerm' => 'email',
         ]);
     }
 
     public function addAccount()
     {
         $this->validate([
-            'searchTerm' => 'email|required'
+            'searchTerm' => 'email|required',
         ]);
 
         $message = __('messages.went_wrong');
@@ -46,12 +45,15 @@ class AddAccount extends Component
         $user_to_add = User::where('email', $this->searchTerm)->first();
         if ($user_to_add) {
             $this->restaurant->users()->attach($user_to_add->id, ['role' => 'user']);
-            $message = __('messages.user_added', ['user_name' => $user_to_add->name, 'user_email' => $user_to_add->email]);
+            $message = __('messages.user_added', [
+                'user_name' => $user_to_add->name,
+                'user_email' => $user_to_add->email,
+            ]);
         } else {
             $invited_user = User::create([
                 'email' => $this->searchTerm,
                 'name' => $this->searchTerm,
-                'type' => 'invited'
+                'type' => 'invited',
             ]);
             $this->restaurant->users()->attach($invited_user->id, ['role' => 'user']);
             Mail::to($invited_user->email)->send(new UserInvited($this->restaurant, $invited_user));
@@ -65,7 +67,7 @@ class AddAccount extends Component
     {
         $anonymous_user = User::create([
             'name' => $this->anon_name,
-            'type' => 'anonymous'
+            'type' => 'anonymous',
         ]);
 
         $anonymous_user->email = 'anonymous@' . $anonymous_user->id;

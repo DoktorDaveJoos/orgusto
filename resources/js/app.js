@@ -5,14 +5,15 @@
  */
 
 require('./bootstrap');
+Vue = window.Vue = require('vue');
 
-window._ = _ = require('lodash');
-
-window.Vue = require('vue');
 import VCalendar from 'v-calendar';
+import store from './store';
+import * as Sentry from '@sentry/tracing';
+import {Integrations} from "@sentry/tracing";
 
 // Localization
-import { Lang } from 'laravel-vue-lang';
+import {Lang} from 'laravel-vue-lang';
 
 // Use v-calendar & v-date-picker components
 Vue.use(VCalendar);
@@ -30,40 +31,31 @@ Vue.use(Lang, {
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
-
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-// Vue.component('reservations-component', require('./components/ReservationsComponent.vue').default);
-// Vue.component('delete-button', require('./components/DeleteButton.vue').default);
-// Vue.component('reservation-list-item', require('./components/ReservationListItem.vue').default);
-
-
 /**
- * Event Bus for inter vue component communication
+ * Add Sentry integration
  */
+Sentry.init({
+    Vue,
+    dsn: process.env.MIX_SENTRY_VUE_DSN,
+    integrations: [new Integrations.BrowserTracing()],
 
-Object.defineProperty(Vue.prototype, '$bus', {
-    get() {
-        return this.$root.bus;
-    }
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
 });
 
-var bus = new Vue({});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-const store = require('./store');
-
 const app = new Vue({
     el: '#app',
-    data: {
-        bus: bus
-    },
     store
 });
 
