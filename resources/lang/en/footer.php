@@ -1,15 +1,13 @@
 <?php
 
 return [
-
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Footer Language Lines
     |--------------------------------------------------------------------------
     |
     */
 
-    'imprint' => 'Imprint',
-    'privacy' => 'Privacy settings',
-
+  'imprint' => 'Imprint',
+  'privacy' => 'Privacy settings',
 ];

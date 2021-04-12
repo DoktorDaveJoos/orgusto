@@ -6,27 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateNewslettersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('newsletters', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('email');
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('newsletters', function (Blueprint $table) {
+      $table->id();
+      $table->timestamps();
+      $table->string('email');
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('newsletter');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('newsletter');
+  }
 }

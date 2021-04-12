@@ -7,53 +7,53 @@ use App\User;
 
 class EditUser extends Component
 {
-    public $user;
+  public $user;
 
-    public $name;
-    public $email;
-    public $type;
+  public $name;
+  public $email;
+  public $type;
 
-    public $is_dirty;
+  public $is_dirty;
 
-    public function getUserUpdatedAtForHumans()
-    {
-        return $this->user->updated_at->format('Y-m-d H:i:s');
-    }
+  public function getUserUpdatedAtForHumans()
+  {
+    return $this->user->updated_at->format('Y-m-d H:i:s');
+  }
 
-    public function mount(User $user)
-    {
-        $this->user = $user;
+  public function mount(User $user)
+  {
+    $this->user = $user;
 
-        $this->name = $user->name;
-        $this->type = $user->type;
-        $this->email = $user->email;
+    $this->name = $user->name;
+    $this->type = $user->type;
+    $this->email = $user->email;
 
-        $this->is_dirty = false;
-    }
+    $this->is_dirty = false;
+  }
 
-    public function updated($field, $value)
-    {
-        $this->validateOnly($field, [
-            'name' => 'string',
-        ]);
+  public function updated($field, $value)
+  {
+    $this->validateOnly($field, [
+      'name' => 'string',
+    ]);
 
-        $this->is_dirty = $this->user->name != $this->name;
-    }
+    $this->is_dirty = $this->user->name != $this->name;
+  }
 
-    public function submit()
-    {
-        $validated = $this->validate([
-            'name' => 'required|string',
-        ]);
+  public function submit()
+  {
+    $validated = $this->validate([
+      'name' => 'required|string',
+    ]);
 
-        $this->user->update($validated);
-        $this->is_dirty = false;
-        $message = $this->user->wasChanged() ? __('messages.user_updated') : __('messages.went_wrong');
-        session()->flash('message', $message);
-    }
+    $this->user->update($validated);
+    $this->is_dirty = false;
+    $message = $this->user->wasChanged() ? __('messages.user_updated') : __('messages.went_wrong');
+    session()->flash('message', $message);
+  }
 
-    public function render()
-    {
-        return view('livewire.edit-user');
-    }
+  public function render()
+  {
+    return view('livewire.edit-user');
+  }
 }

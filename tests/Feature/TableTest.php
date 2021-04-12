@@ -6,24 +6,24 @@ use App\Table;
 
 class TableTest extends AbstractTestSetup
 {
-    public function testTableResourceShow()
-    {
-        $user = $this->withAdmin(true)->buildTestSetup();
+  public function testTableResourceShow()
+  {
+    $user = $this->withAdmin(true)->buildTestSetup();
 
-        $restaurant = $user->firstRestaurant();
+    $restaurant = $user->firstRestaurant();
 
-        $table = Table::first();
+    $table = Table::first();
 
-        $response = $this->actingAs($user)->getJson('/restaurants/' . $restaurant->id . '/' . $table->id);
+    $response = $this->actingAs($user)->getJson('/restaurants/' . $restaurant->id . '/' . $table->id);
 
-        $response->assertExactJson([
-            'data' => [
-                'id' => $table->id,
-                'seats' => $table->seats,
-                'table_number' => $table->table_number,
-                'description' => $table->description,
-                'room' => $table->room,
-            ],
-        ]);
-    }
+    $response->assertExactJson([
+      'data' => [
+        'id' => $table->id,
+        'seats' => $table->seats,
+        'table_number' => $table->table_number,
+        'description' => $table->description,
+        'room' => $table->room,
+      ],
+    ]);
+  }
 }

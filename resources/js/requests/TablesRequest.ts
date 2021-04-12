@@ -1,34 +1,33 @@
-import OrgustoDate from "../models/OrgustoDate";
-import Filter from "../models/Filter";
+import OrgustoDate from '../models/OrgustoDate';
+import Filter from '../models/Filter';
 
 import $ from 'jquery';
 
 export default class TablesRequest {
+  private _filter: Filter;
 
-    private _filter: Filter;
+  constructor(filter: Filter) {
+    this._filter = filter;
+  }
 
-    constructor(filter: Filter) {
-        this._filter = filter;
-    }
+  get filter(): Filter {
+    return this._filter;
+  }
 
-    get filter(): Filter {
-        return this._filter;
-    }
+  set filter(value: Filter) {
+    this._filter = value;
+  }
 
-    set filter(value: Filter) {
-        this._filter = value;
-    }
+  public static of(filter: Filter): TablesRequest {
+    return new TablesRequest(filter);
+  }
 
-    public static of(filter: Filter): TablesRequest {
-        return new TablesRequest(filter);
-    }
-
-    get queryParams(): string {
-        const simplified: any = {
-            start: this.filter.date.asISO,
-            m: this.filter.duration.minutes,
-            persons: this.filter.persons
-        }
-        return $.param(simplified);
-    }
+  get queryParams(): string {
+    const simplified: any = {
+      start: this.filter.date.asISO,
+      m: this.filter.duration.minutes,
+      persons: this.filter.persons,
+    };
+    return $.param(simplified);
+  }
 }

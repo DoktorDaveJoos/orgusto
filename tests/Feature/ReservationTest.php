@@ -7,266 +7,266 @@ use App\Table;
 
 class ReservationTest extends AbstractTestSetup
 {
-    public function testCreateReservation()
-    {
-        $user = $this->buildTestSetup();
+  public function testCreateReservation()
+  {
+    $user = $this->buildTestSetup();
 
-        $this->assertDatabaseHas('users', [
-            'id' => self::TEST_USER_ID,
-        ]);
+    $this->assertDatabaseHas('users', [
+      'id' => self::TEST_USER_ID,
+    ]);
 
-        $this->assertDatabaseCount('reservations', 0);
+    $this->assertDatabaseCount('reservations', 0);
 
-        $table = Table::first();
+    $table = Table::first();
 
-        $reservation = $this->createReservationRequestPayload([$table->id]);
+    $reservation = $this->createReservationRequestPayload([$table->id]);
 
-        $response = $this->actingAs($user)->post('/reservations', $reservation);
+    $response = $this->actingAs($user)->post('/reservations', $reservation);
 
-        $response->assertCreated();
+    $response->assertCreated();
 
-        $this->assertDatabaseHas('reservations', [
-            'name' => 'test_reservation',
-        ]);
-    }
+    $this->assertDatabaseHas('reservations', [
+      'name' => 'test_reservation',
+    ]);
+  }
 
-    public function testReservationGetsNotCreatedBecauseTableIsAlreadyBooked()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
+  public function testReservationGetsNotCreatedBecauseTableIsAlreadyBooked()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload($table->id));
-        $reservation->tables()->attach($table->id);
+    $reservation = Reservation::create($this->createReservationRequestPayload($table->id));
+    $reservation->tables()->attach($table->id);
 
-        $reservation2 = $this->createReservationRequestPayload([$table->id], 'second');
+    $reservation2 = $this->createReservationRequestPayload([$table->id], 'second');
 
-        $response = $this->actingAs($user)->post('/reservations', $reservation2);
+    $response = $this->actingAs($user)->post('/reservations', $reservation2);
 
-        $response->assertStatus(400); // Bad Request
+    $response->assertStatus(400); // Bad Request
 
-        $this->assertDatabaseMissing('reservations', [
-            'name' => 'second',
-        ]);
-    }
+    $this->assertDatabaseMissing('reservations', [
+      'name' => 'second',
+    ]);
+  }
 
-    public function testViewReservation()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
+  public function testViewReservation()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
-        $reservation->tables()->attach($table->id);
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation->tables()->attach($table->id);
 
-        $response = $this->actingAs($user)->get('/reservations/' . $reservation->id);
+    $response = $this->actingAs($user)->get('/reservations/' . $reservation->id);
 
-        $response->assertOk();
-    }
+    $response->assertOk();
+  }
 
-    public function testReservationGetsUpdated()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
+  public function testReservationGetsUpdated()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
 
-        $reservation->tables()->attach($table->id);
+    $reservation->tables()->attach($table->id);
 
-        $this->assertDatabaseHas('reservations', [
-            'id' => $reservation->id,
-        ]);
+    $this->assertDatabaseHas('reservations', [
+      'id' => $reservation->id,
+    ]);
 
-        $updatedReservation = $this->createReservationRequestPayload([$table->id]);
-        $updatedReservation['name'] = 'updated';
+    $updatedReservation = $this->createReservationRequestPayload([$table->id]);
+    $updatedReservation['name'] = 'updated';
 
-        $response = $this->actingAs($user)->put('/reservations/' . $reservation->id, $updatedReservation);
+    $response = $this->actingAs($user)->put('/reservations/' . $reservation->id, $updatedReservation);
 
-        $response->assertNoContent(); // updated
+    $response->assertNoContent(); // updated
 
-        $this->assertDatabaseHas('reservations', [
-            'name' => 'updated',
-        ]);
-    }
+    $this->assertDatabaseHas('reservations', [
+      'name' => 'updated',
+    ]);
+  }
 
-    public function testReservationGetsNotUpdatedBecauseNewTimeFrameHasOtherReservation()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
+  public function testReservationGetsNotUpdatedBecauseNewTimeFrameHasOtherReservation()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
 
-        // First reservation - today
-        $reservation0 = Reservation::create($this->createReservationRequestPayload([$table->id]));
-        $reservation0->tables()->attach($table->id);
+    // First reservation - today
+    $reservation0 = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation0->tables()->attach($table->id);
 
-        // Second reservation - tomorrow
-        $reservation1 = Reservation::create($this->createReservationRequestPayload([$table->id], 'tomorrow'));
-        $reservation1->start = $reservation1->start->addDay();
-        $reservation1->tables()->attach($table->id);
-        $reservation1->save();
+    // Second reservation - tomorrow
+    $reservation1 = Reservation::create($this->createReservationRequestPayload([$table->id], 'tomorrow'));
+    $reservation1->start = $reservation1->start->addDay();
+    $reservation1->tables()->attach($table->id);
+    $reservation1->save();
 
-        // Update first reservation, add one day to reservation start date
-        $updatedReservation = $reservation0->toArray();
-        $updatedReservation['start'] = $reservation0->start->addDay()->toDateTimeString();
-        $updatedReservation['tables'] = [$table->id];
+    // Update first reservation, add one day to reservation start date
+    $updatedReservation = $reservation0->toArray();
+    $updatedReservation['start'] = $reservation0->start->addDay()->toDateTimeString();
+    $updatedReservation['tables'] = [$table->id];
 
-        $response = $this->actingAs($user)->put('/reservations/' . $reservation0->id, $updatedReservation);
+    $response = $this->actingAs($user)->put('/reservations/' . $reservation0->id, $updatedReservation);
 
-        $response->assertStatus(400); // Bad Request
-    }
+    $response->assertStatus(400); // Bad Request
+  }
 
-    public function testDeleteReservation()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
+  public function testDeleteReservation()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
 
-        $reservation->tables()->attach($table->id);
+    $reservation->tables()->attach($table->id);
 
-        $this->assertDatabaseHas('reservations', [
-            'id' => $reservation->id,
-        ]);
+    $this->assertDatabaseHas('reservations', [
+      'id' => $reservation->id,
+    ]);
 
-        $response = $this->actingAs($user)->delete('/reservations/' . $reservation->id);
+    $response = $this->actingAs($user)->delete('/reservations/' . $reservation->id);
 
-        $response->assertNoContent(); // successfully deleted
+    $response->assertNoContent(); // successfully deleted
 
-        $this->assertSoftDeleted($reservation);
-    }
+    $this->assertSoftDeleted($reservation);
+  }
 
-    public function testReservationGetsNotDeletedFromRandomUser()
-    {
-        $this->buildTestSetup();
-        $table = Table::first();
+  public function testReservationGetsNotDeletedFromRandomUser()
+  {
+    $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
 
-        $reservation->tables()->attach($table->id);
+    $reservation->tables()->attach($table->id);
 
-        $this->assertDatabaseHas('reservations', [
-            'id' => $reservation->id,
-        ]);
+    $this->assertDatabaseHas('reservations', [
+      'id' => $reservation->id,
+    ]);
 
-        $response = $this->actingAs($this->setupRandomUser())->delete('/reservations/' . $reservation->id);
+    $response = $this->actingAs($this->setupRandomUser())->delete('/reservations/' . $reservation->id);
 
-        $response->assertForbidden();
-    }
+    $response->assertForbidden();
+  }
 
-    public function testReservationGetsNotUpdatedFromRandomUser()
-    {
-        $this->buildTestSetup();
-        $table = Table::first();
+  public function testReservationGetsNotUpdatedFromRandomUser()
+  {
+    $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
-        $reservation->tables()->attach($table->id);
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation->tables()->attach($table->id);
 
-        $updatedReservation = $this->createReservationRequestPayload([$table->id]);
-        $updatedReservation['name'] = 'updated';
+    $updatedReservation = $this->createReservationRequestPayload([$table->id]);
+    $updatedReservation['name'] = 'updated';
 
-        $response = $this->actingAs($this->setupRandomUser())->put(
-            '/reservations/' . $reservation->id,
-            $updatedReservation
-        );
+    $response = $this->actingAs($this->setupRandomUser())->put(
+      '/reservations/' . $reservation->id,
+      $updatedReservation
+    );
 
-        $response->assertForbidden();
-    }
+    $response->assertForbidden();
+  }
 
-    public function testReservationCantGetViewedByRandomUser()
-    {
-        $this->buildTestSetup();
-        $table = Table::first();
+  public function testReservationCantGetViewedByRandomUser()
+  {
+    $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
-        $reservation->tables()->attach($table->id);
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation->tables()->attach($table->id);
 
-        $response = $this->actingAs($this->setupRandomUser())->get('/reservations/' . $reservation->id);
+    $response = $this->actingAs($this->setupRandomUser())->get('/reservations/' . $reservation->id);
 
-        $response->assertForbidden();
-    }
+    $response->assertForbidden();
+  }
 
-    public function testThatKeysInReservationAreAllPresentOnShow()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
+  public function testThatKeysInReservationAreAllPresentOnShow()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
 
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
-        $reservation->tables()->attach($table->id);
-        $reservation->save();
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation->tables()->attach($table->id);
+    $reservation->save();
 
-        $response = $this->actingAs($user)->getJson('/reservations/' . $reservation->id);
+    $response = $this->actingAs($user)->getJson('/reservations/' . $reservation->id);
 
-        $response->assertExactJson([
-            'data' => [
-                'id' => $reservation->id,
-                'start' => $reservation->start,
-                'persons' => 2,
-                'duration' => 120,
-                'tables' => [
-                    [
-                        'id' => $table->id,
-                        'seats' => $table->seats,
-                        'table_number' => $table->table_number,
-                        'description' => $table->description,
-                        'room' => $table->room,
-                    ],
-                ],
-                'name' => 'test_reservation',
-                'email' => 'test@test.de',
-                'color' => 'gray',
-                'done' => 0,
-                'notice' => 'some notice',
-                'phone_number' => '+49 172 2541810',
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'type' => $user->type,
-                    'role' => $user->firstRestaurant()->pivot->role,
-                ],
+    $response->assertExactJson([
+      'data' => [
+        'id' => $reservation->id,
+        'start' => $reservation->start,
+        'persons' => 2,
+        'duration' => 120,
+        'tables' => [
+          [
+            'id' => $table->id,
+            'seats' => $table->seats,
+            'table_number' => $table->table_number,
+            'description' => $table->description,
+            'room' => $table->room,
+          ],
+        ],
+        'name' => 'test_reservation',
+        'email' => 'test@test.de',
+        'color' => 'gray',
+        'done' => 0,
+        'notice' => 'some notice',
+        'phone_number' => '+49 172 2541810',
+        'user' => [
+          'id' => $user->id,
+          'name' => $user->name,
+          'email' => $user->email,
+          'type' => $user->type,
+          'role' => $user->firstRestaurant()->pivot->role,
+        ],
+      ],
+    ]);
+  }
+
+  public function testThatKeysInReservationAreAllPresentOnIndex()
+  {
+    $user = $this->buildTestSetup();
+    $table = Table::first();
+
+    $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
+    $reservation->tables()->attach($table->id);
+    $reservation->save();
+
+    $response = $this->actingAs($user)->getJson('/reservations');
+
+    $response->assertJsonFragment([
+      'data' => [
+        [
+          'id' => $reservation->id,
+          'start' => $reservation->start,
+          'persons' => 2,
+          'duration' => 120,
+          'tables' => [
+            [
+              'id' => $table->id,
+              'seats' => $table->seats,
+              'table_number' => $table->table_number,
+              'description' => $table->description,
+              'room' => $table->room,
             ],
-        ]);
-    }
-
-    public function testThatKeysInReservationAreAllPresentOnIndex()
-    {
-        $user = $this->buildTestSetup();
-        $table = Table::first();
-
-        $reservation = Reservation::create($this->createReservationRequestPayload([$table->id]));
-        $reservation->tables()->attach($table->id);
-        $reservation->save();
-
-        $response = $this->actingAs($user)->getJson('/reservations');
-
-        $response->assertJsonFragment([
-            'data' => [
-                [
-                    'id' => $reservation->id,
-                    'start' => $reservation->start,
-                    'persons' => 2,
-                    'duration' => 120,
-                    'tables' => [
-                        [
-                            'id' => $table->id,
-                            'seats' => $table->seats,
-                            'table_number' => $table->table_number,
-                            'description' => $table->description,
-                            'room' => $table->room,
-                        ],
-                    ],
-                    'name' => 'test_reservation',
-                    'email' => 'test@test.de',
-                    'color' => 'gray',
-                    'done' => 0,
-                    'notice' => 'some notice',
-                    'phone_number' => '+49 172 2541810',
-                    'user' => [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'type' => $user->type,
-                        'role' => $user->firstRestaurant()->pivot->role,
-                    ],
-                ],
-            ],
-        ]);
-    }
+          ],
+          'name' => 'test_reservation',
+          'email' => 'test@test.de',
+          'color' => 'gray',
+          'done' => 0,
+          'notice' => 'some notice',
+          'phone_number' => '+49 172 2541810',
+          'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'type' => $user->type,
+            'role' => $user->firstRestaurant()->pivot->role,
+          ],
+        ],
+      ],
+    ]);
+  }
 }

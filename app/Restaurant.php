@@ -10,39 +10,39 @@ use Spark\Billable;
 
 class Restaurant extends Model
 {
-    use Billable, HasFactory, Notifiable, SoftDeletes;
+  use Billable, HasFactory, Notifiable, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'table_count',
-        'contact_email',
-        'owner_id',
-        'default_table_seats',
-        'seat_reservation_bound',
-    ];
+  protected $fillable = [
+    'name',
+    'table_count',
+    'contact_email',
+    'owner_id',
+    'default_table_seats',
+    'seat_reservation_bound',
+  ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'trial_ends_at' => 'datetime',
-    ];
+  protected $casts = [
+    'created_at' => 'datetime',
+    'trial_ends_at' => 'datetime',
+  ];
 
-    public function stripeEmail()
-    {
-        return $this->owner->email;
-    }
+  public function stripeEmail()
+  {
+    return $this->owner->email;
+  }
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class)->withPivot(['role']);
-    }
+  public function users()
+  {
+    return $this->belongsToMany(User::class)->withPivot(['role']);
+  }
 
-    public function owner()
-    {
-        return $this->belongsTo(User::class);
-    }
+  public function owner()
+  {
+    return $this->belongsTo(User::class);
+  }
 
-    public function tables()
-    {
-        return $this->hasMany(Table::class);
-    }
+  public function tables()
+  {
+    return $this->hasMany(Table::class);
+  }
 }

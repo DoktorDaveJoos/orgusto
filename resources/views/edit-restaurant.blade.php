@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <livewire:edit-restaurant :restaurant="$restaurant" />
+
 
 @endsection

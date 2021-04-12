@@ -10,7 +10,7 @@ Vue = window.Vue = require('vue');
 import VCalendar from 'v-calendar';
 import store from './store';
 import * as Sentry from '@sentry/tracing';
-import {Integrations} from "@sentry/tracing";
+import {Integrations} from '@sentry/tracing';
 
 // Localization
 import {Lang} from 'laravel-vue-lang';
@@ -19,10 +19,9 @@ import {Lang} from 'laravel-vue-lang';
 Vue.use(VCalendar);
 Vue.use(require('vue-moment'));
 Vue.use(Lang, {
-    locale: 'de',
-    fallback: 'en',
-})
-
+  locale: 'de',
+  fallback: 'en',
+});
 
 /**
  * The following block of code may be used to automatically register your
@@ -31,23 +30,30 @@ Vue.use(Lang, {
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
-const files = require.context('./', true, /\.vue$/i)
-files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+const files = require.context('./', true, /\.vue$/i);
+files.keys().map(key =>
+  Vue.component(
+    key
+      .split('/')
+      .pop()
+      .split('.')[0],
+    files(key).default,
+  ),
+);
 
 /**
  * Add Sentry integration
  */
 Sentry.init({
-    Vue,
-    dsn: process.env.MIX_SENTRY_VUE_DSN,
-    integrations: [new Integrations.BrowserTracing()],
+  Vue,
+  dsn: process.env.MIX_SENTRY_VUE_DSN,
+  integrations: [new Integrations.BrowserTracing()],
 
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 1.0,
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
 });
-
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -55,7 +61,6 @@ Sentry.init({
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 const app = new Vue({
-    el: '#app',
-    store
+  el: '#app',
+  store,
 });
-
