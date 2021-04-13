@@ -22,6 +22,12 @@ class RestaurantController extends Controller
     $this->middleware('auth');
   }
 
+  public function show() {
+
+        return null;
+
+  }
+
   public function index(Request $request)
   {
     $restaurants = auth()

@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class BillingMiddelware
+class BillingMiddleware
 {
   /**
    * Handle an incoming request.
@@ -25,7 +25,7 @@ class BillingMiddelware
             auth()->user()->selected->name .
             '\' ein Abo-Plan gewählt hast.'
         );
-      return redirect()->route('restaurants.show');
+      return redirect()->route('spa');
     }
 
     return $next($request);
