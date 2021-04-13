@@ -9,7 +9,7 @@ Vue = window.Vue = require('vue');
 
 import VCalendar from 'v-calendar';
 import store from './store';
-import * as Sentry from '@sentry/tracing';
+import * as Sentry from '@sentry/vue';
 import {Integrations} from '@sentry/tracing';
 
 // Localization

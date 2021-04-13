@@ -38,11 +38,14 @@ class RestaurantController extends Controller
 
   public function show(Request $request, Restaurant $restaurant)
   {
+    $protectedRestaurant = new RestaurantResource($restaurant);
+
     if ($request->wantsJson()) {
-      return new RestaurantResource($restaurant);
+      return $protectedRestaurant;
     }
 
-    return view('edit-restaurant', ['restaurant' => $restaurant]);
+
+    return view('edit-restaurant', ['restaurant' => json_encode($protectedRestaurant)]);
   }
 
   public function update(Restaurant $restaurant)

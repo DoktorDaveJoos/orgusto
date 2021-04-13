@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import store from '../store';
+import store from '../../store';
 import {setHours, setMinutes, getHours, getMinutes, isSameDay, startOfToday} from 'date-fns';
 
 export default {

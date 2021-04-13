@@ -34,6 +34,14 @@ export default {
     allTables: [],
     settings: {},
   },
+  selectedRestaurant: {
+    id: null,
+    name: null,
+    table_count: null,
+    contact_email: null,
+    owner_id: null,
+    seat_reservation_bound: null,
+  },
   modal: {
     isOpen: false,
     activeReservationId: null,

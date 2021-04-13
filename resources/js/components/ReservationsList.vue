@@ -90,13 +90,9 @@
 <script>
 import {mapState} from 'vuex';
 import store from '../store';
-import SearchReservationsBar from './SearchReservation';
-import SearchBar from './Reservations/SearchBar';
-import Paginator from './Reservations/Paginator';
 
 export default {
   name: 'ReservationsList',
-  components: {Paginator, SearchBar, SearchReservationsBar},
   store,
   data() {
     return {};

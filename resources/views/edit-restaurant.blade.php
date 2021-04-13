@@ -2,6 +2,7 @@
 
 @section('content')
 
-
+<edit-restaurant restaurant="{{ $restaurant }}"></edit-restaurant>
 
 @endsection
+

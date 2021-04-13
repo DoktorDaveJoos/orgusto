@@ -108,4 +108,8 @@ export default {
   updateScope(state, payload) {
     state.filter.timelineStart = payload;
   },
+
+  updateSelectedRestaurant(state, payload) {
+    state.selectedRestaurant = JSON.parse(payload);
+  },
 };
