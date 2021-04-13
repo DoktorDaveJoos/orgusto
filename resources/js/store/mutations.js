@@ -2,7 +2,7 @@ import {createEmptyReservation} from '../helper/helper';
 
 export default {
   setUser(state, payload) {
-    state.user = payload;
+    state.user = payload.data;
   },
 
   loadReservations(state, items) {
@@ -27,10 +27,6 @@ export default {
     Object.keys(data.data).forEach(key => {
       res[key] = data.data[key];
     });
-  },
-
-  setEmployees(state, data) {
-    state.restaurant.users = data;
   },
 
   setAvailableTables(state, data) {
@@ -75,8 +71,8 @@ export default {
     state.reservations.errors = {};
   },
 
-  setRestaurant(state, data) {
-    state.restaurant.settings = data.data;
+  setRestaurants(state, data) {
+    state.restaurants = data.data;
   },
 
   updateSearchQuery(state, value) {

@@ -4,11 +4,10 @@
         <div class="max-w-6xl w-full flex flex-row justify-between content-center">
 
             <div class="flex flex-row items-center">
-                <a href="{{ route('home') }} ">
-                    <img class="w-32" src="{{ asset('orgusto-logo-svg.svg') }}"/>
+                <a href="{{ route('landing') }} ">
+                    <img class="w-32" src="{{ asset('img/orgusto-logo-svg.svg') }}"/>
                 </a>
             </div>
-
 
             <div class="flex flex-1 py-6 justify-end font-semibold">
                 <a class="text-l text-gray-600 hover:text-indigo-600 mr-6 transition-colors duration-150 ease-in-out"
@@ -21,7 +20,3 @@
 
     </nav>
 @endguest
-
-@include('trial-banner')
-
-

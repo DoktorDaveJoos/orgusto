@@ -12,46 +12,36 @@ use Illuminate\Support\Carbon;
 
 class ReservationsController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index(Request $request)
     {
 
-        if ($request->wantsJson()) {
-
-
-            $restaurant = $this->getRestaurant();
-
-            if ($request->get('search')) {
-                $user_ids = $restaurant
-                    ->users()
-                    ->get()
-                    ->pluck('id');
-
-                $query = Reservation::search($request->get('search'));
-                $user_ids->each(function ($item) use ($query) {
-                    $query->where('user_id', $item);
-                });
-            } else {
-                $query = Reservation::whereHas('tables', function ($q) use ($restaurant) {
-                    $q->where('restaurant_id', $restaurant->id);
-                });
-            }
-            $this->buildQueryFromRequest($request, $query);
-
-            $reservations = $query->paginate();
-
-            return ReservationResource::collection($reservations);
+        if ($request->has('scoped')) {
+            return $this->scoped($request);
         }
 
+        $restaurant = $this->getRestaurant();
+
+        if ($request->get('search')) {
+            $user_ids = $restaurant
+                ->users()
+                ->get()
+                ->pluck('id');
+
+            $query = Reservation::search($request->get('search'));
+            $user_ids->each(function ($item) use ($query) {
+                $query->where('user_id', $item);
+            });
+        } else {
+            $query = Reservation::whereHas('tables', function ($q) use ($restaurant) {
+                $q->where('restaurant_id', $restaurant->id);
+            });
+        }
+        $this->buildQueryFromRequest($request, $query);
+
+        $reservations = $query->paginate();
+
+        return ReservationResource::collection($reservations);
     }
 
     public function scoped(Request $request)

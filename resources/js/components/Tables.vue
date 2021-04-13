@@ -66,15 +66,5 @@ export default {
       restaurant: state => state.restaurant.settings,
     }),
   },
-  watch: {
-    user(updated) {
-      if (updated !== undefined) {
-        this.$store.dispatch('loadTables');
-        this.$store.dispatch('loadEmployees');
-        this.$store.dispatch('loadScopedReservations');
-        this.$store.dispatch('loadRestaurant');
-      }
-    },
-  },
 };
 </script>

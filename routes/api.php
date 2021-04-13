@@ -17,18 +17,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/user', [UserController::class, 'user'])
-        ->name('user.show');
+    Route::get('/user', [UserController::class, 'show'])
+        ->name('users.show');
 
     Route::middleware('verified')->group(function () {
 
         Route::prefix('/restaurants')->group(function () {
 
             Route::get('/', [RestaurantController::class, 'index'])
-                ->name('restaurants.show')
-                ->middleware('can:view,App\Models\Restaurant');
+                ->name('restaurants.show');
 
             Route::post('/', [RestaurantController::class, 'store'])
                 ->name('restaurants.store')
@@ -53,8 +52,7 @@ Route::middleware('auth:api')->group(function () {
             Route::prefix('/reservations')->group(function() {
 
                 Route::get('/', [ReservationsController::class, 'index'])
-                    ->name('reservations.show')
-                    ->middleware('can:view,App\Models\Reservation');
+                    ->name('reservations.show');
 
                 Route::post('/', [ReservationsController::class, 'store'])
                     ->name('reservations.store')

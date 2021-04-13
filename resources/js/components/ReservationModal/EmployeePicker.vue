@@ -73,7 +73,7 @@ export default {
     popper: Popper,
   },
   store,
-  props: ['user', 'error'],
+  props: ['error'],
   data() {
     return {};
   },
@@ -87,7 +87,8 @@ export default {
       return this.users.slice(0, 4);
     },
     ...mapState({
-      users: state => state.restaurant.users,
+      user: state => state.user,
+      users: state => state.restaurants.find(restaurant => restaurant.id === state.user.selected),
       settings: state => state.restaurant.settings,
     }),
   },

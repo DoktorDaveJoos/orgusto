@@ -12,46 +12,15 @@ use Illuminate\Http\Request;
 
 class RestaurantController extends Controller
 {
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    $this->middleware('auth');
-  }
-
-  public function show() {
-
-        return null;
-
-  }
 
   public function index(Request $request)
   {
-    $restaurants = auth()
-      ->user()
-      ->restaurants()
-      ->get();
-
-    if ($request->wantsJson()) {
-      return $restaurants->toJSON();
-    }
-
-    return view('restaurants', ['restaurants' => $restaurants]);
+    return RestaurantResource::collection($request->user()->restaurants());
   }
 
-  public function show(Request $request, Restaurant $restaurant)
+  public function show(Restaurant $restaurant)
   {
-    $protectedRestaurant = new RestaurantResource($restaurant);
-
-    if ($request->wantsJson()) {
-      return $protectedRestaurant;
-    }
-
-
-    return view('edit-restaurant', ['restaurant' => json_encode($protectedRestaurant)]);
+    return new RestaurantResource($restaurant);
   }
 
   public function update(Restaurant $restaurant)
@@ -78,12 +47,7 @@ class RestaurantController extends Controller
     $user->selected_id = $restaurant->id;
     $user->save();
 
-    if ($request->wantsJson()) {
-      return $restaurant;
-    }
-
-    $request->session()->flash('message', 'Dein Restaurant ' . $restaurant->name . ' wurde erfolgreich angelegt.');
-    return redirect()->route('restaurant.show', ['restaurant' => $restaurant->id]);
+    return new RestaurantResource($restaurant);
   }
 
   public function destroy(DeleteRestaurant $request, Restaurant $restaurant)
@@ -113,23 +77,5 @@ class RestaurantController extends Controller
       $request->session()->flash('message', __('messages.deleted_not_restaurant'));
       return redirect()->route('restaurants.show');
     }
-  }
-
-  public function select(Restaurant $restaurant)
-  {
-    $user = auth()->user();
-    $user->selected_id = $restaurant->id;
-    $user->save();
-
-    return back();
-  }
-
-  public function showTable(Request $request, Restaurant $restaurant, Table $table)
-  {
-    if ($request->wantsJson()) {
-      return new TableResource($table);
-    }
-
-    return view('edit-table', ['restaurant' => $restaurant, 'table' => $table]);
   }
 }

@@ -81,7 +81,7 @@ class AddSparkColumnsToRestaurantsTable extends Migration
    */
   public function down()
   {
-    Schema::table('users', function (Blueprint $table) {
+    Schema::table('restaurants', function (Blueprint $table) {
       $table->dropColumn([
         'stripe_id',
         'card_brand',

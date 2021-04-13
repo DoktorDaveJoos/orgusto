@@ -1,12 +1,11 @@
 import {isSameDay, getHours, addHours} from 'date-fns';
-
+import router from '../router';
 const Routes = {
-  reservations: '/reservations',
-  user: '/user',
-  users: '/users',
-  tables: '/tables',
-  restaurants: '/restaurants',
-  manage: '/manage',
+  reservations: '/api/reservations',
+  user: '/api/user',
+  users: '/api/users',
+  tables: '/api/tables',
+  restaurants: '/api/restaurants',
 };
 
 const DoneMapping = {
@@ -18,8 +17,8 @@ const buildQueryParams = (state, newPageLink = null) => {
   // fixed query params
   const params = {
     done: DoneMapping[state.filter.showFulfilled],
-    search: state.search.query,
     past: DoneMapping[state.filter.past],
+    search: state.search.query,
   };
 
   // optional filter
@@ -56,6 +55,12 @@ const buildPaginationParams = url => {
 };
 
 export default {
+  loadState({dispatch}) {
+    dispatch('loadUser');
+    dispatch('loadRestaurants');
+    dispatch('loadReservations');
+  },
+
   loadUser({commit}) {
     axios.get(Routes.user).then(response => {
       commit('setUser', response.data);
@@ -63,8 +68,8 @@ export default {
   },
 
   loadReservationsProxy({dispatch}) {
-    const isManage = location.href.includes('/manage');
-    if (isManage) {
+    const isTables = location.href.includes(Routes.tables);
+    if (isTables) {
       dispatch('loadScopedReservations');
     } else {
       dispatch('loadPaginatedReservations');
@@ -94,22 +99,15 @@ export default {
       date: date.toISOString(),
     };
 
-    const url = Routes.reservations + '/scoped?' + new URLSearchParams(query).toString();
+    const url = Routes.reservations + '?' + new URLSearchParams(query).toString() + '&scoped=true';
 
     axios.get(url).then(response => {
       commit('loadReservations', response.data.data);
     });
   },
 
-  loadEmployees({commit}) {
-    axios.get(Routes.users).then(response => {
-      const {data} = response;
-      commit('setEmployees', data);
-    });
-  },
-
   loadTables({commit}) {
-    axios.get(Routes.tables + '/all').then(response => {
+    axios.get(Routes.tables).then(response => {
       commit('setTables', response.data.data);
     });
   },
@@ -235,10 +233,13 @@ export default {
     commit('clearErrors');
   },
 
-  loadRestaurant({state, commit}) {
-    axios.get(Routes.restaurants + `/${state.user.selected_id}`).then(response => {
-      commit('setRestaurant', response.data);
-    });
+  loadRestaurants({commit}) {
+    axios
+      .get(Routes.restaurants)
+      .then(response => {
+        commit('setRestaurants', response.data);
+      })
+      .catch(() => router.push('restaurants'));
   },
 
   markFulfilled({commit, state, dispatch}, data) {

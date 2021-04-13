@@ -14,7 +14,7 @@
           <!--        <x-restaurant-switcher></x-restaurant-switcher>-->
           <!--        @endif @if(auth()->user()->restaurants->count() >= 1)-->
           <router-link
-            to="/reservations"
+            to="/app/reservations"
             class="px-6 py-3 ml-6 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out font-semibold text-indigo-600"
           >
             <i class="text-lg text-center far fa-calendar"></i>
@@ -22,7 +22,7 @@
           </router-link>
 
           <router-link
-            to="/tables"
+            to="/app/tables"
             class="px-6 py-3 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out font-semibold text-indigo-600"
           >
             <i class="text-lg text-center fa fa-stream"></i>
@@ -65,7 +65,7 @@
               >
                 <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                   <router-link
-                    :to="'/users/' + user.id"
+                    :to="'/app/users/' + user.id"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     role="menuitem"
                     >Profil
@@ -73,7 +73,7 @@
 
                   <router-link
                     class="group block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    to="/restaurants"
+                    to="/app/restaurants"
                   >
                     Restaurants
                   </router-link>
@@ -115,7 +115,7 @@ export default {
   },
   store,
   mounted() {
-    this.$store.dispatch('loadUser');
+    this.$store.dispatch('loadState');
   },
   computed: mapState(['user']),
 };

@@ -12,46 +12,13 @@ import VCalendar from 'v-calendar';
 import store from './store';
 import * as Sentry from '@sentry/vue';
 import {Integrations} from '@sentry/tracing';
-import Reservations from './components/Reservations';
-import Tables from './components/Tables';
-import Restaurants from './components/Restaurants';
-import EditRestaurant from './components/EditRestaurant';
+import router from './router';
 
 // Localization
 import {Lang} from 'laravel-vue-lang';
 
 // VueRouter
 Vue.use(VueRouter);
-const router = new VueRouter({
-  mode: 'history',
-  routes: [
-    {
-      path: '/reservations',
-      name: 'reservations',
-      component: Reservations,
-    },
-    {
-      path: '/tables',
-      name: 'tables',
-      component: Tables,
-    },
-    {
-      path: '/restaurants',
-      name: 'restaurants',
-      component: Restaurants,
-    },
-    {
-      path: '/restaurants/:id',
-      name: 'edit-restaurant',
-      component: EditRestaurant,
-    },
-    {
-      path: '/users/:id',
-      name: 'edit-user',
-      component: EditRestaurant,
-    },
-  ],
-});
 
 // Use v-calendar & v-date-picker components
 Vue.use(VCalendar);

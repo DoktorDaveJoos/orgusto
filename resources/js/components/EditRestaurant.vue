@@ -19,8 +19,6 @@ export default {
   store,
   mounted() {
     this.$store.commit('updateSelectedRestaurant', this.restaurant);
-    this.$store.dispatch('loadUser');
-    this.$store.dispatch('loadEmployees');
   },
 };
 </script>

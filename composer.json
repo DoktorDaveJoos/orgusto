@@ -9,19 +9,19 @@
   "license": "MIT",
   "require": {
     "php": "^7.4",
+    "ext-json": "*",
     "fideloper/proxy": "^4.0",
     "guzzlehttp/guzzle": "^7.1.1",
     "laravel/framework": "^8.9.0",
+    "laravel/sanctum": "^2.9",
     "laravel/scout": "^8.3.1",
     "laravel/spark-stripe": "^1.0",
     "laravel/telescope": "^4.1",
     "laravel/tinker": "^2.4.2",
     "laravel/ui": "^3.0",
-    "livewire/livewire": "^2.3",
     "sentry/sentry-laravel": "^2.4",
     "teamtnt/laravel-scout-tntsearch-driver": "^11.1",
-    "wildbit/swiftmailer-postmark": "^3.3",
-    "ext-json": "*"
+    "wildbit/swiftmailer-postmark": "^3.3"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.2",

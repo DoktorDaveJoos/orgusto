@@ -14038,24 +14038,22 @@ __webpack_require__.r(__webpack_exports__);
   },
   store: _store__WEBPACK_IMPORTED_MODULE_0__["default"],
   mounted: function mounted() {
-    this.$store.dispatch('loadUser');
+    this.$store.dispatch('loadState');
   },
   computed: Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])(['user'])
 });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditReservation.vue?vue&type=script&lang=js&":
-/*!**************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EditReservation.vue?vue&type=script&lang=js& ***!
-  \**************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -14067,63 +14065,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['tablesEndpoint', 'reservationsEndpoint', 'reservation', 'deleteReservationsEndpoint'],
-  data: function data() {
-    return {
-      open: false
-    };
-  },
-  methods: {
-    handleOpen: function handleOpen() {
-      this.open = true;
-    },
-    handleClose: function handleClose() {
-      this.open = false;
-    },
-    handleDelete: function handleDelete() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](this.deleteReservationsEndpoint).then(function () {
-        return location.reload();
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    },
-    handleDone: function handleDone() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.put(this.reservationsEndpoint + '/fulfilled').then(function () {
-        return location.reload();
-      });
+  props: ['handle', 'selected', 'value', 'icon'],
+  computed: {
+    capitalized: function capitalized() {
+      if (isNaN(this.value)) {
+        return this.value.charAt(0).toUpperCase() + this.value.slice(1);
+      }
+
+      return this.value;
     }
   }
 });
@@ -14159,8 +14109,6 @@ __webpack_require__.r(__webpack_exports__);
   store: _store__WEBPACK_IMPORTED_MODULE_0__["default"],
   mounted: function mounted() {
     this.$store.commit('updateSelectedRestaurant', this.restaurant);
-    this.$store.dispatch('loadUser');
-    this.$store.dispatch('loadEmployees');
   }
 });
 
@@ -14547,7 +14495,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     popper: vue_popperjs__WEBPACK_IMPORTED_MODULE_2___default.a
   },
   store: _store__WEBPACK_IMPORTED_MODULE_0__["default"],
-  props: ['user', 'error'],
+  props: ['error'],
   data: function data() {
     return {};
   },
@@ -14561,8 +14509,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.users.slice(0, 4);
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])({
+    user: function user(state) {
+      return state.user;
+    },
     users: function users(state) {
-      return state.restaurant.users;
+      return state.restaurants.find(function (restaurant) {
+        return restaurant.id === state.user.selected;
+      });
     },
     settings: function settings(state) {
       return state.restaurant.settings;
@@ -15379,9 +15332,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {};
   },
-  mounted: function mounted() {
-    this.$store.dispatch('loadUser');
-  },
   methods: {
     addNewReservation: function addNewReservation() {
       this.$store.dispatch('createNewReservation');
@@ -15408,8 +15358,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     user: function user(updated, old) {
       if (updated) {
         this.$store.dispatch('loadPaginatedReservations');
-        this.$store.dispatch('loadEmployees');
-        this.$store.dispatch('loadRestaurant');
       }
     }
   }
@@ -16176,17 +16124,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     restaurant: function restaurant(state) {
       return state.restaurant.settings;
     }
-  })),
-  watch: {
-    user: function user(updated) {
-      if (updated !== undefined) {
-        this.$store.dispatch('loadTables');
-        this.$store.dispatch('loadEmployees');
-        this.$store.dispatch('loadScopedReservations');
-        this.$store.dispatch('loadRestaurant');
-      }
-    }
-  }
+  }))
 });
 
 /***/ }),
@@ -66972,7 +66910,7 @@ var render = function() {
                     {
                       staticClass:
                         "px-6 py-3 ml-6 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out font-semibold text-indigo-600",
-                      attrs: { to: "/reservations" }
+                      attrs: { to: "/app/reservations" }
                     },
                     [
                       _c("i", {
@@ -66990,7 +66928,7 @@ var render = function() {
                     {
                       staticClass:
                         "px-6 py-3 flex flex-col justify-center text-gray-400 hover:text-gray-600 transition-colors duration-75 ease-in-out font-semibold text-indigo-600",
-                      attrs: { to: "/tables" }
+                      attrs: { to: "/app/tables" }
                     },
                     [
                       _c("i", {
@@ -67097,7 +67035,7 @@ var render = function() {
                                   staticClass:
                                     "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
                                   attrs: {
-                                    to: "/users/" + _vm.user.id,
+                                    to: "/app/users/" + _vm.user.id,
                                     role: "menuitem"
                                   }
                                 },
@@ -67109,7 +67047,7 @@ var render = function() {
                                 {
                                   staticClass:
                                     "group block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900",
-                                  attrs: { to: "/restaurants" }
+                                  attrs: { to: "/app/restaurants" }
                                 },
                                 [
                                   _vm._v(
@@ -67174,10 +67112,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditReservation.vue?vue&type=template&id=ce428272&":
-/*!******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/EditReservation.vue?vue&type=template&id=ce428272& ***!
-  \******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da& ***!
+  \*********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -67190,79 +67128,23 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    { staticClass: "flex flex-row items-center" },
+    "button",
+    {
+      staticClass:
+        "h-10 text-sm rounded-lg bg-gray-300 text-gray-600 leading-tight px-4 focus:outline-none hover:shadow-lg",
+      class: _vm.selected(_vm.value)
+        ? "border-2 border-indigo-400 text-gray-800 font-semibold shadow-lg"
+        : "",
+      on: {
+        click: function($event) {
+          _vm.handle ? _vm.handle(_vm.value) : null
+        }
+      }
+    },
     [
-      _c(
-        "button",
-        {
-          staticClass:
-            "text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
-          on: { click: _vm.handleOpen }
-        },
-        [_c("i", { staticClass: "far fa-edit mr-1" }), _vm._v("Edit\n  ")]
-      ),
-      _vm._v(" "),
-      _c(
-        "orgusto-modal-wrapper",
-        { attrs: { "is-open": _vm.open, "handle-close": _vm.handleClose } },
-        [
-          _c("reservation-item", {
-            attrs: {
-              reservation: _vm.reservation,
-              "tables-endpoint": _vm.tablesEndpoint,
-              "reservations-endpoint": _vm.reservationsEndpoint
-            },
-            on: { "modal:close": _vm.handleClose }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.reservation.done === 0
-        ? _c(
-            "button",
-            {
-              staticClass:
-                "ml-4 text-green-600 hover:bg-green-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
-              on: { click: _vm.handleDone }
-            },
-            [
-              _c("i", { staticClass: "fas fa-check mr-1" }),
-              _vm._v("Mark fulfilled\n  ")
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.reservation.done === 1
-        ? _c(
-            "button",
-            {
-              staticClass:
-                "ml-4 text-blue-400 hover:bg-blue-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
-              on: { click: _vm.handleDone }
-            },
-            [
-              _c("i", { staticClass: "fas fa-redo mr-1" }),
-              _vm._v("Reactivate\n  ")
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "ml-4 text-red-600 hover:bg-red-600 hover:text-white rounded-full leading-tight text-xs px-2 h-8",
-          on: { click: _vm.handleDelete }
-        },
-        [
-          _c("i", { staticClass: "far fa-trash-alt mr-1" }),
-          _vm._v("Delete\n  ")
-        ]
-      )
-    ],
-    1
+      _vm._v("\n  " + _vm._s(_vm.capitalized) + "\n  "),
+      _vm.icon ? _c("i", { staticClass: "ml-2", class: _vm.icon }) : _vm._e()
+    ]
   )
 }
 var staticRenderFns = []
@@ -92392,7 +92274,7 @@ module.exports = function(module) {
 
 var map = {
 	"./components/App.vue": "./resources/js/components/App.vue",
-	"./components/EditReservation.vue": "./resources/js/components/EditReservation.vue",
+	"./components/Basic/SelectButton.vue": "./resources/js/components/Basic/SelectButton.vue",
 	"./components/EditRestaurant.vue": "./resources/js/components/EditRestaurant.vue",
 	"./components/Modals/OrgustoModalWrapper.vue": "./resources/js/components/Modals/OrgustoModalWrapper.vue",
 	"./components/ReservationModal/ColorSwitcher.vue": "./resources/js/components/ReservationModal/ColorSwitcher.vue",
@@ -92460,12 +92342,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./store */ "./resources/js/store/index.js");
 /* harmony import */ var _sentry_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @sentry/vue */ "./node_modules/@sentry/vue/esm/index.js");
 /* harmony import */ var _sentry_tracing__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @sentry/tracing */ "./node_modules/@sentry/tracing/esm/index.js");
-/* harmony import */ var _components_Reservations__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Reservations */ "./resources/js/components/Reservations.vue");
-/* harmony import */ var _components_Tables__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/Tables */ "./resources/js/components/Tables.vue");
-/* harmony import */ var _components_Restaurants__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/Restaurants */ "./resources/js/components/Restaurants.vue");
-/* harmony import */ var _components_EditRestaurant__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/EditRestaurant */ "./resources/js/components/EditRestaurant.vue");
-/* harmony import */ var laravel_vue_lang__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! laravel-vue-lang */ "./node_modules/laravel-vue-lang/dist/index.js");
-/* harmony import */ var laravel_vue_lang__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_lang__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./router */ "./resources/js/router/index.js");
+/* harmony import */ var laravel_vue_lang__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! laravel-vue-lang */ "./node_modules/laravel-vue-lang/dist/index.js");
+/* harmony import */ var laravel_vue_lang__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(laravel_vue_lang__WEBPACK_IMPORTED_MODULE_7__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -92479,42 +92358,15 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
-
-
-
  // Localization
 
  // VueRouter
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
-  mode: 'history',
-  routes: [{
-    path: '/reservations',
-    name: 'reservations',
-    component: _components_Reservations__WEBPACK_IMPORTED_MODULE_6__["default"]
-  }, {
-    path: '/tables',
-    name: 'tables',
-    component: _components_Tables__WEBPACK_IMPORTED_MODULE_7__["default"]
-  }, {
-    path: '/restaurants',
-    name: 'restaurants',
-    component: _components_Restaurants__WEBPACK_IMPORTED_MODULE_8__["default"]
-  }, {
-    path: '/restaurants/:id',
-    name: 'edit-restaurant',
-    component: _components_EditRestaurant__WEBPACK_IMPORTED_MODULE_9__["default"]
-  }, {
-    path: '/users/:id',
-    name: 'edit-user',
-    component: _components_EditRestaurant__WEBPACK_IMPORTED_MODULE_9__["default"]
-  }]
-}); // Use v-calendar & v-date-picker components
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]); // Use v-calendar & v-date-picker components
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(v_calendar__WEBPACK_IMPORTED_MODULE_2___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(__webpack_require__(/*! vue-moment */ "./node_modules/vue-moment/dist/vue-moment.js"));
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(laravel_vue_lang__WEBPACK_IMPORTED_MODULE_10__["Lang"], {
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(laravel_vue_lang__WEBPACK_IMPORTED_MODULE_7__["Lang"], {
   locale: 'de',
   fallback: 'en'
 });
@@ -92553,7 +92405,7 @@ _sentry_vue__WEBPACK_IMPORTED_MODULE_4__["init"]({
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
   store: _store__WEBPACK_IMPORTED_MODULE_3__["default"],
-  router: router
+  router: _router__WEBPACK_IMPORTED_MODULE_6__["default"]
 });
 
 /***/ }),
@@ -92585,6 +92437,7 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -92671,18 +92524,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/EditReservation.vue":
-/*!*****************************************************!*\
-  !*** ./resources/js/components/EditReservation.vue ***!
-  \*****************************************************/
+/***/ "./resources/js/components/Basic/SelectButton.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/Basic/SelectButton.vue ***!
+  \********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _EditReservation_vue_vue_type_template_id_ce428272___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EditReservation.vue?vue&type=template&id=ce428272& */ "./resources/js/components/EditReservation.vue?vue&type=template&id=ce428272&");
-/* harmony import */ var _EditReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EditReservation.vue?vue&type=script&lang=js& */ "./resources/js/components/EditReservation.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectButton.vue?vue&type=template&id=071581da& */ "./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&");
+/* harmony import */ var _SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectButton.vue?vue&type=script&lang=js& */ "./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -92691,9 +92544,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _EditReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _EditReservation_vue_vue_type_template_id_ce428272___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _EditReservation_vue_vue_type_template_id_ce428272___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -92703,38 +92556,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/EditReservation.vue"
+component.options.__file = "resources/js/components/Basic/SelectButton.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/EditReservation.vue?vue&type=script&lang=js&":
-/*!******************************************************************************!*\
-  !*** ./resources/js/components/EditReservation.vue?vue&type=script&lang=js& ***!
-  \******************************************************************************/
+/***/ "./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./EditReservation.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditReservation.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_EditReservation_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SelectButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/EditReservation.vue?vue&type=template&id=ce428272&":
-/*!************************************************************************************!*\
-  !*** ./resources/js/components/EditReservation.vue?vue&type=template&id=ce428272& ***!
-  \************************************************************************************/
+/***/ "./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da& ***!
+  \***************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditReservation_vue_vue_type_template_id_ce428272___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./EditReservation.vue?vue&type=template&id=ce428272& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/EditReservation.vue?vue&type=template&id=ce428272&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditReservation_vue_vue_type_template_id_ce428272___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./SelectButton.vue?vue&type=template&id=071581da& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Basic/SelectButton.vue?vue&type=template&id=071581da&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_EditReservation_vue_vue_type_template_id_ce428272___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectButton_vue_vue_type_template_id_071581da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -94679,6 +94532,52 @@ var createEmptyReservation = function createEmptyReservation() {
 
 /***/ }),
 
+/***/ "./resources/js/router/index.js":
+/*!**************************************!*\
+  !*** ./resources/js/router/index.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var _components_Reservations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Reservations */ "./resources/js/components/Reservations.vue");
+/* harmony import */ var _components_Tables__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Tables */ "./resources/js/components/Tables.vue");
+/* harmony import */ var _components_Restaurants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Restaurants */ "./resources/js/components/Restaurants.vue");
+/* harmony import */ var _components_EditRestaurant__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/EditRestaurant */ "./resources/js/components/EditRestaurant.vue");
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  mode: 'history',
+  routes: [{
+    path: '/app/reservations',
+    name: 'reservations',
+    component: _components_Reservations__WEBPACK_IMPORTED_MODULE_1__["default"]
+  }, {
+    path: '/app/tables',
+    name: 'tables',
+    component: _components_Tables__WEBPACK_IMPORTED_MODULE_2__["default"]
+  }, {
+    path: '/app/restaurants',
+    name: 'restaurants',
+    component: _components_Restaurants__WEBPACK_IMPORTED_MODULE_3__["default"]
+  }, {
+    path: '/app/restaurants/:id',
+    name: 'edit-restaurant',
+    component: _components_EditRestaurant__WEBPACK_IMPORTED_MODULE_4__["default"]
+  }, {
+    path: '/app/users/:id',
+    name: 'edit-user',
+    component: _components_EditRestaurant__WEBPACK_IMPORTED_MODULE_4__["default"]
+  }]
+}));
+
+/***/ }),
+
 /***/ "./resources/js/store/actions.js":
 /*!***************************************!*\
   !*** ./resources/js/store/actions.js ***!
@@ -94689,6 +94588,7 @@ var createEmptyReservation = function createEmptyReservation() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../router */ "./resources/js/router/index.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -94696,13 +94596,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
+
 var Routes = {
-  reservations: '/reservations',
-  user: '/user',
-  users: '/users',
-  tables: '/tables',
-  restaurants: '/restaurants',
-  manage: '/manage'
+  reservations: '/api/reservations',
+  user: '/api/user',
+  users: '/api/users',
+  tables: '/api/tables',
+  restaurants: '/api/restaurants'
 };
 var DoneMapping = {
   "true": 1,
@@ -94714,8 +94614,8 @@ var buildQueryParams = function buildQueryParams(state) {
   // fixed query params
   var params = {
     done: DoneMapping[state.filter.showFulfilled],
-    search: state.search.query,
-    past: DoneMapping[state.filter.past]
+    past: DoneMapping[state.filter.past],
+    search: state.search.query
   }; // optional filter
 
   if (state.filter.dateFilter.active) {
@@ -94760,25 +94660,31 @@ var buildPaginationParams = function buildPaginationParams(url) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  loadUser: function loadUser(_ref) {
-    var commit = _ref.commit;
+  loadState: function loadState(_ref) {
+    var dispatch = _ref.dispatch;
+    dispatch('loadUser');
+    dispatch('loadRestaurants');
+    dispatch('loadReservations');
+  },
+  loadUser: function loadUser(_ref2) {
+    var commit = _ref2.commit;
     axios.get(Routes.user).then(function (response) {
       commit('setUser', response.data);
     });
   },
-  loadReservationsProxy: function loadReservationsProxy(_ref2) {
-    var dispatch = _ref2.dispatch;
-    var isManage = location.href.includes('/manage');
+  loadReservationsProxy: function loadReservationsProxy(_ref3) {
+    var dispatch = _ref3.dispatch;
+    var isTables = location.href.includes(Routes.tables);
 
-    if (isManage) {
+    if (isTables) {
       dispatch('loadScopedReservations');
     } else {
       dispatch('loadPaginatedReservations');
     }
   },
-  loadPaginatedReservations: function loadPaginatedReservations(_ref3) {
-    var commit = _ref3.commit,
-        state = _ref3.state;
+  loadPaginatedReservations: function loadPaginatedReservations(_ref4) {
+    var commit = _ref4.commit,
+        state = _ref4.state;
     var paginationLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     var url = "".concat(Routes.reservations, "?").concat(buildQueryParams(state, paginationLink).toString());
     axios.get(url).then(function (response) {
@@ -94790,30 +94696,23 @@ var buildPaginationParams = function buildPaginationParams(url) {
       commit('loadMetaData', meta);
     });
   },
-  loadScopedReservations: function loadScopedReservations(_ref4) {
-    var commit = _ref4.commit,
-        state = _ref4.state;
+  loadScopedReservations: function loadScopedReservations(_ref5) {
+    var commit = _ref5.commit,
+        state = _ref5.state;
     // TODO fix this timezone issue
     var hours = Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["getHours"])(state.filter.timelineStart);
     var date = hours === 0 ? Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addHours"])(state.filter.timelineStart, 1) : state.filter.timelineStart;
     var query = {
       date: date.toISOString()
     };
-    var url = Routes.reservations + '/scoped?' + new URLSearchParams(query).toString();
+    var url = Routes.reservations + '?' + new URLSearchParams(query).toString() + '&scoped=true';
     axios.get(url).then(function (response) {
       commit('loadReservations', response.data.data);
     });
   },
-  loadEmployees: function loadEmployees(_ref5) {
-    var commit = _ref5.commit;
-    axios.get(Routes.users).then(function (response) {
-      var data = response.data;
-      commit('setEmployees', data);
-    });
-  },
   loadTables: function loadTables(_ref6) {
     var commit = _ref6.commit;
-    axios.get(Routes.tables + '/all').then(function (response) {
+    axios.get(Routes.tables).then(function (response) {
       commit('setTables', response.data.data);
     });
   },
@@ -94932,11 +94831,12 @@ var buildPaginationParams = function buildPaginationParams(url) {
     commit('closeModal');
     commit('clearErrors');
   },
-  loadRestaurant: function loadRestaurant(_ref14) {
-    var state = _ref14.state,
-        commit = _ref14.commit;
-    axios.get(Routes.restaurants + "/".concat(state.user.selected_id)).then(function (response) {
-      commit('setRestaurant', response.data);
+  loadRestaurants: function loadRestaurants(_ref14) {
+    var commit = _ref14.commit;
+    axios.get(Routes.restaurants).then(function (response) {
+      commit('setRestaurants', response.data);
+    })["catch"](function () {
+      return _router__WEBPACK_IMPORTED_MODULE_1__["default"].push('restaurants');
     });
   },
   markFulfilled: function markFulfilled(_ref15, data) {
@@ -95053,7 +94953,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   setUser: function setUser(state, payload) {
-    state.user = payload;
+    state.user = payload.data;
   },
   loadReservations: function loadReservations(state, items) {
     state.reservations.items = items;
@@ -95078,9 +94978,6 @@ __webpack_require__.r(__webpack_exports__);
     Object.keys(data.data).forEach(function (key) {
       res[key] = data.data[key];
     });
-  },
-  setEmployees: function setEmployees(state, data) {
-    state.restaurant.users = data;
   },
   setAvailableTables: function setAvailableTables(state, data) {
     state.restaurant.tables = data;
@@ -95116,8 +95013,8 @@ __webpack_require__.r(__webpack_exports__);
   clearErrors: function clearErrors(state) {
     state.reservations.errors = {};
   },
-  setRestaurant: function setRestaurant(state, data) {
-    state.restaurant.settings = data.data;
+  setRestaurants: function setRestaurants(state, data) {
+    state.restaurants = data.data;
   },
   updateSearchQuery: function updateSearchQuery(state, value) {
     state.search.query = value;
@@ -95188,21 +95085,7 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
     timelineStart: makeDefaultTimelineStart()
   },
   user: {},
-  restaurant: {
-    id: null,
-    users: [],
-    tables: [],
-    allTables: [],
-    settings: {}
-  },
-  selectedRestaurant: {
-    id: null,
-    name: null,
-    table_count: null,
-    contact_email: null,
-    owner_id: null,
-    seat_reservation_bound: null
-  },
+  restaurants: [],
   modal: {
     isOpen: false,
     activeReservationId: null,

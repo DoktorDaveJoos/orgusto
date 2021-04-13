@@ -97,9 +97,6 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    this.$store.dispatch('loadUser');
-  },
   methods: {
     addNewReservation() {
       this.$store.dispatch('createNewReservation');
@@ -122,8 +119,6 @@ export default {
     user(updated, old) {
       if (updated) {
         this.$store.dispatch('loadPaginatedReservations');
-        this.$store.dispatch('loadEmployees');
-        this.$store.dispatch('loadRestaurant');
       }
     },
   },

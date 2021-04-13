@@ -23,7 +23,7 @@ Auth::routes();
 
 Route::get('/', function () {
     return view('landing');
-});
+})->name('landing');
 
 Route::get('/imprint', function () {
     return view('imprint');
