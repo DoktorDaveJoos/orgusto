@@ -1,14 +1,8 @@
 <?php
 
 use App\Http\Controllers\InvitationController;
-use App\Http\Controllers\ManageController;
-use App\Http\Controllers\ReservationsController;
-use App\Http\Controllers\RestaurantController;
-use App\Http\Controllers\TablesController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\SpaController;
 use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
