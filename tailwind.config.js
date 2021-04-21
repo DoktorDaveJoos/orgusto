@@ -1,22 +1,20 @@
 module.exports = {
   theme: {
     fontFamiliy: {
-      'display': ['Nunito']
+      display: ['Nunito'],
     },
     screens: {
-      'xs': { 'max': '639px' },
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
+      xs: {max: '639px'},
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
     },
-    extend: {}
+    extend: {},
   },
   variants: {
-    backgroundColor: [
-      'hover', 'focus', 'responsive', 'active'
-    ],
-    borderColor: ['hover', 'focus', 'responsive', 'active', 'focus-within']
+    backgroundColor: ['hover', 'focus', 'responsive', 'active'],
+    borderColor: ['hover', 'focus', 'responsive', 'active', 'focus-within'],
   },
-  plugins: []
-}
+  plugins: [require('@tailwindcss/forms')],
+};

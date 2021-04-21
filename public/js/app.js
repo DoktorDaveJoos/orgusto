@@ -15757,6 +15757,154 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../store */ "./resources/js/store/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'createRestaurant',
+  store: _store__WEBPACK_IMPORTED_MODULE_0__["default"],
+  props: ['isOpen'],
+  data: function data() {
+    return {
+      name: null,
+      showWarning: false
+    };
+  },
+  methods: {
+    handleCreate: function handleCreate() {
+      if (this.name != null) {
+        this.$store.dispatch('createRestaurant', this.name);
+      } else {
+        this.showWarning = true;
+      }
+    },
+    handleCancel: function handleCancel() {
+      this.name = '';
+      this.showWarning = false;
+      this.$emit('modal-close');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/General.vue?vue&type=script&lang=js&":
 /*!*****************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Restaurant/General.vue?vue&type=script&lang=js& ***!
@@ -15960,6 +16108,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store */ "./resources/js/store/index.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 //
 //
 //
@@ -16032,8 +16182,67 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'restaurants'
+  name: 'restaurants',
+  data: function data() {
+    return {
+      modal: {
+        isOpen: false
+      }
+    };
+  },
+  store: _store__WEBPACK_IMPORTED_MODULE_0__["default"],
+  methods: {
+    createRestaurant: function createRestaurant() {
+      this.modal.isOpen = true;
+    }
+  },
+  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapState"])(['restaurants'])
 });
 
 /***/ }),
@@ -16619,6 +16828,25 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".lds-dual-ring[data-v-7bdcc5f9] {\n  display: inline-block;\n  width: 24px;\n  height: 24px;\n}\n.lds-dual-ring[data-v-7bdcc5f9]:after {\n  content: ' ';\n  display: block;\n  width: 24px;\n  height: 24px;\n  margin: 0px;\n  border-radius: 50%;\n  border: 3px solid #374152;\n  border-color: #1f2a37 transparent #374152 transparent;\n  -webkit-animation: lds-dual-ring-data-v-7bdcc5f9 1.2s linear infinite;\n          animation: lds-dual-ring-data-v-7bdcc5f9 1.2s linear infinite;\n}\n@-webkit-keyframes lds-dual-ring-data-v-7bdcc5f9 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n@keyframes lds-dual-ring-data-v-7bdcc5f9 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".half-circle-spinner,\n.half-circle-spinner * {\n  box-sizing: border-box;\n}\n.half-circle-spinner {\n  width: 60px;\n  height: 60px;\n  border-radius: 100%;\n  position: relative;\n}\n.half-circle-spinner .circle {\n  content: '';\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  border-radius: 100%;\n  border: calc(60px / 10) solid transparent;\n}\n.half-circle-spinner .circle.circle-1 {\n  border-top-color: #ff1d5e;\n  -webkit-animation: half-circle-spinner-animation 1s infinite;\n          animation: half-circle-spinner-animation 1s infinite;\n}\n.half-circle-spinner .circle.circle-2 {\n  border-bottom-color: #ff1d5e;\n  -webkit-animation: half-circle-spinner-animation 1s infinite alternate;\n          animation: half-circle-spinner-animation 1s infinite alternate;\n}\n@-webkit-keyframes half-circle-spinner-animation {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n@keyframes half-circle-spinner-animation {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n", ""]);
 
 // exports
 
@@ -65986,6 +66214,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateRestaurant.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/lib/addStyles.js":
 /*!****************************************************!*\
   !*** ./node_modules/style-loader/lib/addStyles.js ***!
@@ -69751,6 +70009,226 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=template&id=2c7e7d70&":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=template&id=2c7e7d70& ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.isOpen,
+          expression: "isOpen"
+        }
+      ],
+      staticClass: "fixed z-10 inset-0 overflow-y-auto",
+      attrs: {
+        "aria-labelledby": "modal-title",
+        role: "dialog",
+        "aria-modal": "true"
+      }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+        },
+        [
+          _c("div", {
+            staticClass:
+              "fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity",
+            attrs: { "aria-hidden": "true" }
+          }),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "hidden sm:inline-block sm:align-middle sm:h-screen",
+              attrs: { "aria-hidden": "true" }
+            },
+            [_vm._v("​")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6"
+            },
+            [
+              _c("div", [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "mx-auto flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-600"
+                  },
+                  [
+                    _c(
+                      "svg",
+                      {
+                        staticClass: "h-5 w-5 text-gray-600",
+                        attrs: {
+                          xmlns: "http://www.w3.org/2000/svg",
+                          viewBox: "0 0 20 20",
+                          fill: "currentColor"
+                        }
+                      },
+                      [
+                        _c("path", {
+                          attrs: {
+                            d:
+                              "M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+                          }
+                        })
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(0)
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "mt-5 sm:mt-6" }, [
+                _c("div", { staticClass: "mb-5" }, [
+                  _c(
+                    "label",
+                    {
+                      staticClass: "sr-only",
+                      attrs: { for: "restaurant_name" }
+                    },
+                    [_vm._v("Restaurant")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.name,
+                        expression: "name"
+                      }
+                    ],
+                    staticClass: "shadow-sm block w-full sm:text-sm rounded-md",
+                    class: _vm.showWarning
+                      ? "border-2 border-red-500"
+                      : "focus:ring-indigo-500 focus:border-indigo-500 border-gray-300",
+                    attrs: {
+                      type: "text",
+                      name: "restaurant_name",
+                      id: "restaurant_name",
+                      placeholder: "Dein Restaurant"
+                    },
+                    domProps: { value: _vm.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.name = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.showWarning,
+                          expression: "showWarning"
+                        }
+                      ],
+                      staticClass: "text-xs text-red-500 mt-0.5"
+                    },
+                    [
+                      _vm._v(
+                        "\n              Gib einen Namen für dein Restaurant ein.\n            "
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "flex space-x-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm",
+                      attrs: { type: "button" },
+                      on: { click: _vm.handleCreate }
+                    },
+                    [_vm._v("\n              Erstellen\n            ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "inline-flex justify-center w-full rounded-md border border-gray-200 shadow-sm px-4 py-2 text-base font-medium text-gray-800 hover:bg-gray-200 focus:outline-none sm:text-sm",
+                      attrs: { type: "button" },
+                      on: { click: _vm.handleCancel }
+                    },
+                    [_vm._v("\n              Abbrechen\n            ")]
+                  )
+                ])
+              ])
+            ]
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-3 text-center sm:mt-5" }, [
+      _c(
+        "h3",
+        {
+          staticClass: "text-lg leading-6 font-medium text-gray-900",
+          attrs: { id: "modal-title" }
+        },
+        [_vm._v("\n              Neues Restaurant!\n            ")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "mt-2" }, [
+        _c("p", { staticClass: "text-sm text-gray-500" }, [
+          _vm._v(
+            "\n                Gib den Namen deines Restaurants ein.\n              "
+          )
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/General.vue?vue&type=template&id=b000cabe&scoped=true&":
 /*!*********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Restaurant/General.vue?vue&type=template&id=b000cabe&scoped=true& ***!
@@ -70123,218 +70601,329 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    [
+      _vm.restaurants.length > 0
+        ? [
+            _c("div", { staticClass: "flex flex-col p-10 px-16" }, [
+              _c(
+                "div",
+                { staticClass: "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8" },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
+                        },
+                        [
+                          _c(
+                            "table",
+                            {
+                              staticClass: "min-w-full divide-y divide-gray-200"
+                            },
+                            [
+                              _vm._m(0),
+                              _vm._v(" "),
+                              _c(
+                                "tbody",
+                                {
+                                  staticClass:
+                                    "bg-white divide-y divide-gray-200",
+                                  attrs: { "x-max": "1" }
+                                },
+                                _vm._l(_vm.restaurants, function(restaurant) {
+                                  return _c("tr", [
+                                    _c(
+                                      "td",
+                                      {
+                                        staticClass:
+                                          "px-6 py-4 whitespace-nowrap"
+                                      },
+                                      [
+                                        _c(
+                                          "div",
+                                          { staticClass: "flex items-center" },
+                                          [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "flex-shrink-0 h-10 w-10"
+                                              },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "rounded-full bg-gray-200 h-10 w-10 flex items-center justify-center"
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "svg",
+                                                      {
+                                                        staticClass:
+                                                          "h-5 w-5 text-gray-600",
+                                                        attrs: {
+                                                          xmlns:
+                                                            "http://www.w3.org/2000/svg",
+                                                          viewBox: "0 0 20 20",
+                                                          fill: "currentColor"
+                                                        }
+                                                      },
+                                                      [
+                                                        _c("path", {
+                                                          attrs: {
+                                                            d:
+                                                              "M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+                                                          }
+                                                        })
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c("div", { staticClass: "ml-4" }, [
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "text-sm font-medium text-gray-900"
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                          " +
+                                                      _vm._s(restaurant.name) +
+                                                      "\n                        "
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                {
+                                                  staticClass:
+                                                    "text-sm text-gray-500"
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                          " +
+                                                      _vm._s(
+                                                        restaurant.contact_email
+                                                      ) +
+                                                      "\n                        "
+                                                  )
+                                                ]
+                                              )
+                                            ])
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      {
+                                        staticClass:
+                                          "px-6 py-4 whitespace-nowrap"
+                                      },
+                                      [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass: "text-sm text-gray-900"
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(restaurant.owner.name)
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass: "text-sm text-gray-500"
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(restaurant.owner.email)
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _vm._m(1, true),
+                                    _vm._v(" "),
+                                    _vm._m(2, true)
+                                  ])
+                                }),
+                                0
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]
+              )
+            ])
+          ]
+        : [
+            _c("div", { staticClass: "p-4 sm:p-16 sm:px-48" }, [
+              _c("div", { staticClass: "bg-white shadow sm:rounded-lg" }, [
+                _c("div", { staticClass: "px-4 py-5 sm:p-6" }, [
+                  _c(
+                    "h3",
+                    {
+                      staticClass: "text-lg leading-6 font-medium text-gray-900"
+                    },
+                    [_vm._v("\n            Noch kein Restaurant!\n          ")]
+                  ),
+                  _vm._v(" "),
+                  _vm._m(3),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "mt-3 text-sm" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass:
+                          "font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none",
+                        on: { click: _vm.createRestaurant }
+                      },
+                      [
+                        _vm._v("\n              Neues Restaurant "),
+                        _c("span", { attrs: { "aria-hidden": "true" } }, [
+                          _vm._v("→")
+                        ])
+                      ]
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ],
+      _vm._v(" "),
+      _c("create-restaurant", {
+        attrs: { "is-open": _vm.modal.isOpen },
+        on: {
+          "modal-close": function($event) {
+            _vm.modal.isOpen = false
+          }
+        }
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col" }, [
-      _c("div", { staticClass: "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8" }, [
+    return _c("thead", { staticClass: "bg-gray-50" }, [
+      _c("tr", [
         _c(
-          "div",
+          "th",
           {
             staticClass:
-              "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
+              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
+            attrs: { scope: "col" }
           },
-          [
-            _c(
-              "div",
-              {
-                staticClass:
-                  "shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
-              },
-              [
-                _c(
-                  "table",
-                  { staticClass: "min-w-full divide-y divide-gray-200" },
-                  [
-                    _c("thead", { staticClass: "bg-gray-50" }, [
-                      _c("tr", [
-                        _c(
-                          "th",
-                          {
-                            staticClass:
-                              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
-                            attrs: { scope: "col" }
-                          },
-                          [_vm._v("\n                Name\n              ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "th",
-                          {
-                            staticClass:
-                              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
-                            attrs: { scope: "col" }
-                          },
-                          [_vm._v("\n                Title\n              ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "th",
-                          {
-                            staticClass:
-                              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
-                            attrs: { scope: "col" }
-                          },
-                          [_vm._v("\n                Status\n              ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "th",
-                          {
-                            staticClass:
-                              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
-                            attrs: { scope: "col" }
-                          },
-                          [_vm._v("\n                Role\n              ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "th",
-                          {
-                            staticClass: "relative px-6 py-3",
-                            attrs: { scope: "col" }
-                          },
-                          [
-                            _c("span", { staticClass: "sr-only" }, [
-                              _vm._v("Edit")
-                            ])
-                          ]
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      {
-                        staticClass: "bg-white divide-y divide-gray-200",
-                        attrs: { "x-max": "1" }
-                      },
-                      [
-                        _c("tr", [
-                          _c(
-                            "td",
-                            { staticClass: "px-6 py-4 whitespace-nowrap" },
-                            [
-                              _c("div", { staticClass: "flex items-center" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "flex-shrink-0 h-10 w-10" },
-                                  [
-                                    _c("img", {
-                                      staticClass: "h-10 w-10 rounded-full",
-                                      attrs: {
-                                        src:
-                                          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-                                        alt: ""
-                                      }
-                                    })
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "ml-4" }, [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass:
-                                        "text-sm font-medium text-gray-900"
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                      Jane Cooper\n                    "
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    { staticClass: "text-sm text-gray-500" },
-                                    [
-                                      _vm._v(
-                                        "\n                      jane.cooper@example.com\n                    "
-                                      )
-                                    ]
-                                  )
-                                ])
-                              ])
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            { staticClass: "px-6 py-4 whitespace-nowrap" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "text-sm text-gray-900" },
-                                [_vm._v("Regional Paradigm Technician")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "text-sm text-gray-500" },
-                                [_vm._v("Optimization")]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            { staticClass: "px-6 py-4 whitespace-nowrap" },
-                            [
-                              _c(
-                                "span",
-                                {
-                                  staticClass:
-                                    "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                  Active\n                "
-                                  )
-                                ]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            {
-                              staticClass:
-                                "px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                            },
-                            [_vm._v("\n                Admin\n              ")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            {
-                              staticClass:
-                                "px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                            },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass:
-                                    "text-indigo-600 hover:text-indigo-900",
-                                  attrs: { href: "#" }
-                                },
-                                [_vm._v("Edit")]
-                              )
-                            ]
-                          )
-                        ])
-                      ]
-                    )
-                  ]
-                )
-              ]
-            )
-          ]
+          [_vm._v("\n                    Name\n                  ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass:
+              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("\n                    Besitzer\n                  ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass:
+              "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider",
+            attrs: { scope: "col" }
+          },
+          [_vm._v("\n                    Abo Status\n                  ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "th",
+          { staticClass: "relative px-6 py-3", attrs: { scope: "col" } },
+          [_c("span", { staticClass: "sr-only" }, [_vm._v("Edit")])]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "px-6 py-4 whitespace-nowrap" }, [
+      _c(
+        "span",
+        {
+          staticClass:
+            "px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+        },
+        [_vm._v("\n                      Active\n                    ")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "td",
+      {
+        staticClass:
+          "px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+      },
+      [
+        _c(
+          "a",
+          {
+            staticClass: "text-indigo-600 hover:text-indigo-900",
+            attrs: { href: "#" }
+          },
+          [_vm._v("Edit")]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "mt-2 max-w-xl text-sm text-gray-500" }, [
+      _c("p", [
+        _vm._v(
+          "\n              Willkommen bei Orgusto! Schön Dich begrüßen zu dürfen.\n            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("p", [
+        _vm._v(
+          "\n              Erstelle dein erstes Restaurant um Orgusto zu nutzen! Sobald du dein erstes Restaurant erstellt hast\n              kannst du loslegen! Wir freuen Uns!\n            "
         )
       ])
     ])
@@ -92291,6 +92880,7 @@ var map = {
 	"./components/Reservations/Paginator.vue": "./resources/js/components/Reservations/Paginator.vue",
 	"./components/Reservations/ReservationListItem.vue": "./resources/js/components/Reservations/ReservationListItem.vue",
 	"./components/Reservations/SearchBar.vue": "./resources/js/components/Reservations/SearchBar.vue",
+	"./components/Restaurant/CreateRestaurant.vue": "./resources/js/components/Restaurant/CreateRestaurant.vue",
 	"./components/Restaurant/General.vue": "./resources/js/components/Restaurant/General.vue",
 	"./components/Restaurant/Rooms.vue": "./resources/js/components/Restaurant/Rooms.vue",
 	"./components/Restaurant/Tables.vue": "./resources/js/components/Restaurant/Tables.vue",
@@ -92458,15 +93048,14 @@ window.axios.defaults.withCredentials = true;
 /*!*****************************************!*\
   !*** ./resources/js/components/App.vue ***!
   \*****************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _App_vue_vue_type_template_id_332fccf4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=template&id=332fccf4& */ "./resources/js/components/App.vue?vue&type=template&id=332fccf4&");
 /* harmony import */ var _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js& */ "./resources/js/components/App.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -92496,7 +93085,7 @@ component.options.__file = "resources/js/components/App.vue"
 /*!******************************************************************!*\
   !*** ./resources/js/components/App.vue?vue&type=script&lang=js& ***!
   \******************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -93805,6 +94394,93 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Restaurant/CreateRestaurant.vue":
+/*!*****************************************************************!*\
+  !*** ./resources/js/components/Restaurant/CreateRestaurant.vue ***!
+  \*****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateRestaurant_vue_vue_type_template_id_2c7e7d70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateRestaurant.vue?vue&type=template&id=2c7e7d70& */ "./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=template&id=2c7e7d70&");
+/* harmony import */ var _CreateRestaurant_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateRestaurant.vue?vue&type=script&lang=js& */ "./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CreateRestaurant.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _CreateRestaurant_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateRestaurant_vue_vue_type_template_id_2c7e7d70___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateRestaurant_vue_vue_type_template_id_2c7e7d70___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Restaurant/CreateRestaurant.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateRestaurant.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateRestaurant.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=template&id=2c7e7d70&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=template&id=2c7e7d70& ***!
+  \************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_template_id_2c7e7d70___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateRestaurant.vue?vue&type=template&id=2c7e7d70& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Restaurant/CreateRestaurant.vue?vue&type=template&id=2c7e7d70&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_template_id_2c7e7d70___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateRestaurant_vue_vue_type_template_id_2c7e7d70___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Restaurant/General.vue":
 /*!********************************************************!*\
   !*** ./resources/js/components/Restaurant/General.vue ***!
@@ -94578,175 +95254,117 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/store/actions.js":
-/*!***************************************!*\
-  !*** ./resources/js/store/actions.js ***!
-  \***************************************/
+/***/ "./resources/js/store/actions/filter.js":
+/*!**********************************************!*\
+  !*** ./resources/js/store/actions/filter.js ***!
+  \**********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/esm/index.js");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../router */ "./resources/js/router/index.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+/* harmony default export */ __webpack_exports__["default"] = ({
+  activateRangeFilter: function activateRangeFilter(_ref, payload) {
+    var commit = _ref.commit,
+        dispatch = _ref.dispatch,
+        state = _ref.state;
+    commit('setDateFilterActive', payload);
+    commit('setDateRange', payload.dateRange);
+    dispatch('proxyLoadReservations');
+  },
+  activateSingleDateFilter: function activateSingleDateFilter(_ref2, payload) {
+    var commit = _ref2.commit,
+        dispatch = _ref2.dispatch,
+        state = _ref2.state;
+    commit('setDateFilterActive', payload);
+    commit('setSingleDate', payload.singleDate);
+    dispatch('proxyLoadReservations');
+  },
+  updateScope: function updateScope(_ref3, payload) {
+    var commit = _ref3.commit,
+        state = _ref3.state,
+        dispatch = _ref3.dispatch;
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-var Routes = {
-  reservations: '/api/reservations',
-  user: '/api/user',
-  users: '/api/users',
-  tables: '/api/tables',
-  restaurants: '/api/restaurants'
-};
-var DoneMapping = {
-  "true": 1,
-  "false": 0
-};
-
-var buildQueryParams = function buildQueryParams(state) {
-  var newPageLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  // fixed query params
-  var params = {
-    done: DoneMapping[state.filter.showFulfilled],
-    past: DoneMapping[state.filter.past],
-    search: state.search.query
-  }; // optional filter
-
-  if (state.filter.dateFilter.active) {
-    if (state.filter.dateFilter.mode === 'range') {
-      var _state$filter$dateRan = state.filter.dateRange,
-          start = _state$filter$dateRan.start,
-          end = _state$filter$dateRan.end;
-      params.from = start.toISOString(); // TODO fix timezone issue
-
-      var consolidatedTo = Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addHours"])(end, 1);
-      params.to = consolidatedTo.toISOString();
-    }
-
-    if (state.filter.dateFilter.mode === 'single') {
-      var singleDate = state.filter.singleDate;
-      params.from = singleDate.toISOString();
-    }
-  } // if no search query -> apply pagination
-
-
-  if (state.search.query.length === 0) {
-    var _state$reservations$m;
-
-    if (newPageLink) {
-      params.page = buildPaginationParams(newPageLink).get('page');
-    } else if ((_state$reservations$m = state.reservations.meta.links) === null || _state$reservations$m === void 0 ? void 0 : _state$reservations$m.find(function (link) {
-      return link.active;
-    })) {
-      var activePage = state.reservations.meta.links.find(function (link) {
-        return link.active;
-      });
-      params.page = buildPaginationParams(activePage.url).get('page');
+    if (!Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["isSameDay"])(payload, state.filter.timelineStart)) {
+      commit('updateScope', payload);
+      dispatch('proxyLoadReservations');
+    } else {
+      commit('updateScope', payload);
     }
   }
+});
 
-  return new URLSearchParams(params);
-};
+/***/ }),
 
-var buildPaginationParams = function buildPaginationParams(url) {
-  var parsed = new URL(url);
-  return new URLSearchParams(parsed.search);
-};
+/***/ "./resources/js/store/actions/index.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/actions/index.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _restaurant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./restaurant */ "./resources/js/store/actions/restaurant.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "./resources/js/store/actions/filter.js");
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./user */ "./resources/js/store/actions/user.js");
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   loadState: function loadState(_ref) {
     var dispatch = _ref.dispatch;
     dispatch('loadUser');
     dispatch('loadRestaurants');
-    dispatch('loadReservations');
+    dispatch('proxyLoadReservations');
   },
-  loadUser: function loadUser(_ref2) {
-    var commit = _ref2.commit;
-    axios.get(Routes.user).then(function (response) {
-      commit('setUser', response.data);
-    });
+  closeModal: function closeModal(_ref2) {
+    var commit = _ref2.commit,
+        dispatch = _ref2.dispatch;
+    dispatch('proxyLoadReservations');
+    commit('closeModal');
+    commit('clearErrors');
   },
-  loadReservationsProxy: function loadReservationsProxy(_ref3) {
-    var dispatch = _ref3.dispatch;
-    var isTables = location.href.includes(Routes.tables);
+  filter: _filter__WEBPACK_IMPORTED_MODULE_1__["default"],
+  restaurant: _restaurant__WEBPACK_IMPORTED_MODULE_0__["default"],
+  user: _user__WEBPACK_IMPORTED_MODULE_2__["default"]
+});
 
-    if (isTables) {
-      dispatch('loadScopedReservations');
-    } else {
-      dispatch('loadPaginatedReservations');
-    }
-  },
-  loadPaginatedReservations: function loadPaginatedReservations(_ref4) {
-    var commit = _ref4.commit,
-        state = _ref4.state;
-    var paginationLink = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    var url = "".concat(Routes.reservations, "?").concat(buildQueryParams(state, paginationLink).toString());
-    axios.get(url).then(function (response) {
-      var data = response.data.data;
-      var links = response.data.links;
-      var meta = response.data.meta;
-      commit('loadReservations', data);
-      commit('loadPaginationLinks', links);
-      commit('loadMetaData', meta);
-    });
-  },
-  loadScopedReservations: function loadScopedReservations(_ref5) {
-    var commit = _ref5.commit,
-        state = _ref5.state;
-    // TODO fix this timezone issue
-    var hours = Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["getHours"])(state.filter.timelineStart);
-    var date = hours === 0 ? Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["addHours"])(state.filter.timelineStart, 1) : state.filter.timelineStart;
-    var query = {
-      date: date.toISOString()
-    };
-    var url = Routes.reservations + '?' + new URLSearchParams(query).toString() + '&scoped=true';
-    axios.get(url).then(function (response) {
-      commit('loadReservations', response.data.data);
-    });
-  },
-  loadTables: function loadTables(_ref6) {
-    var commit = _ref6.commit;
-    axios.get(Routes.tables).then(function (response) {
-      commit('setTables', response.data.data);
-    });
-  },
-  deleteReservation: function deleteReservation(_ref7, id) {
-    var dispatch = _ref7.dispatch,
-        commit = _ref7.commit;
-    axios["delete"]("".concat(Routes.reservations, "/").concat(id)).then(function () {
-      commit('closeModal');
-      dispatch('loadReservationsProxy');
-    });
-  },
-  createNewReservation: function createNewReservation(_ref8, preSelected) {
-    var commit = _ref8.commit,
-        dispatch = _ref8.dispatch;
-    commit('setNewReservation');
+/***/ }),
 
-    if (preSelected) {
-      commit('updateReservation', {
-        data: preSelected
+/***/ "./resources/js/store/actions/restaurant.js":
+/*!**************************************************!*\
+  !*** ./resources/js/store/actions/restaurant.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _shared_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/routes */ "./resources/js/store/shared/routes.js");
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../router */ "./resources/js/router/index.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  createRestaurant: function createRestaurant(_ref, restaurantName) {
+    var commit = _ref.commit,
+        dispatch = _ref.dispatch;
+    axios.post(_shared_routes__WEBPACK_IMPORTED_MODULE_0__["ApiRoutes"].restaurants, {
+      name: restaurantName
+    }).then(function (res) {
+      dispatch('loadRestaurants');
+      _router__WEBPACK_IMPORTED_MODULE_1__["default"].push({
+        path: "".concat(_shared_routes__WEBPACK_IMPORTED_MODULE_0__["AppRoutes"].restaurants, "/").concat(res.data.id)
       });
-    }
-
-    dispatch('loadAvailableTables');
-    commit('openModal');
+    })["catch"](function (error) {
+      return commit('setError', error);
+    });
   },
-  setActiveReservation: function setActiveReservation(_ref9, id) {
-    var dispatch = _ref9.dispatch,
-        commit = _ref9.commit;
-    commit('setActiveReservation', id);
-    dispatch('loadAvailableTables');
-  },
-  loadAvailableTables: function loadAvailableTables(_ref10) {
-    var commit = _ref10.commit,
-        state = _ref10.state;
+  loadAvailableTables: function loadAvailableTables(_ref2) {
+    var commit = _ref2.commit,
+        state = _ref2.state;
     // remove all tables
     commit('setAvailableTables', []);
     commit('setLoadingState', {
@@ -94754,11 +95372,11 @@ var buildPaginationParams = function buildPaginationParams(url) {
       value: true
     });
     var activeReservationId = state.modal.activeReservationId;
-    var reservation = activeReservationId ? state.reservations.items.find(function (res) {
+    var reservation = activeReservationId ? state.restaurant.reservations.items.find(function (res) {
       return res.id === state.modal.activeReservationId;
     }) : state.modal.newReservation;
     var existingReservationQuery = activeReservationId ? "&r_id=".concat(activeReservationId) : '';
-    var url = Routes.tables + "?start=".concat(reservation.start, "&m=").concat(reservation.duration) + existingReservationQuery;
+    var url = "".concat(_shared_routes__WEBPACK_IMPORTED_MODULE_0__["ApiRoutes"].tables, "?start=").concat(reservation.start, "&m=").concat(reservation.duration).concat(existingReservationQuery);
     axios.get(url).then(function (response) {
       var data = response.data;
       commit('setAvailableTables', data);
@@ -94768,142 +95386,56 @@ var buildPaginationParams = function buildPaginationParams(url) {
       });
     })["catch"](function (error) {
       if (error.status === 401) {
+        // logout
         location.reload();
+      } else {
+        commit('setError', error);
       }
     });
   },
-  updateReservation: function updateReservation(_ref11, data) {
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch;
-    // mutate state
-    commit('updateReservation', data); // getting tables if filter data is changed
-
-    var filter = ['start', 'duration'];
-    var key = Object.keys(data.data).pop();
-
-    if (filter.includes(key)) {
-      dispatch('loadAvailableTables');
-    }
-  },
-  saveReservation: function saveReservation(_ref12, reservation) {
-    var _reservation$user;
-
-    var commit = _ref12.commit,
-        dispatch = _ref12.dispatch,
-        state = _ref12.state;
-    commit('clearErrors');
-
-    var payload = _objectSpread({}, reservation); // remove user object
-
-
-    delete payload.user; // set user_id
-
-    payload.user_id = ((_reservation$user = reservation.user) === null || _reservation$user === void 0 ? void 0 : _reservation$user.id) ? reservation.user.id : null; // map tables to table_id
-
-    payload.tables = payload.tables.map(function (table) {
-      return table.id;
-    });
-
-    if (payload.id) {
-      axios.put(Routes.reservations + "/".concat(payload.id), payload).then(function () {
-        // bring in sync
-        dispatch('loadReservationsProxy'); // close modal
-
-        commit('closeModal');
-      })["catch"](function (error) {
-        commit('setErrors', error);
-      });
-    } else {
-      axios.post(Routes.reservations, payload).then(function () {
-        // bring in sync
-        dispatch('loadReservationsProxy'); // close modal
-
-        commit('closeModal');
-      })["catch"](function (error) {
-        commit('setErrors', error);
-      });
-    }
-  },
-  closeModal: function closeModal(_ref13) {
-    var commit = _ref13.commit,
-        dispatch = _ref13.dispatch;
-    dispatch('loadReservationsProxy');
-    commit('closeModal');
-    commit('clearErrors');
-  },
-  loadRestaurants: function loadRestaurants(_ref14) {
-    var commit = _ref14.commit;
-    axios.get(Routes.restaurants).then(function (response) {
-      commit('setRestaurants', response.data);
-    })["catch"](function () {
-      return _router__WEBPACK_IMPORTED_MODULE_1__["default"].push('restaurants');
+  loadRestaurants: function loadRestaurants(_ref3) {
+    var commit = _ref3.commit;
+    axios.get(_shared_routes__WEBPACK_IMPORTED_MODULE_0__["ApiRoutes"].restaurants).then(function (response) {
+      var data = response.data.data;
+      commit('setRestaurants', data);
+    })["catch"](function (error) {
+      return commit('setError', error);
     });
   },
-  markFulfilled: function markFulfilled(_ref15, data) {
-    var commit = _ref15.commit,
-        state = _ref15.state,
-        dispatch = _ref15.dispatch;
-    var consolidatedData = {
-      id: data.id,
-      data: {
-        done: data.value
-      }
-    };
-    commit('setActiveReservation', data.id);
-    commit('updateReservation', consolidatedData);
-    var res = state.reservations.items.filter(function (item) {
-      return item.id === data.id;
-    })[0];
-    dispatch('saveReservation', res);
-    commit('setActiveReservation', null);
-  },
-  showAllFullFilled: function showAllFullFilled(_ref16, val) {
-    var commit = _ref16.commit,
-        dispatch = _ref16.dispatch,
-        state = _ref16.state;
-    commit('showAllFullFilled', val);
-    dispatch('loadReservationsProxy');
-  },
-  activateRangeFilter: function activateRangeFilter(_ref17, payload) {
-    var commit = _ref17.commit,
-        dispatch = _ref17.dispatch,
-        state = _ref17.state;
-    commit('setDateFilterActive', payload);
-    commit('setDateRange', payload.dateRange);
-    dispatch('loadReservationsProxy');
-  },
-  activateSingleDateFilter: function activateSingleDateFilter(_ref18, payload) {
-    var commit = _ref18.commit,
-        dispatch = _ref18.dispatch,
-        state = _ref18.state;
-    commit('setDateFilterActive', payload);
-    commit('setSingleDate', payload.singleDate);
-    dispatch('loadReservationsProxy');
-  },
-  updateScope: function updateScope(_ref19, payload) {
-    var commit = _ref19.commit,
-        state = _ref19.state,
-        dispatch = _ref19.dispatch;
-
-    if (!Object(date_fns__WEBPACK_IMPORTED_MODULE_0__["isSameDay"])(payload, state.filter.timelineStart)) {
-      commit('updateScope', payload);
-      dispatch('loadReservationsProxy');
-    } else {
-      commit('updateScope', payload);
-    }
+  loadTables: function loadTables(_ref4) {
+    var commit = _ref4.commit;
+    axios.get(_shared_routes__WEBPACK_IMPORTED_MODULE_0__["ApiRoutes"].tables).then(function (response) {
+      var data = response.data.data;
+      commit('setTables', data);
+    })["catch"](function (error) {
+      return commit('setError', error);
+    });
   }
 });
 
 /***/ }),
 
-/***/ "./resources/js/store/getters.js":
-/*!***************************************!*\
-  !*** ./resources/js/store/getters.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ "./resources/js/store/actions/user.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/actions/user.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _shared_routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/routes */ "./resources/js/store/shared/routes.js");
 
+/* harmony default export */ __webpack_exports__["default"] = ({
+  loadUser: function loadUser(_ref) {
+    var commit = _ref.commit;
+    axios.get(_shared_routes__WEBPACK_IMPORTED_MODULE_0__["ApiRoutes"].user).then(function (response) {
+      commit('setUser', response.data);
+    })["catch"](function (error) {
+      commit('setError', error);
+    });
+  }
+});
 
 /***/ }),
 
@@ -94916,109 +95448,60 @@ var buildPaginationParams = function buildPaginationParams(url) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./actions */ "./resources/js/store/actions.js");
-/* harmony import */ var _getters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getters */ "./resources/js/store/getters.js");
-/* harmony import */ var _getters__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_getters__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _mutations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mutations */ "./resources/js/store/mutations.js");
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./state */ "./resources/js/store/state.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _mutations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mutations */ "./resources/js/store/mutations/index.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./actions */ "./resources/js/store/actions/index.js");
+/* harmony import */ var _states__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./states */ "./resources/js/store/states/index.js");
 
 
 
 
 
-
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
-  actions: _actions__WEBPACK_IMPORTED_MODULE_2__["default"],
-  getters: _getters__WEBPACK_IMPORTED_MODULE_3___default.a,
-  mutations: _mutations__WEBPACK_IMPORTED_MODULE_4__["default"],
-  state: _state__WEBPACK_IMPORTED_MODULE_5__["default"]
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_0__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_0__["default"].Store({
+  mutations: _mutations__WEBPACK_IMPORTED_MODULE_2__["default"],
+  actions: _actions__WEBPACK_IMPORTED_MODULE_3__["default"],
+  state: _states__WEBPACK_IMPORTED_MODULE_4__["default"]
 }));
 
 /***/ }),
 
-/***/ "./resources/js/store/mutations.js":
-/*!*****************************************!*\
-  !*** ./resources/js/store/mutations.js ***!
-  \*****************************************/
+/***/ "./resources/js/store/mutations/error.js":
+/*!***********************************************!*\
+  !*** ./resources/js/store/mutations/error.js ***!
+  \***********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _helper_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helper/helper */ "./resources/js/helper/helper.js");
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  setUser: function setUser(state, payload) {
-    state.user = payload.data;
+  setError: function setError(_ref, error) {
+    var state = _ref.state;
+    state.error.hasError = true;
+    state.error.errorMsg = error.message;
   },
-  loadReservations: function loadReservations(state, items) {
-    state.reservations.items = items;
-  },
-  loadPaginationLinks: function loadPaginationLinks(state, paginationLinks) {
-    state.reservations.links = paginationLinks;
-  },
-  loadMetaData: function loadMetaData(state, meta) {
-    state.reservations.meta = meta;
-  },
-  updateReservation: function updateReservation(state, data) {
-    var res;
+  clearError: function clearError(_ref2) {
+    var state = _ref2.state;
+    state.error.hasError = false;
+    state.error.errorMsg = null;
+  }
+});
 
-    if (state.modal.activeReservationId) {
-      res = state.reservations.items.find(function (reservation) {
-        return reservation.id === data.id;
-      });
-    } else {
-      res = state.modal.newReservation;
-    }
+/***/ }),
 
-    Object.keys(data.data).forEach(function (key) {
-      res[key] = data.data[key];
-    });
-  },
-  setAvailableTables: function setAvailableTables(state, data) {
-    state.restaurant.tables = data;
-  },
-  setActiveReservation: function setActiveReservation(state, id) {
-    state.modal.activeReservationId = id;
-  },
-  closeModal: function closeModal(state) {
-    state.restaurant.tables = [];
-    state.modal.activeReservationId = null;
-    state.modal.isOpen = false;
-  },
-  openModal: function openModal(state) {
-    state.modal.isOpen = true;
-  },
-  setLoadingState: function setLoadingState(state, data) {
-    state.loadingStates[data.indicator] = data.value;
-  },
-  setErrors: function setErrors(state, error) {
-    if (error.response.status === 422) {
-      state.reservations.errors = error.response.data.errors;
-    } else if (error.response.status === 400) {
-      state.reservations.errors = {
-        tables: error.response.data.message
-      };
-    } else if (error.response.status === 401) {
-      location.reload();
-    }
-  },
-  setNewReservation: function setNewReservation(state) {
-    state.modal.newReservation = Object(_helper_helper__WEBPACK_IMPORTED_MODULE_0__["createEmptyReservation"])();
-  },
-  clearErrors: function clearErrors(state) {
-    state.reservations.errors = {};
-  },
-  setRestaurants: function setRestaurants(state, data) {
-    state.restaurants = data.data;
-  },
-  updateSearchQuery: function updateSearchQuery(state, value) {
-    state.search.query = value;
-  },
+/***/ "./resources/js/store/mutations/filter.js":
+/*!************************************************!*\
+  !*** ./resources/js/store/mutations/filter.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
   showAllFullFilled: function showAllFullFilled(state, value) {
     state.filter.showFulfilled = value;
   },
@@ -95033,11 +95516,169 @@ __webpack_require__.r(__webpack_exports__);
     state.filter.dateFilter.mode = payload.mode;
     state.filter.dateFilter.active = payload.active;
   },
-  setTables: function setTables(state, payload) {
-    state.restaurant.allTables = payload;
-  },
   updateScope: function updateScope(state, payload) {
     state.filter.timelineStart = payload;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations/index.js":
+/*!***********************************************!*\
+  !*** ./resources/js/store/mutations/index.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _reservation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reservation */ "./resources/js/store/mutations/reservation.js");
+/* harmony import */ var _restaurant__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./restaurant */ "./resources/js/store/mutations/restaurant.js");
+/* harmony import */ var _loading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./loading */ "./resources/js/store/mutations/loading.js");
+/* harmony import */ var _search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./search */ "./resources/js/store/mutations/search.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./filter */ "./resources/js/store/mutations/filter.js");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modal */ "./resources/js/store/mutations/modal.js");
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./error */ "./resources/js/store/mutations/error.js");
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./user */ "./resources/js/store/mutations/user.js");
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  loadingStates: _loading__WEBPACK_IMPORTED_MODULE_2__["default"],
+  reservation: _reservation__WEBPACK_IMPORTED_MODULE_0__["default"],
+  restaurants: _restaurant__WEBPACK_IMPORTED_MODULE_1__["default"],
+  filter: _filter__WEBPACK_IMPORTED_MODULE_4__["default"],
+  search: _search__WEBPACK_IMPORTED_MODULE_3__["default"],
+  modal: _modal__WEBPACK_IMPORTED_MODULE_5__["default"],
+  error: _error__WEBPACK_IMPORTED_MODULE_6__["default"],
+  user: _user__WEBPACK_IMPORTED_MODULE_7__["default"]
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations/loading.js":
+/*!*************************************************!*\
+  !*** ./resources/js/store/mutations/loading.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  setLoadingState: function setLoadingState(state, data) {
+    state.loadingStates[data.indicator] = data.value;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations/modal.js":
+/*!***********************************************!*\
+  !*** ./resources/js/store/mutations/modal.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  closeModal: function closeModal(state) {
+    state.modal.activeReservationId = null;
+    state.restaurant.tables = [];
+    state.modal.isOpen = false;
+  },
+  openModal: function openModal(state) {
+    state.modal.isOpen = true;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations/reservation.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/store/mutations/reservation.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helper_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helper/helper */ "./resources/js/helper/helper.js");
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  // Paginated
+  setPaginatedReservations: function setPaginatedReservations(state, items, links, meta) {
+    state.restaurant.reservations.items = items;
+    state.restaurant.reservations.links = links;
+    state.restaurant.reservations.meta = meta;
+  },
+  setReservations: function setReservations(state, items) {
+    state.restaurant.reservations.items = items;
+  },
+  setPaginationLinks: function setPaginationLinks(state, paginationLinks) {
+    state.restaurant.reservations.links = paginationLinks;
+  },
+  setMetaData: function setMetaData(state, meta) {
+    state.restaurant.reservations.meta = meta;
+  },
+  setActiveReservation: function setActiveReservation(state, id) {
+    state.modal.activeReservationId = id;
+  },
+  setNewReservation: function setNewReservation(state) {
+    state.modal.newReservation = Object(_helper_helper__WEBPACK_IMPORTED_MODULE_0__["createEmptyReservation"])();
+  },
+  updateReservation: function updateReservation(state, data) {
+    var activeReservationId = state.modal.activeReservationId;
+    var res = activeReservationId ? state.restaurant.reservations.items.find(function (reservation) {
+      return reservation.id === data.id;
+    }) : state.modal.newReservation;
+    Object.keys(data).forEach(function (key) {
+      res[key] = data[key];
+    });
+  },
+  clearReservationErrors: function clearReservationErrors(state) {
+    state.restaurant.reservations.errors = {};
+  },
+  setReservationErrors: function setReservationErrors(state, error) {
+    if (error.response.status === 422) {
+      state.restaurant.reservations.errors = error.response.data.errors;
+    } else if (error.response.status === 400) {
+      state.restaurant.reservations.errors = {
+        tables: error.response.data.message
+      };
+    } else if (error.response.status === 401) {
+      // logout
+      location.reload();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations/restaurant.js":
+/*!****************************************************!*\
+  !*** ./resources/js/store/mutations/restaurant.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  setAvailableTables: function setAvailableTables(state, data) {
+    state.restaurant.tables = data;
+  },
+  setRestaurants: function setRestaurants(state, data) {
+    state.restaurants = data;
+  },
+  setTables: function setTables(state, payload) {
+    state.restaurant.allTables = payload;
   },
   updateSelectedRestaurant: function updateSelectedRestaurant(state, payload) {
     state.selectedRestaurant = JSON.parse(payload);
@@ -95046,10 +95687,89 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/store/state.js":
-/*!*************************************!*\
-  !*** ./resources/js/store/state.js ***!
-  \*************************************/
+/***/ "./resources/js/store/mutations/search.js":
+/*!************************************************!*\
+  !*** ./resources/js/store/mutations/search.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  updateSearchQuery: function updateSearchQuery(state, value) {
+    state.search.query = value;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations/user.js":
+/*!**********************************************!*\
+  !*** ./resources/js/store/mutations/user.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  setUser: function setUser(state, payload) {
+    var data = payload.data.data;
+    state.user = data;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/shared/routes.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/shared/routes.js ***!
+  \*********************************************/
+/*! exports provided: ApiRoutes, AppRoutes */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiRoutes", function() { return ApiRoutes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppRoutes", function() { return AppRoutes; });
+var ApiRoutes = {
+  reservations: '/api/reservations',
+  restaurants: '/api/restaurants',
+  tables: '/api/tables',
+  users: '/api/users',
+  user: '/api/user'
+};
+var AppRoutes = {
+  reservations: '/app/reservations',
+  restaurants: '/app/restaurants',
+  tables: '/app/tables',
+  users: '/app/users',
+  user: '/app/user'
+};
+
+/***/ }),
+
+/***/ "./resources/js/store/states/error.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/states/error.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  hasError: false,
+  errorMsg: null
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/filter.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/states/filter.js ***!
+  \*********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -95064,41 +95784,169 @@ var makeDefaultTimelineStart = function makeDefaultTimelineStart() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  reservations: {
-    items: [],
-    links: {},
-    meta: {},
-    errors: []
+  timelineStart: makeDefaultTimelineStart(),
+  singleDate: new Date(),
+  showFulfilled: false,
+  dateRange: {
+    start: new Date(),
+    end: new Date()
   },
-  filter: {
-    showFulfilled: false,
-    dateRange: {
-      start: new Date(),
-      end: new Date()
-    },
-    singleDate: new Date(),
-    dateFilter: {
-      active: false,
-      mode: 'none'
-    },
-    past: false,
-    timelineStart: makeDefaultTimelineStart()
+  dateFilter: {
+    active: false,
+    mode: 'none'
   },
-  user: {},
-  restaurants: [],
-  modal: {
-    isOpen: false,
-    activeReservationId: null,
-    newReservation: {}
-  },
-  loadingStates: {
-    reservations: false,
-    employees: false,
-    tables: false
-  },
-  search: {
-    query: ''
-  }
+  past: false
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/index.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/states/index.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _restaurant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./restaurant */ "./resources/js/store/states/restaurant.js");
+/* harmony import */ var _loading__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./loading */ "./resources/js/store/states/loading.js");
+/* harmony import */ var _search__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./search */ "./resources/js/store/states/search.js");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./filter */ "./resources/js/store/states/filter.js");
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./error */ "./resources/js/store/states/error.js");
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modal */ "./resources/js/store/states/modal.js");
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./user */ "./resources/js/store/states/user.js");
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  loadingStates: _loading__WEBPACK_IMPORTED_MODULE_1__["default"],
+  restaurants: _restaurant__WEBPACK_IMPORTED_MODULE_0__["restaurants"],
+  restaurant: _restaurant__WEBPACK_IMPORTED_MODULE_0__["restaurant"],
+  filter: _filter__WEBPACK_IMPORTED_MODULE_3__["default"],
+  search: _search__WEBPACK_IMPORTED_MODULE_2__["default"],
+  modal: _modal__WEBPACK_IMPORTED_MODULE_5__["default"],
+  error: _error__WEBPACK_IMPORTED_MODULE_4__["default"],
+  user: _user__WEBPACK_IMPORTED_MODULE_6__["default"]
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/loading.js":
+/*!**********************************************!*\
+  !*** ./resources/js/store/states/loading.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  createRestaurant: false,
+  reservations: false,
+  employees: false,
+  tables: false
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/modal.js":
+/*!********************************************!*\
+  !*** ./resources/js/store/states/modal.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  activeReservationId: null,
+  newReservation: {},
+  isOpen: false
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/reservations.js":
+/*!***************************************************!*\
+  !*** ./resources/js/store/states/reservations.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  errors: [],
+  items: [],
+  links: {},
+  meta: {}
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/restaurant.js":
+/*!*************************************************!*\
+  !*** ./resources/js/store/states/restaurant.js ***!
+  \*************************************************/
+/*! exports provided: restaurants, restaurant */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurants", function() { return restaurants; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restaurant", function() { return restaurant; });
+/* harmony import */ var _reservations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reservations */ "./resources/js/store/states/reservations.js");
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./user */ "./resources/js/store/states/user.js");
+
+
+var restaurants = [];
+var restaurant = {
+  contact_email: null,
+  abo_status: null,
+  reservations: _reservations__WEBPACK_IMPORTED_MODULE_0__["default"],
+  owner: _user__WEBPACK_IMPORTED_MODULE_1__["default"],
+  name: null,
+  id: null,
+  user: []
+};
+
+/***/ }),
+
+/***/ "./resources/js/store/states/search.js":
+/*!*********************************************!*\
+  !*** ./resources/js/store/states/search.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  query: ''
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/states/user.js":
+/*!*******************************************!*\
+  !*** ./resources/js/store/states/user.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  selected: null,
+  email: null,
+  name: null,
+  type: null,
+  id: null
 });
 
 /***/ }),

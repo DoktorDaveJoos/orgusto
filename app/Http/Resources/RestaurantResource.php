@@ -21,6 +21,7 @@ class RestaurantResource extends JsonResource
             'contact_email' => $this->contact_email,
             'owner' => new UserResource($this->owner),
             'user' => UserResource::collection($this->users),
+            'abo_status' => $this->subscribed(),
         ];
     }
 }
